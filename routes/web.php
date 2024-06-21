@@ -32,8 +32,10 @@ Route::middleware(['auth:karyawan'])->group(function () {
     // dashboard page
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // presensi
+    // create presensi
     Route::get('/presensi/create', [PresensiController::class, 'PresensiCreate'])->name('presensi.create');
+    // store presensi
+    Route::post('/presensi/store', [PresensiController::class, 'PresensiStore'])->name('presensi.store');
 
     // logout
     Route::get('/logout', [AuthController::class, 'Logout'])->name('logout');

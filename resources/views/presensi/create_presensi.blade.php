@@ -38,8 +38,9 @@
 @section('content')
 <div class="row" style="margin-top: 70px">
     <div class="col">
+
         {{-- menampilkan lokasi --}}
-        <input type="text" id="lokasi">
+        <input type="hidden" id="lokasi">
 
         {{-- menampilkan webcam --}}
         <div class="webcam-capture"></div>
@@ -47,7 +48,11 @@
 </div>
 <div class="row">
     <div class="col">
+        @if ($cek > 0)
+            <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
+        @else
         <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>
+        @endif
     </div>
 </div>
 <div class="row mt-2">
@@ -96,5 +101,44 @@
     function errorCallback(){
 
     }
+
+    // get data gambar dan lokasi
+    $("#takeabsen").click(function(e){
+        Webcam.snap(function(uri){
+            image = uri;
+        });
+        var lokasi = $("#lokasi").val();
+
+        // save data with ajax
+        $.ajax({
+            type:'POST',
+            url:'/presensi/store',
+            data:{
+                _token: "{{ csrf_token() }}",
+                image:image,
+                lokasi:lokasi
+            },
+            cache:false,
+            success:function(respond) {
+                var status = respond.split("|");
+                if(status[0] == "success"){
+                    Swal.fire({
+                    title: 'Success!',
+                    text: status[1],
+                    icon: 'success',
+                    })
+                    setTimeout("location.href='/dashboard'", 2000)
+                }else{
+                    Swal.fire({
+                    title: 'Failed!',
+                    text: 'Gagal melakukan Absensi, silahkan hubungi IT.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                    })
+                }
+            }
+        });
+
+    });
 </script>
 @endpush

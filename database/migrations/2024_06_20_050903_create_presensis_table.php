@@ -15,13 +15,14 @@ return new class extends Migration
     {
         Schema::create('presensi', function (Blueprint $table) {
             $table->id();
-            $table->string('nik')->unique();
-            $table->string('tanggal_presensi');
-            $table->time('jam_masuk');
-            $table->time('jam_keluar');
-            $table->string('foto_masuk');
-            $table->string('foto_keluar');
-            $table->text('location');
+            $table->string('nik')->unique()->nullable();
+            $table->string('tanggal_presensi')->nullable();
+            $table->time('jam_masuk')->nullable();
+            $table->time('jam_keluar')->nullable();
+            $table->string('foto_masuk')->nullable();
+            $table->string('foto_keluar')->nullable();
+            $table->text('lokasi_masuk')->nullable();
+            $table->text('lokasi_keluar')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('presensis');
+        Schema::dropIfExists('presensi');
     }
 };
