@@ -48,10 +48,10 @@
 </div>
 <div class="row">
     <div class="col">
-        @if ($cek > 0)
+        @if ($cek_masuk > 0 && empty($foto_keluar))
             <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
-        @else
-        <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>
+        @elseif ($cek_masuk == 0 || $cek_masuk > 0 && !empty($foto_keluar))
+            <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>
         @endif
     </div>
 </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\presensi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,8 +15,10 @@ class PresensiController extends Controller
         // cek apakah sudah absen
         $hari_ini = date("Y-m-d");
         $nik = Auth::guard('karyawan')->user()->nik;
-        $cek = DB::table('presensi')->where('tanggal_presensi', $hari_ini)->where('nik', $nik)->count();
-        return view('presensi.create_presensi', compact('cek'));
+        $cek_masuk = DB::table('presensi')->where('tanggal_presensi', $hari_ini)->where('nik', $nik)->count();
+        $cek_keluar = DB::table('presensi')->where('tanggal_presensi', $hari_ini)->where('nik', $nik)->whereNotNull('foto_keluar')->count();
+        $foto_keluar = DB::table('presensi')->where('nik', $nik)->where('tanggal_presensi', $hari_ini)->whereNotNull('foto_keluar')->first();
+        return view('presensi.create_presensi', compact('cek_masuk', 'cek_keluar', 'foto_keluar'));
     }
 
     public function PresensiStore(Request $request)
