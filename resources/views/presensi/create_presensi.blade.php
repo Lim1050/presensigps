@@ -61,10 +61,24 @@
     </div>
 </div>
 
+<audio id="notif_in">
+    <source src="{{ asset('assets/sound/notif_in.mp3') }}" type="audio/mpeg">
+</audio>
+<audio id="notif_out">
+    <source src="{{ asset('assets/sound/notif_out.mp3') }}" type="audio/mpeg">
+</audio>
+<audio id="notif_rad">
+    <source src="{{ asset('assets/sound/notif_rad.mp3') }}" type="audio/mpeg">
+</audio>
+
 @endsection
 
 @push('myscipt')
 <script>
+    // inisiasi audio
+    var notif_in = document.getElementById('notif_in');
+    var notif_out = document.getElementById('notif_out');
+    var notif_rad = document.getElementById('notif_rad');
     // setting webcam
     Webcam.set({
         height: 480,
@@ -90,11 +104,11 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
         var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
-        var circle = L.circle([position.coords.latitude, position.coords.longitude], {
+        var circle = L.circle([-6.230492103607936, 107.00292558836199], {
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.5,
-            radius: 40
+            radius: 50
         }).addTo(map);
     }
 
@@ -122,16 +136,24 @@
             success:function(respond) {
                 var status = respond.split("|");
                 if(status[0] == "success"){
+                    if (status[2] == "in") {
+                        notif_in.play();
+                    } else {
+                        notif_out.play();
+                    }
                     Swal.fire({
                     title: 'Success!',
                     text: status[1],
                     icon: 'success',
                     })
-                    setTimeout("location.href='/dashboard'", 2000)
+                    setTimeout("location.href='/dashboard'", 3000)
                 }else{
+                    if (status[2] == "rad") {
+                        notif_rad.play();
+                    }
                     Swal.fire({
                     title: 'Failed!',
-                    text: 'Gagal melakukan Absensi, silahkan hubungi IT.',
+                    text: status[1],
                     icon: 'error',
                     confirmButtonText: 'Ok'
                     })
