@@ -26,7 +26,7 @@
         @endif
     </div>
 </div>
-<form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" >
+<form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" style="min-height: 1000px">
     @csrf
     <div class="col">
         <div class="form-group boxed">
