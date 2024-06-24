@@ -1,0 +1,84 @@
+@extends('layouts.master')
+@section('header')
+{{-- App Header --}}
+<div class="appHeader bg-primary text-light">
+    <div class="left">
+        <a href="{{ route('dashboard') }}" class="headerButton goBack">
+            <ion-icon name="chevron-back-outline"></ion-icon>
+        </a>
+    </div>
+    <div class="pageTitle">Profil</div>
+    <div class="right"></div>
+</div>
+@endsection
+
+@section('content')
+<div class="row">
+    <div class="col" style="margin-top: 4rem">
+        @php
+            $messagesuccess = Session::get('success');
+            $messageerror = Session::get('error');
+        @endphp
+        @if (Session::get('success'))
+            <div class="alert alert-success">{{ $messagesuccess }}</div>
+        @elseif (Session::get('error'))
+            <div class="alert alert-error">{{ $messageerror }}</div>
+        @endif
+    </div>
+</div>
+<form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" >
+    @csrf
+    <div class="col">
+        <div class="form-group boxed">
+            <div class="input-wrapper">
+                <label for="nik">NIK</label>
+                <input type="text" class="form-control" value="{{ $karyawan->nik }}" name="nik" placeholder="NIK" autocomplete="off" disabled>
+            </div>
+        </div>
+        <div class="form-group boxed">
+            <div class="input-wrapper">
+                <label for="nama_lengkap">Nama Lengkap</label>
+                <input type="text" class="form-control" value="{{ $karyawan->nama_lengkap }}" name="nama_lengkap" placeholder="Nama Lengkap" autocomplete="off">
+            </div>
+        </div>
+        <div class="form-group boxed">
+            <div class="input-wrapper">
+                <label for="jabatan">Jabatan</label>
+                <input type="text" class="form-control" value="{{ $karyawan->jabatan }}" name="jabatan" placeholder="Jabatan" autocomplete="off">
+            </div>
+        </div>
+        <div class="form-group boxed">
+            <div class="input-wrapper">
+                <label for="no_wa">Nomor HP</label>
+                <input type="text" class="form-control" value="{{ $karyawan->no_wa }}" name="no_wa" placeholder="No. WA" autocomplete="off">
+            </div>
+        </div>
+        <div class="form-group boxed">
+            <div class="input-wrapper">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" placeholder="Password" autocomplete="off">
+            </div>
+        </div>
+        <label for="foto">Foto</label>
+        <div class="custom-file-upload" id="fileUpload1">
+            <input type="file" name="foto" id="fileuploadInput" accept=".png, .jpg, .jpeg">
+            <label for="fileuploadInput">
+                <span>
+                    <strong>
+                        <ion-icon name="cloud-upload-outline" role="img" class="md hydrated" aria-label="cloud upload outline"></ion-icon>
+                        <i>Tap to Upload</i>
+                    </strong>
+                </span>
+            </label>
+        </div>
+        <div class="form-group boxed">
+            <div class="input-wrapper">
+                <button type="submit" class="btn btn-primary btn-block">
+                    <ion-icon name="refresh-outline"></ion-icon>
+                    Update
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+@endsection
