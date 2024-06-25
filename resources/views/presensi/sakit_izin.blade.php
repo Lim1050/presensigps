@@ -26,6 +26,25 @@
         @endif
     </div>
 </div>
+<div class="row">
+    <div class="col">
+        @foreach ($dataIzin as $izin)
+        <ul class="listview image-listview">
+            <li>
+                <div class="item">
+                    <div class="in">
+                        <div>
+                            <b>{{ date("d-m-Y", strtotime($izin->tanggal_izin)) }} ({{ $izin->status == "sakit" ? "Sakit" : "Izin" }})</b>  <br>
+                            <small class="text-muted">{{ $izin->keterangan}}</small>
+                        </div>
+                        <span class="badge {{ $izin->status_approved == "1" ? "badge-success" : ($izin->status_approved == "2" ? "badge-danger" : "badge-warning")}}">{{ $izin->status_approved == "1" ? "Aproved" : ($izin->status_approved == "2" ? "Rejected" : "Waiting") }}</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        @endforeach
+    </div>
+</div>
 <div class="fab-button bottom-right" style="margin-bottom: 70px">
     <a href="{{ route('presensi.create.sakit-izin') }}" class="fab bg-danger"><ion-icon name="add-outline"></ion-icon></a>
 </div>
