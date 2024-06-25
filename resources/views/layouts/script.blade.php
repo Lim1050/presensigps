@@ -20,6 +20,9 @@
 
     {{-- sweet alert --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {{-- Datepicker --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <script>
         am4core.ready(function () {
 
@@ -70,4 +73,4 @@
     </script>
 
     {{-- script webcam --}}
-    @stack('myscipt')
+    @stack('myscript')

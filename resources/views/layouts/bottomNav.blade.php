@@ -5,25 +5,23 @@
             <strong>Home</strong>
         </div>
     </a>
-    <a href="#" class="item">
+    <a href="{{ route('presensi.history') }}" class="item {{ request()->is('presensi/history') ? 'active' : '' }}" >
         <div class="col">
-            <ion-icon name="calendar-outline" role="img" class="md hydrated"
-                aria-label="calendar outline"></ion-icon>
-            <strong>Calendar</strong>
+            <ion-icon name="calendar-outline"></ion-icon>
+            <strong>History</strong>
         </div>
     </a>
     <a href="{{ route('presensi.create') }}" class="item">
         <div class="col">
-            <div class="action-button large">
-                <ion-icon name="camera" role="img" class="md hydrated" aria-label="add outline"></ion-icon>
+            <div class="action-button large bg-danger">
+                <ion-icon name="camera"></ion-icon>
             </div>
         </div>
     </a>
-    <a href="#" class="item">
+    <a href="{{ route('presensi.sakit-izin') }}" class="item {{ request()->is('presensi/sakit-izin') ? 'active' : '' }}" >
         <div class="col">
-            <ion-icon name="document-text-outline" role="img" class="md hydrated"
-                aria-label="document text outline"></ion-icon>
-            <strong>Docs</strong>
+            <ion-icon name="reader-outline"></ion-icon>
+            <strong>Sakit/Izin</strong>
         </div>
     </a>
     <a href="{{ route('profile') }}" class="item {{ request()->is('profile') ? 'active' : '' }}">

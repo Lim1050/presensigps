@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('content')
-<div class="section" id="user-section">
+<div class="section gradasired" id="user-section">
     <div id="user-detail">
         {{-- @php
             $message = Session::get('message');
@@ -273,7 +273,7 @@
                             <div class="in">
                                 <div>{{ date("d-m-Y", strtotime($bulan_ini->tanggal_presensi)) }}</div>
                                 <div>
-                                    <span class="badge badge-success">{{ $bulan_ini->jam_masuk }}</span>
+                                    <span class="badge {{ $bulan_ini->jam_masuk < "09:00" ? "badge-success" : "badge-warning"}}">{{ $bulan_ini->jam_masuk < "09:00" ? $bulan_ini->jam_masuk : "Telat " . $bulan_ini->jam_masuk}}</span>
                                     <span class="badge badge-danger">{{ $presensi_hari_ini != null && $bulan_ini->jam_keluar != null ? $bulan_ini->jam_keluar : 'Belum Absen'}}</span>
                                 </div>
                             </div>
@@ -295,11 +295,7 @@
                                     <br>
                                     <small class="text-muted">{{ $leaderboard->jabatan }}</small>
                                 </div>
-                                @if ($leaderboard->jam_masuk < "09:00")
-                                    <span class="badge bg-success">{{ $leaderboard->jam_masuk}}
-                                @else
-                                    <span class="badge bg-danger">{{ $leaderboard->jam_masuk}}  <small>Telat</small></span>
-                                @endif
+                                <span class="badge {{ $bulan_ini->jam_masuk < "09:00" ? "badge-success" : "badge-warning"}}">{{ $bulan_ini->jam_masuk < "09:00" ? $bulan_ini->jam_masuk : "Telat " . $bulan_ini->jam_masuk}}</span>
 
                             </div>
                         </div>

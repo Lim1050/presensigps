@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -60,6 +61,7 @@ class ProfileController extends Controller
             'jabatan' => $jabatan,
             'no_wa' => $no_wa,
             'foto' => $foto,
+            'updated_at' => Carbon::now()
             ];
         } else {
             $data = [
@@ -68,6 +70,7 @@ class ProfileController extends Controller
             'no_wa' => $no_wa,
             'foto' => $foto,
             'password' => $password,
+            'updated_at' => Carbon::now()
             ];
         }
 

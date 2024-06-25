@@ -73,7 +73,7 @@
 
 @endsection
 
-@push('myscipt')
+@push('myscript')
 <script>
     // inisiasi audio
     var notif_in = document.getElementById('notif_in');

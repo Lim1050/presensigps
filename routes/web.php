@@ -37,6 +37,17 @@ Route::middleware(['auth:karyawan'])->group(function () {
     Route::get('/presensi/create', [PresensiController::class, 'PresensiCreate'])->name('presensi.create');
     // store presensi
     Route::post('/presensi/store', [PresensiController::class, 'PresensiStore'])->name('presensi.store');
+    // history presensi
+    Route::get('/presensi/history', [PresensiController::class, 'PresensiHistory'])->name('presensi.history');
+    // gethistory presensi
+    Route::post('/gethistory', [PresensiController::class, 'GetHistory']);
+    // sakit/izin presensi
+    Route::get('/presensi/sakit-izin', [PresensiController::class, 'SakitIzin'])->name('presensi.sakit-izin');
+    // create sakit/izin presensi
+    Route::get('/presensi/create/sakit-izin', [PresensiController::class, 'CreateSakitIzin'])->name('presensi.create.sakit-izin');
+    // store sakit/izin presensi
+    Route::post('/presensi/store/sakit-izin', [PresensiController::class, 'StoreSakitIzin'])->name('presensi.store.sakit-izin');
+
 
     // profile
     Route::get('/profile', [ProfileController::class, 'Profile'])->name('profile');

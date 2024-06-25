@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\presensi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -68,7 +69,8 @@ class PresensiController extends Controller
                 'tanggal_presensi' => $tgl_presensi,
                 'jam_keluar' => $jam_presensi,
                 'foto_keluar' => $file,
-                'lokasi_keluar' => $lokasi
+                'lokasi_keluar' => $lokasi,
+                'updated_at' => Carbon::now()
             ];
             $update = DB::table('presensi')->where('nik', $nik)->update($data_pulang);
             if($update){
@@ -83,7 +85,8 @@ class PresensiController extends Controller
                 'tanggal_presensi' => $tgl_presensi,
                 'jam_masuk' => $jam_presensi,
                 'foto_masuk' => $file,
-                'lokasi_masuk' => $lokasi
+                'lokasi_masuk' => $lokasi,
+                'created_at' => Carbon::now()
             ];
             $save = DB::table('presensi')->insert($data_masuk);
             if($save){
@@ -110,5 +113,78 @@ class PresensiController extends Controller
         $kilometers = $miles * 1.609344;
         $meters = $kilometers * 1000;
         return compact('meters');
+    }
+
+    public function PresensiHistory()
+    {
+        // $monthNumber = date("m");
+
+        $months = [
+            '',
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember',
+        ];
+
+        // $monthName = $months[$monthNumber];
+        return view('presensi.history', compact('months'));
+    }
+
+    public function GetHistory(Request $request)
+    {
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+        $nik = Auth::guard('karyawan')->user()->nik;
+
+        // tampilkan data presensi sesuai bulan dan tahun
+        $history = DB::table('presensi')
+            ->whereRaw('MONTH(tanggal_presensi)="' . $bulan . '"')
+            ->whereRaw('YEAR(tanggal_presensi)="' . $tahun . '"')
+            ->where('nik', $nik)
+            ->orderBy('tanggal_presensi')
+            ->get();
+
+        return view('presensi.gethistory', compact('history'));
+    }
+
+    public function SakitIzin()
+    {
+        return view('presensi.sakit_izin');
+    }
+    public function CreateSakitIzin()
+    {
+        return view('presensi.create_sakit_izin');
+    }
+    public function StoreSakitIzin(Request $request)
+    {
+        $nik = Auth::guard('karyawan')->user()->nik;
+        $tanggal_izin = $request->tanggal_izin;
+        $status = $request->status;
+        $keterangan = $request->keterangan;
+
+        $data = [
+            'nik' => $nik,
+            'tanggal_izin' => $tanggal_izin,
+            'status' => $status,
+            'keterangan' => $keterangan,
+            'created_at' => Carbon::now()
+        ];
+
+        $save = DB::table('pengajuan_sakit_izin')->insert($data);
+
+        if($save){
+            return redirect('/presensi/sakit-izin')->with(['success' => 'Data berhasil disimpan!']);
+        } else {
+            return redirect()->back()->with(['error' => 'Data gagal disimpan!']);
+        }
     }
 }
