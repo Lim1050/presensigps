@@ -28,6 +28,14 @@ Route::middleware(['guest:karyawan'])->group(function () {
     Route::post('/login', [AuthController::class, 'Login'])->name('login');
 });
 
+// auth guest middleware
+Route::middleware(['guest:user'])->group(function () {
+    // login page
+    Route::get('/admin/login', function () {
+        return view('auth.admin_login');
+    })->name('admin.login');
+});
+
 // auth karyawan middleware
 Route::middleware(['auth:karyawan'])->group(function () {
     // dashboard page
@@ -57,3 +65,5 @@ Route::middleware(['auth:karyawan'])->group(function () {
     // logout
     Route::get('/logout', [AuthController::class, 'Logout'])->name('logout');
 });
+
+Route::get('/admin/dashboard', [DashboardController::class, 'AdminDashboard'])->name('admin.dashboard');

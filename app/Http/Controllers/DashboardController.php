@@ -60,6 +60,20 @@ class DashboardController extends Controller
         // Ambil nama bulan dari array
         $monthName = $months[$bulan_ini];
 
-        return view('dashboard.dashboard', compact('rekap_presensi', 'monthName', 'tahun_ini', 'nama','jabatan','presensi_hari_ini', 'history_bulan_ini', 'leaderboards'));
+        // rekap izin sakit
+        $rekap_sakit_izin = DB::table('pengajuan_sakit_izin')
+            ->selectRaw('SUM(IF(status="izin",1,0)) as jumlah_izin, SUM(IF(status="sakit",1,0)) as jumlah_sakit')
+            ->where('nik', $nik)
+            ->whereRaw('MONTH(tanggal_izin)="' . $bulan_ini . '"')
+            ->whereRaw('YEAR(tanggal_izin)="' . $tahun_ini . '"')
+            ->where('status_approved', 1)
+            ->first();
+
+        return view('dashboard.dashboard', compact('rekap_presensi', 'monthName', 'tahun_ini', 'nama','jabatan','presensi_hari_ini', 'history_bulan_ini', 'leaderboards', 'rekap_sakit_izin'));
+    }
+
+    public function AdminDashboard()
+    {
+        return view('dashboard.admin_dashboard');
     }
 }

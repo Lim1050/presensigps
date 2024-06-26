@@ -1,3 +1,8 @@
+<style>
+    .appBottomMenu .item.active ion-icon, .appBottomMenu .item.active strong {
+    color: #ca364b !important;
+}
+</style>
 <div class="appBottomMenu">
     <a href="{{ route('dashboard') }}" class="item {{ request()->is('dashboard') ? 'active' : '' }}">
         <div class="col">

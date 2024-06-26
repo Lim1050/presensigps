@@ -35,7 +35,7 @@
             <div class="list-menu">
                 <div class="item-menu text-center">
                     <div class="menu-icon">
-                        <a href="" class="green" style="font-size: 40px;">
+                        <a href="{{ route('profile') }}" class="green" style="font-size: 40px;">
                             <ion-icon name="person-sharp"></ion-icon>
                         </a>
                     </div>
@@ -45,22 +45,22 @@
                 </div>
                 <div class="item-menu text-center">
                     <div class="menu-icon">
-                        <a href="" class="danger" style="font-size: 40px;">
+                        <a href="{{ route('presensi.history') }}" class="danger" style="font-size: 40px;">
                             <ion-icon name="calendar-number"></ion-icon>
                         </a>
                     </div>
                     <div class="menu-name">
-                        <span class="text-center">Cuti</span>
+                        <span class="text-center">History</span>
                     </div>
                 </div>
                 <div class="item-menu text-center">
                     <div class="menu-icon">
-                        <a href="" class="warning" style="font-size: 40px;">
+                        <a href="{{ route('presensi.sakit-izin') }}" class="warning" style="font-size: 40px;">
                             <ion-icon name="document-text"></ion-icon>
                         </a>
                     </div>
                     <div class="menu-name">
-                        <span class="text-center">Histori</span>
+                        <span class="text-center">Sakit/Izin</span>
                     </div>
                 </div>
                 <div class="item-menu text-center">
@@ -212,7 +212,7 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
-                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">0</span>
+                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_sakit_izin->jumlah_sakit }}</span>
                         <ion-icon name="medkit-outline" style="font-size: 1.6rem" class="text-success mb-1"></ion-icon>
                         <br>
                         <span style="font-size: 0.8rem; font-weight:500" class="text-success">Sakit</span>
@@ -222,7 +222,7 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
-                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">0</span>
+                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_sakit_izin->jumlah_izin }}</span>
                         <ion-icon name="information-outline" style="font-size: 1.6rem" class="text-warning mb-1"></ion-icon>
                         <br>
                         <span style="font-size: 0.8rem; font-weight:500" class="text-warning">Izin</span>
@@ -295,7 +295,7 @@
                                     <br>
                                     <small class="text-muted">{{ $leaderboard->jabatan }}</small>
                                 </div>
-                                <span class="badge {{ $bulan_ini->jam_masuk < "09:00" ? "badge-success" : "badge-warning"}}">{{ $bulan_ini->jam_masuk < "09:00" ? $bulan_ini->jam_masuk : "Telat " . $bulan_ini->jam_masuk}}</span>
+                                <span class="badge {{ $leaderboard->jam_masuk < "09:00" ? "badge-success" : "badge-warning"}}">{{ $leaderboard->jam_masuk < "09:00" ? $leaderboard->jam_masuk : "Telat " . $leaderboard->jam_masuk}}</span>
 
                             </div>
                         </div>
