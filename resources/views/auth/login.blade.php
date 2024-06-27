@@ -49,7 +49,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('login') }}" method="POST">
+                <form action="{{ route('loginproses') }}" method="POST" autocomplete="off">
                     @csrf
                     <div class="form-group boxed">
                         <div class="input-wrapper">

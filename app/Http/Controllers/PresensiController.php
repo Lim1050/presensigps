@@ -66,13 +66,12 @@ class PresensiController extends Controller
         } else {
             if ($cek > 0 ) {
             $data_pulang = [
-                'tanggal_presensi' => $tgl_presensi,
                 'jam_keluar' => $jam_presensi,
                 'foto_keluar' => $file,
                 'lokasi_keluar' => $lokasi,
                 'updated_at' => Carbon::now()
             ];
-            $update = DB::table('presensi')->where('nik', $nik)->update($data_pulang);
+            $update = DB::table('presensi')->where('nik', $nik)->where('tanggal_presensi', $tgl_presensi)->update($data_pulang);
             if($update){
                 echo "success|Terima kasih, Hati - hati dijalan!|out";
                 Storage::put($file, $image_base64);

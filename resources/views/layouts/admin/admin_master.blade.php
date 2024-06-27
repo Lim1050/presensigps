@@ -20,6 +20,9 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('assets/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.2/font/bootstrap-icons.min.css">
+
 </head>
 
 <body id="page-top">
@@ -42,7 +45,10 @@
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
                 @yield('content')
+                </div>
                 <!-- /.container-fluid -->
 
             </div>

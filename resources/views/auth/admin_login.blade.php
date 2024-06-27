@@ -49,11 +49,11 @@
                     </div>
                 @endif
 
-                <form action="" method="">
+                <form action="{{ route('admin.proses.login') }}" method="POST" autocomplete="off">
                     @csrf
                     <div class="form-group boxed">
                         <div class="input-wrapper">
-                            <input type="text" name="nik" class="form-control" id="nik" placeholder="NIK">
+                            <input type="email" name="email" class="form-control" id="email" placeholder="email">
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>

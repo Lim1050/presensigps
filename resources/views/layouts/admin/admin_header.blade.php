@@ -179,7 +179,14 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                <div>
+                    <div class="text-truncate text-right">
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small ">{{ Auth::guard('user')->user()->name }}</span>
+                    </div>
+                    <div class="small text-gray-500 text-right">
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small ">{{ Auth::guard('user')->user()->email }}</span>
+                    </div>
+                </div>
                 <img class="img-profile rounded-circle"
                     src="{{ asset('assets/img/undraw_profile.svg')}}">
             </a>

@@ -34,7 +34,9 @@
 
     <!-- App Capsule -->
     <div id="appCapsule">
+
         @yield('content')
+
     </div>
     <!-- * App Capsule -->
 

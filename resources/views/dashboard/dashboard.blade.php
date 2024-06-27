@@ -19,7 +19,7 @@
                 @endphp
                 <img src="{{ url($path) }}" alt="avatar" class="imaged w64 rounded" style="height: 60px">
             @else
-                <img src="assets/img/sample/avatar/avatar1.jpg" alt="avatar" class="imaged w64 rounded">
+                <img src="{{ asset('assets/img/sample/avatar/avatar1.jpg') }}" alt="avatar" class="imaged w64 rounded">
             @endif
         </div>
         <div id="user-info">
@@ -274,7 +274,7 @@
                                 <div>{{ date("d-m-Y", strtotime($bulan_ini->tanggal_presensi)) }}</div>
                                 <div>
                                     <span class="badge {{ $bulan_ini->jam_masuk < "09:00" ? "badge-success" : "badge-warning"}}">{{ $bulan_ini->jam_masuk < "09:00" ? $bulan_ini->jam_masuk : "Telat " . $bulan_ini->jam_masuk}}</span>
-                                    <span class="badge badge-danger">{{ $presensi_hari_ini != null && $bulan_ini->jam_keluar != null ? $bulan_ini->jam_keluar : 'Belum Absen'}}</span>
+                                    <span class="badge badge-danger">{{ $bulan_ini->jam_keluar != null ? $bulan_ini->jam_keluar : 'Belum Absen'}}</span>
                                 </div>
                             </div>
                         </div>

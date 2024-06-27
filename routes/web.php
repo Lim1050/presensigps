@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -21,11 +22,11 @@ use Illuminate\Support\Facades\Route;
 // auth guest middleware
 Route::middleware(['guest:karyawan'])->group(function () {
     // login page
-    Route::get('/', function () {
+    Route::get('/login', function () {
         return view('auth.login');
-    // login proses
     })->name('login.page');
-    Route::post('/login', [AuthController::class, 'Login'])->name('login');
+    // login proses
+    Route::post('/loginproses', [AuthController::class, 'LoginProses'])->name('loginproses');
 });
 
 // auth guest middleware
@@ -34,6 +35,19 @@ Route::middleware(['guest:user'])->group(function () {
     Route::get('/admin/login', function () {
         return view('auth.admin_login');
     })->name('admin.login');
+    // login proses
+    Route::post('/admin/proses/login', [AuthController::class, 'AdminProsesLogin'])->name('admin.proses.login');
+});
+
+Route::middleware(['auth:user'])->group(function () {
+    // admin dashboard
+    Route::get('/admin/dashboard', [DashboardController::class, 'AdminDashboard'])->name('admin.dashboard');
+
+    // Karyawan Index
+    Route::get('/karyawan', [KaryawanController::class, 'KaryawanIndex'])->name('karyawan');
+
+    // Admin logout
+    Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
 });
 
 // auth karyawan middleware
@@ -66,4 +80,4 @@ Route::middleware(['auth:karyawan'])->group(function () {
     Route::get('/logout', [AuthController::class, 'Logout'])->name('logout');
 });
 
-Route::get('/admin/dashboard', [DashboardController::class, 'AdminDashboard'])->name('admin.dashboard');
+
