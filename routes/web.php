@@ -45,6 +45,12 @@ Route::middleware(['auth:user'])->group(function () {
 
     // Karyawan Index
     Route::get('/karyawan', [KaryawanController::class, 'KaryawanIndex'])->name('karyawan');
+    // Karyawan Store
+    Route::post('/karyawan/store', [KaryawanController::class, 'KaryawanStore'])->name('karyawan.store');
+    // Karyawan edit
+    Route::post('/karyawan/edit', [KaryawanController::class, 'KaryawanEdit'])->name('karyawan.edit');
+    // Karyawan update
+    Route::post('/karyawan/update/{nik}', [KaryawanController::class, 'KaryawanUpdate'])->name('karyawan.update.{nik}');
 
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
