@@ -92,6 +92,7 @@ class KaryawanController extends Controller
         $kode_departemen = $request->kode_departemen;
 
         // get data karyawan dari table
+        $karyawan
         // cek apakah ada foto dari form
         if($request->hasFile('foto')){
             $foto = $nik . "_" . time() . "." . $request->file('foto')->getClientOriginalExtension();
