@@ -48,9 +48,11 @@ Route::middleware(['auth:user'])->group(function () {
     // Karyawan Store
     Route::post('/karyawan/store', [KaryawanController::class, 'KaryawanStore'])->name('karyawan.store');
     // Karyawan edit
-    Route::post('/karyawan/edit', [KaryawanController::class, 'KaryawanEdit'])->name('karyawan.edit');
+    Route::get('/karyawan/edit/{nik}', [KaryawanController::class, 'KaryawanEdit'])->name('karyawan.edit');
     // Karyawan update
-    Route::post('/karyawan/update/{nik}', [KaryawanController::class, 'KaryawanUpdate'])->name('karyawan.update.{nik}');
+    Route::post('/karyawan/update', [KaryawanController::class, 'KaryawanUpdate'])->name('karyawan.update');
+    // Karyawan delete
+    Route::get('/karyawan/delete/{nik}', [KaryawanController::class, 'KaryawanDelete'])->name('karyawan.delete');
 
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');

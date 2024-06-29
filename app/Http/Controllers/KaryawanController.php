@@ -68,14 +68,14 @@ class KaryawanController extends Controller
                 $folderPath = "public/uploads/karyawan/";
                 $request->file('foto')->storeAs($folderPath, $foto);
             }
-            return redirect()->back()->with(['success' => 'Data Berhasil Disimpan!']);
+            return redirect('karyawan')->with(['success' => 'Data Berhasil Disimpan!']);
             }
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
         }
     }
 
-    public function KaryawanEdit(Request $request)
+    public function KaryawanEdit(Request $request, $nik)
     {
         $nik = $request->nik;
         $departemen = DB::table('departemen')->get();
@@ -83,46 +83,76 @@ class KaryawanController extends Controller
         return view('karyawan.karyawan_edit', compact('nik', 'departemen', 'karyawan'));
     }
 
-    public function KaryawanUpdate(Request $request, $nik)
+    public function KaryawanUpdate(Request $request)
     {
         $nik = $request->nik;
         $nama_lengkap = $request->nama_lengkap;
         $no_wa = $request->no_wa;
         $jabatan = $request->jabatan;
         $kode_departemen = $request->kode_departemen;
+        $old_foto = $request->old_foto;
 
-        // get data karyawan dari table
-        $karyawan
         // cek apakah ada foto dari form
         if($request->hasFile('foto')){
             $foto = $nik . "_" . time() . "." . $request->file('foto')->getClientOriginalExtension();
         } else {
             // Jika tidak ada file foto yang diunggah, gunakan foto sebelumnya
-            $foto = null;
+            $foto = $old_foto;
         }
 
         try {
             $data = [
-                'nik' => $nik,
                 'nama_lengkap' => $nama_lengkap,
                 'no_wa' => $no_wa,
-                'password' => Hash::make('password123'),
+                // 'password' => Hash::make('password123'),
                 'jabatan' => $jabatan,
                 'kode_departemen' => $kode_departemen,
                 'foto' => $foto,
-                'created_at' => Carbon::now()
+                'updated_at' => Carbon::now()
             ];
-            $save = DB::table('karyawan')->insert($data);
-            if($save){
+            $update = DB::table('karyawan')->where('nik',$nik)->update($data);
+            // dd($update);
+            if($update){
                 // save foto ke storage
-            if($request->hasFile('foto')){
-                $folderPath = "public/uploads/karyawan/";
-                $request->file('foto')->storeAs($folderPath, $foto);
-            }
-            return redirect()->back()->with(['success' => 'Data Berhasil Disimpan!']);
+                if($request->hasFile('foto')){
+                    $folderPath = "public/uploads/karyawan/";
+                    $request->file('foto')->storeAs($folderPath, $foto);
+
+                    // Hapus foto lama jika berbeda dengan foto baru
+                    if ($old_foto !== $foto) {
+                        Storage::delete($folderPath . $old_foto);
+                    }
+                }
+            return redirect()->route('karyawan')->with(['success' => 'Data Berhasil Diupdate!']);
             }
         } catch (\Exception $e) {
-            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
+            return redirect()->route('karyawan')->with(['error' => 'Data Gagal Diupdate!']);
+        }
+    }
+
+    public function KaryawanDelete($nik)
+    {
+        // Ambil data karyawan berdasarkan NIK
+        $karyawan = DB::table('karyawan')->where('nik', $nik)->first();
+
+        // Periksa apakah data karyawan ada
+        if ($karyawan) {
+            // Hapus foto dari storage
+            $folderPath = "public/uploads/karyawan/";
+            if ($karyawan->foto && Storage::exists($folderPath . $karyawan->foto)) {
+                Storage::delete($folderPath . $karyawan->foto);
+            }
+
+            // Hapus data karyawan dari database
+            $delete = DB::table('karyawan')->where('nik', $nik)->delete();
+
+            if ($delete) {
+                return redirect()->back()->with(['success' => 'Data Berhasil Dihapus!']);
+            } else {
+                return redirect()->back()->with(['warning' => 'Data Gagal Dihapus!']);
+            }
+        } else {
+            return redirect()->back()->with(['warning' => 'Data Karyawan Tidak Ditemukan!']);
         }
     }
 }

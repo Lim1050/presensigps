@@ -123,8 +123,11 @@
                                 <td>{{ $item->jabatan }}</td>
                                 <td>{{ $item->nama_departemen }}</td>
                                 <td>{{ $item->no_wa }}</td>
-                                <td><a href="#" class="btn btn-warning edit" data-toggle="modal" data-target="#modalEditKaryawan" nik="{{ $item->nik }}"><i class="bi bi-pencil-square"></i> Edit</a>
-                                    <a href="#" class="btn btn-danger"><i class="bi bi-trash3"></i> Delete</a>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{{ route('karyawan.edit', $item->nik) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
+                                        <a href="{{ route('karyawan.delete', $item->nik) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach
@@ -206,7 +209,7 @@
 </div>
 
 <!-- Modal Edit Karyawan -->
-<div class="modal fade" id="modalEditKaryawan" tabindex="-1" aria-labelledby="modalEditKaryawanLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="modalEditKaryawan" tabindex="-1" aria-labelledby="modalEditKaryawanLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -220,32 +223,32 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 @push('myscript')
 <script>
     // modal Edit
-    $(".edit").click(function(){
-        var nik = $(this).attr('nik');
-        $.ajax({
-            type: 'POST',
-            url:'/karyawan/edit',
-            cache:false,
-            data:{
-                _token:"{{ csrf_token() }}",
-                nik: nik,
-            },
-            success:function(respond){
-                $("#loadEditForm").html(respond);
-            },
-            error: function (xhr, status, error) {
-                        console.error("Error: " + error);
-                        console.error("Status: " + status);
-                        console.error("Response: " + xhr.responseText);
-                    }
-        });
-        $("#modalEditKaryawan").modal("show");
-    })
+    // $(".edit").click(function(){
+    //     var nik = $(this).attr('nik');
+    //     $.ajax({
+    //         type: 'POST',
+    //         url:'/karyawan/edit',
+    //         cache:false,
+    //         data:{
+    //             _token:"{{ csrf_token() }}",
+    //             nik: nik,
+    //         },
+    //         success:function(respond){
+    //             $("#loadEditForm").html(respond);
+    //         },
+    //         error: function (xhr, status, error) {
+    //                     console.error("Error: " + error);
+    //                     console.error("Status: " + status);
+    //                     console.error("Response: " + xhr.responseText);
+    //                 }
+    //     });
+    //     $("#modalEditKaryawan").modal("show");
+    // })
 
     // preview image
     $(document).ready(function () {
@@ -262,6 +265,29 @@
                 }
             });
         });
+
+    $(".delete-confirm").click(function (e){
+        e.preventDefault();
+        var url = $(this).attr('href');
+        Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Data Ini Akan Dihapus!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, hapus!"
+        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+            Swal.fire({
+            title: "Terhapus!",
+            text: "Data Sudah dihapus.",
+            icon: "success"
+            });
+        }
+        });
+    });
 
     // Validasi form
         $("#formKaryawan").submit(function(){
