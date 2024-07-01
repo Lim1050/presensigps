@@ -83,7 +83,8 @@ class DashboardController extends Controller
                             ->selectRaw('SUM(IF(status = "sakit",1,0)) as jumlah_sakit, SUM(IF(status = "izin",1,0)) as jumlah_izin')
                             ->where('tanggal_izin', $hari_ini)
                             ->first();
+        $jumlah_karyawan = DB::table('karyawan')->count('nik');
 
-        return view('dashboard.admin_dashboard', compact('rekap_presensi', 'rekap_sakit_izin'));
+        return view('dashboard.admin_dashboard', compact('rekap_presensi', 'rekap_sakit_izin', 'jumlah_karyawan'));
     }
 }

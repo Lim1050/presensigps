@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepartemenController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
@@ -44,15 +45,31 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'AdminDashboard'])->name('admin.dashboard');
 
     // Karyawan Index
-    Route::get('/karyawan', [KaryawanController::class, 'KaryawanIndex'])->name('karyawan');
+    Route::get('/admin/karyawan', [KaryawanController::class, 'KaryawanIndex'])->name('admin.karyawan');
     // Karyawan Store
-    Route::post('/karyawan/store', [KaryawanController::class, 'KaryawanStore'])->name('karyawan.store');
+    Route::post('/admin/karyawan/store', [KaryawanController::class, 'KaryawanStore'])->name('admin.karyawan.store');
     // Karyawan edit
-    Route::get('/karyawan/edit/{nik}', [KaryawanController::class, 'KaryawanEdit'])->name('karyawan.edit');
+    Route::get('/admin/karyawan/edit/{nik}', [KaryawanController::class, 'KaryawanEdit'])->name('admin.karyawan.edit');
     // Karyawan update
-    Route::post('/karyawan/update', [KaryawanController::class, 'KaryawanUpdate'])->name('karyawan.update');
+    Route::post('/admin/karyawan/update', [KaryawanController::class, 'KaryawanUpdate'])->name('admin.karyawan.update');
     // Karyawan delete
-    Route::get('/karyawan/delete/{nik}', [KaryawanController::class, 'KaryawanDelete'])->name('karyawan.delete');
+    Route::get('/admin/karyawan/delete/{nik}', [KaryawanController::class, 'KaryawanDelete'])->name('admin.karyawan.delete');
+
+    // departemen Index
+    Route::get('/admin/departemen', [DepartemenController::class, 'DepartemenIndex'])->name('admin.departemen');
+    // departemen Store
+    Route::post('/admin/departemen/store', [DepartemenController::class, 'DepartemenStore'])->name('admin.departemen.store');
+    // departemen edit
+    Route::get('/admin/departemen/edit/{kode_departemen}', [DepartemenController::class, 'DepartemenEdit'])->name('admin.departemen.edit');
+    // departemen update
+    Route::post('/admin/departemen/update', [DepartemenController::class, 'DepartemenUpdate'])->name('admin.departemen.update');
+    // departemen delete
+    Route::get('/admin/departemen/delete/{nik}', [DepartemenController::class, 'DepartemenDelete'])->name('admin.departemen.delete');
+
+    // monitoring presensi Index
+    Route::get('/admin/monitoring/presensi', [PresensiController::class, 'MonitoringPresensi'])->name('admin.monitoring.presensi');
+    // monitoring getpresensi
+    Route::post('/admin/monitoring/getpresensi', [PresensiController::class, 'MonitoringGetPresensi'])->name('admin.monitoring.getpresensi');
 
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');

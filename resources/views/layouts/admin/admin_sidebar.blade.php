@@ -12,10 +12,16 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item {{ request()->is('admin/dashboard') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
+    </li>
+    <!-- Nav Item - Monitoring Presensi -->
+    <li class="nav-item {{ request()->is('admin/monitoring/presensi') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.monitoring.presensi') }}">
+            <i class="bi bi-display fa-fw "></i>
+            <span>Monitoring Presensi</span></a>
     </li>
 
     <!-- Divider -->
@@ -26,11 +32,17 @@
         Master
     </div>
 
-    <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
-        <a class="nav-link" href="{{ route('karyawan') }}">
+    <!-- Nav Item - Karyawan -->
+    <li class="nav-item {{ request()->is('admin/karyawan') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.karyawan') }}">
             <i class="bi bi-person-vcard fa-fw"></i>
-            <span>Data Karyawan</span></a>
+            <span>Karyawan</span></a>
+    </li>
+    <!-- Nav Item - Departemen -->
+    <li class="nav-item {{ request()->is('admin/departemen') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.departemen') }}">
+            <i class="bi bi-building fa-fw"></i>
+            <span>Departemen</span></a>
     </li>
 
     <!-- Nav Item - Pages Collapse Menu -->

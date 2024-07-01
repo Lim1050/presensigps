@@ -68,7 +68,7 @@ class KaryawanController extends Controller
                 $folderPath = "public/uploads/karyawan/";
                 $request->file('foto')->storeAs($folderPath, $foto);
             }
-            return redirect('karyawan')->with(['success' => 'Data Berhasil Disimpan!']);
+            return redirect()->route('admin.karyawan')->with(['success' => 'Data Berhasil Disimpan!']);
             }
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
@@ -123,10 +123,10 @@ class KaryawanController extends Controller
                         Storage::delete($folderPath . $old_foto);
                     }
                 }
-            return redirect()->route('karyawan')->with(['success' => 'Data Berhasil Diupdate!']);
+            return redirect()->route('admin.karyawan')->with(['success' => 'Data Berhasil Diupdate!']);
             }
         } catch (\Exception $e) {
-            return redirect()->route('karyawan')->with(['error' => 'Data Gagal Diupdate!']);
+            return redirect()->route('admin.karyawan')->with(['error' => 'Data Gagal Diupdate!']);
         }
     }
 

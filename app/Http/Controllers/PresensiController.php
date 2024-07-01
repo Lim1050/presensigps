@@ -191,4 +191,23 @@ class PresensiController extends Controller
             return redirect()->back()->with(['error' => 'Data gagal disimpan!']);
         }
     }
+
+    // Admin Monitoring Presensi
+    public function MonitoringPresensi()
+    {
+        return view('presensi.monitoring_presensi');
+    }
+
+    public function MonitoringGetPresensi(Request $request)
+    {
+        $tanggal_presensi = $request->tanggal_presensi;
+        $presensi = DB::table('presensi')
+            ->select('presensi.*', 'nama_lengkap', 'nama_departemen')
+            ->join('karyawan', 'presensi.nik', '=', 'karyawan.nik')
+            ->join('departemen', 'karyawan.kode_departemen', '=', 'departemen.kode_departemen')
+            ->where('tanggal_presensi', $tanggal_presensi)
+            ->get();
+
+        return view('presensi.monitoring_getpresensi', compact('presensi'));
+    }
 }

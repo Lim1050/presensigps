@@ -57,7 +57,7 @@
         {{-- form cari data karyawan --}}
         <div class="row">
             <div class="col-12">
-                <form action="/karyawan" method="GET">
+                <form action="{{ route('admin.karyawan') }}" method="GET">
                     <div class="row mt-2">
                         <div class="col-6">
                             <div class="form-group">
@@ -123,10 +123,10 @@
                                 <td>{{ $item->jabatan }}</td>
                                 <td>{{ $item->nama_departemen }}</td>
                                 <td>{{ $item->no_wa }}</td>
-                                <td>
+                                <td class="text-center">
                                     <div class="btn-group">
-                                        <a href="{{ route('karyawan.edit', $item->nik) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
-                                        <a href="{{ route('karyawan.delete', $item->nik) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
+                                        <a href="{{ route('admin.karyawan.edit', $item->nik) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
+                                        <a href="{{ route('admin.karyawan.delete', $item->nik) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
                                     </div>
                                 </td>
                             </tr>
@@ -151,7 +151,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('karyawan.store') }}" method="POST" id="formKaryawan" enctype="multipart/form-data">
+                <form action="{{ route('admin.karyawan.store') }}" method="POST" id="formKaryawan" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <div class="icon-placeholder">
