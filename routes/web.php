@@ -66,10 +66,18 @@ Route::middleware(['auth:user'])->group(function () {
     // departemen delete
     Route::get('/admin/departemen/delete/{nik}', [DepartemenController::class, 'DepartemenDelete'])->name('admin.departemen.delete');
 
+    // laporan presensi
+    Route::get('/admin/laporan/presensi', [PresensiController::class, 'LaporanPresensi'])->name('admin.laporan.presensi');
+    // print laporan presensi
+    Route::post('/admin/laporan/print', [PresensiController::class, 'LaporanPrint'])->name('admin.laporan.print');
+
+
     // monitoring presensi Index
     Route::get('/admin/monitoring/presensi', [PresensiController::class, 'MonitoringPresensi'])->name('admin.monitoring.presensi');
     // monitoring getpresensi
     Route::post('/admin/monitoring/getpresensi', [PresensiController::class, 'MonitoringGetPresensi'])->name('admin.monitoring.getpresensi');
+    // tampilkan peta
+    Route::post('/admin/presensi/tampilkanpeta', [PresensiController::class, 'TampilkanPeta'])->name('admin.presensi.tampilkanpeta');
 
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');

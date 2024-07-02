@@ -31,6 +31,7 @@ class PresensiController extends Controller
         $jam = explode(":", $jam_presensi);
         $jam_save = $jam[0] . $jam[1] . $jam[2];
 
+        // nanti disesuaikan dengan lokasi kantor
         $latitude_kantor = -6.235776234264604;
         $longitude_kantor = 107.00803747720603;
         $lokasi = $request->lokasi;
@@ -38,6 +39,7 @@ class PresensiController extends Controller
         $latitude_user = $lokasi_user[0];
         $longitude_user = $lokasi_user[1];
 
+        // nanti disesuaikan dengan lokasi kantor untuk latitude1 dan longitude1
         $jarak = $this->distance($latitude_user, $longitude_user, $latitude_user, $longitude_user);
         $radius = round($jarak["meters"]);
 
@@ -209,5 +211,73 @@ class PresensiController extends Controller
             ->get();
 
         return view('presensi.monitoring_getpresensi', compact('presensi'));
+    }
+
+    public function TampilkanPeta(Request $request)
+    {
+        $id = $request->id;
+        $presensi = DB::table('presensi')
+        ->join('karyawan', 'presensi.nik', '=', 'karyawan.nik')
+        ->where('id', $id)
+        ->first();
+        return view('presensi.monitoring_showmap', compact('presensi'));
+    }
+
+    public function LaporanPresensi()
+    {
+        $months = [
+            '',
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember',
+        ];
+
+        $karyawan = DB::table('karyawan')->orderBy('nama_lengkap')->get();
+        return view('presensi.laporan_presensi', compact('months', 'karyawan'));
+    }
+
+    public function LaporanPrint(Request $request)
+    {
+        $nik = $request->nik;
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+
+        $months = [
+            '',
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember',
+        ];
+
+        $karyawan = DB::table('karyawan')
+                    ->join('departemen', 'karyawan.kode_departemen', '=', 'departemen.kode_departemen')
+                    ->where('nik', $nik)
+                    ->first();
+
+        $presensi = DB::table('presensi')
+                    ->where('nik', $nik)
+                    ->whereRaw('MONTH(tanggal_presensi)="' . $bulan . '"')
+                    ->whereRaw('YEAR(tanggal_presensi)="' . $tahun . '"')
+                    ->get();
+
+        return view('presensi.laporan_print', compact('bulan', 'tahun', 'months', 'karyawan', 'presensi'));
     }
 }

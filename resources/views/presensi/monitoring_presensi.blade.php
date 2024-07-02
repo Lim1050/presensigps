@@ -38,6 +38,8 @@
         cursor: pointer;
         }
 </style>
+
+
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Monitoring Presensi</h1>
@@ -46,21 +48,22 @@
 <!-- Content Row -->
 <div class="row">
     <div class="col-12">
-        <div class="card">
+        <div class="card shadow">
             <div class="card-body">
                 <div class="form-group">
                     <label for="">Tanggal Presensi</label>
-                    <input type="date" class="form-control" id="tanggal_presensi" name="tanggal_presensi" placeholder=" Tanggal Presensi">
+                    <input type="date" class="form-control" id="tanggal_presensi" value="{{ date("Y-m-d") }}" name="tanggal_presensi" placeholder=" Tanggal Presensi">
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
-                    <table class="table table-striped table-hover">
+                    <div class="table-responsive">
+                    <table class="table table-striped table-hover text-center">
                         <thead>
-                            <tr>
+                            <tr class="text-center">
                                 <th>No.</th>
                                 <th>NIK</th>
-                                <th>Nama</th>
+                                <th>Nama Karyawan</th>
                                 {{-- <th>Jabatan</th> --}}
                                 <th>Departemen</th>
                                 <th>Jam Masuk</th>
@@ -68,13 +71,32 @@
                                 <th>Jam Pulang</th>
                                 <th>Foto Pulang</th>
                                 <th>Keterangan</th>
+                                <th>Lokasi</th>
                             </tr>
                         </thead>
                         <tbody id="loadpresensi">
 
                         </tbody>
                     </table>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal peta lokasi -->
+<div class="modal fade" id="modalShowMap" tabindex="-1" aria-labelledby="modalShowMapLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalShowMapLabel">Lokasi Presensi Karyawan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="loadmap">
+                <!-- Map content here -->
             </div>
         </div>
     </div>
@@ -84,8 +106,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(function () {
-    $("#tanggal_presensi").change(function(e) {
-        var tanggal_presensi = $(this).val();
+    function loadpresensi(){
+        var tanggal_presensi = $("#tanggal_presensi").val();
         $.ajax({
             type: 'POST',
             url: '/admin/monitoring/getpresensi',
@@ -101,7 +123,12 @@ $(function () {
                 console.error('Error loading presensi:', error);
             }
         });
+    }
+    $("#tanggal_presensi").change(function(e) {
+        loadpresensi()
     });
+
+    loadpresensi()
 });
 </script>
 @endpush

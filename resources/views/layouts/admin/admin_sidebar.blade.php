@@ -29,7 +29,28 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Master
+        <i class="bi bi-file-earmark"></i> Laporan
+    </div>
+
+    <!-- Nav Item - Karyawan -->
+    <li class="nav-item {{ request()->is('admin/laporan/presensi') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.laporan.presensi') }}">
+            <i class="bi bi-file-earmark-text fa-fw"></i>
+            <span>Laporan Presensi</span></a>
+    </li>
+    <!-- Nav Item - Departemen -->
+    <li class="nav-item {{ request()->is('admin/departemen') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.departemen') }}">
+            <i class="bi bi-file-earmark-spreadsheet fa-fw"></i>
+            <span>Rekap Presensi</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        <i class="bi bi-archive"></i> Master
     </div>
 
     <!-- Nav Item - Karyawan -->
