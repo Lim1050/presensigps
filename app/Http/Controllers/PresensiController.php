@@ -276,8 +276,94 @@ class PresensiController extends Controller
                     ->where('nik', $nik)
                     ->whereRaw('MONTH(tanggal_presensi)="' . $bulan . '"')
                     ->whereRaw('YEAR(tanggal_presensi)="' . $tahun . '"')
+                    ->orderBy('tanggal_presensi')
                     ->get();
 
         return view('presensi.laporan_print', compact('bulan', 'tahun', 'months', 'karyawan', 'presensi'));
+    }
+
+    public function RekapPresensi()
+    {
+        $months = [
+            '',
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember',
+        ];
+
+        return view('presensi.rekap_presensi', compact('months'));
+    }
+
+    public function RekapPrint(Request $request)
+    {
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+
+        $months = [
+            '',
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember',
+        ];
+
+        $rekap = DB::table('presensi')
+                    ->selectRaw('presensi.nik,nama_lengkap,
+                    MAX(IF(DAY(tanggal_presensi) = 1, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_1,
+                    MAX(IF(DAY(tanggal_presensi) = 2, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_2,
+                    MAX(IF(DAY(tanggal_presensi) = 3, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_3,
+                    MAX(IF(DAY(tanggal_presensi) = 4, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_4,
+                    MAX(IF(DAY(tanggal_presensi) = 5, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_5,
+                    MAX(IF(DAY(tanggal_presensi) = 6, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_6,
+                    MAX(IF(DAY(tanggal_presensi) = 7, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_7,
+                    MAX(IF(DAY(tanggal_presensi) = 8, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_8,
+                    MAX(IF(DAY(tanggal_presensi) = 9, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_9,
+                    MAX(IF(DAY(tanggal_presensi) = 10, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_10,
+                    MAX(IF(DAY(tanggal_presensi) = 11, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_11,
+                    MAX(IF(DAY(tanggal_presensi) = 12, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_12,
+                    MAX(IF(DAY(tanggal_presensi) = 13, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_13,
+                    MAX(IF(DAY(tanggal_presensi) = 14, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_14,
+                    MAX(IF(DAY(tanggal_presensi) = 15, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_15,
+                    MAX(IF(DAY(tanggal_presensi) = 16, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_16,
+                    MAX(IF(DAY(tanggal_presensi) = 17, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_17,
+                    MAX(IF(DAY(tanggal_presensi) = 18, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_18,
+                    MAX(IF(DAY(tanggal_presensi) = 19, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_19,
+                    MAX(IF(DAY(tanggal_presensi) = 20, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_20,
+                    MAX(IF(DAY(tanggal_presensi) = 21, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_21,
+                    MAX(IF(DAY(tanggal_presensi) = 22, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_22,
+                    MAX(IF(DAY(tanggal_presensi) = 23, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_23,
+                    MAX(IF(DAY(tanggal_presensi) = 24, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_24,
+                    MAX(IF(DAY(tanggal_presensi) = 25, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_25,
+                    MAX(IF(DAY(tanggal_presensi) = 26, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_26,
+                    MAX(IF(DAY(tanggal_presensi) = 27, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_27,
+                    MAX(IF(DAY(tanggal_presensi) = 28, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_28,
+                    MAX(IF(DAY(tanggal_presensi) = 29, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_29,
+                    MAX(IF(DAY(tanggal_presensi) = 30, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_30,
+                    MAX(IF(DAY(tanggal_presensi) = 31, CONCAT(jam_masuk, "-", IFNULL(jam_keluar,"00:00:00")),"")) as tanggal_31')
+                    ->join('karyawan','presensi.nik','=','karyawan.nik')
+                    ->whereRaw('MONTH(tanggal_presensi)="' . $bulan . '"')
+                    ->whereRaw('YEAR(tanggal_presensi)="' . $tahun . '"')
+                    ->groupByRaw('presensi.nik,nama_lengkap')
+                    ->get();
+        // dd($rekap);
+
+        return view('presensi.rekap_print', compact('bulan', 'tahun', 'months', 'rekap'));
     }
 }

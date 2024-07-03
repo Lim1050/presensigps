@@ -39,8 +39,8 @@
             <span>Laporan Presensi</span></a>
     </li>
     <!-- Nav Item - Departemen -->
-    <li class="nav-item {{ request()->is('admin/departemen') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.departemen') }}">
+    <li class="nav-item {{ request()->is('admin/laporan/presensi') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.rekap.presensi') }}">
             <i class="bi bi-file-earmark-spreadsheet fa-fw"></i>
             <span>Rekap Presensi</span></a>
     </li>

@@ -70,6 +70,10 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/admin/laporan/presensi', [PresensiController::class, 'LaporanPresensi'])->name('admin.laporan.presensi');
     // print laporan presensi
     Route::post('/admin/laporan/print', [PresensiController::class, 'LaporanPrint'])->name('admin.laporan.print');
+    // rekap presensi
+    Route::get('/admin/rekap/presensi', [PresensiController::class, 'RekapPresensi'])->name('admin.rekap.presensi');
+    // print rekap presensi
+    Route::post('/admin/rekap/print', [PresensiController::class, 'RekapPrint'])->name('admin.rekap.print');
 
 
     // monitoring presensi Index

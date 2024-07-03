@@ -49,7 +49,39 @@
 <!-- Set "A5", "A4" or "A3" for class name -->
 <!-- Set also "landscape" if you need -->
 <body class="A4">
+    @php
+        // Function Untuk Menghitung Selisih Jam
+        function selisih($jam_masuk, $jam_keluar)
+        {
+            list($h, $m, $s) = explode(":", $jam_masuk);
+            $dtAwal = mktime($h, $m, $s, "1", "1", "1");
+            list($h, $m, $s) = explode(":", $jam_keluar);
+            $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
+            $dtSelisih = $dtAkhir - $dtAwal;
+            $totalmenit = $dtSelisih / 60;
+            $jam = explode(".", $totalmenit / 60);
+            $sisamenit = ($totalmenit / 60) - $jam[0];
+            $sisamenit2 = $sisamenit * 60;
+            $jml_jam = $jam[0];
+            return $jml_jam . " jam " . round($sisamenit2) . " menit";
+        }
 
+        // function hitung_gaji($jam_masuk, $jam_keluar, $tarif_per_jam) {
+        //     list($h, $m, $s) = explode(":", $jam_masuk);
+        //     $dtAwal = mktime($h, $m, $s, "1", "1", "1");
+        //     list($h, $m, $s) = explode(":", $jam_keluar);
+        //     $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
+        //     $dtSelisih = $dtAkhir - $dtAwal;
+        //     $totalmenit = $dtSelisih / 60;
+        //     $jam = (int)($totalmenit / 60);
+        //     $sisamenit = $totalmenit % 60;
+
+        //     $total_jam = $jam + ($sisamenit / 60);
+        //     $gaji = $total_jam * $tarif_per_jam;
+
+        //     return array('jam' => $jam, 'menit' => $sisamenit, 'gaji' => $gaji);
+        // }
+    @endphp
     <!-- Each sheet element should have the class "sheet" -->
     <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
     <section class="sheet padding-10mm">
@@ -115,9 +147,11 @@
             <th>Jam Pulang</th>
             <th>Foto Pulang</th>
             <th>Keterangan</th>
+            <th>Jumlah Jam</th>
+            {{-- <th>Gaji</th> --}}
         </tr>
         @foreach ($presensi as $item)
-            <tr>
+            <tr style="text-align: center">
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ date("d-m-Y", strtotime($item->tanggal_presensi)) }}</td>
                 <td>{{ $item->jam_masuk }}</td>
@@ -135,18 +169,60 @@
                     @if ($item->foto_keluar != null)
                     <img src="{{ url($pathout) }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
                     @else
-                    Belum Absen Pulang
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="75" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
+                    <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708"/>
+                    </svg>
                     @endif
                 </td>
                 <td>
+                    @php
+                        $terlambat = selisih('09:00:00', $item->jam_masuk);
+                    @endphp
                      @if ($item->jam_masuk >= '09:00')
-                        Terlambat
+                        Terlambat {{ $terlambat }}
                     @else
                         Tepat Waktu
                     @endif
                 </td>
+                <td>
+                    @if ($item->jam_keluar != null)
+                        @php
+                            $jumlah_jam_kerja = selisih($item->jam_masuk, $item->jam_keluar);
+                        @endphp
+                    @else
+                        @php
+                            $jumlah_jam_kerja = 0;
+                        @endphp
+                    @endif
+                    {{ $jumlah_jam_kerja }}
+                </td>
+                {{-- <td>
+                    @php
+
+                        $hasil = hitung_gaji($item->jam_masuk, $item->jam_keluar, 100000);
+                        // dd($hasil['gaji'])
+                    @endphp
+                    {{ $hasil['gaji'] }}
+                </td> --}}
             </tr>
         @endforeach
+    </table>
+
+    <table width="100%" style="margin-top: 50px">
+        <tr>
+            <td colspan="2" style="text-align: right">Kota Baru Banget, {{ date('d-m-Y') }}</td>
+        </tr>
+        <tr>
+            <td style="text-align: center; vertical-align:bottom" height="100px" >
+                <u>Ramadhan S Purnama</u><br>
+                <i><b>Head HRD</b></i>
+            </td>
+            <td style="text-align: center; vertical-align:bottom" height="100px" >
+                <u>Salim</u><br>
+                <i><b>Direktur</b></i>
+            </td>
+        </tr>
     </table>
 
     </section>
