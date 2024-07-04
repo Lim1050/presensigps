@@ -5290,14 +5290,14 @@ a.badge-info.focus {
 }
 
 .badge-warning {
-    color: #fff;
-    background-color: #ffc107;
+    color: #fff !important;
+    background-color: #ffc107 !important;
 }
 
 a.badge-warning:hover,
 a.badge-warning:focus {
-    color: #fff;
-    background-color: #f4b30d;
+    color: #fff !important;
+    background-color: #f4b30d !important;
 }
 
 a.badge-warning:focus,

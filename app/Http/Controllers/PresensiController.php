@@ -19,7 +19,11 @@ class PresensiController extends Controller
         $cek_masuk = DB::table('presensi')->where('tanggal_presensi', $hari_ini)->where('nik', $nik)->count();
         $cek_keluar = DB::table('presensi')->where('tanggal_presensi', $hari_ini)->where('nik', $nik)->whereNotNull('foto_keluar')->count();
         $foto_keluar = DB::table('presensi')->where('nik', $nik)->where('tanggal_presensi', $hari_ini)->whereNotNull('foto_keluar')->first();
-        return view('presensi.create_presensi', compact('cek_masuk', 'cek_keluar', 'foto_keluar'));
+
+        $lokasi_kantor = DB::table('lokasi_kantor')->where('id', 1)->first();
+
+
+        return view('presensi.create_presensi', compact('cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor'));
     }
 
     public function PresensiStore(Request $request)
@@ -32,15 +36,19 @@ class PresensiController extends Controller
         $jam_save = $jam[0] . $jam[1] . $jam[2];
 
         // nanti disesuaikan dengan lokasi kantor
-        $latitude_kantor = -6.235776234264604;
-        $longitude_kantor = 107.00803747720603;
+        $lokasi_kantor = DB::table('lokasi_kantor')->where('id', 1)->first();
+        $kantor = explode(",", $lokasi_kantor->lokasi_kantor );
+        $latitude_kantor = $kantor[0];
+        $longitude_kantor = $kantor[1];
+
+        // lokasi user
         $lokasi = $request->lokasi;
         $lokasi_user = explode(",", $lokasi);
         $latitude_user = $lokasi_user[0];
         $longitude_user = $lokasi_user[1];
 
         // nanti disesuaikan dengan lokasi kantor untuk latitude1 dan longitude1
-        $jarak = $this->distance($latitude_user, $longitude_user, $latitude_user, $longitude_user);
+        $jarak = $this->distance($latitude_kantor, $longitude_kantor, $latitude_user, $longitude_user);
         $radius = round($jarak["meters"]);
 
         $cek = DB::table('presensi')->where('tanggal_presensi', $tgl_presensi)->where('nik', $nik)->count();
@@ -63,7 +71,7 @@ class PresensiController extends Controller
 
 
         // cek jarak
-        if ($radius > 60) {
+        if ($radius > $lokasi_kantor->radius) {
             echo "error|Maaf, anda diluar radius, jarak anda " . $radius . " meter dari kantor!|rad";
         } else {
             if ($cek > 0 ) {
@@ -365,5 +373,47 @@ class PresensiController extends Controller
         // dd($rekap);
 
         return view('presensi.rekap_print', compact('bulan', 'tahun', 'months', 'rekap'));
+    }
+
+    public function PengajuanSakitIzin()
+    {
+        $sakit_izin = DB::table('pengajuan_sakit_izin')
+                        ->join('karyawan', 'pengajuan_sakit_izin.nik', '=', 'karyawan.nik')
+                        ->orderBy('tanggal_izin', 'desc')
+                        ->get();
+        // dd($sakit_izin);
+        return view('presensi.pengajuan_sakit_izin', compact('sakit_izin'));
+    }
+
+    public function ApprovalSakitIzin(Request $request)
+    {
+        $id = $request->id;
+        $status_approved = $request->status_approved;
+
+        $update = DB::table('pengajuan_sakit_izin')
+            ->where('id', $id)
+            ->update([
+                'status_approved' => $status_approved
+            ]);
+
+        if($update){
+            return redirect()->back()->with(['success' => 'Data Berhasil Diupdate!']);
+        } else {
+            return redirect()->back()->with(['warning' => 'Data Gagal Diupdate!']);
+        }
+    }
+    public function BatalkanSakitIzin($id)
+    {
+        $update = DB::table('pengajuan_sakit_izin')
+            ->where('id', $id)
+            ->update([
+                'status_approved' => 0
+            ]);
+
+        if($update){
+            return redirect()->back()->with(['success' => 'Data Berhasil Diupdate!']);
+        } else {
+            return redirect()->back()->with(['warning' => 'Data Gagal Diupdate!']);
+        }
     }
 }

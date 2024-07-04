@@ -4599,13 +4599,13 @@ a.badge-info:focus {
     box-shadow: 0 0 0 0.2rem rgba(54, 185, 204, 0.5);
 }
 .badge-warning {
-    color: #fff;
-    background-color: #ffc107;
+    color: #fff !important;
+    background-color: #ffc107 !important;
 }
 a.badge-warning:focus,
 a.badge-warning:hover {
-    color: #fff;
-    background-color: #f4b30d;
+    color: #fff !important;
+    background-color: #f4b30d !important;
 }
 a.badge-warning.focus,
 a.badge-warning:focus {

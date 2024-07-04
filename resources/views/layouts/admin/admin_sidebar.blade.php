@@ -23,6 +23,12 @@
             <i class="bi bi-display fa-fw "></i>
             <span>Monitoring Presensi</span></a>
     </li>
+    <!-- Nav Item - Monitoring Presensi -->
+    <li class="nav-item {{ request()->is('admin/pengajuan/sakit/izin') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.pengajuan.sakit.izin') }}">
+            <i class="bi bi-file-text-fill fa-fw "></i>
+            <span>Pengajuan Sakit / Izin</span></a>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -39,7 +45,7 @@
             <span>Laporan Presensi</span></a>
     </li>
     <!-- Nav Item - Departemen -->
-    <li class="nav-item {{ request()->is('admin/laporan/presensi') ? 'active' : '' }}">
+    <li class="nav-item {{ request()->is('admin/rekap/presensi') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('admin.rekap.presensi') }}">
             <i class="bi bi-file-earmark-spreadsheet fa-fw"></i>
             <span>Rekap Presensi</span></a>
@@ -66,7 +72,22 @@
             <span>Departemen</span></a>
     </li>
 
-    <!-- Nav Item - Pages Collapse Menu -->
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        <i class="bi bi-gear fa-fw"></i></i> Konfigurasi
+    </div>
+
+    <!-- Nav Item - Karyawan -->
+    <li class="nav-item {{ request()->is('admin/konfigurasi/lokasi/kantor') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.konfigurasi.lokasi.kantor') }}">
+            <i class="bi bi-geo fa-fw"></i>
+            <span>Lokasi Kantor</span></a>
+    </li>
+
+    {{-- <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
@@ -150,7 +171,7 @@
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
+    </div> --}}
 
     <!-- Sidebar Message -->
     {{-- <div class="sidebar-card d-none d-lg-flex">

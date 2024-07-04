@@ -11,8 +11,8 @@
 
     <title>SB Admin 2 - Dashboard</title>
 
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/person-check-fill.svg') }}" sizes="32x32" style="color: white">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/person-check-fill.svg') }}" style="color: white">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/android-chrome-512x512.png') }}" sizes="32x32" style="color: white">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/android-chrome-512x512.png') }}" style="color: white">
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('assets/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">

@@ -8,7 +8,7 @@
     }
 
     .icon-placeholder input {
-        padding-left: 25px; /* Adjust padding to make room for the icon */
+        padding-left: 30px; /* Adjust padding to make room for the icon */
     }
 
     .icon-placeholder .bi {

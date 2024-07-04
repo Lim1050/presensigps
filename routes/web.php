@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartemenController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +83,18 @@ Route::middleware(['auth:user'])->group(function () {
     Route::post('/admin/monitoring/getpresensi', [PresensiController::class, 'MonitoringGetPresensi'])->name('admin.monitoring.getpresensi');
     // tampilkan peta
     Route::post('/admin/presensi/tampilkanpeta', [PresensiController::class, 'TampilkanPeta'])->name('admin.presensi.tampilkanpeta');
+
+    // pengajuan sakit izin
+    Route::get('/admin/pengajuan/sakit/izin', [PresensiController::class, 'PengajuanSakitIzin'])->name('admin.pengajuan.sakit.izin');
+    // approval sakit izin
+    Route::post('/admin/approval/sakit/izin', [PresensiController::class, 'ApprovalSakitIzin'])->name('admin.approval.sakit.izin');
+    // batalkan sakit izin
+    Route::get('/admin/batalkan/sakit/izin/{id}', [PresensiController::class, 'BatalkanSakitIzin'])->name('admin.batalkan.sakit.izin');
+
+    // Konfigurasi Lokasi Kantor
+    Route::get('/admin/konfigurasi/lokasi/kantor', [KonfigurasiController::class, 'LokasiKantor'])->name('admin.konfigurasi.lokasi.kantor');
+    // update Lokasi Kantor
+    Route::post('/admin/update/lokasi/kantor', [KonfigurasiController::class, 'UpdateLokasiKantor'])->name('admin.update.lokasi.kantor');
 
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');

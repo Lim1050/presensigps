@@ -108,7 +108,7 @@
                     <div class="card-body">
                         <div class="presencecontent">
                             <div class="iconpresence">
-                                @if ($presensi_hari_ini != null)
+                                @if ($presensi_hari_ini != null && $presensi_hari_ini->foto_keluar != null)
                                 @php
                                     $path = Storage::url($presensi_hari_ini->foto_keluar);
                                 @endphp

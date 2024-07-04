@@ -104,7 +104,7 @@
                         }
                     }
             ?>
-            <td>
+            <td style="font-size: 9px">
                 <span style="color: {{ $hadir[0] > "09:00:00" ? "red" : ""}}"  >{{ $hadir[0] }}</span></br>
                 <span style="color: {{ $hadir[0] < "17:00:00" ? "red" : ""}}"  >{{ $hadir[1] }}</span>
             </td>
