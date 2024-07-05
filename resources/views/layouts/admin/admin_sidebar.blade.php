@@ -87,6 +87,16 @@
             <span>Lokasi Kantor</span></a>
     </li>
 
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Nav Item - Karyawan -->
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.logout') }}">
+            <i class="bi bi-box-arrow-left fa-fw"></i>
+            <span>Logout</span></a>
+    </li>
+
     {{-- <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
