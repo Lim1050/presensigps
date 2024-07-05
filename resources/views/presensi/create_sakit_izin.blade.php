@@ -80,6 +80,30 @@
                 format: "yyyy-mm-dd"
             });
 
+            $("#tanggal_izin").change(function(e){
+                var tanggal_izin = $(this).val();
+                $.ajax({
+                    type:'POST',
+                    url:'/presensi/cek/pengajuan/sakit-izin',
+                    data: {
+                        _token:"{{ csrf_token() }}",
+                        tanggal_izin: tanggal_izin
+                    },
+                    cache: false,
+                    success: function(respond){
+                        if (respond != 0) {
+                            Swal.fire({
+                            title: 'Oops!',
+                            text: 'Anda sudah melakukan pengajuan sakit/izin pada tanggal tersebut!',
+                            icon: 'warning',
+                            }).then((result) => {
+                                $("#tanggal_izin").val("");
+                            });
+                        }
+                    }
+                });
+            });
+
             $("#formIzin").submit(function(){
                 var tanggal_izin = $("#tanggal_izin").val();
                 var status = $("#status").val();

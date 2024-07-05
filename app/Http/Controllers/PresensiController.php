@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PersetujuanSakitIzin;
 use App\Models\presensi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -375,14 +376,34 @@ class PresensiController extends Controller
         return view('presensi.rekap_print', compact('bulan', 'tahun', 'months', 'rekap'));
     }
 
-    public function PengajuanSakitIzin()
+    public function PersetujuanSakitIzin(Request $request)
     {
-        $sakit_izin = DB::table('pengajuan_sakit_izin')
-                        ->join('karyawan', 'pengajuan_sakit_izin.nik', '=', 'karyawan.nik')
-                        ->orderBy('tanggal_izin', 'desc')
-                        ->get();
+
+        $query = PersetujuanSakitIzin::query();
+        $query->select('id', 'tanggal_izin', 'pengajuan_sakit_izin.nik', 'nama_lengkap', 'jabatan', 'status', 'status_approved', 'keterangan');
+        $query->join('karyawan', 'pengajuan_sakit_izin.nik', '=', 'karyawan.nik');
+        $query->orderBy('tanggal_izin', 'desc');
+
+        if (!empty($request->dari) && !empty($request->sampai)) {
+            $query->whereBetween('tanggal_izin', [$request->dari, $request->sampai]);
+        }
+        if (!empty($request->nik)) {
+            $query->where('pengajuan_sakit_izin.nik', 'like', '%' .  $request->nik . "%");
+        }
+        if (!empty($request->nama_lengkap)) {
+            $query->where('nama_lengkap', 'like', '%'. $request->nama_lengkap . '%');
+        }
+        if (!empty($request->jabatan)) {
+            $query->where('jabatan', 'like', '%'. $request->jabatan . '%');
+        }
+        if ($request->status_approved != '') {
+            $query->where('status_approved', $request->status_approved);
+        }
+
+        $sakit_izin = $query->paginate('10');
+        $sakit_izin->appends($request->all());
         // dd($sakit_izin);
-        return view('presensi.pengajuan_sakit_izin', compact('sakit_izin'));
+        return view('presensi.persetujuan_sakit_izin', compact('sakit_izin'));
     }
 
     public function ApprovalSakitIzin(Request $request)
@@ -415,5 +436,13 @@ class PresensiController extends Controller
         } else {
             return redirect()->back()->with(['warning' => 'Data Gagal Diupdate!']);
         }
+    }
+
+    public function CekPengajuanSakitIzin(Request $request)
+    {
+        $tanggal_izin = $request->tanggal_izin;
+        $nik = Auth::guard('karyawan')->user()->nik;
+        $cek = DB::table('pengajuan_sakit_izin')->where('nik', $nik)->where('tanggal_izin', $tanggal_izin)->count();
+        return $cek;
     }
 }

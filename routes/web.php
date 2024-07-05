@@ -84,12 +84,14 @@ Route::middleware(['auth:user'])->group(function () {
     // tampilkan peta
     Route::post('/admin/presensi/tampilkanpeta', [PresensiController::class, 'TampilkanPeta'])->name('admin.presensi.tampilkanpeta');
 
-    // pengajuan sakit izin
-    Route::get('/admin/pengajuan/sakit/izin', [PresensiController::class, 'PengajuanSakitIzin'])->name('admin.pengajuan.sakit.izin');
+    // persetujuan sakit izin
+    Route::get('/admin/persetujuan/sakit/izin', [PresensiController::class, 'PersetujuanSakitIzin'])->name('admin.persetujuan.sakit.izin');
     // approval sakit izin
     Route::post('/admin/approval/sakit/izin', [PresensiController::class, 'ApprovalSakitIzin'])->name('admin.approval.sakit.izin');
     // batalkan sakit izin
     Route::get('/admin/batalkan/sakit/izin/{id}', [PresensiController::class, 'BatalkanSakitIzin'])->name('admin.batalkan.sakit.izin');
+    // cek pengajuan sakit/izin
+    // Route::post('/admin/cek/pengajuan/sakit-izin', [PresensiController::class, 'CekPengajuanSakitIzin'])->name('admin.cek.pengajuan.sakit-izin');
 
     // Konfigurasi Lokasi Kantor
     Route::get('/admin/konfigurasi/lokasi/kantor', [KonfigurasiController::class, 'LokasiKantor'])->name('admin.konfigurasi.lokasi.kantor');
@@ -119,6 +121,8 @@ Route::middleware(['auth:karyawan'])->group(function () {
     Route::get('/presensi/create/sakit-izin', [PresensiController::class, 'CreateSakitIzin'])->name('presensi.create.sakit-izin');
     // store sakit/izin presensi
     Route::post('/presensi/store/sakit-izin', [PresensiController::class, 'StoreSakitIzin'])->name('presensi.store.sakit-izin');
+    // cek pengajuan sakit/izin
+    Route::post('/presensi/cek/pengajuan/sakit-izin', [PresensiController::class, 'CekPengajuanSakitIzin'])->name('presensi.store.sakit-izin');
 
 
     // profile

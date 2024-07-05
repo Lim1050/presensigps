@@ -24,10 +24,10 @@
             <span>Monitoring Presensi</span></a>
     </li>
     <!-- Nav Item - Monitoring Presensi -->
-    <li class="nav-item {{ request()->is('admin/pengajuan/sakit/izin') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.pengajuan.sakit.izin') }}">
+    <li class="nav-item {{ request()->is('admin/persetujuan/sakit/izin') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.persetujuan.sakit.izin') }}">
             <i class="bi bi-file-text-fill fa-fw "></i>
-            <span>Pengajuan Sakit / Izin</span></a>
+            <span>Persetujuan Sakit / Izin</span></a>
     </li>
 
     <!-- Divider -->

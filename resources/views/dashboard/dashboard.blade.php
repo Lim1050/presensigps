@@ -11,25 +11,28 @@
                 {{ $message }}
             </div>
         @endif --}}
+                <div class="avatar">
+                    @if ((Auth::guard('karyawan')->user()->foto))
+                        @php
+                            $path = Storage::url("uploads/karyawan/".Auth::guard('karyawan')->user()->foto)
+                        @endphp
+                        <img src="{{ url($path) }}" alt="avatar" class="imaged w64 rounded" style="height: 60px">
+                    @else
+                        <img src="{{ asset('assets/img/sample/avatar/avatar1.jpg') }}" alt="avatar" class="imaged w64 rounded">
+                    @endif
+                </div>
+                <div id="user-info">
+                    <h2 id="user-name">{{ Auth::guard('karyawan')->user()->nama_lengkap }}</h2><br>
+                    <span id="user-role">{{ Auth::guard('karyawan')->user()->jabatan }}</span>
+                </div>
 
-        <div class="avatar">
-            @if ((Auth::guard('karyawan')->user()->foto))
-                @php
-                    $path = Storage::url("uploads/karyawan/".Auth::guard('karyawan')->user()->foto)
-                @endphp
-                <img src="{{ url($path) }}" alt="avatar" class="imaged w64 rounded" style="height: 60px">
-            @else
-                <img src="{{ asset('assets/img/sample/avatar/avatar1.jpg') }}" alt="avatar" class="imaged w64 rounded">
-            @endif
-        </div>
-        <div id="user-info">
-            <h2 id="user-name">{{ Auth::guard('karyawan')->user()->nama_lengkap }}</h2>
-            <span id="user-role">{{ Auth::guard('karyawan')->user()->jabatan }}</span>
-        </div>
+            <div class="col-4">
+                <a href="{{ route('logout') }}" class="btn btn-primary"><ion-icon name="log-out-outline"></ion-icon>Logout</a>
+            </div>
     </div>
 </div>
 
-<div class="section" id="menu-section">
+<div class="section mt-1" id="menu-section">
     <div class="card">
         <div class="card-body text-center">
             <div class="list-menu">
