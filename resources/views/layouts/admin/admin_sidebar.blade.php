@@ -11,72 +11,91 @@
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
-    <!-- Nav Item - Dashboard -->
-    <li class="nav-item {{ request()->is('admin/dashboard') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.dashboard') }}">
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
+            aria-expanded="true" aria-controls="collapseOne">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+        <div id="collapseOne" class="collapse bg-red" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+
+            <a class="nav-link {{ request()->is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
-    </li>
-    <!-- Nav Item - Monitoring Presensi -->
-    <li class="nav-item {{ request()->is('admin/monitoring/presensi') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.monitoring.presensi') }}">
+
+            <a class="nav-link {{ request()->is('admin/monitoring/presensi') ? 'active' : '' }}" href="{{ route('admin.monitoring.presensi') }}">
             <i class="bi bi-display fa-fw "></i>
             <span>Monitoring Presensi</span></a>
-    </li>
-    <!-- Nav Item - Monitoring Presensi -->
-    <li class="nav-item {{ request()->is('admin/persetujuan/sakit/izin') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.persetujuan.sakit.izin') }}">
+
+            <a class="nav-link {{ request()->is('admin/persetujuan/sakit/izin') ? 'active' : '' }}" href="{{ route('admin.persetujuan.sakit.izin') }}">
             <i class="bi bi-file-text-fill fa-fw "></i>
             <span>Persetujuan Sakit / Izin</span></a>
+
+        </div>
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        <i class="bi bi-file-earmark"></i> Laporan
-    </div>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="bi bi-file-earmark fa-fw"></i>
+            <span>Laporan</span>
+        </a>
+        <div id="collapseTwo" class="collapse bg-red" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
 
-    <!-- Nav Item - Karyawan -->
-    <li class="nav-item {{ request()->is('admin/laporan/presensi') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.laporan.presensi') }}">
+            <a class="nav-link" href="{{ route('admin.laporan.presensi') }}">
             <i class="bi bi-file-earmark-text fa-fw"></i>
             <span>Laporan Presensi</span></a>
-    </li>
-    <!-- Nav Item - Departemen -->
-    <li class="nav-item {{ request()->is('admin/rekap/presensi') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.rekap.presensi') }}">
+
+            <a class="nav-link" href="{{ route('admin.rekap.presensi') }}">
             <i class="bi bi-file-earmark-spreadsheet fa-fw"></i>
             <span>Rekap Presensi</span></a>
+        </div>
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        <i class="bi bi-archive"></i> Master
-    </div>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
+            aria-expanded="true" aria-controls="collapseThree">
+            <i class="bi bi-archive fa-fw"></i>
+            <span>Master</span>
+        </a>
+        <div id="collapseThree" class="collapse bg-red" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
 
-    <!-- Nav Item - Karyawan -->
-    <li class="nav-item {{ request()->is('admin/karyawan') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.karyawan') }}">
+            <a class="nav-link" href="{{ route('admin.karyawan') }}">
             <i class="bi bi-person-vcard fa-fw"></i>
             <span>Karyawan</span></a>
-    </li>
-    <!-- Nav Item - Departemen -->
-    <li class="nav-item {{ request()->is('admin/departemen') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('admin.departemen') }}">
+
+            <a class="nav-link" href="{{ route('admin.departemen') }}">
             <i class="bi bi-building fa-fw"></i>
             <span>Departemen</span></a>
+        </div>
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFour"
+            aria-expanded="true" aria-controls="collapseFour">
+            <i class="bi bi-gear fa-fw"></i>
+            <span>Konfigurasi</span>
+        </a>
+        <div id="collapseFour" class="collapse bg-red" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+
+            <a class="nav-link" href="{{ route('admin.konfigurasi.lokasi.kantor') }}">
+            <i class="bi bi-geo fa-fw"></i>
+            <span>Lokasi Kantor</span></a>
+        </div>
+    </li>
+
     <!-- Heading -->
-    <div class="sidebar-heading">
+    {{-- <div class="sidebar-heading">
         <i class="bi bi-gear fa-fw"></i></i> Konfigurasi
     </div>
 
@@ -85,7 +104,7 @@
         <a class="nav-link" href="{{ route('admin.konfigurasi.lokasi.kantor') }}">
             <i class="bi bi-geo fa-fw"></i>
             <span>Lokasi Kantor</span></a>
-    </li>
+    </li> --}}
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -97,24 +116,24 @@
             <span>Logout</span></a>
     </li>
 
-    {{-- <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
+    <!-- Nav Item - Pages Collapse Menu -->
+    {{-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
             <span>Components</span>
         </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Custom Components:</h6>
-                <a class="collapse-item" href="buttons.html">Buttons</a>
-                <a class="collapse-item" href="cards.html">Cards</a>
-            </div>
+        <div id="collapseTwo" class="collapse bg-red" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+
+            <a class="nav-link" href="{{ route('admin.konfigurasi.lokasi.kantor') }}">
+            <i class="bi bi-geo fa-fw"></i>
+            <span>Lokasi Kantor</span></a>
+
         </div>
-    </li>
+    </li> --}}
 
     <!-- Nav Item - Utilities Collapse Menu -->
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
             aria-expanded="true" aria-controls="collapseUtilities">
             <i class="fas fa-fw fa-wrench"></i>
@@ -130,18 +149,18 @@
                 <a class="collapse-item" href="utilities-other.html">Other</a>
             </div>
         </div>
-    </li>
+    </li> --}}
 
     <!-- Divider -->
-    <hr class="sidebar-divider">
+    {{-- <hr class="sidebar-divider"> --}}
 
     <!-- Heading -->
-    <div class="sidebar-heading">
+    {{-- <div class="sidebar-heading">
         Addons
-    </div>
+    </div> --}}
 
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
             aria-expanded="true" aria-controls="collapsePages">
             <i class="fas fa-fw fa-folder"></i>
@@ -159,9 +178,9 @@
                 <a class="collapse-item" href="blank.html">Blank Page</a>
             </div>
         </div>
-    </li>
+    </li> --}}
 
-    <!-- Nav Item - Charts -->
+    {{-- <!-- Nav Item - Charts -->
     <li class="nav-item">
         <a class="nav-link" href="charts.html">
             <i class="fas fa-fw fa-chart-area"></i>
@@ -173,7 +192,7 @@
         <a class="nav-link" href="tables.html">
             <i class="fas fa-fw fa-table"></i>
             <span>Tables</span></a>
-    </li>
+    </li> --}}
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
@@ -181,10 +200,10 @@
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div> --}}
+    </div>
 
     <!-- Sidebar Message -->
-    {{-- <div class="sidebar-card d-none d-lg-flex">
+    {{-- -- <div class="sidebar-card d-none d-lg-flex">
         <img class="sidebar-card-illustration mb-2" src="{{ asset('assets/img/undraw_rocket.svg')}}" alt="...">
         <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
         <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
