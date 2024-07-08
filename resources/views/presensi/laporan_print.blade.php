@@ -65,22 +65,6 @@
             $jml_jam = $jam[0];
             return $jml_jam . " jam " . round($sisamenit2) . " menit";
         }
-
-        // function hitung_gaji($jam_masuk, $jam_keluar, $tarif_per_jam) {
-        //     list($h, $m, $s) = explode(":", $jam_masuk);
-        //     $dtAwal = mktime($h, $m, $s, "1", "1", "1");
-        //     list($h, $m, $s) = explode(":", $jam_keluar);
-        //     $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
-        //     $dtSelisih = $dtAkhir - $dtAwal;
-        //     $totalmenit = $dtSelisih / 60;
-        //     $jam = (int)($totalmenit / 60);
-        //     $sisamenit = $totalmenit % 60;
-
-        //     $total_jam = $jam + ($sisamenit / 60);
-        //     $gaji = $total_jam * $tarif_per_jam;
-
-        //     return array('jam' => $jam, 'menit' => $sisamenit, 'gaji' => $gaji);
-        // }
     @endphp
     <!-- Each sheet element should have the class "sheet" -->
     <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
@@ -207,6 +191,13 @@
                 </td> --}}
             </tr>
         @endforeach
+            <tr>
+                <td colspan="8">
+                    Total Masuk : {{ $total_hari }} hari, <br>
+                    Gaji per Hari : Rp {{ $gaji_harian }}, <br>
+                    Total Gaji : Rp {{ $total_gaji }}
+                </td>
+            </tr>
     </table>
 
     <table width="100%" style="margin-top: 50px">

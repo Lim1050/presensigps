@@ -5,12 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class presensi extends Model
+class Gaji extends Model
 {
     use HasFactory;
-
-    protected $table = "presensi";
+    protected $table = "gaji";
     protected $primaryKey = "id";
     protected $guarded = [];
-
 }

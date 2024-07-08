@@ -288,7 +288,21 @@ class PresensiController extends Controller
                     ->orderBy('tanggal_presensi')
                     ->get();
 
-        return view('presensi.laporan_print', compact('bulan', 'tahun', 'months', 'karyawan', 'presensi'));
+        // Hitung total hari presensi
+        $total_hari = $presensi->groupBy('tanggal_presensi')->count();
+
+        // Asumsikan gaji harian adalah 100000
+        $gaji_harian = 100000;
+        $total_gaji = $total_hari * $gaji_harian;
+        // dd($total_gaji);
+
+        // Simpan atau perbarui gaji
+        // $salary = Salary::updateOrCreate(
+        //     ['nik' => $nik],
+        //     ['total_days_worked' => $totalDaysWorked, 'salary_amount' => $salaryAmount]
+        // );
+
+        return view('presensi.laporan_print', compact('bulan', 'tahun', 'months', 'karyawan', 'presensi', 'total_hari', 'gaji_harian', 'total_gaji'));
     }
 
     public function RekapPresensi()
