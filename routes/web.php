@@ -122,7 +122,7 @@ Route::middleware(['auth:karyawan'])->group(function () {
     // store sakit/izin presensi
     Route::post('/presensi/store/sakit-izin', [PresensiController::class, 'StoreSakitIzin'])->name('presensi.store.sakit-izin');
     // cek pengajuan sakit/izin
-    Route::post('/presensi/cek/pengajuan/sakit-izin', [PresensiController::class, 'CekPengajuanSakitIzin'])->name('presensi.store.sakit-izin');
+    Route::post('/presensi/cek/pengajuan/sakit-izin', [PresensiController::class, 'CekPengajuanSakitIzin'])->name('presensi.cek.pengajuan.sakit-izin');
 
 
     // profile
