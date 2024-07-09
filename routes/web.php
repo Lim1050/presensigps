@@ -98,6 +98,9 @@ Route::middleware(['auth:user'])->group(function () {
     // update Lokasi Kantor
     Route::post('/admin/update/lokasi/kantor', [KonfigurasiController::class, 'UpdateLokasiKantor'])->name('admin.update.lokasi.kantor');
 
+    // Konfigurasi Lokasi Kantor
+    Route::get('/admin/konfigurasi/jam/kerja', [KonfigurasiController::class, 'JamKerja'])->name('admin.konfigurasi.jam.kerja');
+
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
 });

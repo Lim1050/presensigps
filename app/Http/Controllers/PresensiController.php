@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\LaporanPresensiExport;
 
 class PresensiController extends Controller
 {
@@ -302,6 +304,17 @@ class PresensiController extends Controller
         //     ['total_days_worked' => $totalDaysWorked, 'salary_amount' => $salaryAmount]
         // );
 
+        // Export data ke Excel
+        // return Excel::download(new LaporanPresensiExport($presensi, $karyawan, $total_gaji), 'laporan_presensi_'.$karyawan->nik.'_'.$karyawan->nama_lengkap.'_'.$bulan.'_'.$tahun.'.xlsx');
+
+        if(isset($_POST['export_excel'])){
+            $time = date("H:i:s");
+            // fungsi header dengan mengirimkan raw data excel
+            header("Content-type: application/vnd-ms-excel");
+            // Mendefinisikan nama file export "hasil-export.xls"
+            header("Content-Disposition: attachment; filename=Laporan_Presensi_$time.xls");
+        }
+
         return view('presensi.laporan_print', compact('bulan', 'tahun', 'months', 'karyawan', 'presensi', 'total_hari', 'gaji_harian', 'total_gaji'));
     }
 
@@ -386,6 +399,14 @@ class PresensiController extends Controller
                     ->groupByRaw('presensi.nik,nama_lengkap')
                     ->get();
         // dd($rekap);
+
+        if(isset($_POST['export_excel'])){
+            $time = date("H:i:s");
+            // fungsi header dengan mengirimkan raw data excel
+            header("Content-type: application/vnd-ms-excel");
+            // Mendefinisikan nama file export "hasil-export.xls"
+            header("Content-Disposition: attachment; filename=Laporan_Presensi_$time.xls");
+        }
 
         return view('presensi.rekap_print', compact('bulan', 'tahun', 'months', 'rekap'));
     }

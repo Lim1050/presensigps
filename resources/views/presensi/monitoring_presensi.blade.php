@@ -54,30 +54,31 @@
                     <label for="">Tanggal Presensi</label>
                     <input type="date" class="form-control" id="tanggal_presensi" value="{{ date("Y-m-d") }}" name="tanggal_presensi" placeholder=" Tanggal Presensi">
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="table-responsive">
-                    <table class="table table-striped table-hover text-center">
-                        <thead>
-                            <tr class="text-center">
-                                <th>No.</th>
-                                <th>NIK</th>
-                                <th>Nama Karyawan</th>
-                                {{-- <th>Jabatan</th> --}}
-                                <th>Departemen</th>
-                                <th>Jam Masuk</th>
-                                <th>Foto Masuk</th>
-                                <th>Jam Pulang</th>
-                                <th>Foto Pulang</th>
-                                <th>Keterangan</th>
-                                <th>Lokasi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="loadpresensi">
 
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                        <table class="table table-striped table-hover text-center">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>No.</th>
+                                    <th>NIK</th>
+                                    <th>Nama Karyawan</th>
+                                    {{-- <th>Jabatan</th> --}}
+                                    <th>Departemen</th>
+                                    <th>Jam Masuk</th>
+                                    <th>Foto Masuk</th>
+                                    <th>Jam Pulang</th>
+                                    <th>Foto Pulang</th>
+                                    <th>Keterangan</th>
+                                    <th>Lokasi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="loadpresensi">
+
+                            </tbody>
+                        </table>
+                        </div>
                     </div>
                 </div>
             </div>

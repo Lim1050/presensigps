@@ -3789,9 +3789,9 @@ input[type="submit"].btn-block {
 }
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-link.active {
-    color: #6e707e;
-    background-color: #fff;
-    border-color: #dddfeb #dddfeb #fff;
+    color: #6e707e !important;
+    background-color: #fff !important;
+    border-color: #dddfeb #dddfeb #fff !important;
 }
 .nav-tabs .dropdown-menu {
     margin-top: -1px;
@@ -9506,22 +9506,23 @@ a:focus {
     padding: 0.5rem 1rem;
     margin: 0 0.5rem;
     display: block;
-    color: #3a3b45;
+    color: #f0f0f2;
     text-decoration: none;
     border-radius: 0.35rem;
     white-space: nowrap;
+    background-color: #ca364b;
 }
 .sidebar .nav-item .collapse .collapse-inner .collapse-item:hover,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item:hover {
-    background-color: #eaecf4;
+    color: #fff;
 }
 .sidebar .nav-item .collapse .collapse-inner .collapse-item:active,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item:active {
-    background-color: #dddfeb;
+    color: #fff;
 }
 .sidebar .nav-item .collapse .collapse-inner .collapse-item.active,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item.active {
-    color: #0d6efd;
+    color: #fff;
     font-weight: 700;
 }
 .sidebar #sidebarToggle {
