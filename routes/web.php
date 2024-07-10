@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CabangController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartemenController;
 use App\Http\Controllers\KaryawanController;
@@ -65,7 +66,18 @@ Route::middleware(['auth:user'])->group(function () {
     // departemen update
     Route::post('/admin/departemen/update', [DepartemenController::class, 'DepartemenUpdate'])->name('admin.departemen.update');
     // departemen delete
-    Route::get('/admin/departemen/delete/{nik}', [DepartemenController::class, 'DepartemenDelete'])->name('admin.departemen.delete');
+    Route::get('/admin/departemen/delete/{kode_departemen}', [DepartemenController::class, 'DepartemenDelete'])->name('admin.departemen.delete');
+
+    // Kantor Cabang
+    Route::get('/admin/cabang', [CabangController::class, 'CabangIndex'])->name('admin.cabang');
+    // Kantor cabang Store
+    Route::post('/admin/cabang/store', [CabangController::class, 'CabangStore'])->name('admin.cabang.store');
+    // Kantor cabang edit
+    Route::get('/admin/cabang/edit/{kode_cabang}', [CabangController::class, 'cabangEdit'])->name('admin.cabang.edit');
+    // Kantor cabang update
+    Route::post('/admin/cabang/update', [CabangController::class, 'CabangUpdate'])->name('admin.cabang.update');
+    // Kantor cabang delete
+    Route::get('/admin/cabang/delete/{kode_cabang}', [CabangController::class, 'cabangDelete'])->name('admin.cabang.delete');
 
     // laporan presensi
     Route::get('/admin/laporan/presensi', [PresensiController::class, 'LaporanPresensi'])->name('admin.laporan.presensi');
@@ -98,7 +110,7 @@ Route::middleware(['auth:user'])->group(function () {
     // update Lokasi Kantor
     Route::post('/admin/update/lokasi/kantor', [KonfigurasiController::class, 'UpdateLokasiKantor'])->name('admin.update.lokasi.kantor');
 
-    // Konfigurasi Lokasi Kantor
+    // Konfigurasi Jam Kerja
     Route::get('/admin/konfigurasi/jam/kerja', [KonfigurasiController::class, 'JamKerja'])->name('admin.konfigurasi.jam.kerja');
 
     // Admin logout

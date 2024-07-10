@@ -29,8 +29,9 @@ class KaryawanController extends Controller
 
 
         $departemen = DB::table('departemen')->get();
+        $cabang = DB::table('kantor_cabang')->orderBy('kode_cabang')->get();
 
-        return view('karyawan.karyawan_index', compact('karyawan', 'departemen'));
+        return view('karyawan.karyawan_index', compact('karyawan', 'departemen', 'cabang'));
     }
 
     public function KaryawanStore(Request $request)
@@ -40,6 +41,7 @@ class KaryawanController extends Controller
         $no_wa = $request->no_wa;
         $jabatan = $request->jabatan;
         $kode_departemen = $request->kode_departemen;
+        $kode_cabang = $request->kode_cabang;
 
         // get data karyawan dari table
         // cek apakah ada foto dari form
@@ -58,6 +60,7 @@ class KaryawanController extends Controller
                 'password' => Hash::make('password123'),
                 'jabatan' => $jabatan,
                 'kode_departemen' => $kode_departemen,
+                'kode_cabang' => $kode_cabang,
                 'foto' => $foto,
                 'created_at' => Carbon::now()
             ];
@@ -71,7 +74,11 @@ class KaryawanController extends Controller
             return redirect()->route('admin.karyawan')->with(['success' => 'Data Berhasil Disimpan!']);
             }
         } catch (\Exception $e) {
-            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
+            // dd($e->getCode());
+            if($e->getCode()==23000){
+                $message = " Data dengan NIK " . $nik . " Sudah ada!";
+            }
+            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!' . $message]);
         }
     }
 
@@ -79,8 +86,9 @@ class KaryawanController extends Controller
     {
         $nik = $request->nik;
         $departemen = DB::table('departemen')->get();
+        $cabang = DB::table('kantor_cabang')->orderBy('kode_cabang')->get();
         $karyawan = DB::table('karyawan')->where('nik', $nik)->first();
-        return view('karyawan.karyawan_edit', compact('nik', 'departemen', 'karyawan'));
+        return view('karyawan.karyawan_edit', compact('nik', 'departemen', 'karyawan', 'cabang'));
     }
 
     public function KaryawanUpdate(Request $request)
@@ -90,6 +98,7 @@ class KaryawanController extends Controller
         $no_wa = $request->no_wa;
         $jabatan = $request->jabatan;
         $kode_departemen = $request->kode_departemen;
+        $kode_cabang = $request->kode_cabang;
         $old_foto = $request->old_foto;
 
         // cek apakah ada foto dari form
@@ -107,6 +116,7 @@ class KaryawanController extends Controller
                 // 'password' => Hash::make('password123'),
                 'jabatan' => $jabatan,
                 'kode_departemen' => $kode_departemen,
+                'kode_cabang' => $kode_cabang,
                 'foto' => $foto,
                 'updated_at' => Carbon::now()
             ];

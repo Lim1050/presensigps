@@ -42,7 +42,10 @@ class DepartemenController extends Controller
                 return redirect()->route('admin.departemen')->with(['success' => 'Data Berhasil Disimpan!']);
             }
         } catch (\Exception $e) {
-            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
+            if($e->getCode()==23000){
+                $message = " Data dengan Kode Departemen " . $kode_departemen . " Sudah ada!";
+            }
+            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!' . $message]);
         }
     }
 

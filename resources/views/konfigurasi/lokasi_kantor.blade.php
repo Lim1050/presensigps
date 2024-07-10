@@ -39,7 +39,7 @@
                         {{ Session::get('error') }}
                     </div>
                 @endif
-                <form action="{{ route('admin.update.lokasi.kantor') }}" method="POST" id="formKaryawan" enctype="multipart/form-data">
+                <form action="{{ route('admin.update.lokasi.kantor') }}" method="POST" id="form_lokasi_kantor" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <div class="icon-placeholder">
@@ -67,3 +67,36 @@
     </div>
 </div>
 @endsection
+
+@push('myscript')
+    <script>
+        $(function(){
+            $("#form_lokasi_kantor").submit(function(e){
+                var bulan = $("#lokasi_kantor").val();
+                var radius = $("#radius").val();
+                var nik = $("#nik").val();
+                if(lokasi_kantor==""){
+                    Swal.fire({
+                    title: 'Oops!',
+                    text: 'Lokasi Kantor Harus Diisi!',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                    }).then((result)=>{
+                        $("#lokasi_kantor").focus();
+                    });
+                    return false;
+                } else if (radius==""){
+                    Swal.fire({
+                    title: 'Oops!',
+                    text: 'Radius Harus Diisi!',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                    }).then((result)=>{
+                        $("#radius").focus();
+                    });
+                    return false;
+                }
+            });
+        });
+    </script>
+@endpush

@@ -9,14 +9,14 @@
     <div class="col-6">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('admin.laporan.print') }}" target="_blank" method="POST">
+                <form action="{{ route('admin.laporan.print') }}" id="form_laporan" target="_blank" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
                                 <select name="bulan" id="bulan" class="form-control">
                                     <option value="">Bulan</option>
-                                     @for ($i = 1; $i<=12; $i++)
+                                    @for ($i = 1; $i<=12; $i++)
                                         <option value="{{ $i }}" {{ date("m") == $i ? 'selected' : '' }}>{{ $months[$i] }}</option>
                                     @endfor
                                 </select>
@@ -75,3 +75,46 @@
     </div>
 </div>
 @endsection
+
+@push('myscript')
+    <script>
+        $(function(){
+            $("#form_laporan").submit(function(e){
+                var bulan = $("#bulan").val();
+                var tahun = $("#tahun").val();
+                var nik = $("#nik").val();
+                if(bulan==""){
+                    Swal.fire({
+                    title: 'Oops!',
+                    text: 'Pilih Bulan!',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                    }).then((result)=>{
+                        $("#bulan").focus();
+                    });
+                    return false;
+                } else if (tahun==""){
+                    Swal.fire({
+                    title: 'Oops!',
+                    text: 'Pilih Tahun!',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                    }).then((result)=>{
+                        $("#tahun").focus();
+                    });
+                    return false;
+                } else if (nik==""){
+                    Swal.fire({
+                    title: 'Oops!',
+                    text: 'Pilih Nama Karyawan!',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                    }).then((result)=>{
+                        $("#nik").focus();
+                    });
+                    return false;
+                }
+            });
+        });
+    </script>
+@endpush

@@ -17,6 +17,7 @@
     <link rel="icon" type="image/png" href="{{ asset('assets/img/android-chrome-512x512.png') }}" sizes="32x32">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/android-chrome-512x512.png') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> --}}
 
     <link rel="manifest" href="__manifest.json">
 </head>

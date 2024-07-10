@@ -23,7 +23,8 @@ class PresensiController extends Controller
         $cek_keluar = DB::table('presensi')->where('tanggal_presensi', $hari_ini)->where('nik', $nik)->whereNotNull('foto_keluar')->count();
         $foto_keluar = DB::table('presensi')->where('nik', $nik)->where('tanggal_presensi', $hari_ini)->whereNotNull('foto_keluar')->first();
 
-        $lokasi_kantor = DB::table('lokasi_kantor')->where('id', 1)->first();
+        $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
+        $lokasi_kantor = DB::table('kantor_cabang')->where('kode_cabang', $kode_cabang)->first();
 
 
         return view('presensi.create_presensi', compact('cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor'));
@@ -39,7 +40,8 @@ class PresensiController extends Controller
         $jam_save = $jam[0] . $jam[1] . $jam[2];
 
         // nanti disesuaikan dengan lokasi kantor
-        $lokasi_kantor = DB::table('lokasi_kantor')->where('id', 1)->first();
+        $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
+        $lokasi_kantor = DB::table('kantor_cabang')->where('kode_cabang', $kode_cabang)->first();
         $kantor = explode(",", $lokasi_kantor->lokasi_kantor );
         $latitude_kantor = $kantor[0];
         $longitude_kantor = $kantor[1];

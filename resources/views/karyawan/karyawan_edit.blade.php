@@ -74,6 +74,14 @@
             @endforeach
         </select>
     </div>
+    <div class="form-group">
+        <select name="kode_cabang" id="kode_cabang" class="form-control">
+            <option value="">Pilih Cabang</option>
+            @foreach ($cabang as $item)
+            <option {{ $karyawan->kode_cabang == $item->kode_cabang ? 'selected' : '' }} value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+            @endforeach
+        </select>
+    </div>
     <div class="input-group mb-3">
         <div class="custom-file">
             <input type="file" class="custom-file-input" id="foto" name="foto" onchange="previewImage()">
@@ -106,6 +114,80 @@
 </form>
 @push('myscript')
 <script>
+
+// Validasi form
+        $("#formKaryawan").submit(function(){
+            var nik = $("#nik").val();
+            var nama_lengkap = $("#nama_lengkap").val();
+            var no_wa = $("#no_wa").val();
+            var jabatan = $("#jabatan").val();
+            var kode_departement = $("#kode_departement").val();
+            var kode_cabang = $("#kode_cabang").val();
+            var foto = $("#foto").val();
+
+            if(nik==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'NIK Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#nik").focus();
+                });
+                return false;
+            } else if (nama_lengkap==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Nama Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#nama_lengkap").focus();
+                });
+                return false;
+            } else if (no_wa==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Nomor HP Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#no_wa").focus();
+                });
+                return false;
+            } else if (jabatan==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Jabatan Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#jabatan").focus();
+                });
+                return false;
+            } else if (kode_departement==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Departemen Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#kode_departement").focus();
+                });
+                return false;
+            } else if (kode_cabang==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Cabang Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#kode_cabang").focus();
+                });
+                return false;
+            }
+        });
+
         // preview image
     function previewImage() {
     const fileInput = document.getElementById('foto');
@@ -125,6 +207,8 @@
         imgPreview.src = "{{ Storage::url('uploads/karyawan/' . $karyawan->foto) }}";
         showImage.src = "{{ Storage::url('uploads/karyawan/' . $karyawan->foto) }}";
     }
+
+
 }
 </script>
 

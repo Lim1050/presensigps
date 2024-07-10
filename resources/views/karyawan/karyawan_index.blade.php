@@ -98,6 +98,7 @@
                                 <th>Foto</th>
                                 <th>Jabatan</th>
                                 <th>Departemen</th>
+                                <th>Kantor</th>
                                 <th>No HP</th>
                                 <th>Aksi</th>
                             </tr>
@@ -122,6 +123,7 @@
                                 </td>
                                 <td>{{ $item->jabatan }}</td>
                                 <td>{{ $item->nama_departemen }}</td>
+                                <td>{{ $item->kode_cabang }}</td>
                                 <td>{{ $item->no_wa }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
@@ -185,6 +187,14 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="form-group">
+                        <select name="kode_cabang" id="kode_cabang" class="form-control">
+                            <option value="">Pilih Cabang</option>
+                            @foreach ($cabang as $item)
+                            <option {{ Request('kode_cabang') == $item->kode_cabang ? 'selected' : '' }} value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="input-group mb-3">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="foto" name="foto">
@@ -208,47 +218,8 @@
     </div>
 </div>
 
-<!-- Modal Edit Karyawan -->
-{{-- <div class="modal fade" id="modalEditKaryawan" tabindex="-1" aria-labelledby="modalEditKaryawanLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalEditKaryawanLabel">Edit Data Karyawan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="loadEditForm">
-
-            </div>
-        </div>
-    </div>
-</div> --}}
-
 @push('myscript')
 <script>
-    // modal Edit
-    // $(".edit").click(function(){
-    //     var nik = $(this).attr('nik');
-    //     $.ajax({
-    //         type: 'POST',
-    //         url:'/karyawan/edit',
-    //         cache:false,
-    //         data:{
-    //             _token:"{{ csrf_token() }}",
-    //             nik: nik,
-    //         },
-    //         success:function(respond){
-    //             $("#loadEditForm").html(respond);
-    //         },
-    //         error: function (xhr, status, error) {
-    //                     console.error("Error: " + error);
-    //                     console.error("Status: " + status);
-    //                     console.error("Response: " + xhr.responseText);
-    //                 }
-    //     });
-    //     $("#modalEditKaryawan").modal("show");
-    // })
 
     // preview image
     $(document).ready(function () {
@@ -296,6 +267,7 @@
             var no_wa = $("#no_wa").val();
             var jabatan = $("#jabatan").val();
             var kode_departement = $("#kode_departement").val();
+            var kode_cabang = $("#kode_cabang").val();
             var foto = $("#foto").val();
 
             if(nik==""){
@@ -346,6 +318,16 @@
                 confirmButtonText: 'Ok'
                 }).then((result)=>{
                     $("#kode_departement").focus();
+                });
+                return false;
+            } else if (kode_cabang==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Cabang Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#kode_cabang").focus();
                 });
                 return false;
             } else if (foto==""){

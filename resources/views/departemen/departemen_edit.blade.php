@@ -62,6 +62,33 @@
 </form>
 @push('myscript')
 <script>
+    // Validasi form
+        $("#formDepartemen").submit(function(){
+            var kode_departemen = $("#kode_departemen").val();
+            var nama_departemen = $("#nama_departemen").val();
+
+            if(kode_departemen==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Kode Departemen Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#kode_departemen").focus();
+                });
+                return false;
+            } else if (nama_departemen==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Nama Departemen Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#nama_departemen").focus();
+                });
+                return false;
+            }
+        });
 </script>
 
 

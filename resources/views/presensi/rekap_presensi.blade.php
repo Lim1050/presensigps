@@ -9,7 +9,7 @@
     <div class="col-6">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('admin.rekap.print') }}" target="_blank" method="POST">
+                <form action="{{ route('admin.rekap.print') }}" id="form_rekap" target="_blank" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-12">
@@ -73,3 +73,35 @@
     </div>
 </div>
 @endsection
+@push('myscript')
+    <script>
+        $(function(){
+            $("#form_rekap").submit(function(e){
+                var bulan = $("#bulan").val();
+                var tahun = $("#tahun").val();
+                var nik = $("#nik").val();
+                if(bulan==""){
+                    Swal.fire({
+                    title: 'Oops!',
+                    text: 'Pilih Bulan!',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                    }).then((result)=>{
+                        $("#bulan").focus();
+                    });
+                    return false;
+                } else if (tahun==""){
+                    Swal.fire({
+                    title: 'Oops!',
+                    text: 'Pilih Tahun!',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                    }).then((result)=>{
+                        $("#tahun").focus();
+                    });
+                    return false;
+                }
+            });
+        });
+    </script>
+@endpush
