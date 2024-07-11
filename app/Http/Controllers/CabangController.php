@@ -87,7 +87,7 @@ class CabangController extends Controller
             return redirect()->back()->with(['success' => 'Data Berhasil Dihapus!']);
 
         } else {
-            return redirect()->back()->with(['warning' => 'Data Karyawan Tidak Ditemukan!']);
+            return redirect()->back()->with(['warning' => 'Data Kantor Cabang Tidak Ditemukan!']);
         }
     }
 }

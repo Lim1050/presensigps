@@ -112,6 +112,12 @@ Route::middleware(['auth:user'])->group(function () {
 
     // Konfigurasi Jam Kerja
     Route::get('/admin/konfigurasi/jam/kerja', [KonfigurasiController::class, 'JamKerja'])->name('admin.konfigurasi.jam.kerja');
+    // Konfigurasi Jam Kerja Store
+    Route::post('/admin/konfigurasi/jam/kerja/store', [KonfigurasiController::class, 'JamKerjaStore'])->name('admin.konfigurasi.jam.kerja.store');
+    // Konfigurasi Jam Kerja Update
+    Route::put('/admin/konfigurasi/jam/kerja/update/{kode_jam_kerja}', [KonfigurasiController::class, 'JamKerjaUpdate'])->name('admin.konfigurasi.jam.kerja.update');
+    // Kantor Jam Kerja delete
+    Route::get('/admin/konfigurasi/jam/kerja/delete/{kode_jam_kerja}', [KonfigurasiController::class, 'JamKerjaDelete'])->name('admin.konfigurasi.jam.kerja.delete');
 
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
