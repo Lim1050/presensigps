@@ -23,7 +23,7 @@
 {{-- App Header --}}
 <div class="appHeader gradasired text-light">
     <div class="left">
-        <a href="{{ route('dashboard') }}" class="headerButton goBack">
+        <a href="{{ route('presensi.sakit-izin') }}" class="headerButton goBack">
             <ion-icon name="chevron-back-outline"></ion-icon>
         </a>
     </div>

@@ -14,10 +14,52 @@ use App\Exports\LaporanPresensiExport;
 
 class PresensiController extends Controller
 {
+    public function gethari()
+    {
+        $hari = date("D");
+
+        switch ($hari) {
+            case 'Sun':
+                $hari_ini = "Minggu";
+                break;
+
+            case 'Mon':
+                $hari_ini = "Senin";
+                break;
+
+            case 'Tue':
+                $hari_ini = "Selasa";
+                break;
+
+            case 'Wed':
+                $hari_ini = "Rabu";
+                break;
+
+            case 'Thu':
+                $hari_ini = "Kamis";
+                break;
+
+            case 'Fri':
+                $hari_ini = "Jumat";
+                break;
+
+            case 'Sat':
+                $hari_ini = "Sabtu";
+                break;
+
+            default:
+                $hari_ini = "Tidak diketahui";
+                break;
+        }
+        return $hari_ini;
+    }
+
     public function PresensiCreate()
     {
         // cek apakah sudah absen
         $hari_ini = date("Y-m-d");
+        $nama_hari = $this->gethari();
+
         $nik = Auth::guard('karyawan')->user()->nik;
         $cek_masuk = DB::table('presensi')->where('tanggal_presensi', $hari_ini)->where('nik', $nik)->count();
         $cek_keluar = DB::table('presensi')->where('tanggal_presensi', $hari_ini)->where('nik', $nik)->whereNotNull('foto_keluar')->count();
@@ -26,8 +68,13 @@ class PresensiController extends Controller
         $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
         $lokasi_kantor = DB::table('kantor_cabang')->where('kode_cabang', $kode_cabang)->first();
 
+        $jam_kerja_karyawan = DB::table('jam_kerja_karyawan')
+                                ->join('jam_kerja', 'jam_kerja_karyawan.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+                                ->where('nik', $nik)
+                                ->where('hari', $nama_hari)
+                                ->first();
 
-        return view('presensi.create_presensi', compact('cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor'));
+        return view('presensi.create_presensi', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan'));
     }
 
     public function PresensiStore(Request $request)

@@ -89,7 +89,7 @@
             <div class="col-12">
                 {{-- table --}}
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="text-center">
                                 <th>No</th>
@@ -128,6 +128,7 @@
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <a href="{{ route('admin.karyawan.edit', $item->nik) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
+                                        <a href="{{ route('admin.karyawan.setting', $item->nik) }}" class="btn btn-secondary "><i class="bi bi-gear"></i> Setting</a>
                                         <a href="{{ route('admin.karyawan.delete', $item->nik) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
                                     </div>
                                 </td>

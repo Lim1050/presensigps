@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\JamKerjaKaryawan;
 use App\Models\Karyawan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -163,6 +164,74 @@ class KaryawanController extends Controller
             }
         } else {
             return redirect()->back()->with(['warning' => 'Data Karyawan Tidak Ditemukan!']);
+        }
+    }
+
+    public function KaryawanSetting(Request $request, $nik)
+    {
+        $nik = $request->nik;
+        $karyawan = DB::table('karyawan')->where('nik', $nik)->first();
+        $jam_kerja = DB::table('jam_kerja')->orderBy('kode_jam_kerja')->get();
+        $cek_jam_kerja_karyawan = DB::table('jam_kerja_karyawan')->where('nik', $nik)->count();
+
+        if($cek_jam_kerja_karyawan > 0 ) {
+            $jam_kerja_karyawan = DB::table('jam_kerja_karyawan')->where('nik', $nik)->get();
+            return view('karyawan.karyawan_setting_edit', compact('nik', 'karyawan', 'jam_kerja', 'jam_kerja_karyawan'));
+        } else {
+            return view('karyawan.karyawan_setting', compact('nik', 'karyawan', 'jam_kerja'));
+        }
+
+    }
+
+    public function KaryawanSettingStore(Request $request)
+    {
+        $nik = $request->nik;
+        $hari = $request->hari;
+        $kode_jam_kerja = $request->kode_jam_kerja;
+
+        for ($i = 0; $i < count($hari); $i++){
+            $data[] = [
+                'nik' => $nik,
+                'hari' => $hari[$i],
+                'kode_jam_kerja' => $kode_jam_kerja[$i],
+                'created_at' => Carbon::now()
+            ];
+        }
+
+        try {
+            JamKerjaKaryawan::insert($data);
+            return redirect()->route('admin.karyawan')->with(['success' => 'Jam Kerja Berhasil Disimpan!']);
+        } catch (\Throwable $e){
+            return redirect()->route('admin.karyawan')->with(['warning' => 'Jam Kerja Gagal Disimpan!']);
+        }
+    }
+
+    public function KaryawanSettingUpdate(Request $request)
+    {
+        $nik = $request->nik;
+        $hari = $request->hari;
+        $kode_jam_kerja = $request->kode_jam_kerja;
+
+        for ($i = 0; $i < count($hari); $i++){
+            $data[] = [
+                'nik' => $nik,
+                'hari' => $hari[$i],
+                'kode_jam_kerja' => $kode_jam_kerja[$i],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ];
+        }
+
+        DB::beginTransaction();
+
+        try {
+            DB::table('jam_kerja_karyawan')->where('nik', $nik)->delete();
+            JamKerjaKaryawan::insert($data);
+            DB::commit();
+            return redirect()->route('admin.karyawan')->with(['success' => 'Jam Kerja Berhasil Diupdate!']);
+        } catch (\Throwable $e){
+            DB::rollBack();
+            return redirect()->route('admin.karyawan')->with(['warning' => 'Jam Kerja Gagal Diupdate!']);
         }
     }
 }

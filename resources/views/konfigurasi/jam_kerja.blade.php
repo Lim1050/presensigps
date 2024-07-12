@@ -38,7 +38,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-body">
-        <div class="row">
+        <div class="row mb-4">
             <div class="col-12">
                 @if (Session::get('success'))
                     <div class="alert alert-success">
@@ -55,7 +55,7 @@
         </div>
 
         {{-- form cari data jam kerja --}}
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-12">
                 <form action="{{ route('admin.konfigurasi.jam.kerja') }}" method="GET">
                     <div class="row mt-2">
@@ -75,12 +75,12 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-12">
                 {{-- table --}}
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="text-center">
                                 <th>No</th>

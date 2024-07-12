@@ -3,7 +3,7 @@
 <!-- App Header -->
 <div class="appHeader gradasired text-light">
     <div class="left">
-        <a href="javascript:;" class="headerButton goBack">
+        <a href="{{ route('dashboard') }}" class="headerButton goBack">
             <ion-icon name="chevron-back-outline"></ion-icon>
         </a>
     </div>
@@ -26,6 +26,25 @@
     #map {
         height: 200px;
     }
+
+    .jam-digital-malasngoding {
+        background-color: #27272783;
+        position: absolute;
+        top: 63px;
+        left: 10px;
+        z-index: 9999;
+        width: 150px;
+        border-radius: 10px;
+        padding: 5px;
+    }
+
+    .jam-digital-malasngoding p {
+        color: #fff;
+        font-size: 16px;
+        text-align: left;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 </style>
 
 {{-- leaflet css (for map) --}}
@@ -36,7 +55,7 @@
 @endsection
 
 @section('content')
-<div class="row" style="margin-top: 70px">
+<div class="row" style="margin-top: 60px">
     <div class="col">
 
         {{-- menampilkan lokasi --}}
@@ -45,6 +64,15 @@
         {{-- menampilkan webcam --}}
         <div class="webcam-capture"></div>
     </div>
+</div>
+<div class="jam-digital-malasngoding">
+    <p>{{ $nama_hari }},{{ date("d-m-Y") }}</p>
+    <p id="jam"></p>
+    <p>{{ $jam_kerja_karyawan->nama_jam_kerja }}</p>
+    <p>Awal Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->awal_jam_masuk)) }}</p>
+    <p>Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_masuk)) }}</p>
+    <p>Akhir Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->akhir_jam_masuk)) }}</p>
+    <p>Jam Pulang : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_pulang)) }}</p>
 </div>
 <div class="row">
     <div class="col">
@@ -74,6 +102,30 @@
 @endsection
 
 @push('myscript')
+<script type="text/javascript">
+    window.onload = function() {
+        jam();
+    }
+
+    function jam() {
+        var e = document.getElementById('jam')
+            , d = new Date()
+            , h, m, s;
+        h = d.getHours();
+        m = set(d.getMinutes());
+        s = set(d.getSeconds());
+
+        e.innerHTML = h + ':' + m + ':' + s;
+
+        setTimeout('jam()', 1000);
+    }
+
+    function set(e) {
+        e = e < 10 ? '0' + e : e;
+        return e;
+    }
+</script>
+
 <script>
     // inisiasi audio
     var notif_in = document.getElementById('notif_in');

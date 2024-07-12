@@ -54,6 +54,12 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/admin/karyawan/edit/{nik}', [KaryawanController::class, 'KaryawanEdit'])->name('admin.karyawan.edit');
     // Karyawan update
     Route::post('/admin/karyawan/update', [KaryawanController::class, 'KaryawanUpdate'])->name('admin.karyawan.update');
+    // Karyawan setting
+    Route::get('/admin/karyawan/setting/{nik}', [KaryawanController::class, 'KaryawanSetting'])->name('admin.karyawan.setting');
+    // Karyawan setting store
+    Route::post('/admin/karyawan/setting/store', [KaryawanController::class, 'KaryawanSettingStore'])->name('admin.karyawan.setting.store');
+    // Karyawan setting update
+    Route::post('/admin/karyawan/setting/update', [KaryawanController::class, 'KaryawanSettingUpdate'])->name('admin.karyawan.setting.update');
     // Karyawan delete
     Route::get('/admin/karyawan/delete/{nik}', [KaryawanController::class, 'KaryawanDelete'])->name('admin.karyawan.delete');
 

@@ -12,22 +12,22 @@
     <hr class="sidebar-divider my-0">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/dashboard', 'admin/monitoring/presensi', 'admin/persetujuan/sakit/izin']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseOne"
-            aria-expanded="{{ request()->is(['admin/dashboard', 'admin/monitoring/presensi', 'admin/persetujuan/sakit/izin']) ? 'true' : 'false' }}" aria-controls="collapseOne">
+        <a class="nav-link collapsed {{ request()->is(['admin/dashboard*', 'admin/monitoring/presensi*', 'admin/persetujuan/sakit/izin*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseOne"
+            aria-expanded="{{ request()->is(['admin/dashboard*', 'admin/monitoring/presensi*', 'admin/persetujuan/sakit/izin*']) ? 'true' : 'false' }}" aria-controls="collapseOne">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>
-        <div id="collapseOne" class="collapse {{ request()->is(['admin/dashboard', 'admin/monitoring/presensi', 'admin/persetujuan/sakit/izin']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseOne" class="collapse {{ request()->is(['admin/dashboard*', 'admin/monitoring/presensi*', 'admin/persetujuan/sakit/izin*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
-                <a class="collapse-item {{ request()->is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                <a class="collapse-item {{ request()->is('admin/dashboard*') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span></a>
 
-                <a class="collapse-item {{ request()->is('admin/monitoring/presensi') ? 'active' : '' }}" href="{{ route('admin.monitoring.presensi') }}">
+                <a class="collapse-item {{ request()->is('admin/monitoring/presensi*') ? 'active' : '' }}" href="{{ route('admin.monitoring.presensi') }}">
                 <i class="bi bi-display fa-fw "></i>
                 <span>Monitoring Presensi</span></a>
 
-                <a class="collapse-item {{ request()->is('admin/persetujuan/sakit/izin') ? 'active' : '' }}" href="{{ route('admin.persetujuan.sakit.izin') }}">
+                <a class="collapse-item {{ request()->is('admin/persetujuan/sakit/izin*') ? 'active' : '' }}" href="{{ route('admin.persetujuan.sakit.izin') }}">
                 <i class="bi bi-file-text-fill fa-fw "></i>
                 <span>Persetujuan Sakit / Izin</span></a>
             </div>
@@ -38,18 +38,18 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/laporan/presensi', 'admin/rekap/presensi']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseTwo"
-            aria-expanded="{{ request()->is(['admin/laporan/presensi', 'admin/rekap/presensi']) ? 'true' : 'false' }}" aria-controls="collapseTwo">
+        <a class="nav-link collapsed {{ request()->is(['admin/laporan/presensi*', 'admin/rekap/presensi*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            aria-expanded="{{ request()->is(['admin/laporan/presensi*', 'admin/rekap/presensi*']) ? 'true' : 'false' }}" aria-controls="collapseTwo">
             <i class="bi bi-file-earmark fa-fw"></i>
             <span>Laporan</span>
         </a>
-        <div id="collapseTwo" class="collapse {{ request()->is(['admin/laporan/presensi', 'admin/rekap/presensi']) ? 'show' : '' }} bg-red" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseTwo" class="collapse {{ request()->is(['admin/laporan/presensi*', 'admin/rekap/presensi*']) ? 'show' : '' }} bg-red" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
-                <a class="collapse-item {{ request()->is('admin/laporan/presensi') ? 'active' : '' }}" href="{{ route('admin.laporan.presensi') }}">
+                <a class="collapse-item {{ request()->is('admin/laporan/presensi*') ? 'active' : '' }}" href="{{ route('admin.laporan.presensi') }}">
                 <i class="bi bi-file-earmark-text fa-fw"></i>
                 <span>Laporan Presensi</span></a>
 
-                <a class="collapse-item {{ request()->is('admin/rekap/presensi') ? 'active' : '' }}" href="{{ route('admin.rekap.presensi') }}">
+                <a class="collapse-item {{ request()->is('admin/rekap/presensi*') ? 'active' : '' }}" href="{{ route('admin.rekap.presensi') }}">
                 <i class="bi bi-file-earmark-spreadsheet fa-fw"></i>
                 <span>Rekap Presensi</span></a>
             </div>
@@ -60,22 +60,22 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/karyawan', 'admin/departemen', 'admin/cabang']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseThree"
-            aria-expanded="{{ request()->is(['admin/karyawan', 'admin/departemen', 'admin/cabang']) ? 'true' : 'false' }}" aria-controls="collapseThree">
+        <a class="nav-link collapsed {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseThree"
+            aria-expanded="{{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*']) ? 'true' : 'false' }}" aria-controls="collapseThree">
             <i class="bi bi-archive fa-fw"></i>
             <span>Master</span>
         </a>
-        <div id="collapseThree" class="collapse bg-red {{ request()->is(['admin/karyawan', 'admin/departemen', 'admin/cabang']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseThree" class="collapse bg-red {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
-                <a class="collapse-item {{ request()->is('admin/karyawan') ? 'active' : '' }}" href="{{ route('admin.karyawan') }}">
+                <a class="collapse-item {{ request()->is('admin/karyawan*') ? 'active' : '' }}" href="{{ route('admin.karyawan') }}">
                 <i class="bi bi-person-vcard fa-fw"></i>
                 <span>Karyawan</span></a>
 
-                <a class="collapse-item {{ request()->is('admin/departemen') ? 'active' : '' }}" href="{{ route('admin.departemen') }}">
+                <a class="collapse-item {{ request()->is('admin/departemen*') ? 'active' : '' }}" href="{{ route('admin.departemen') }}">
                 <i class="bi bi-building fa-fw"></i>
                 <span>Departemen</span></a>
 
-                <a class="collapse-item {{ request()->is('admin/cabang') ? 'active' : '' }}" href="{{ route('admin.cabang') }}">
+                <a class="collapse-item {{ request()->is('admin/cabang*') ? 'active' : '' }}" href="{{ route('admin.cabang') }}">
                 <i class="bi bi-buildings fa-fw"></i>
                 <span>Kantor Cabang</span></a>
             </div>
@@ -86,17 +86,17 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/konfigurasi/lokasi/kantor', 'admin/konfigurasi/jam/kerja']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseFour"
-            aria-expanded="{{ request()->is(['admin/konfigurasi/lokasi/kantor', 'admin/konfigurasi/jam/kerja']) ? 'true' : 'false' }}" aria-controls="collapseFour">
+        <a class="nav-link collapsed {{ request()->is(['admin/konfigurasi/lokasi/kantor*', 'admin/konfigurasi/jam/kerja*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseFour"
+            aria-expanded="{{ request()->is(['admin/konfigurasi/lokasi/kantor*', 'admin/konfigurasi/jam/kerja*']) ? 'true' : 'false' }}" aria-controls="collapseFour">
             <i class="bi bi-gear fa-fw"></i>
             <span>Konfigurasi</span>
         </a>
-        <div id="collapseFour" class="collapse bg-red {{ request()->is(['admin/konfigurasi/lokasi/kantor', 'admin/konfigurasi/jam/kerja']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseFour" class="collapse bg-red {{ request()->is(['admin/konfigurasi/lokasi/kantor*', 'admin/konfigurasi/jam/kerja*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
-                <a class="collapse-item {{ request()->is('admin/konfigurasi/lokasi/kantor') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.lokasi.kantor') }}">
+                <a class="collapse-item {{ request()->is('admin/konfigurasi/lokasi/kantor*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.lokasi.kantor') }}">
                 <i class="bi bi-geo fa-fw"></i>
                 <span>Lokasi Kantor</span></a>
-                <a class="collapse-item {{ request()->is('admin/konfigurasi/jam/kerja') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.jam.kerja') }}">
+                <a class="collapse-item {{ request()->is('admin/konfigurasi/jam/kerja*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.jam.kerja') }}">
                 <i class="bi bi-clock fa-fw"></i>
                 <span>Jam Kerja</span></a>
             </div>
