@@ -34,16 +34,17 @@
         left: 10px;
         z-index: 9999;
         width: 150px;
+        height: 150px;
         border-radius: 10px;
         padding: 5px;
     }
 
     .jam-digital-malasngoding p {
         color: #fff;
-        font-size: 16px;
+        font-size: 12px;
         text-align: left;
-        margin-top: 0;
-        margin-bottom: 0;
+        margin-top: -5px;
+        margin-bottom: -5px;
     }
 </style>
 

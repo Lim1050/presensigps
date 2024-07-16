@@ -277,7 +277,7 @@
         </div>
         <div class="tab-content mt-2" style="margin-bottom:100px;">
             <div class="tab-pane fade show active" id="home" role="tabpanel">
-                <ul class="listview image-listview">
+                {{-- <ul class="listview image-listview">
                     @foreach ($history_bulan_ini as $bulan_ini)
                     @php
                         $path = Storage::url($bulan_ini->foto_masuk);
@@ -298,8 +298,33 @@
                         </div>
                     </li>
                     @endforeach
-
-                </ul>
+                </ul> --}}
+                <style>
+                    .historycontent{
+                        display: flex;
+                    }
+                    .datapresensi{
+                        margin-left: 10px;
+                    }
+                </style>
+                @foreach ($history_bulan_ini as $bulan_ini)
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="historycontent">
+                                <div class="iconpresensi">
+                                    <ion-icon style="font-size: 40px" name="checkmark-circle-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
+                                </div>
+                                <div class="datapresensi">
+                                    <h3 style="line-height: 3px">{{ $bulan_ini->nama_jam_kerja }}</h3>
+                                    <span>{{ $bulan_ini->jam_kerja_masuk }} - {{ $bulan_ini->jam_pulang }}</span>
+                                    <h4 style="margin: 0px !important;">{{ date("d-m-Y", strtotime($bulan_ini->tanggal_presensi)) }}</h4>
+                                    <span class="badge {{ $bulan_ini->jam_masuk < $bulan_ini->jam_kerja_masuk ? "badge-success" : "badge-warning"}}">{{ $bulan_ini->jam_masuk < $bulan_ini->jam_kerja_masuk ? $bulan_ini->jam_masuk : "Telat " . $bulan_ini->jam_masuk}}</span>
+                                    <span class="badge badge-danger">{{ $bulan_ini->jam_keluar != null ? $bulan_ini->jam_keluar : 'Belum Absen'}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel">
                 <ul class="listview image-listview">

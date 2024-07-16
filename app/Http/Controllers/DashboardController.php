@@ -21,15 +21,19 @@ class DashboardController extends Controller
                                 ->where('nik', $nik)
                                 ->where('tanggal_presensi', $hari_ini)
                                 ->first();
+
         $history_bulan_ini = DB::table('presensi')
-                                ->where('nik', $nik)
-                                ->whereRaw('MONTH(tanggal_presensi)="' . $bulan_ini . '"')
-                                ->whereRaw('YEAR(tanggal_presensi)="' . $tahun_ini . '"')
-                                ->orderBy('tanggal_presensi')
+                                ->select('presensi.*', 'jam_kerja.nama_jam_kerja', 'jam_kerja.jam_masuk as jam_kerja_masuk', 'jam_kerja.jam_pulang')
+                                ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+                                ->where('presensi.nik', $nik)
+                                ->whereRaw('MONTH(presensi.tanggal_presensi) = ?', [$bulan_ini])
+                                ->whereRaw('YEAR(presensi.tanggal_presensi) = ?', [$tahun_ini])
+                                ->orderBy('presensi.tanggal_presensi')
                                 ->get();
 
         $rekap_presensi = DB::table('presensi')
-                            ->selectRaw('COUNT(nik) as jml_hadir, SUM(IF(jam_masuk > "09:00",1,0)) as jml_terlambat')
+                            ->selectRaw('COUNT(nik) as jml_hadir, SUM(IF(presensi.jam_masuk > jam_kerja.jam_masuk,1,0)) as jml_terlambat')
+                            ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
                             ->where('nik', $nik)
                             ->whereRaw('MONTH(tanggal_presensi)="' . $bulan_ini . '"')
                             ->whereRaw('YEAR(tanggal_presensi)="' . $tahun_ini . '"')

@@ -161,9 +161,9 @@
                 </td>
                 <td>
                     @php
-                        $terlambat = selisih('09:00:00', $item->jam_masuk);
+                        $terlambat = selisih($item->jam_masuk_kerja, $item->jam_masuk);
                     @endphp
-                     @if ($item->jam_masuk >= '09:00')
+                    @if ($item->jam_masuk >= $item->jam_masuk_kerja)
                         Terlambat {{ $terlambat }}
                     @else
                         Tepat Waktu

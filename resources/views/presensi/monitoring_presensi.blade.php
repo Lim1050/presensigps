@@ -64,8 +64,9 @@
                                     <th>No.</th>
                                     <th>NIK</th>
                                     <th>Nama Karyawan</th>
-                                    {{-- <th>Jabatan</th> --}}
+                                    <th>Jabatan</th>
                                     <th>Departemen</th>
+                                    <th>Jadwal</th>
                                     <th>Jam Masuk</th>
                                     <th>Foto Masuk</th>
                                     <th>Jam Pulang</th>

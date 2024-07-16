@@ -21,8 +21,9 @@
         <td class="text-center">{{ $loop->iteration }}</td>
         <td>{{ $item->nik }}</td>
         <td>{{ $item->nama_lengkap }}</td>
-        {{-- <td>{{ $item->jabatan }}</td> --}}
+        <td>{{ $item->jabatan }}</td>
         <td>{{ $item->nama_departemen }}</td>
+        <td>{{ $item->nama_jam_kerja }} <br> ({{ $item->jam_masuk_kerja }} s/d {{ $item->jam_pulang_kerja }})</td>
         <td>{{ $item->jam_masuk }}</td>
         <td><img src="{{ Storage::url($item->foto_masuk) }}" class="img-thumbnail" style="width: 70px; height: 70px;" alt="..."></td>
         <td>{!! $item->jam_keluar != null ? $item->jam_keluar : '<span class="badge bg-danger" style="color: white">Belum Absen Pulang</span>' !!}</td>
@@ -38,9 +39,9 @@
             @endif
         </td>
         <td>
-            @if ($item->jam_masuk >= '09:00')
+            @if ($item->jam_masuk >= $item->jam_masuk_kerja)
                 @php
-                    $terlambat = selisih('09:00:00', $item->jam_masuk);
+                    $terlambat = selisih($item->jam_masuk_kerja, $item->jam_masuk);
                 @endphp
                 <span class="badge bg-warning" style="color: white">Terlambat {{ $terlambat }}</span>
             @else

@@ -49,7 +49,7 @@
 
 <!-- Set "A5", "A4" or "A3" for class name -->
 <!-- Set also "landscape" if you need -->
-<body class="A4 landscape">
+<body class="A3 landscape">
     <!-- Each sheet element should have the class "sheet" -->
     <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
     <section class="sheet padding-10mm">
@@ -75,8 +75,8 @@
             <th rowspan="2">NIK</th>
             <th rowspan="2">Nama Karyawan</th>
             <th colspan="31">Tanggal</th>
-            <th rowspan="2">Total Hadir</th>
-            <th rowspan="2">Total Terlambat</th>
+            <th rowspan="2">Hadir</th>
+            <th rowspan="2">Terlambat</th>
         </tr>
         <tr>
             @for ($i=1; $i <= 31; $i++)
@@ -99,21 +99,21 @@
                     } else {
                         $hadir = explode("-", $r->$tanggal);
                         $total_hadir += 1;
-                        if ($hadir[0] > "09:00:00" ) {
+                        if ($hadir[0] > $r->jam_masuk_kerja ) {
                             $total_terlambat += 1;
                         }
                     }
             ?>
-            <td style="font-size: 9px">
-                <span style="color: {{ $hadir[0] > "09:00:00" ? "red" : ""}}"  >{{ $hadir[0] }}</span></br>
-                <span style="color: {{ $hadir[0] < "17:00:00" ? "red" : ""}}"  >{{ $hadir[1] }}</span>
+            <td style="text-align: center; font-size: 9px">
+                <span style="color: {{ $hadir[0] > $r->jam_masuk_kerja ? "red" : ""}}"  >{{ !empty($hadir[0]) ? $hadir[0] : '-' }}</span></br>
+                <span style="color: {{ $hadir[0] < $r->jam_pulang ? "red" : ""}}"  >{{ $hadir[1] }}</span>
             </td>
 
             <?php
                 }
             ?>
-            <td>{{ $total_hadir }}</td>
-            <td>{{ $total_terlambat }}</td>
+            <td style="text-align: center">{{ $total_hadir }}</td>
+            <td style="text-align: center">{{ $total_terlambat }}</td>
 
         </tr>
         @endforeach
