@@ -152,28 +152,16 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="icon-placeholder">
-                            <i class="bi bi-alarm"></i>
-                            <input type="text" class="form-control" id="awal_jam_masuk" name="awal_jam_masuk" placeholder=" Awal Jam Masuk">
-                        </div>
+                        <input type="time" class="form-control" id="awal_jam_masuk" name="awal_jam_masuk" placeholder=" Awal Jam Masuk">
                     </div>
                     <div class="form-group">
-                        <div class="icon-placeholder">
-                            <i class="bi bi-alarm"></i>
-                            <input type="text" class="form-control" id="jam_masuk" name="jam_masuk" placeholder=" Jam Masuk">
-                        </div>
+                        <input type="time" class="form-control" id="jam_masuk" name="jam_masuk" placeholder=" Jam Masuk">
                     </div>
                     <div class="form-group">
-                        <div class="icon-placeholder">
-                            <i class="bi bi-alarm"></i>
-                            <input type="text" class="form-control" id="akhir_jam_masuk" name="akhir_jam_masuk" placeholder=" Akhir Jam Masuk">
-                        </div>
+                        <input type="time" class="form-control" id="akhir_jam_masuk" name="akhir_jam_masuk" placeholder=" Akhir Jam Masuk">
                     </div>
                     <div class="form-group">
-                        <div class="icon-placeholder">
-                            <i class="bi bi-alarm-fill"></i>
-                            <input type="text" class="form-control" id="jam_pulang" name="jam_pulang" placeholder=" Jam Pulang">
-                        </div>
+                        <input type="time" class="form-control" id="jam_pulang" name="jam_pulang" placeholder=" Jam Pulang">
                     </div>
 
                     <div class="row mt-2">

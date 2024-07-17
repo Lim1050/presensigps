@@ -36,6 +36,7 @@ class ComposerStaticInit28d475a14bbcc97a87a1d90e6d3f1e18
         'ce9671a430e4846b44e1c68c7611f9f5' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         '320163ac6b93aebe3dc25b60a0533d56' => __DIR__ . '/..' . '/spatie/laravel-ignition/src/helpers.php',
+        '1f9e54d362959b6a1a8e882d41880168' => __DIR__ . '/../..' . '/app/Helper/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -572,7 +573,9 @@ class ComposerStaticInit28d475a14bbcc97a87a1d90e6d3f1e18
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Exports\\LaporanPresensiExport' => __DIR__ . '/../..' . '/app/Exports/LaporanPresensiExport.php',
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
+        'App\\Http\\Controllers\\CabangController' => __DIR__ . '/../..' . '/app/Http/Controllers/CabangController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/DashboardController.php',
         'App\\Http\\Controllers\\DepartemenController' => __DIR__ . '/../..' . '/app/Http/Controllers/DepartemenController.php',
@@ -593,6 +596,7 @@ class ComposerStaticInit28d475a14bbcc97a87a1d90e6d3f1e18
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Models\\Departemen' => __DIR__ . '/../..' . '/app/Models/Departemen.php',
         'App\\Models\\Gaji' => __DIR__ . '/../..' . '/app/Models/Gaji.php',
+        'App\\Models\\JamKerjaKaryawan' => __DIR__ . '/../..' . '/app/Models/JamKerjaKaryawan.php',
         'App\\Models\\Karyawan' => __DIR__ . '/../..' . '/app/Models/Karyawan.php',
         'App\\Models\\LokasiKantor' => __DIR__ . '/../..' . '/app/Models/LokasiKantor.php',
         'App\\Models\\PersetujuanSakitIzin' => __DIR__ . '/../..' . '/app/Models/PersetujuanSakitIzin.php',
@@ -732,6 +736,7 @@ class ComposerStaticInit28d475a14bbcc97a87a1d90e6d3f1e18
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
         'Database\\Seeders\\DepartemenSeeder' => __DIR__ . '/../..' . '/database/seeders/DepartemenSeeder.php',
+        'Database\\Seeders\\JamKerjaSeeder' => __DIR__ . '/../..' . '/database/seeders/JamKerjaSeeder.php',
         'Database\\Seeders\\KaryawanSeeder' => __DIR__ . '/../..' . '/database/seeders/KaryawanSeeder.php',
         'Database\\Seeders\\LokasiKantorSeeder' => __DIR__ . '/../..' . '/database/seeders/LokasiKantorSeeder.php',
         'Database\\Seeders\\PresensiTableSeeder' => __DIR__ . '/../..' . '/database/seeders/PresensiTableSeeder.php',

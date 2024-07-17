@@ -222,6 +222,11 @@
 @push('myscript')
 <script>
 
+    $(function(){
+        $("#nik").mask("000000000");
+        $("#no_wa").mask("0000000000000");
+    });
+
     // preview image
     $(document).ready(function () {
             $('#foto').on('change', function () {

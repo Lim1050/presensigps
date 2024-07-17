@@ -93,9 +93,9 @@
         </a>
         <div id="collapseFour" class="collapse bg-red {{ request()->is(['admin/konfigurasi/lokasi/kantor*', 'admin/konfigurasi/jam/kerja*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
-                <a class="collapse-item {{ request()->is('admin/konfigurasi/lokasi/kantor*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.lokasi.kantor') }}">
+                {{-- <a class="collapse-item {{ request()->is('admin/konfigurasi/lokasi/kantor*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.lokasi.kantor') }}">
                 <i class="bi bi-geo fa-fw"></i>
-                <span>Lokasi Kantor</span></a>
+                <span>Lokasi Kantor</span></a> --}}
                 <a class="collapse-item {{ request()->is('admin/konfigurasi/jam/kerja*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.jam.kerja') }}">
                 <i class="bi bi-clock fa-fw"></i>
                 <span>Jam Kerja</span></a>

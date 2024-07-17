@@ -312,14 +312,39 @@
                         <div class="card-body">
                             <div class="historycontent">
                                 <div class="iconpresensi">
-                                    <ion-icon style="font-size: 40px" name="checkmark-circle-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
+                                    <ion-icon style="font-size: 48px" name="checkmark-circle-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
                                 </div>
                                 <div class="datapresensi">
-                                    <h3 style="line-height: 3px">{{ $bulan_ini->nama_jam_kerja }}</h3>
-                                    <span>{{ $bulan_ini->jam_kerja_masuk }} - {{ $bulan_ini->jam_pulang }}</span>
+                                    <h3 style="line-height: 3px">{{ $bulan_ini->nama_jam_kerja }} <small>({{ date("H:i",strtotime($bulan_ini->jam_kerja_masuk)) }} - {{ date("H:i",strtotime($bulan_ini->jam_pulang)) }})</small></h3>
+
                                     <h4 style="margin: 0px !important;">{{ date("d-m-Y", strtotime($bulan_ini->tanggal_presensi)) }}</h4>
-                                    <span class="badge {{ $bulan_ini->jam_masuk < $bulan_ini->jam_kerja_masuk ? "badge-success" : "badge-warning"}}">{{ $bulan_ini->jam_masuk < $bulan_ini->jam_kerja_masuk ? $bulan_ini->jam_masuk : "Telat " . $bulan_ini->jam_masuk}}</span>
-                                    <span class="badge badge-danger">{{ $bulan_ini->jam_keluar != null ? $bulan_ini->jam_keluar : 'Belum Absen'}}</span>
+                                    <span class="{{ $bulan_ini->jam_masuk < $bulan_ini->jam_kerja_masuk ? "text-success" : "text-warning"}}">{{ $bulan_ini->jam_masuk < $bulan_ini->jam_kerja_masuk ? date("H:i",strtotime($bulan_ini->jam_masuk)) : date("H:i",strtotime($bulan_ini->jam_masuk))}}</span> -
+                                    <span class="text-danger">{{ $bulan_ini->jam_keluar != null ? date("H:i",strtotime($bulan_ini->jam_keluar)) : 'Belum Absen'}}</span>
+                                    <div id="keterangan" class="mt-0">
+                                        @php
+                                            // waktu ketika absen
+                                            $jam_masuk = date("H:i",strtotime($bulan_ini->jam_masuk));
+                                            // waktu jadwal masuk
+                                            $jam_kerja_masuk = date("H:i",strtotime($bulan_ini->jam_kerja_masuk));
+
+                                            $jadwal_jam_masuk = $bulan_ini->tanggal_presensi." ".$jam_kerja_masuk;
+                                            $jam_presensi = $bulan_ini->tanggal_presensi." ".$jam_masuk;
+                                            $hitungjamterlambat = hitungjamterlambat($jadwal_jam_masuk, $jam_presensi);
+                                            // Konversi hasil $hitungjamterlambat menjadi format deskriptif
+                                            list($hours, $minutes) = explode(':', $hitungjamterlambat);
+                                            $deskripsiTerlambat = '';
+                                            if ($hours > 0) {
+                                                $deskripsiTerlambat .= (int)$hours . ' jam';
+                                            }
+                                            if ($minutes > 0) {
+                                                if ($hours > 0) {
+                                                    $deskripsiTerlambat .= ' ';
+                                                }
+                                                $deskripsiTerlambat .= (int)$minutes . ' menit';
+                                            }
+                                        @endphp
+                                        <span class="{{ $bulan_ini->jam_masuk < $bulan_ini->jam_kerja_masuk ? "text-success" : "text-warning"}}">{{ $bulan_ini->jam_masuk > $bulan_ini->jam_kerja_masuk ? "Terlambat $deskripsiTerlambat" : "Tepat Waktu"}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

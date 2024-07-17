@@ -78,6 +78,8 @@ class KaryawanController extends Controller
             // dd($e->getCode());
             if($e->getCode()==23000){
                 $message = " Data dengan NIK " . $nik . " Sudah ada!";
+            } else {
+                $message = " Hubungi Tim IT";
             }
             return redirect()->back()->with(['error' => 'Data Gagal Disimpan!' . $message]);
         }
