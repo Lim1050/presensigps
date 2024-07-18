@@ -13,21 +13,27 @@
 @endsection
 
 @section('content')
-<div class="row">
-    <div class="col" style="margin-top: 4rem">
-        @php
-            $messagesuccess = Session::get('success');
-            $messageerror = Session::get('error');
-        @endphp
-        @if (Session::get('success'))
-            <div class="alert alert-success">{{ $messagesuccess }}</div>
-        @elseif (Session::get('error'))
-            <div class="alert alert-error">{{ $messageerror }}</div>
-        @endif
-    </div>
-</div>
 <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" style="min-height: 1000px">
     @csrf
+    <div class="row">
+        <div class="col" style="margin-top: 4rem">
+            @php
+                $messagesuccess = Session::get('success');
+                $messageerror = Session::get('error');
+            @endphp
+            @if (Session::get('success'))
+                <div class="alert alert-success">{{ $messagesuccess }}</div>
+            @elseif (Session::get('error'))
+                <div class="alert alert-error">{{ $messageerror }}</div>
+            @endif
+
+            @error('foto')
+                <div class="alert alert-warning">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+    </div>
     <div class="col">
         <div class="form-group boxed">
             <div class="input-wrapper">

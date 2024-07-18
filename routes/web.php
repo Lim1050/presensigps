@@ -125,6 +125,21 @@ Route::middleware(['auth:user'])->group(function () {
     // Kantor Jam Kerja delete
     Route::get('/admin/konfigurasi/jam/kerja/delete/{kode_jam_kerja}', [KonfigurasiController::class, 'JamKerjaDelete'])->name('admin.konfigurasi.jam.kerja.delete');
 
+    // Konfigurasi Jam Kerja Departement
+    Route::get('/admin/konfigurasi/jam-kerja-dept', [KonfigurasiController::class, 'JamKerjaDept'])->name('admin.konfigurasi.jam-kerja-dept');
+    // Konfigurasi Jam Kerja Departement Create
+    Route::get('/admin/konfigurasi/jam-kerja-dept/create', [KonfigurasiController::class, 'JamKerjaDeptCreate'])->name('admin.konfigurasi.jam-kerja-dept.create');
+    // Konfigurasi Jam Kerja Departement Store
+    Route::post('/admin/konfigurasi/jam-kerja-dept/store', [KonfigurasiController::class, 'JamKerjaDeptStore'])->name('admin.konfigurasi.jam-kerja-dept.store');
+    // Konfigurasi Jam Kerja Departement view
+    Route::get('/admin/konfigurasi/jam-kerja-dept/view/{kode_jk_dept}', [KonfigurasiController::class, 'JamKerjaDeptView'])->name('admin.konfigurasi.jam-kerja-dept.view');
+    // Konfigurasi Jam Kerja Departement edit
+    Route::get('/admin/konfigurasi/jam-kerja-dept/edit/{kode_jk_dept}', [KonfigurasiController::class, 'JamKerjaDeptEdit'])->name('admin.konfigurasi.jam-kerja-dept.edit');
+    // Konfigurasi Jam Kerja Departement update
+    Route::post('/admin/konfigurasi/jam-kerja-dept/update/{kode_jk_dept}', [KonfigurasiController::class, 'JamKerjaDeptUpdate'])->name('admin.konfigurasi.jam-kerja-dept.update');
+    // Konfigurasi Jam Kerja Departement delete
+    Route::get('/admin/konfigurasi/jam-kerja-dept/delete/{kode_jk_dept}', [KonfigurasiController::class, 'JamKerjaDeptDelete'])->name('admin.konfigurasi.jam-kerja-dept.delete');
+
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
 });

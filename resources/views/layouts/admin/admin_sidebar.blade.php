@@ -86,19 +86,19 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/konfigurasi/lokasi/kantor*', 'admin/konfigurasi/jam/kerja*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseFour"
-            aria-expanded="{{ request()->is(['admin/konfigurasi/lokasi/kantor*', 'admin/konfigurasi/jam/kerja*']) ? 'true' : 'false' }}" aria-controls="collapseFour">
+        <a class="nav-link collapsed {{ request()->is(['admin/konfigurasi/jam/kerja*', 'admin/konfigurasi/jam-kerja-dept*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseFour"
+            aria-expanded="{{ request()->is(['admin/konfigurasi/jam/kerja*', 'admin/konfigurasi/jam-kerja-dept*']) ? 'true' : 'false' }}" aria-controls="collapseFour">
             <i class="bi bi-gear fa-fw"></i>
             <span>Konfigurasi</span>
         </a>
-        <div id="collapseFour" class="collapse bg-red {{ request()->is(['admin/konfigurasi/lokasi/kantor*', 'admin/konfigurasi/jam/kerja*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseFour" class="collapse bg-red {{ request()->is(['admin/konfigurasi/jam/kerja*', 'admin/konfigurasi/jam-kerja-dept*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
-                {{-- <a class="collapse-item {{ request()->is('admin/konfigurasi/lokasi/kantor*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.lokasi.kantor') }}">
-                <i class="bi bi-geo fa-fw"></i>
-                <span>Lokasi Kantor</span></a> --}}
                 <a class="collapse-item {{ request()->is('admin/konfigurasi/jam/kerja*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.jam.kerja') }}">
                 <i class="bi bi-clock fa-fw"></i>
                 <span>Jam Kerja</span></a>
+                <a class="collapse-item {{ request()->is('admin/konfigurasi/jam-kerja-dept*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.jam-kerja-dept') }}">
+                <i class="bi bi-clock fa-fw"></i>
+                <span>Jam Kerja Departemen</span></a>
             </div>
         </div>
     </li>

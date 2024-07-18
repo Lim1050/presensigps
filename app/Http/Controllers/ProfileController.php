@@ -31,6 +31,9 @@ class ProfileController extends Controller
 
         // get data karyawan dari table
         $karyawan = DB::table('karyawan')->where('nik', $nik)->first();
+        $request->validate([
+            'foto' => 'image|mimes:jpeg,png,jpg|max:1000'
+        ]);
 
         // cek apakah ada foto dari form
         if($request->hasFile('foto')){

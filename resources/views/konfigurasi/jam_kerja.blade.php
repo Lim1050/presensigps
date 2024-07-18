@@ -111,7 +111,7 @@
                                             data-awal="{{ $item->awal_jam_masuk }}"
                                             data-masuk="{{ $item->jam_masuk }}"
                                             data-akhir="{{ $item->akhir_jam_masuk }}"
-                                            data-pulang="{{ $item->jam_pulang }}"><i class="bi pencil-square"></i> Edit</a>
+                                            data-pulang="{{ $item->jam_pulang }}"><i class="bi bi-pencil-square"></i> Edit</a>
                                         <a href="{{ route('admin.konfigurasi.jam.kerja.delete', $item->kode_jam_kerja) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
                                     </div>
                                 </td>

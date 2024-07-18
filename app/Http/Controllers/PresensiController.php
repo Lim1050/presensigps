@@ -73,8 +73,12 @@ class PresensiController extends Controller
                                 ->where('nik', $nik)
                                 ->where('hari', $nama_hari)
                                 ->first();
-
-        return view('presensi.create_presensi', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan'));
+        if($jam_kerja_karyawan == null){
+            return view('presensi.jadwal_kosong', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan'));
+        }else{
+            return view('presensi.create_presensi', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan'));
+        }
+        // dd($jam_kerja_karyawan);
     }
 
     public function PresensiStore(Request $request)
