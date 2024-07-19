@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CabangController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartemenController;
+use App\Http\Controllers\IzinController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\PresensiController;
@@ -166,6 +167,12 @@ Route::middleware(['auth:karyawan'])->group(function () {
     // cek pengajuan sakit/izin
     Route::post('/presensi/cek/pengajuan/sakit-izin', [PresensiController::class, 'CekPengajuanSakitIzin'])->name('presensi.cek.pengajuan.sakit-izin');
 
+    // Izin Absen
+    Route::get('/izin/absen', [IzinController::class, 'CreateIzinAbsen'])->name('izin.absen');
+    // Izin Sakit
+    Route::get('/izin/sakit', [IzinController::class, 'CreateIzinSakit'])->name('izin.sakit');
+    // Izin Cuti
+    Route::get('/izin/cuti', [IzinController::class, 'CreateIzinCuti'])->name('izin.cuti');
 
     // profile
     Route::get('/profile', [ProfileController::class, 'Profile'])->name('profile');

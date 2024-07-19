@@ -45,7 +45,31 @@
         @endforeach
     </div>
 </div>
-<div class="fab-button bottom-right" style="margin-bottom: 70px">
-    <a href="{{ route('presensi.create.sakit-izin') }}" class="fab bg-danger"><ion-icon name="add-outline"></ion-icon></a>
+
+<div class="fab-button animate bottom-right dropdown" style="margin-bottom: 70px">
+    <a href="#" class="fab bg-danger" data-toggle="dropdown">
+        <ion-icon name="add-outline" role="img" class="md hydrated" aria-label="add outline"></ion-icon>
+    </a>
+    <div class="dropdown-menu">
+
+        <a href="{{ route('izin.absen') }}" class="dropdown-item bg-danger">
+            <ion-icon name="reader-outline" role="img" class="md hydrated" aria-label="image outline"></ion-icon>
+            <p>Izin Absen</p>
+        </a>
+
+        <a href="{{ route('izin.sakit') }}" class="dropdown-item bg-danger">
+            <ion-icon name="medkit-outline" role="img" class="md hydrated" aria-label="videocam outline"></ion-icon>
+            <p>Sakit</p>
+        </a>
+
+        <a href="{{ route('izin.cuti') }}" class="dropdown-item bg-danger">
+            <ion-icon name="calendar-outline" role="img" class="md hydrated" aria-label="videocam outline"></ion-icon>
+            <p>Cuti</p>
+        </a>
+    </div>
 </div>
+
+{{-- <div class="fab-button bottom-right" style="margin-bottom: 70px">
+    <a href="{{ route('presensi.create.sakit-izin') }}" class="fab bg-danger"><ion-icon name="add-outline"></ion-icon></a>
+</div> --}}
 @endsection

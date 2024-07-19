@@ -61,18 +61,48 @@ class PresensiController extends Controller
         $nama_hari = $this->gethari();
 
         $nik = Auth::guard('karyawan')->user()->nik;
-        $cek_masuk = DB::table('presensi')->where('tanggal_presensi', $hari_ini)->where('nik', $nik)->count();
-        $cek_keluar = DB::table('presensi')->where('tanggal_presensi', $hari_ini)->where('nik', $nik)->whereNotNull('foto_keluar')->count();
-        $foto_keluar = DB::table('presensi')->where('nik', $nik)->where('tanggal_presensi', $hari_ini)->whereNotNull('foto_keluar')->first();
+        $kode_departemen = Auth::guard('karyawan')->user()->kode_departemen;
+
+        $cek_masuk = DB::table('presensi')
+                        ->where('tanggal_presensi', $hari_ini)
+                        ->where('nik', $nik)
+                        ->count();
+
+        $cek_keluar = DB::table('presensi')
+                        ->where('tanggal_presensi', $hari_ini)
+                        ->where('nik', $nik)
+                        ->whereNotNull('foto_keluar')
+                        ->count();
+
+        $foto_keluar = DB::table('presensi')
+                        ->where('nik', $nik)
+                        ->where('tanggal_presensi', $hari_ini)
+                        ->whereNotNull('foto_keluar')
+                        ->first();
 
         $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
-        $lokasi_kantor = DB::table('kantor_cabang')->where('kode_cabang', $kode_cabang)->first();
+
+        $lokasi_kantor = DB::table('kantor_cabang')
+                            ->where('kode_cabang', $kode_cabang)
+                            ->first();
 
         $jam_kerja_karyawan = DB::table('jam_kerja_karyawan')
                                 ->join('jam_kerja', 'jam_kerja_karyawan.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
                                 ->where('nik', $nik)
                                 ->where('hari', $nama_hari)
                                 ->first();
+
+        if ($jam_kerja_karyawan == null) {
+            $jam_kerja_karyawan = DB::table('jam_kerja_dept_detail')
+                                ->join('jam_kerja_dept', 'jam_kerja_dept_detail.kode_jk_dept', '=', 'jam_kerja_dept.kode_jk_dept')
+                                ->join('jam_kerja', 'jam_kerja_dept_detail.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+                                ->where('kode_departemen', $kode_departemen)
+                                ->where('kode_cabang', $kode_cabang)
+                                ->where('hari', $nama_hari)
+                                ->first();
+            // dd($jam_kerja_karyawan);
+        }
+
         if($jam_kerja_karyawan == null){
             return view('presensi.jadwal_kosong', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan'));
         }else{
@@ -85,6 +115,8 @@ class PresensiController extends Controller
     {
         // inisiasi data
         $nik = Auth::guard('karyawan')->user()->nik;
+        $kode_departemen = Auth::guard('karyawan')->user()->kode_departemen;
+        $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
         $tgl_presensi = date("Y-m-d");
         $jam_presensi = date("H:i:s");
         $jam = explode(":", $jam_presensi);
@@ -98,7 +130,15 @@ class PresensiController extends Controller
                                 ->where('hari', $nama_hari)
                                 ->first();
 
-
+            if ($jam_kerja_karyawan == null) {
+                $jam_kerja_karyawan = DB::table('jam_kerja_dept_detail')
+                                        ->join('jam_kerja_dept', 'jam_kerja_dept_detail.kode_jk_dept', '=', 'jam_kerja_dept.kode_jk_dept')
+                                        ->join('jam_kerja', 'jam_kerja_dept_detail.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+                                        ->where('kode_departemen', $kode_departemen)
+                                        ->where('kode_cabang', $kode_cabang)
+                                        ->where('hari', $nama_hari)
+                                        ->first();
+            }
         // nanti disesuaikan dengan lokasi kantor
         $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
         $lokasi_kantor = DB::table('kantor_cabang')->where('kode_cabang', $kode_cabang)->first();
