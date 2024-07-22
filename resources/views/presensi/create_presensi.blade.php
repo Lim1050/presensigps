@@ -135,6 +135,10 @@
     button.disabled = true;
 </script>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ecbf6e6990ecfbb1a8cc1a995b7906fd12d88df9
 <script>
     // inisiasi audio
     var notif_in = document.getElementById('notif_in');
