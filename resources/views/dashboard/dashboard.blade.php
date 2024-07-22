@@ -308,7 +308,7 @@
                     }
                 </style>
                 @foreach ($history_bulan_ini as $bulan_ini)
-                    <div class="card">
+                    <div class="card mb-1">
                         <div class="card-body">
                             <div class="historycontent">
                                 <div class="iconpresensi">

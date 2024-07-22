@@ -68,8 +68,8 @@ class DashboardController extends Controller
         $rekap_sakit_izin = DB::table('pengajuan_sakit_izin')
             ->selectRaw('SUM(IF(status="izin",1,0)) as jumlah_izin, SUM(IF(status="sakit",1,0)) as jumlah_sakit')
             ->where('nik', $nik)
-            ->whereRaw('MONTH(tanggal_izin)="' . $bulan_ini . '"')
-            ->whereRaw('YEAR(tanggal_izin)="' . $tahun_ini . '"')
+            ->whereRaw('MONTH(tanggal_izin_dari)="' . $bulan_ini . '"')
+            ->whereRaw('YEAR(tanggal_izin_dari)="' . $tahun_ini . '"')
             ->where('status_approved', 1)
             ->first();
 
@@ -85,7 +85,7 @@ class DashboardController extends Controller
                             ->first();
         $rekap_sakit_izin = DB::table('pengajuan_sakit_izin')
                             ->selectRaw('SUM(IF(status = "sakit",1,0)) as jumlah_sakit, SUM(IF(status = "izin",1,0)) as jumlah_izin')
-                            ->where('tanggal_izin', $hari_ini)
+                            ->where('tanggal_izin_dari', $hari_ini)
                             ->first();
         $jumlah_karyawan = DB::table('karyawan')->count('nik');
 

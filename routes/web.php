@@ -158,6 +158,7 @@ Route::middleware(['auth:karyawan'])->group(function () {
     Route::get('/presensi/history', [PresensiController::class, 'PresensiHistory'])->name('presensi.history');
     // gethistory presensi
     Route::post('/gethistory', [PresensiController::class, 'GetHistory']);
+
     // sakit/izin presensi
     Route::get('/presensi/sakit-izin', [PresensiController::class, 'SakitIzin'])->name('presensi.sakit-izin');
     // create sakit/izin presensi
@@ -169,6 +170,8 @@ Route::middleware(['auth:karyawan'])->group(function () {
 
     // Izin Absen
     Route::get('/izin/absen', [IzinController::class, 'CreateIzinAbsen'])->name('izin.absen');
+    // Izin Absen Store
+    Route::post('/izin/absen/store', [IzinController::class, 'StoreIzinAbsen'])->name('izin.absen');
     // Izin Sakit
     Route::get('/izin/sakit', [IzinController::class, 'CreateIzinSakit'])->name('izin.sakit');
     // Izin Cuti

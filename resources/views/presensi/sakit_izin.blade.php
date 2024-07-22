@@ -14,7 +14,7 @@
 @endsection
 @section('content')
 <div class="row">
-    <div class="col" style="margin-top: 70px">
+    <div class="col" style="margin-top: 70px;">
         @php
             $messagesuccess = Session::get('success');
             $messageerror = Session::get('error');
@@ -28,20 +28,50 @@
 </div>
 <div class="row">
     <div class="col">
+        <style>
+                    .historycontent{
+                        display: flex;
+                        gap: 1px;
+                    }
+                    .datapresensi{
+                        margin-left: 10px;
+                    }
+                    .status {
+                        position: absolute;
+                        right: 20px;
+                    }
+                </style>
         @foreach ($dataIzin as $izin)
-        <ul class="listview image-listview">
+        <div class="card mb-1">
+            <div class="card-body">
+                <div class="historycontent">
+                    <div class="iconpresensi">
+                        <ion-icon style="font-size: 40px" name="document-text-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
+                    </div>
+                    <div class="datapresensi">
+                        <h3 style="line-height: 3px">{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} ({{ $izin->status == "izin" ? "Izin" : ($izin->status == "sakit" ? "Sakit" : "Cuti")}})</h3>
+                        <small>{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} - {{ date("d-m-Y",strtotime($izin->tanggal_izin_sampai)) }}({{ $izin->jumlah_hari }}) </small>
+                        <p>{{ $izin->keterangan }}</p>
+                    </div>
+                    <div class="status">
+                        <span class="{{ $izin->status_approved == "1" ? "text-success" : ($izin->status_approved == "2" ? "text-danger" : "text-warning")}}">{{ $izin->status_approved == "1" ? "Aproved" : ($izin->status_approved == "2" ? "Rejected" : "Waiting") }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- <ul class="listview image-listview">
             <li>
                 <div class="item">
                     <div class="in">
                         <div>
-                            <b>{{ date("d-m-Y", strtotime($izin->tanggal_izin)) }} ({{ $izin->status == "sakit" ? "Sakit" : "Izin" }})</b>  <br>
+                            <b>{{ date("d-m-Y", strtotime($izin->tanggal_izin_dari)) }} ({{ $izin->status == "sakit" ? "Sakit" : "Izin" }})</b>  <br>
                             <small class="text-muted">{{ $izin->keterangan}}</small>
                         </div>
                         <span class="badge {{ $izin->status_approved == "1" ? "badge-success" : ($izin->status_approved == "2" ? "badge-danger" : "badge-warning")}}">{{ $izin->status_approved == "1" ? "Aproved" : ($izin->status_approved == "2" ? "Rejected" : "Waiting") }}</span>
                     </div>
                 </div>
             </li>
-        </ul>
+        </ul> --}}
         @endforeach
     </div>
 </div>

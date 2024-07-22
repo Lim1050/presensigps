@@ -79,8 +79,10 @@
     <div class="col">
         @if ($cek_masuk > 0 && empty($foto_keluar))
             <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
-        @elseif ($cek_masuk == 0 || $cek_masuk > 0 && !empty($foto_keluar))
+        @elseif ($cek_masuk == 0))
             <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>
+        @elseif ($cek_keluar == 1 && $cek_masuk == 1))
+            <button id="sudahabsen" class="btn btn-secondary btn-block"><ion-icon name="camera-outline" @disabled(true)></ion-icon>Sudah Absen</button>
         @endif
     </div>
 </div>
@@ -125,6 +127,12 @@
         e = e < 10 ? '0' + e : e;
         return e;
     }
+</script>
+
+<script>
+    // JavaScript to disable the button
+    var button = document.getElementById('sudahabsen');
+    button.disabled = true;
 </script>
 
 <script>

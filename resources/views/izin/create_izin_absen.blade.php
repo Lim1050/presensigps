@@ -19,6 +19,9 @@
     .datepicker-table td.is-today {
     color: #ca364b;
     }
+    #keterangan {
+        height: 5rem !important;
+    }
 </style>
 {{-- App Header --}}
 <div class="appHeader gradasired text-light">
@@ -33,9 +36,9 @@
 {{-- App Header --}}
 @endsection
 @section('content')
-<div class="row" style="margin-top: 70px">
+<div class="row" style="margin-top: 70px;>
     <div class="col">
-        <form action="{{ route('presensi.store.sakit-izin') }}" method="POST" enctype="multipart/form-data" style="min-height: 1000px" id="formIzinAbsen">
+        <form action="{{ route('izin.absen.store') }}" method="POST" enctype="multipart/form-data" style="min-height: 1000px" id="formIzinAbsen">
             @csrf
             <div class="form-group">
                 <input type="text" class="form-control datepicker" name="tanggal_izin_dari" id="tanggal_izin_dari" placeholder="Dari">
@@ -46,12 +49,11 @@
             </div>
 
             <div class="form-group">
-                <input type="text" class="form-control" name="jumlah_hari" id="jumlah_hari" placeholder="Jumlah Hari">
+                <input type="text" class="form-control" name="jumlah_hari" id="jumlah_hari" placeholder="Jumlah Hari" autocomplete="off" readonly>
             </div>
 
             <div class="form-group">
-                <label for="keterangan">Keterangan</label>
-                <textarea name="keterangan" id="keterangan" cols="30" rows="5" class="form-control"></textarea>
+                <input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Keterangan">
             </div>
 
             <div class="form-group">
