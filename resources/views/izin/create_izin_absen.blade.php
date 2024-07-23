@@ -26,7 +26,7 @@
 {{-- App Header --}}
 <div class="appHeader gradasired text-light">
     <div class="left">
-        <a href="{{ route('presensi.sakit-izin') }}" class="headerButton goBack">
+        <a href="{{ route('izin') }}" class="headerButton goBack">
             <ion-icon name="chevron-back-outline"></ion-icon>
         </a>
     </div>
@@ -36,7 +36,7 @@
 {{-- App Header --}}
 @endsection
 @section('content')
-<div class="row" style="margin-top: 70px;>
+<div class="row" style="margin-top: 70px;">
     <div class="col">
         <form action="{{ route('izin.absen.store') }}" method="POST" enctype="multipart/form-data" style="min-height: 1000px" id="formIzinAbsen">
             @csrf

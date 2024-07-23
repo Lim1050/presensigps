@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2024 at 04:21 PM
+-- Generation Time: Jul 23, 2024 at 04:37 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -362,6 +362,31 @@ INSERT INTO `lokasi_kantor` (`id`, `lokasi_kantor`, `radius`, `created_at`, `upd
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `master_cuti`
+--
+
+CREATE TABLE `master_cuti` (
+  `kode_cuti` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_cuti` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jumlah_hari` smallint DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `master_cuti`
+--
+
+INSERT INTO `master_cuti` (`kode_cuti`, `nama_cuti`, `jumlah_hari`, `created_at`, `updated_at`) VALUES
+('C001', 'Cuti Tahunan', 12, '2024-07-23 07:20:41', NULL),
+('C002', 'Cuti Sakit', 30, '2024-07-23 07:20:41', '2024-07-23 08:45:54'),
+('C003', 'Cuti Melahirkan', 90, '2024-07-23 07:20:41', NULL),
+('C004', 'Cuti Pendidikan', 300, '2024-07-23 08:06:06', '2024-07-23 08:39:54'),
+('C005', 'Cuti Menikah', 7, '2024-07-23 08:46:21', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `migrations`
 --
 
@@ -397,7 +422,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (27, '2024_07_18_113217_create_jam_kerja_dept_table', 14),
 (28, '2024_07_18_113515_create_jam_kerja_dept_detail_table', 15),
 (29, '2024_07_18_124201_modify_jam_kerja_dept_and_detail_tables', 16),
-(33, '2024_07_22_151928_update_persetujuan_sakit_izin_table', 17);
+(33, '2024_07_22_151928_update_persetujuan_sakit_izin_table', 17),
+(34, '2024_07_23_113243_add_surat_sakit_to_pengajuan_sakit_izin_table', 18),
+(35, '2024_07_23_132656_update_id_to_kode_izin_in_pengajuan_izin_table', 19),
+(36, '2024_07_23_133500_update_kode_izin_in_pengajuan_izin_table', 20),
+(38, '2024_07_23_141508_create_master_cuti_table', 21),
+(40, '2024_07_23_161528_add_kode_cuti_to_pengajuan_izin_table', 22);
 
 -- --------------------------------------------------------
 
@@ -414,29 +444,33 @@ CREATE TABLE `password_resets` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pengajuan_sakit_izin`
+-- Table structure for table `pengajuan_izin`
 --
 
-CREATE TABLE `pengajuan_sakit_izin` (
-  `id` bigint UNSIGNED NOT NULL,
+CREATE TABLE `pengajuan_izin` (
+  `kode_izin` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tanggal_izin_dari` date DEFAULT NULL,
   `tanggal_izin_sampai` date DEFAULT NULL,
   `jumlah_hari` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` enum('sakit','izin') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_cuti` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('sakit','izin','cuti') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status_approved` tinyint(1) NOT NULL DEFAULT '0',
   `keterangan` text COLLATE utf8mb4_unicode_ci,
+  `surat_sakit` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `pengajuan_sakit_izin`
+-- Dumping data for table `pengajuan_izin`
 --
 
-INSERT INTO `pengajuan_sakit_izin` (`id`, `nik`, `tanggal_izin_dari`, `tanggal_izin_sampai`, `jumlah_hari`, `status`, `status_approved`, `keterangan`, `created_at`, `updated_at`) VALUES
-(17, '123123123', '2024-07-25', '2024-07-27', '3 Hari', 'izin', 0, 'Libur Bentar', '2024-07-22 08:33:20', NULL),
-(18, '123123123', '2024-07-28', '2024-07-31', '4 Hari', 'izin', 0, 'Libur Lagi', '2024-07-22 08:59:56', NULL);
+INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_izin_sampai`, `jumlah_hari`, `kode_cuti`, `status`, `status_approved`, `keterangan`, `surat_sakit`, `created_at`, `updated_at`) VALUES
+('IA0724001', '123123123', '2024-07-24', '2024-07-24', '1 Hari', NULL, 'izin', 0, 'Libur Bentar', NULL, '2024-07-23 07:02:40', NULL),
+('IC0724004', '123123123', '2024-07-24', '2024-07-27', '4 Hari', 'C002', 'cuti', 0, 'Demam', NULL, '2024-07-23 09:21:34', NULL),
+('IS0724002', '123123123', '2024-07-24', '2024-07-24', '1 Hari', NULL, 'sakit', 0, 'Demam', NULL, '2024-07-23 07:05:24', NULL),
+('IS0724003', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'sakit', 0, 'Demam', 'IS0724003.jpg', '2024-07-23 07:05:53', NULL);
 
 -- --------------------------------------------------------
 
@@ -603,6 +637,12 @@ ALTER TABLE `lokasi_kantor`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `master_cuti`
+--
+ALTER TABLE `master_cuti`
+  ADD PRIMARY KEY (`kode_cuti`);
+
+--
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
@@ -615,10 +655,10 @@ ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Indexes for table `pengajuan_sakit_izin`
+-- Indexes for table `pengajuan_izin`
 --
-ALTER TABLE `pengajuan_sakit_izin`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `pengajuan_izin`
+  ADD PRIMARY KEY (`kode_izin`);
 
 --
 -- Indexes for table `personal_access_tokens`
@@ -667,13 +707,7 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
-
---
--- AUTO_INCREMENT for table `pengajuan_sakit_izin`
---
-ALTER TABLE `pengajuan_sakit_izin`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`

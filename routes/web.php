@@ -86,6 +86,15 @@ Route::middleware(['auth:user'])->group(function () {
     // Kantor cabang delete
     Route::get('/admin/cabang/delete/{kode_cabang}', [CabangController::class, 'cabangDelete'])->name('admin.cabang.delete');
 
+    // Master Cuti
+    Route::get('/admin/cuti', [IzinController::class, 'CutiMaster'])->name('admin.cuti');
+    // Master Cuti Store
+    Route::post('/admin/cuti/store', [IzinController::class, 'CutiMasterStore'])->name('admin.cuti.store');
+    // Master Cuti Update
+    Route::put('/admin/cuti/update/{kode_cuti}', [IzinController::class, 'CutiMasterUpdate'])->name('admin.cuti.update');
+    // Master Cuti delete
+    Route::get('/admin/cuti/delete/{kode_cuti}', [IzinController::class, 'CutiMasterDelete'])->name('admin.cuti.delete');
+
     // laporan presensi
     Route::get('/admin/laporan/presensi', [PresensiController::class, 'LaporanPresensi'])->name('admin.laporan.presensi');
     // print laporan presensi
@@ -94,7 +103,6 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/admin/rekap/presensi', [PresensiController::class, 'RekapPresensi'])->name('admin.rekap.presensi');
     // print rekap presensi
     Route::post('/admin/rekap/print', [PresensiController::class, 'RekapPrint'])->name('admin.rekap.print');
-
 
     // monitoring presensi Index
     Route::get('/admin/monitoring/presensi', [PresensiController::class, 'MonitoringPresensi'])->name('admin.monitoring.presensi');
@@ -159,23 +167,30 @@ Route::middleware(['auth:karyawan'])->group(function () {
     // gethistory presensi
     Route::post('/gethistory', [PresensiController::class, 'GetHistory']);
 
-    // sakit/izin presensi
-    Route::get('/presensi/sakit-izin', [PresensiController::class, 'SakitIzin'])->name('presensi.sakit-izin');
-    // create sakit/izin presensi
-    Route::get('/presensi/create/sakit-izin', [PresensiController::class, 'CreateSakitIzin'])->name('presensi.create.sakit-izin');
-    // store sakit/izin presensi
-    Route::post('/presensi/store/sakit-izin', [PresensiController::class, 'StoreSakitIzin'])->name('presensi.store.sakit-izin');
+
+    // // create sakit/izin presensi
+    // Route::get('/presensi/create/sakit-izin', [PresensiController::class, 'CreateSakitIzin'])->name('presensi.create.sakit-izin');
+    // // store sakit/izin presensi
+    // Route::post('/presensi/store/sakit-izin', [PresensiController::class, 'StoreSakitIzin'])->name('presensi.store.sakit-izin');
     // cek pengajuan sakit/izin
     Route::post('/presensi/cek/pengajuan/sakit-izin', [PresensiController::class, 'CekPengajuanSakitIzin'])->name('presensi.cek.pengajuan.sakit-izin');
 
+    // sakit/izin/cuti
+    Route::get('/izin', [IzinController::class, 'IzinSakitCuti'])->name('izin');
     // Izin Absen
     Route::get('/izin/absen', [IzinController::class, 'CreateIzinAbsen'])->name('izin.absen');
     // Izin Absen Store
-    Route::post('/izin/absen/store', [IzinController::class, 'StoreIzinAbsen'])->name('izin.absen');
+    Route::post('/izin/absen/store', [IzinController::class, 'StoreIzinAbsen'])->name('izin.absen.store');
+
     // Izin Sakit
     Route::get('/izin/sakit', [IzinController::class, 'CreateIzinSakit'])->name('izin.sakit');
+    // Izin Sakit Store
+    Route::post('/izin/sakit/store', [IzinController::class, 'StoreIzinSakit'])->name('izin.sakit.store');
+
     // Izin Cuti
     Route::get('/izin/cuti', [IzinController::class, 'CreateIzinCuti'])->name('izin.cuti');
+    // Izin Cuti Store
+    Route::post('/izin/cuti/store', [IzinController::class, 'StoreIzinCuti'])->name('izin.cuti.store');
 
     // profile
     Route::get('/profile', [ProfileController::class, 'Profile'])->name('profile');

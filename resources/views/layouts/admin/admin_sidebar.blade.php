@@ -60,12 +60,12 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseThree"
-            aria-expanded="{{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*']) ? 'true' : 'false' }}" aria-controls="collapseThree">
+        <a class="nav-link collapsed {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*', 'admin/cuti*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseThree"
+            aria-expanded="{{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*', 'admin/cuti*']) ? 'true' : 'false' }}" aria-controls="collapseThree">
             <i class="bi bi-archive fa-fw"></i>
             <span>Master</span>
         </a>
-        <div id="collapseThree" class="collapse bg-red {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseThree" class="collapse bg-red {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*', 'admin/cuti*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
                 <a class="collapse-item {{ request()->is('admin/karyawan*') ? 'active' : '' }}" href="{{ route('admin.karyawan') }}">
                 <i class="bi bi-person-vcard fa-fw"></i>
@@ -78,6 +78,10 @@
                 <a class="collapse-item {{ request()->is('admin/cabang*') ? 'active' : '' }}" href="{{ route('admin.cabang') }}">
                 <i class="bi bi-buildings fa-fw"></i>
                 <span>Kantor Cabang</span></a>
+
+                <a class="collapse-item {{ request()->is('admin/cuti*') ? 'active' : '' }}" href="{{ route('admin.cuti') }}">
+                <i class="bi bi-calendar3 fa-fw"></i>
+                <span>Cuti</span></a>
             </div>
         </div>
     </li>

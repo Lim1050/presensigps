@@ -324,7 +324,7 @@
             }
         });
 
-// Send Data to modal edit jam kerja
+    // Send Data to modal edit jam kerja
         $('#modalEditJamKerja').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
         var kode_jam_kerja = button.data('kode_jam_kerja');

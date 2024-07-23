@@ -13,7 +13,8 @@
 @endsection
 
 @section('content')
-<form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" style="min-height: 1000px">
+<div class="tab-content" style="margin-bottom:100px;">
+<form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="row">
         <div class="col" style="margin-top: 4rem">
@@ -87,4 +88,5 @@
         </div>
     </div>
 </form>
+</div>
 @endsection

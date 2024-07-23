@@ -56,51 +56,53 @@
 @endsection
 
 @section('content')
-<div class="row" style="margin-top: 60px">
-    <div class="col">
+<div class="tab-content" style="margin-bottom:100px;">
+    <div class="row" style="margin-top: 60px">
+        <div class="col">
 
-        {{-- menampilkan lokasi --}}
-        <input type="hidden" id="lokasi">
+            {{-- menampilkan lokasi --}}
+            <input type="hidden" id="lokasi">
 
-        {{-- menampilkan webcam --}}
-        <div class="webcam-capture"></div>
+            {{-- menampilkan webcam --}}
+            <div class="webcam-capture"></div>
+        </div>
     </div>
-</div>
-<div class="jam-digital-malasngoding">
-    <p>{{ $nama_hari }},{{ date("d-m-Y") }}</p>
-    <p id="jam"></p>
-    <p>{{ $jam_kerja_karyawan->nama_jam_kerja }}</p>
-    <p>Awal Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->awal_jam_masuk)) }}</p>
-    <p>Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_masuk)) }}</p>
-    <p>Akhir Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->akhir_jam_masuk)) }}</p>
-    <p>Jam Pulang : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_pulang)) }}</p>
-</div>
-<div class="row">
-    <div class="col">
-        @if ($cek_masuk > 0 && empty($foto_keluar))
-            <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
-        @elseif ($cek_masuk == 0))
-            <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>
-        @elseif ($cek_keluar == 1 && $cek_masuk == 1))
-            <button id="sudahabsen" class="btn btn-secondary btn-block"><ion-icon name="camera-outline" @disabled(true)></ion-icon>Sudah Absen</button>
-        @endif
+    <div class="jam-digital-malasngoding">
+        <p>{{ $nama_hari }},{{ date("d-m-Y") }}</p>
+        <p id="jam"></p>
+        <p>{{ $jam_kerja_karyawan->nama_jam_kerja }}</p>
+        <p>Awal Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->awal_jam_masuk)) }}</p>
+        <p>Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_masuk)) }}</p>
+        <p>Akhir Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->akhir_jam_masuk)) }}</p>
+        <p>Jam Pulang : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_pulang)) }}</p>
     </div>
-</div>
-<div class="row mt-2">
-    <div class="col">
-        <div id="map"></div>
+    <div class="row">
+        <div class="col">
+            @if ($cek_masuk > 0 && empty($foto_keluar))
+                <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
+            @elseif ($cek_masuk == 0))
+                <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>
+            @elseif ($cek_keluar == 1 && $cek_masuk == 1))
+                <button id="sudahabsen" class="btn btn-secondary btn-block"><ion-icon name="camera-outline" @disabled(true)></ion-icon>Sudah Absen</button>
+            @endif
+        </div>
     </div>
-</div>
+    <div class="row mt-2">
+        <div class="col">
+            <div id="map"></div>
+        </div>
+    </div>
 
-<audio id="notif_in">
-    <source src="{{ asset('assets/sound/notif_in.mp3') }}" type="audio/mpeg">
-</audio>
-<audio id="notif_out">
-    <source src="{{ asset('assets/sound/notif_out.mp3') }}" type="audio/mpeg">
-</audio>
-<audio id="notif_rad">
-    <source src="{{ asset('assets/sound/notif_rad.mp3') }}" type="audio/mpeg">
-</audio>
+    <audio id="notif_in">
+        <source src="{{ asset('assets/sound/notif_in.mp3') }}" type="audio/mpeg">
+    </audio>
+    <audio id="notif_out">
+        <source src="{{ asset('assets/sound/notif_out.mp3') }}" type="audio/mpeg">
+    </audio>
+    <audio id="notif_rad">
+        <source src="{{ asset('assets/sound/notif_rad.mp3') }}" type="audio/mpeg">
+    </audio>
+</div>
 
 @endsection
 
@@ -135,10 +137,6 @@
     button.disabled = true;
 </script>
 
-<<<<<<< HEAD
-=======
-
->>>>>>> ecbf6e6990ecfbb1a8cc1a995b7906fd12d88df9
 <script>
     // inisiasi audio
     var notif_in = document.getElementById('notif_in');

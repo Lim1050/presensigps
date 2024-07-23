@@ -23,10 +23,10 @@
             </div>
         </div>
     </a>
-    <a href="{{ route('presensi.sakit-izin') }}" class="item {{ request()->is('presensi/sakit-izin') ? 'active' : '' }}" >
+    <a href="{{ route('izin') }}" class="item {{ request()->is('izin') ? 'active' : '' }}" >
         <div class="col">
             <ion-icon name="reader-outline"></ion-icon>
-            <strong>Sakit/Izin</strong>
+            <strong>Izin/Sakit/Cuti</strong>
         </div>
     </a>
     <a href="{{ route('profile') }}" class="item {{ request()->is('profile') ? 'active' : '' }}">

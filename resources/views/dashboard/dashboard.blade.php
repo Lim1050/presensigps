@@ -73,12 +73,12 @@
                 </div>
                 <div class="item-menu text-center">
                     <div class="menu-icon">
-                        <a href="{{ route('presensi.sakit-izin') }}" class="warning" style="font-size: 40px;">
+                        <a href="{{ route('izin') }}" class="warning" style="font-size: 40px;">
                             <ion-icon name="document-text"></ion-icon>
                         </a>
                     </div>
                     <div class="menu-name">
-                        <span class="text-center">Sakit/Izin</span>
+                        <span class="text-center">Izin</span>
                     </div>
                 </div>
                 <div class="item-menu text-center">
@@ -145,74 +145,6 @@
             </div>
         </div>
     </div>
-
-    {{-- <div class="rekappresence">
-        <div id="chartdiv"></div>
-        <!-- <div class="row">
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="presencecontent">
-                            <div class="iconpresence primary">
-                                <ion-icon name="log-in"></ion-icon>
-                            </div>
-                            <div class="presencedetail">
-                                <h4 class="rekappresencetitle">Hadir</h4>
-                                <span class="rekappresencedetail">0 Hari</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="presencecontent">
-                            <div class="iconpresence green">
-                                <ion-icon name="document-text"></ion-icon>
-                            </div>
-                            <div class="presencedetail">
-                                <h4 class="rekappresencetitle">Izin</h4>
-                                <span class="rekappresencedetail">0 Hari</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-1">
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="presencecontent">
-                            <div class="iconpresence warning">
-                                <ion-icon name="sad"></ion-icon>
-                            </div>
-                            <div class="presencedetail">
-                                <h4 class="rekappresencetitle">Sakit</h4>
-                                <span class="rekappresencedetail">0 Hari</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="presencecontent">
-                            <div class="iconpresence danger">
-                                <ion-icon name="alarm"></ion-icon>
-                            </div>
-                            <div class="presencedetail">
-                                <h4 class="rekappresencetitle">Terlambat</h4>
-                                <span class="rekappresencedetail">0 Hari</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-    </div> --}}
 
     <div id="rekappresensi">
         <h3>Rekap Presensi Bulan {{ $monthName }} {{ $tahun_ini }}</h3>
