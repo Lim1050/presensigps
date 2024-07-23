@@ -533,12 +533,12 @@ class PresensiController extends Controller
     {
 
         $query = PersetujuanSakitIzin::query();
-        $query->select('id', 'tanggal_izin', 'pengajuan_izin.nik', 'nama_lengkap', 'jabatan', 'status', 'status_approved', 'keterangan');
+        $query->select('kode_izin', 'tanggal_izin_dari', 'tanggal_izin_sampai', 'pengajuan_izin.nik', 'nama_lengkap', 'jabatan', 'status', 'status_approved', 'keterangan');
         $query->join('karyawan', 'pengajuan_izin.nik', '=', 'karyawan.nik');
-        $query->orderBy('tanggal_izin', 'desc');
+        $query->orderBy('tanggal_izin_dari', 'desc');
 
         if (!empty($request->dari) && !empty($request->sampai)) {
-            $query->whereBetween('tanggal_izin', [$request->dari, $request->sampai]);
+            $query->whereBetween('tanggal_izin_dari', [$request->dari, $request->sampai]);
         }
         if (!empty($request->nik)) {
             $query->where('pengajuan_izin.nik', 'like', '%' .  $request->nik . "%");
@@ -561,11 +561,11 @@ class PresensiController extends Controller
 
     public function ApprovalSakitIzin(Request $request)
     {
-        $id = $request->id;
+        $kode_izin = $request->kode_izin;
         $status_approved = $request->status_approved;
 
         $update = DB::table('pengajuan_izin')
-            ->where('id', $id)
+            ->where('kode_izin', $kode_izin)
             ->update([
                 'status_approved' => $status_approved
             ]);
@@ -576,10 +576,10 @@ class PresensiController extends Controller
             return redirect()->back()->with(['warning' => 'Data Gagal Diupdate!']);
         }
     }
-    public function BatalkanSakitIzin($id)
+    public function BatalkanSakitIzin($kode_izin)
     {
         $update = DB::table('pengajuan_izin')
-            ->where('id', $id)
+            ->where('kode_izin', $kode_izin)
             ->update([
                 'status_approved' => 0
             ]);
@@ -595,7 +595,7 @@ class PresensiController extends Controller
     {
         $tanggal_izin = $request->tanggal_izin;
         $nik = Auth::guard('karyawan')->user()->nik;
-        $cek = DB::table('pengajuan_izin')->where('nik', $nik)->where('tanggal_izin', $tanggal_izin)->count();
+        $cek = DB::table('pengajuan_izin')->where('nik', $nik)->where('tanggal_izin_dari', $tanggal_izin)->count();
         return $cek;
     }
 }

@@ -73,7 +73,7 @@
                 <span>
                     <strong>
                         <ion-icon name="cloud-upload-outline" role="img" class="md hydrated" aria-label="cloud upload outline"></ion-icon>
-                        <i>Tap to Upload</i>
+                        <i>Sentuh Untuk Unggah Foto Profil</i>
                     </strong>
                 </span>
             </label>
@@ -82,7 +82,7 @@
             <div class="input-wrapper">
                 <button type="submit" class="btn btn-danger btn-block">
                     <ion-icon name="refresh-outline"></ion-icon>
-                    Update
+                    Perbarui
                 </button>
             </div>
         </div>

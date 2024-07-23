@@ -4,16 +4,16 @@
 }
 </style>
 <div class="appBottomMenu">
-    <a href="{{ route('dashboard') }}" class="item {{ request()->is('dashboard') ? 'active' : '' }}">
+    <a href="{{ route('dashboard') }}" class="item {{ request()->is('dashboard*') ? 'active' : '' }}">
         <div class="col">
             <ion-icon name="home-outline"></ion-icon>
-            <strong>Home</strong>
+            <strong>Beranda</strong>
         </div>
     </a>
-    <a href="{{ route('presensi.history') }}" class="item {{ request()->is('presensi/history') ? 'active' : '' }}" >
+    <a href="{{ route('presensi.history') }}" class="item {{ request()->is('presensi/history*') ? 'active' : '' }}" >
         <div class="col">
             <ion-icon name="calendar-outline"></ion-icon>
-            <strong>History</strong>
+            <strong>Riwayat</strong>
         </div>
     </a>
     <a href="{{ route('presensi.create') }}" class="item">
@@ -23,13 +23,13 @@
             </div>
         </div>
     </a>
-    <a href="{{ route('izin') }}" class="item {{ request()->is('izin') ? 'active' : '' }}" >
+    <a href="{{ route('izin') }}" class="item {{ request()->is('izin*') ? 'active' : '' }}" >
         <div class="col">
             <ion-icon name="reader-outline"></ion-icon>
-            <strong>Izin/Sakit/Cuti</strong>
+            <strong>Izin</strong>
         </div>
     </a>
-    <a href="{{ route('profile') }}" class="item {{ request()->is('profile') ? 'active' : '' }}">
+    <a href="{{ route('profile') }}" class="item {{ request()->is('profile*') ? 'active' : '' }}">
         <div class="col">
             <ion-icon name="person-outline"></ion-icon>
             <strong>Profil</strong>

@@ -22,6 +22,18 @@
     #keterangan {
         height: 5rem !important;
     }
+
+    .btn-danger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-danger ion-icon {
+        margin-left: 5px; /* Jarak antara teks dan ikon */
+        vertical-align: center; /* Memastikan ikon sejajar vertikal dengan teks */
+    }
+
 </style>
 {{-- App Header --}}
 <div class="appHeader gradasired text-light">
@@ -57,10 +69,11 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-danger btn-block">
-                    {{-- <ion-icon name="arrow-up-outline"></ion-icon> --}}
-                    Kirim
-                </button>
+                <div class="input-wrapper">
+                    <button type="submit" class="btn btn-danger btn-block">
+                        Kirim <ion-icon name="send-outline"></ion-icon>
+                    </button>
+                </div>
             </div>
         </form>
     </div>

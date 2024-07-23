@@ -35,7 +35,7 @@
     <h1 class="h3 mb-0 text-gray-800">Data Karyawan</h1>
 </div>
 
-<!-- DataTales Example -->
+<!-- DataTables Example -->
 <div class="card shadow mb-4">
     <div class="card-body">
         <div class="row">

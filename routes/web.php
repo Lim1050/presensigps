@@ -116,7 +116,7 @@ Route::middleware(['auth:user'])->group(function () {
     // approval sakit izin
     Route::post('/admin/approval/sakit/izin', [PresensiController::class, 'ApprovalSakitIzin'])->name('admin.approval.sakit.izin');
     // batalkan sakit izin
-    Route::get('/admin/batalkan/sakit/izin/{id}', [PresensiController::class, 'BatalkanSakitIzin'])->name('admin.batalkan.sakit.izin');
+    Route::get('/admin/batalkan/sakit/izin/{kode_izin}', [PresensiController::class, 'BatalkanSakitIzin'])->name('admin.batalkan.sakit.izin');
     // cek pengajuan sakit/izin
     // Route::post('/admin/cek/pengajuan/sakit-izin', [PresensiController::class, 'CekPengajuanSakitIzin'])->name('admin.cek.pengajuan.sakit-izin');
 

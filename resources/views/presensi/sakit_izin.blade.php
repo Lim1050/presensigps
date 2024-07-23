@@ -47,11 +47,11 @@
                     <div class="historycontent">
                         <div class="iconpresensi">
                             @if ($izin->status == "izin")
-                            <ion-icon style="font-size: 40px; color:rgb(21,95,207) !important;" name="reader-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
+                            <ion-icon style="font-size: 40px;" name="reader-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
                             @elseif ($izin->status == "sakit")
-                            <ion-icon style="font-size: 40px; color:rgb(191,7,65) !important;" name="medkit-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
+                            <ion-icon style="font-size: 40px;" name="medkit-outline" role="img" class="md hydrated text-danger" aria-label="checkmark"></ion-icon>
                             @elseif ($izin->status == "cuti")
-                            <ion-icon style="font-size: 40px; color:rgb(1, 139, 31) !important;" name="calendar-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
+                            <ion-icon style="font-size: 40px;" name="calendar-outline" role="img" class="md hydrated text-secondary" aria-label="checkmark"></ion-icon>
                             @endif
 
                         </div>
@@ -62,7 +62,7 @@
                             <h4 >{{ $izin->keterangan }}</h4>
 
                                 @if ($izin->status == "cuti")
-                                <p class="text-success"><ion-icon name="calendar-outline"></ion-icon> {{ $izin->nama_cuti }}</p>
+                                <p class="text-secondary"><ion-icon name="calendar-outline"></ion-icon> {{ $izin->nama_cuti }}</p>
                                 @endif
 
                                 @if (!empty($izin->surat_sakit))
@@ -71,7 +71,7 @@
 
                         </div>
                         <div class="status">
-                            <span class="{{ $izin->status_approved == "1" ? "text-success" : ($izin->status_approved == "2" ? "text-danger" : "text-warning")}}">{{ $izin->status_approved == "1" ? "Aproved" : ($izin->status_approved == "2" ? "Rejected" : "Waiting") }}</span>
+                            <span class="{{ $izin->status_approved == "1" ? "text-success" : ($izin->status_approved == "2" ? "text-danger" : "text-warning")}}">{{ $izin->status_approved == "1" ? "Diterima" : ($izin->status_approved == "2" ? "Ditolak" : "Menunggu") }}</span>
                             {{-- <p>{{ hitunghari($izin->tanggal_izin_dari, $izin->tanggal_izin_sampai) }} Hari</p> --}}
                         </div>
                     </div>

@@ -9,7 +9,7 @@
     }
 </style>
 <div class="section gradasired" id="user-section">
-    <a href="{{ route('logout') }}" class="btn btn-primary logout"><ion-icon name="log-out-outline"></ion-icon>Logout</a><br>
+    <a href="{{ route('logout') }}" class="btn btn-primary logout"><ion-icon name="log-out-outline"></ion-icon>Keluar</a><br>
     <div id="user-detail">
         <div class="avatar">
             @if ((Auth::guard('karyawan')->user()->foto))
@@ -68,7 +68,7 @@
                         </a>
                     </div>
                     <div class="menu-name">
-                        <span class="text-center">History</span>
+                        <span class="text-center">Riwayat</span>
                     </div>
                 </div>
                 <div class="item-menu text-center">
@@ -153,9 +153,9 @@
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
                         <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_presensi->jml_hadir }}</span>
-                        <ion-icon name="accessibility-outline" style="font-size: 1.6rem" class="text-primary mb-1"></ion-icon>
+                        <ion-icon name="checkmark-circle-outline" style="font-size: 1.6rem" class="text-success mb-1"></ion-icon>
                         <br>
-                        <span style="font-size: 0.8rem; font-weight:500" class="text-primary">Hadir</span>
+                        <span style="font-size: 0.8rem; font-weight:500" class="text-success">Hadir</span>
                     </div>
                 </div>
             </div>
@@ -163,9 +163,9 @@
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
                         <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_sakit_izin->jumlah_sakit }}</span>
-                        <ion-icon name="medkit-outline" style="font-size: 1.6rem" class="text-success mb-1"></ion-icon>
+                        <ion-icon name="medkit-outline" style="font-size: 1.6rem" class="text-danger mb-1"></ion-icon>
                         <br>
-                        <span style="font-size: 0.8rem; font-weight:500" class="text-success">Sakit</span>
+                        <span style="font-size: 0.8rem; font-weight:500" class="text-danger">Sakit</span>
                     </div>
                 </div>
             </div>
@@ -173,9 +173,9 @@
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
                         <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_sakit_izin->jumlah_izin }}</span>
-                        <ion-icon name="information-outline" style="font-size: 1.6rem" class="text-warning mb-1"></ion-icon>
+                        <ion-icon name="reader-outline" style="font-size: 1.6rem" class="text-primary mb-1"></ion-icon>
                         <br>
-                        <span style="font-size: 0.8rem; font-weight:500" class="text-warning">Izin</span>
+                        <span style="font-size: 0.8rem; font-weight:500" class="text-primary">Izin</span>
                     </div>
                 </div>
             </div>
@@ -183,9 +183,9 @@
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
                         <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_presensi->jml_terlambat }}</span>
-                        <ion-icon name="close-circle-outline" style="font-size: 1.6rem" class="text-danger mb-1"></ion-icon>
+                        <ion-icon name="alert-circle-outline" style="font-size: 1.6rem" class="text-warning mb-1"></ion-icon>
                         <br>
-                        <span style="font-size: 0.8rem; font-weight:500" class="text-danger">Telat</span>
+                        <span style="font-size: 0.8rem; font-weight:500" class="text-warning">Telat</span>
                     </div>
                 </div>
             </div>
@@ -202,7 +202,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#profile" role="tab">
-                        Leaderboard
+                        Daftar Kehadiran
                     </a>
                 </li>
             </ul>
@@ -244,7 +244,12 @@
                         <div class="card-body">
                             <div class="historycontent">
                                 <div class="iconpresensi">
-                                    <ion-icon style="font-size: 48px" name="checkmark-circle-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
+                                    @if ($bulan_ini->jam_masuk < $bulan_ini->jam_kerja_masuk)
+                                        <ion-icon style="font-size: 48px" name="checkmark-circle-outline" role="img" class="md hydrated text-success" aria-label="checkmark"></ion-icon>
+                                    @else
+                                        <ion-icon style="font-size: 48px" name="alert-circle-outline" role="img" class="md hydrated text-warning" aria-label="checkmark"></ion-icon>
+                                    @endif
+                                    {{-- <ion-icon style="font-size: 48px" name="checkmark-circle-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon> --}}
                                 </div>
                                 <div class="datapresensi">
                                     <h3 style="line-height: 3px">{{ $bulan_ini->nama_jam_kerja }} <small>({{ date("H:i",strtotime($bulan_ini->jam_kerja_masuk)) }} - {{ date("H:i",strtotime($bulan_ini->jam_pulang)) }})</small></h3>
