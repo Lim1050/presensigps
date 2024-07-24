@@ -42,7 +42,7 @@
                 }
             </style>
             @foreach ($dataIzin as $izin)
-            <div class="card mb-1" style="display: flex">
+            <div class="card mb-1 card_izin" kode_izin="{{ $izin->kode_izin }}" data-toggle="modal" data-target="#actionSheetIconed">
                 <div class="card-body">
                     <div class="historycontent">
                         <div class="iconpresensi">
@@ -57,7 +57,7 @@
                         </div>
                         <div class="datapresensi">
                             <h3 style="line-height: 3px">{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} ({{ $izin->status == "izin" ? "Izin" : ($izin->status == "sakit" ? "Sakit" : "Cuti")}})</h3>
-                            <small>{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} - {{ date("d-m-Y",strtotime($izin->tanggal_izin_sampai)) }} ({{ $izin->jumlah_hari }}) </small>
+                            <small>{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} s/d {{ date("d-m-Y",strtotime($izin->tanggal_izin_sampai)) }} ({{ hitunghari($izin->tanggal_izin_dari, $izin->tanggal_izin_sampai) }} Hari) </small>
 
                             <h4 >{{ $izin->keterangan }}</h4>
 
@@ -72,24 +72,10 @@
                         </div>
                         <div class="status">
                             <span class="{{ $izin->status_approved == "1" ? "text-success" : ($izin->status_approved == "2" ? "text-danger" : "text-warning")}}">{{ $izin->status_approved == "1" ? "Diterima" : ($izin->status_approved == "2" ? "Ditolak" : "Menunggu") }}</span>
-                            {{-- <p>{{ hitunghari($izin->tanggal_izin_dari, $izin->tanggal_izin_sampai) }} Hari</p> --}}
                         </div>
                     </div>
                 </div>
             </div>
-            {{-- <ul class="listview image-listview">
-                <li>
-                    <div class="item">
-                        <div class="in">
-                            <div>
-                                <b>{{ date("d-m-Y", strtotime($izin->tanggal_izin_dari)) }} ({{ $izin->status == "sakit" ? "Sakit" : "Izin" }})</b>  <br>
-                                <small class="text-muted">{{ $izin->keterangan}}</small>
-                            </div>
-                            <span class="badge {{ $izin->status_approved == "1" ? "badge-success" : ($izin->status_approved == "2" ? "badge-danger" : "badge-warning")}}">{{ $izin->status_approved == "1" ? "Aproved" : ($izin->status_approved == "2" ? "Rejected" : "Waiting") }}</span>
-                        </div>
-                    </div>
-                </li>
-            </ul> --}}
             @endforeach
         </div>
     </div>
@@ -118,7 +104,48 @@
     </div>
 </div>
 
-{{-- <div class="fab-button bottom-right" style="margin-bottom: 70px">
-    <a href="{{ route('presensi.create.sakit-izin') }}" class="fab bg-danger"><ion-icon name="add-outline"></ion-icon></a>
-</div> --}}
+{{-- Modal Pop UP Action --}}
+<div class="modal fade action-sheet" id="actionSheetIconed" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Aksi</h5>
+            </div>
+            <div class="modal-body" id="showact">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Delete --}}
+<div class="modal fade dialogbox" id="deleteConfirm" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yakin Dihapus ?</h5>
+            </div>
+            <div class="modal-body">
+                Data Pengajuan Izin Akan dihapus
+            </div>
+            <div class="modal-footer">
+                <div class="btn-inline">
+                    <a href="#" class="btn btn-text-secondary" data-dismiss="modal">Batalkan</a>
+                    <a href="" class="btn btn-text-danger" id="hapuspengajuan">Hapus</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+
+@push('myscript')
+    <script>
+        $(function(){
+            $(".card_izin").click(function(e){
+                var kode_izin = $(this).attr("kode_izin");
+                $("#showact").load('/izin/' + kode_izin + '/showact');
+            });
+        });
+    </script>
+@endpush

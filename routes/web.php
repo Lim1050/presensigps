@@ -177,20 +177,38 @@ Route::middleware(['auth:karyawan'])->group(function () {
 
     // sakit/izin/cuti
     Route::get('/izin', [IzinController::class, 'IzinSakitCuti'])->name('izin');
+    // Izin Show Act
+    Route::get('/izin/{kode_izin}/showact', [IzinController::class, 'IzinShowAct']);
+
     // Izin Absen
     Route::get('/izin/absen', [IzinController::class, 'CreateIzinAbsen'])->name('izin.absen');
     // Izin Absen Store
     Route::post('/izin/absen/store', [IzinController::class, 'StoreIzinAbsen'])->name('izin.absen.store');
+    // Izin Absen edit
+    Route::get('/izin/absen/edit/{kode_izin}', [IzinController::class, 'EditIzinAbsen'])->name('izin.absen.edit');
+    // Izin Absen update
+    Route::post('/izin/absen/update/{kode_izin}', [IzinController::class, 'UpdateIzinAbsen'])->name('izin.absen.update');
 
     // Izin Sakit
     Route::get('/izin/sakit', [IzinController::class, 'CreateIzinSakit'])->name('izin.sakit');
     // Izin Sakit Store
     Route::post('/izin/sakit/store', [IzinController::class, 'StoreIzinSakit'])->name('izin.sakit.store');
+    // Izin sakit edit
+    Route::get('/izin/sakit/edit/{kode_izin}', [IzinController::class, 'EditIzinSakit'])->name('izin.sakit.edit');
+    // Izin sakit update
+    Route::post('/izin/sakit/update/{kode_izin}', [IzinController::class, 'UpdateIzinSakit'])->name('izin.sakit.update');
 
     // Izin Cuti
     Route::get('/izin/cuti', [IzinController::class, 'CreateIzinCuti'])->name('izin.cuti');
     // Izin Cuti Store
     Route::post('/izin/cuti/store', [IzinController::class, 'StoreIzinCuti'])->name('izin.cuti.store');
+    // Izin cuti edit
+    Route::get('/izin/cuti/edit/{kode_izin}', [IzinController::class, 'EditIzinCuti'])->name('izin.cuti.edit');
+    // Izin cuti update
+    Route::post('/izin/cuti/update/{kode_izin}', [IzinController::class, 'UpdateIzinCuti'])->name('izin.cuti.update');
+
+    // Izin sakit cuti delete
+    Route::get('/izin/delete/{kode_izin}', [IzinController::class, 'DeleteIzin'])->name('izin.delete');
 
     // profile
     Route::get('/profile', [ProfileController::class, 'Profile'])->name('profile');

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 23, 2024 at 04:37 PM
+-- Generation Time: Jul 24, 2024 at 04:06 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -467,10 +467,11 @@ CREATE TABLE `pengajuan_izin` (
 --
 
 INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_izin_sampai`, `jumlah_hari`, `kode_cuti`, `status`, `status_approved`, `keterangan`, `surat_sakit`, `created_at`, `updated_at`) VALUES
-('IA0724001', '123123123', '2024-07-24', '2024-07-24', '1 Hari', NULL, 'izin', 0, 'Libur Bentar', NULL, '2024-07-23 07:02:40', NULL),
-('IC0724004', '123123123', '2024-07-24', '2024-07-27', '4 Hari', 'C002', 'cuti', 0, 'Demam', NULL, '2024-07-23 09:21:34', NULL),
-('IS0724002', '123123123', '2024-07-24', '2024-07-24', '1 Hari', NULL, 'sakit', 0, 'Demam', NULL, '2024-07-23 07:05:24', NULL),
-('IS0724003', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'sakit', 0, 'Demam', 'IS0724003.jpg', '2024-07-23 07:05:53', NULL);
+('IA0724001', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'izin', 2, 'Acara Healing', NULL, '2024-07-23 07:02:40', '2024-07-24 04:59:06'),
+('IA0724005', '123123123', '2024-07-26', '2024-08-02', '8 Hari', NULL, 'izin', 0, 'Tugas Luar Kota', NULL, '2024-07-24 07:26:57', NULL),
+('IC0724004', '123123123', '2024-07-24', '2024-07-27', '4 Hari', 'C002', 'cuti', 1, 'Demam', NULL, '2024-07-23 09:21:34', NULL),
+('IC0824001', '123123123', '2024-08-04', '2024-08-10', '7 Hari', 'C005', 'cuti', 0, 'Honeymoon di Bali', NULL, '2024-07-24 07:18:34', '2024-07-24 07:23:58'),
+('IS0724005', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'sakit', 0, 'Demam', 'IS0724005.png', '2024-07-24 07:55:10', '2024-07-24 07:57:49');
 
 -- --------------------------------------------------------
 

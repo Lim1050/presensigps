@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class IzinController extends Controller
 {
@@ -16,6 +17,7 @@ class IzinController extends Controller
         $dataIzin = DB::table('pengajuan_izin')
             ->leftJoin('master_cuti', 'pengajuan_izin.kode_cuti', '=', 'master_cuti.kode_cuti')
             ->where('nik', $nik)
+            ->orderBy('tanggal_izin_dari', 'desc')
             ->get();
         // dd($dataIzin);
         return view('presensi.sakit_izin', compact('dataIzin'));
@@ -64,6 +66,35 @@ class IzinController extends Controller
         if($save){
             return redirect()->route('izin')->with(['success' => 'Data berhasil disimpan!']);
         } else {
+            return redirect()->back()->with(['error' => 'Data gagal disimpan!']);
+        }
+    }
+    public function EditIzinAbsen($kode_izin)
+    {
+        $data_izin = DB::table('pengajuan_izin')
+            ->where('kode_izin', $kode_izin)
+            ->first();
+        return view('izin.edit_izin_absen', compact('data_izin'));
+    }
+    public function UpdateIzinAbsen($kode_izin, Request $request)
+    {
+        $tanggal_izin_dari = $request->tanggal_izin_dari;
+        $tanggal_izin_sampai = $request->tanggal_izin_sampai;
+        $jumlah_hari = $request->jumlah_hari;
+        $keterangan = $request->keterangan;
+
+        try {
+            $data = [
+                'tanggal_izin_dari' => $tanggal_izin_dari,
+                'tanggal_izin_sampai' => $tanggal_izin_sampai,
+                'jumlah_hari' => $jumlah_hari,
+                'keterangan' => $keterangan,
+                'updated_at' => Carbon::now()
+            ];
+
+            DB::table('pengajuan_izin')->where('kode_izin', $kode_izin)->update($data);
+            return redirect()->route('izin')->with(['success' => 'Data berhasil diupdate!']);
+        } catch (\Exception $e) {
             return redirect()->back()->with(['error' => 'Data gagal disimpan!']);
         }
     }
@@ -126,6 +157,60 @@ class IzinController extends Controller
             return redirect()->route('izin')->with(['success' => 'Data berhasil disimpan!']);
         } else {
             return redirect()->back()->with(['error' => 'Data gagal disimpan!']);
+        }
+    }
+    public function EditIzinSakit($kode_izin)
+    {
+        $data_izin = DB::table('pengajuan_izin')
+            ->where('kode_izin', $kode_izin)
+            ->first();
+        return view('izin.edit_izin_sakit', compact('data_izin'));
+    }
+    public function UpdateIzinSakit(Request $request, $kode_izin)
+    {
+        $tanggal_izin_dari = $request->tanggal_izin_dari;
+        $tanggal_izin_sampai = $request->tanggal_izin_sampai;
+        $jumlah_hari = $request->jumlah_hari;
+        $keterangan = $request->keterangan;
+
+        $data_izin = DB::table('pengajuan_izin')
+            ->where('kode_izin', $kode_izin)
+            ->first();
+
+        $old_surat_sakit = $data_izin->surat_sakit;
+
+        //Simpan File Surat Sakit
+            if ($request->hasFile('surat_sakit')) {
+                Storage::delete('public/uploads/surat_sakit/' . $old_surat_sakit);
+                $surat_sakit = $kode_izin . "." . $request->file('surat_sakit')->getClientOriginalExtension();
+            } elseif ($old_surat_sakit != null) {
+                $surat_sakit = $old_surat_sakit;
+            } else {
+                $surat_sakit = null;
+            }
+
+        try {
+            $data = [
+                'tanggal_izin_dari' => $tanggal_izin_dari,
+                'tanggal_izin_sampai' => $tanggal_izin_sampai,
+                'jumlah_hari' => $jumlah_hari,
+                'keterangan' => $keterangan,
+                'surat_sakit' => $surat_sakit,
+                'updated_at' => Carbon::now()
+            ];
+
+            DB::table('pengajuan_izin')->where('kode_izin', $kode_izin)->update($data);
+
+            //Simpan File Surat Sakit
+            if ($request->hasFile('surat_sakit')) {
+                $surat_sakit = $kode_izin . "." . $request->file('surat_sakit')->getClientOriginalExtension();
+                $folderPath = "public/uploads/surat_sakit/";
+                $request->file('surat_sakit')->storeAs($folderPath, $surat_sakit);
+            }
+
+            return redirect()->route('izin')->with(['success' => 'Data berhasil diupdate!']);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => 'Data gagal diupdate!']);
         }
     }
 
@@ -240,5 +325,61 @@ class IzinController extends Controller
         } else {
             return redirect()->back()->with(['error' => 'Data gagal disimpan!']);
         }
+    }
+    public function EditIzinCuti($kode_izin)
+    {
+        $data_izin = DB::table('pengajuan_izin')
+            ->where('kode_izin', $kode_izin)
+            ->first();
+        $master_cuti = DB::table('master_cuti')->orderBy('nama_cuti')->get();
+        return view('izin.edit_izin_cuti', compact('data_izin', 'master_cuti'));
+    }
+    public function UpdateIzinCuti(Request $request, $kode_izin)
+    {
+        $tanggal_izin_dari = $request->tanggal_izin_dari;
+        $tanggal_izin_sampai = $request->tanggal_izin_sampai;
+        $jumlah_hari = $request->jumlah_hari;
+        $kode_cuti = $request->kode_cuti;
+        $keterangan = $request->keterangan;
+
+        try {
+            $data = [
+                'tanggal_izin_dari' => $tanggal_izin_dari,
+                'tanggal_izin_sampai' => $tanggal_izin_sampai,
+                'jumlah_hari' => $jumlah_hari,
+                'kode_cuti' => $kode_cuti,
+                'keterangan' => $keterangan,
+                'updated_at' => Carbon::now()
+            ];
+            DB::table('pengajuan_izin')->where('kode_izin', $kode_izin)->update($data);
+            return redirect()->route('izin')->with(['success' => 'Data berhasil diupdate!']);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => 'Data gagal diupdate!']);
+        }
+    }
+
+    public function DeleteIzin($kode_izin)
+    {
+        $cek_data_izin = DB::table('pengajuan_izin')->where('kode_izin', $kode_izin)->first();
+        $surat_sakit = $cek_data_izin->surat_sakit;
+        try {
+
+            DB::table('pengajuan_izin')->where('kode_izin', $kode_izin)->delete();
+            if($surat_sakit != null) {
+                Storage::delete('public/uploads/surat_sakit/' . $surat_sakit);
+            }
+            return redirect()->back()->with(['success' => 'Data berhasil dihapus!']);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['success' => 'Data berhasil dihapus!']);
+        }
+    }
+
+    public function IzinShowAct($kode_izin)
+    {
+        $data_izin = DB::table('pengajuan_izin')
+            ->where('kode_izin', $kode_izin)
+            ->first();
+
+        return view('izin.izin_showact', compact('data_izin'));
     }
 }
