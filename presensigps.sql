@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 24, 2024 at 04:06 PM
+-- Generation Time: Jul 26, 2024 at 03:48 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -471,6 +471,7 @@ INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_
 ('IA0724005', '123123123', '2024-07-26', '2024-08-02', '8 Hari', NULL, 'izin', 0, 'Tugas Luar Kota', NULL, '2024-07-24 07:26:57', NULL),
 ('IC0724004', '123123123', '2024-07-24', '2024-07-27', '4 Hari', 'C002', 'cuti', 1, 'Demam', NULL, '2024-07-23 09:21:34', NULL),
 ('IC0824001', '123123123', '2024-08-04', '2024-08-10', '7 Hari', 'C005', 'cuti', 0, 'Honeymoon di Bali', NULL, '2024-07-24 07:18:34', '2024-07-24 07:23:58'),
+('IS0624001', '123123123', '2024-06-01', '2024-06-30', '30 Hari', NULL, 'sakit', 0, 'Sakit dikit', 'IS0624001.png', '2024-07-26 08:45:52', NULL),
 ('IS0724005', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'sakit', 0, 'Demam', 'IS0724005.png', '2024-07-24 07:55:10', '2024-07-24 07:57:49');
 
 -- --------------------------------------------------------

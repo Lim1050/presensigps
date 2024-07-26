@@ -41,6 +41,42 @@
                     right: 20px;
                 }
             </style>
+            <form action="{{ route('izin') }}" method="GET">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <select name="bulan" id="bulan" class="form-control selectmaterialize">
+                                <option value="">Bulan</option>
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <option value="{{ $i }}" {{ Request('bulan') == $i ? 'selected' : '' }}>{{ $months[$i] }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <select name="tahun" id="tahun" class="form-control selectmaterialize">
+                                <option value="">Tahun</option>
+                                @php
+                                    $tahun_mulai = 2020;
+                                    $tahun_sekarang = date("Y");
+                                @endphp
+                                @for ($tahun=$tahun_mulai; $tahun <= $tahun_sekarang; $tahun++)
+                                    <option value="{{ $tahun }}" {{ Request('tahun') == $tahun ? 'selected' : '' }}>{{ $tahun }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <button class="btn btn-danger btn-block"><ion-icon name="search-outline"></ion-icon>Cari</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
             @foreach ($dataIzin as $izin)
             <div class="card mb-1 card_izin" kode_izin="{{ $izin->kode_izin }}" data-toggle="modal" data-target="#actionSheetIconed">
                 <div class="card-body">

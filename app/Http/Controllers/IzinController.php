@@ -11,16 +11,47 @@ use Illuminate\Support\Facades\Storage;
 
 class IzinController extends Controller
 {
-    public function IzinSakitCuti()
+    public function IzinSakitCuti(Request $request)
     {
         $nik = Auth::guard('karyawan')->user()->nik;
-        $dataIzin = DB::table('pengajuan_izin')
-            ->leftJoin('master_cuti', 'pengajuan_izin.kode_cuti', '=', 'master_cuti.kode_cuti')
-            ->where('nik', $nik)
-            ->orderBy('tanggal_izin_dari', 'desc')
-            ->get();
-        // dd($dataIzin);
-        return view('presensi.sakit_izin', compact('dataIzin'));
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+
+        $months = [
+            '',
+            'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember',
+        ];
+        if(!empty($request->bulan) && !empty($request->tahun)){
+            $dataIzin = DB::table('pengajuan_izin')
+                            ->leftJoin('master_cuti', 'pengajuan_izin.kode_cuti', '=', 'master_cuti.kode_cuti')
+                            ->where('nik', $nik)
+                            ->whereRaw('MONTH(tanggal_izin_dari)="' . $bulan . '"')
+                            ->whereRaw('YEAR(tanggal_izin_dari)="' . $tahun . '"')
+                            ->orderBy('tanggal_izin_dari', 'desc')
+                            ->get();
+        } else {
+            $dataIzin = DB::table('pengajuan_izin')
+                ->leftJoin('master_cuti', 'pengajuan_izin.kode_cuti', '=', 'master_cuti.kode_cuti')
+                ->where('nik', $nik)
+                ->orderBy('tanggal_izin_dari', 'desc')
+                ->limit(5)
+                ->get();
+        }
+
+
+
+        return view('presensi.sakit_izin', compact('dataIzin', 'months'));
     }
 
     public function CreateIzinAbsen()

@@ -182,6 +182,16 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
+                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_sakit_izin->jumlah_cuti }}</span>
+                        <ion-icon name="reader-outline" style="font-size: 1.6rem" class="text-primary mb-1"></ion-icon>
+                        <br>
+                        <span style="font-size: 0.8rem; font-weight:500" class="text-primary">Cuti</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
                         <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_presensi->jml_terlambat }}</span>
                         <ion-icon name="alert-circle-outline" style="font-size: 1.6rem" class="text-warning mb-1"></ion-icon>
                         <br>

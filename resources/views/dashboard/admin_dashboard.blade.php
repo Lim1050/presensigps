@@ -87,7 +87,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                             Karyawan Cuti</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_sakit_izin->jumlah_izin != null ? $rekap_sakit_izin->jumlah_izin : 0}}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_sakit_izin->jumlah_cuti != null ? $rekap_sakit_izin->jumlah_cuti : 0}}</div>
                     </div>
                     <div class="col-auto">
                         <i class="bi bi-calendar3 fa-2x text-secondary"></i>
