@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 28 Jul 2024 pada 06.58
+-- Waktu pembuatan: 28 Jul 2024 pada 10.01
 -- Versi server: 8.0.35
 -- Versi PHP: 8.2.12
 
@@ -103,7 +103,7 @@ CREATE TABLE `jam_kerja` (
 
 INSERT INTO `jam_kerja` (`kode_jam_kerja`, `nama_jam_kerja`, `awal_jam_masuk`, `jam_masuk`, `akhir_jam_masuk`, `jam_pulang`, `created_at`, `updated_at`) VALUES
 ('JK01', 'Shift Pagi', '00:00:00', '01:00:00', '02:00:00', '08:00:00', NULL, '2024-07-12 06:50:38'),
-('JK02', 'Shift Siang', '10:00:00', '11:00:00', '12:00:00', '16:00:00', NULL, '2024-07-28 03:50:21'),
+('JK02', 'Shift Siang', '10:00:00', '11:00:00', '12:00:00', '15:00:00', NULL, '2024-07-28 07:37:46'),
 ('JK03', 'Shift Malam', '16:00:00', '17:00:00', '18:00:00', '23:59:00', NULL, '2024-07-16 09:07:50');
 
 -- --------------------------------------------------------
@@ -484,7 +484,7 @@ CREATE TABLE `pengajuan_izin` (
 
 INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_izin_sampai`, `jumlah_hari`, `kode_cuti`, `status`, `status_approved`, `keterangan`, `surat_sakit`, `created_at`, `updated_at`) VALUES
 ('IA0724001', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'izin', 2, 'Acara Healing', NULL, '2024-07-23 07:02:40', '2024-07-24 04:59:06'),
-('IA0724005', '123123123', '2024-07-26', '2024-08-02', '8 Hari', NULL, 'izin', 1, 'Tugas Luar Kota', NULL, '2024-07-24 07:26:57', NULL),
+('IA0724005', '123123123', '2024-07-26', '2024-08-02', '8 Hari', NULL, 'izin', 0, 'Tugas Luar Kota', NULL, '2024-07-24 07:26:57', NULL),
 ('IC0724004', '123123123', '2024-07-24', '2024-07-27', '4 Hari', 'C002', 'cuti', 1, 'Demam', NULL, '2024-07-23 09:21:34', '2024-07-28 03:45:38'),
 ('IC0824001', '123123123', '2024-08-04', '2024-08-10', '7 Hari', 'C005', 'cuti', 1, 'Honeymoon di Bali', NULL, '2024-07-24 07:18:34', '2024-07-28 03:45:28'),
 ('IS0624001', '123123123', '2024-06-01', '2024-06-30', '30 Hari', NULL, 'sakit', 2, 'Sakit dikit', 'IS0624001.png', '2024-07-26 08:45:52', NULL),
@@ -538,7 +538,7 @@ CREATE TABLE `presensi` (
 --
 
 INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_keluar`, `foto_masuk`, `foto_keluar`, `lokasi_masuk`, `lokasi_keluar`, `kode_jam_kerja`, `status`, `kode_izin`, `created_at`, `updated_at`) VALUES
-(107, '123123123', '2024-07-28', '10:53:37', NULL, 'public/uploads/absensi/123123123-2024-07-28-105337-masuk.png', NULL, '-6.22592,106.8302336', NULL, 'JK02', 'hadir', NULL, '2024-07-28 03:53:37', NULL),
+(107, '123123123', '2024-07-28', '10:53:37', '15:00:53', 'public/uploads/absensi/123123123-2024-07-28-105337-masuk.png', 'public/uploads/absensi/123123123-2024-07-28-150053-keluar.png', '-6.22592,106.8302336', '-6.22592,106.8302336', 'JK02', 'hadir', NULL, '2024-07-28 03:53:37', '2024-07-28 08:00:53'),
 (163, '123123123', '2024-08-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
 (164, '123123123', '2024-08-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
 (165, '123123123', '2024-08-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
@@ -546,14 +546,6 @@ INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_kelua
 (167, '123123123', '2024-08-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
 (168, '123123123', '2024-08-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
 (169, '123123123', '2024-08-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
-(218, '123123123', '2024-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
-(219, '123123123', '2024-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
-(220, '123123123', '2024-07-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
-(221, '123123123', '2024-07-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
-(222, '123123123', '2024-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
-(223, '123123123', '2024-07-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
-(224, '123123123', '2024-08-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
-(225, '123123123', '2024-08-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
 (226, '123123123', '2024-07-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724005', '2024-07-28 04:46:29', NULL),
 (227, '123123123', '2024-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724005', '2024-07-28 04:46:29', NULL),
 (228, '123123123', '2024-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724005', '2024-07-28 04:46:29', NULL),
