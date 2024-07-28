@@ -78,7 +78,7 @@
 
             </form>
             @foreach ($dataIzin as $izin)
-            <div class="card mb-1 card_izin" kode_izin="{{ $izin->kode_izin }}" data-toggle="modal" data-target="#actionSheetIconed">
+            <div class="card mb-1 card_izin" kode_izin="{{ $izin->kode_izin }}" status_approved="{{ $izin->status_approved }}" data-toggle="modal" data-target="#actionSheetIconed">
                 <div class="card-body">
                     <div class="historycontent">
                         <div class="iconpresensi">
@@ -180,7 +180,22 @@
         $(function(){
             $(".card_izin").click(function(e){
                 var kode_izin = $(this).attr("kode_izin");
-                $("#showact").load('/izin/' + kode_izin + '/showact');
+                var status_approved = $(this).attr("status_approved");
+                if(status_approved == 1) {
+                    Swal.fire({
+                    title: 'Oops!',
+                    text: 'Data Sudah Disetujui! Tidak Dapat Diubah!',
+                    icon: 'warning',
+                    });
+                } else if (status_approved == 2) {
+                    Swal.fire({
+                    title: 'Oops!',
+                    text: 'Data Sudah Ditolak! Tidak Dapat Diubah!',
+                    icon: 'warning',
+                    });
+                } else {
+                    $("#showact").load('/izin/' + kode_izin + '/showact');
+                }
             });
         });
     </script>

@@ -183,13 +183,13 @@
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
                         <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_sakit_izin->jumlah_cuti }}</span>
-                        <ion-icon name="reader-outline" style="font-size: 1.6rem" class="text-primary mb-1"></ion-icon>
+                        <ion-icon name="calendar-outline" style="font-size: 1.6rem" class="text-secondary mb-1"></ion-icon>
                         <br>
-                        <span style="font-size: 0.8rem; font-weight:500" class="text-primary">Cuti</span>
+                        <span style="font-size: 0.8rem; font-weight:500" class="text-secondary">Cuti</span>
                     </div>
                 </div>
             </div>
-            <div class="col-3">
+            {{-- <div class="col-3">
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
                         <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_presensi->jml_terlambat }}</span>
@@ -198,7 +198,7 @@
                         <span style="font-size: 0.8rem; font-weight:500" class="text-warning">Telat</span>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 

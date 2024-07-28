@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 26, 2024 at 03:48 PM
--- Server version: 8.0.33
--- PHP Version: 8.2.4
+-- Waktu pembuatan: 28 Jul 2024 pada 06.58
+-- Versi server: 8.0.35
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,18 +24,18 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `departemen`
+-- Struktur dari tabel `departemen`
 --
 
 CREATE TABLE `departemen` (
-  `kode_departemen` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_departemen` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_departemen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_departemen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `departemen`
+-- Dumping data untuk tabel `departemen`
 --
 
 INSERT INTO `departemen` (`kode_departemen`, `nama_departemen`, `created_at`, `updated_at`) VALUES
@@ -49,28 +49,28 @@ INSERT INTO `departemen` (`kode_departemen`, `nama_departemen`, `created_at`, `u
 -- --------------------------------------------------------
 
 --
--- Table structure for table `failed_jobs`
+-- Struktur dari tabel `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
   `id` bigint UNSIGNED NOT NULL,
-  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `uuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `gaji`
+-- Struktur dari tabel `gaji`
 --
 
 CREATE TABLE `gaji` (
   `id` bigint UNSIGNED NOT NULL,
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nik` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `bulan` int DEFAULT NULL,
   `tahun` int DEFAULT NULL,
   `jumlah_masuk` int DEFAULT NULL,
@@ -83,12 +83,12 @@ CREATE TABLE `gaji` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja`
+-- Struktur dari tabel `jam_kerja`
 --
 
 CREATE TABLE `jam_kerja` (
-  `kode_jam_kerja` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_jam_kerja` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_jam_kerja` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_jam_kerja` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `awal_jam_masuk` time NOT NULL,
   `jam_masuk` time NOT NULL,
   `akhir_jam_masuk` time NOT NULL,
@@ -98,30 +98,30 @@ CREATE TABLE `jam_kerja` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja`
+-- Dumping data untuk tabel `jam_kerja`
 --
 
 INSERT INTO `jam_kerja` (`kode_jam_kerja`, `nama_jam_kerja`, `awal_jam_masuk`, `jam_masuk`, `akhir_jam_masuk`, `jam_pulang`, `created_at`, `updated_at`) VALUES
 ('JK01', 'Shift Pagi', '00:00:00', '01:00:00', '02:00:00', '08:00:00', NULL, '2024-07-12 06:50:38'),
-('JK02', 'Shift Siang', '08:00:00', '09:00:00', '10:00:00', '16:00:00', NULL, '2024-07-16 08:54:50'),
+('JK02', 'Shift Siang', '10:00:00', '11:00:00', '12:00:00', '16:00:00', NULL, '2024-07-28 03:50:21'),
 ('JK03', 'Shift Malam', '16:00:00', '17:00:00', '18:00:00', '23:59:00', NULL, '2024-07-16 09:07:50');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja_dept`
+-- Struktur dari tabel `jam_kerja_dept`
 --
 
 CREATE TABLE `jam_kerja_dept` (
-  `kode_jk_dept` char(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_cabang` char(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_departemen` char(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_jk_dept` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_cabang` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_departemen` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja_dept`
+-- Dumping data untuk tabel `jam_kerja_dept`
 --
 
 INSERT INTO `jam_kerja_dept` (`kode_jk_dept`, `kode_cabang`, `kode_departemen`, `created_at`, `updated_at`) VALUES
@@ -138,7 +138,7 @@ INSERT INTO `jam_kerja_dept` (`kode_jk_dept`, `kode_cabang`, `kode_departemen`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja_dept_detail`
+-- Struktur dari tabel `jam_kerja_dept_detail`
 --
 
 CREATE TABLE `jam_kerja_dept_detail` (
@@ -150,7 +150,7 @@ CREATE TABLE `jam_kerja_dept_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja_dept_detail`
+-- Dumping data untuk tabel `jam_kerja_dept_detail`
 --
 
 INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `created_at`, `updated_at`) VALUES
@@ -221,82 +221,96 @@ INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja_karyawan`
+-- Struktur dari tabel `jam_kerja_karyawan`
 --
 
 CREATE TABLE `jam_kerja_karyawan` (
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `hari` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_jam_kerja` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nik` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `hari` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_jam_kerja` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja_karyawan`
+-- Dumping data untuk tabel `jam_kerja_karyawan`
 --
 
 INSERT INTO `jam_kerja_karyawan` (`nik`, `hari`, `kode_jam_kerja`, `created_at`, `updated_at`) VALUES
-('369258147', 'Senin', 'JK01', '2024-07-12 08:42:15', '2024-07-12 08:42:15'),
-('369258147', 'Selasa', 'JK02', '2024-07-12 08:42:15', '2024-07-12 08:42:15'),
-('369258147', 'Rabu', 'JK03', '2024-07-12 08:42:15', '2024-07-12 08:42:15'),
-('369258147', 'Kamis', NULL, '2024-07-12 08:42:15', '2024-07-12 08:42:15'),
-('369258147', 'Jumat', 'JK01', '2024-07-12 08:42:15', '2024-07-12 08:42:15'),
-('369258147', 'Sabtu', 'JK02', '2024-07-12 08:42:15', '2024-07-12 08:42:15'),
-('369258147', 'Minggu', 'JK03', '2024-07-12 08:42:15', '2024-07-12 08:42:15'),
-('123456789', 'Senin', 'JK02', '2024-07-12 08:48:22', '2024-07-12 08:48:22'),
-('123456789', 'Selasa', 'JK03', '2024-07-12 08:48:22', '2024-07-12 08:48:22'),
-('123456789', 'Rabu', 'JK01', '2024-07-12 08:48:22', '2024-07-12 08:48:22'),
-('123456789', 'Kamis', 'JK02', '2024-07-12 08:48:22', '2024-07-12 08:48:22'),
-('123456789', 'Jumat', 'JK03', '2024-07-12 08:48:22', '2024-07-12 08:48:22'),
-('123456789', 'Sabtu', 'JK01', '2024-07-12 08:48:22', '2024-07-12 08:48:22'),
-('123456789', 'Minggu', NULL, '2024-07-12 08:48:22', '2024-07-12 08:48:22'),
-('213213213', 'Senin', 'JK03', '2024-07-12 08:49:03', NULL),
-('213213213', 'Selasa', 'JK02', '2024-07-12 08:49:03', NULL),
-('213213213', 'Rabu', 'JK01', '2024-07-12 08:49:03', NULL),
-('213213213', 'Kamis', 'JK01', '2024-07-12 08:49:03', NULL),
-('213213213', 'Jumat', 'JK02', '2024-07-12 08:49:03', NULL),
-('213213213', 'Sabtu', 'JK03', '2024-07-12 08:49:03', NULL),
-('213213213', 'Minggu', 'JK03', '2024-07-12 08:49:03', NULL),
-('123123123', 'Senin', 'JK01', '2024-07-12 08:49:21', NULL),
-('123123123', 'Selasa', 'JK02', '2024-07-12 08:49:21', NULL),
-('123123123', 'Rabu', 'JK03', '2024-07-12 08:49:21', NULL),
-('123123123', 'Kamis', 'JK01', '2024-07-12 08:49:21', NULL),
-('123123123', 'Jumat', 'JK02', '2024-07-12 08:49:21', NULL),
-('123123123', 'Sabtu', 'JK03', '2024-07-12 08:49:21', NULL),
-('123123123', 'Minggu', 'JK01', '2024-07-12 08:49:21', NULL),
-('321321321', 'Senin', 'JK01', '2024-07-16 09:05:52', '2024-07-16 09:05:52'),
-('321321321', 'Selasa', 'JK03', '2024-07-16 09:05:52', '2024-07-16 09:05:52'),
-('321321321', 'Rabu', 'JK03', '2024-07-16 09:05:52', '2024-07-16 09:05:52'),
-('321321321', 'Kamis', 'JK03', '2024-07-16 09:05:52', '2024-07-16 09:05:52'),
-('321321321', 'Jumat', 'JK01', '2024-07-16 09:05:52', '2024-07-16 09:05:52'),
-('321321321', 'Sabtu', 'JK02', '2024-07-16 09:05:52', '2024-07-16 09:05:52'),
-('321321321', 'Minggu', 'JK03', '2024-07-16 09:05:52', '2024-07-16 09:05:52'),
-('333333333', 'Senin', 'JK01', '2024-07-18 08:36:07', '2024-07-18 08:36:07'),
-('333333333', 'Selasa', NULL, '2024-07-18 08:36:07', '2024-07-18 08:36:07'),
-('333333333', 'Rabu', 'JK02', '2024-07-18 08:36:07', '2024-07-18 08:36:07'),
-('333333333', 'Kamis', NULL, '2024-07-18 08:36:07', '2024-07-18 08:36:07'),
-('333333333', 'Jumat', 'JK03', '2024-07-18 08:36:07', '2024-07-18 08:36:07'),
-('333333333', 'Sabtu', NULL, '2024-07-18 08:36:07', '2024-07-18 08:36:07'),
-('333333333', 'Minggu', 'JK01', '2024-07-18 08:36:07', '2024-07-18 08:36:07');
+('444444444', 'Senin', NULL, '2024-07-28 03:48:54', NULL),
+('444444444', 'Selasa', NULL, '2024-07-28 03:48:54', NULL),
+('444444444', 'Rabu', NULL, '2024-07-28 03:48:54', NULL),
+('444444444', 'Kamis', NULL, '2024-07-28 03:48:54', NULL),
+('444444444', 'Jumat', NULL, '2024-07-28 03:48:54', NULL),
+('444444444', 'Sabtu', NULL, '2024-07-28 03:48:54', NULL),
+('444444444', 'Minggu', 'JK02', '2024-07-28 03:48:54', NULL),
+('369258147', 'Senin', 'JK01', '2024-07-28 03:49:04', '2024-07-28 03:49:04'),
+('369258147', 'Selasa', 'JK02', '2024-07-28 03:49:04', '2024-07-28 03:49:04'),
+('369258147', 'Rabu', 'JK03', '2024-07-28 03:49:04', '2024-07-28 03:49:04'),
+('369258147', 'Kamis', NULL, '2024-07-28 03:49:04', '2024-07-28 03:49:04'),
+('369258147', 'Jumat', 'JK01', '2024-07-28 03:49:04', '2024-07-28 03:49:04'),
+('369258147', 'Sabtu', 'JK02', '2024-07-28 03:49:04', '2024-07-28 03:49:04'),
+('369258147', 'Minggu', 'JK02', '2024-07-28 03:49:04', '2024-07-28 03:49:04'),
+('123456789', 'Senin', 'JK02', '2024-07-28 03:49:09', '2024-07-28 03:49:09'),
+('123456789', 'Selasa', 'JK03', '2024-07-28 03:49:09', '2024-07-28 03:49:09'),
+('123456789', 'Rabu', 'JK01', '2024-07-28 03:49:09', '2024-07-28 03:49:09'),
+('123456789', 'Kamis', 'JK02', '2024-07-28 03:49:09', '2024-07-28 03:49:09'),
+('123456789', 'Jumat', 'JK03', '2024-07-28 03:49:09', '2024-07-28 03:49:09'),
+('123456789', 'Sabtu', 'JK01', '2024-07-28 03:49:09', '2024-07-28 03:49:09'),
+('123456789', 'Minggu', 'JK02', '2024-07-28 03:49:09', '2024-07-28 03:49:09'),
+('321321321', 'Senin', 'JK01', '2024-07-28 03:49:15', '2024-07-28 03:49:15'),
+('321321321', 'Selasa', 'JK03', '2024-07-28 03:49:15', '2024-07-28 03:49:15'),
+('321321321', 'Rabu', 'JK03', '2024-07-28 03:49:15', '2024-07-28 03:49:15'),
+('321321321', 'Kamis', 'JK03', '2024-07-28 03:49:15', '2024-07-28 03:49:15'),
+('321321321', 'Jumat', 'JK01', '2024-07-28 03:49:15', '2024-07-28 03:49:15'),
+('321321321', 'Sabtu', 'JK02', '2024-07-28 03:49:15', '2024-07-28 03:49:15'),
+('321321321', 'Minggu', 'JK02', '2024-07-28 03:49:15', '2024-07-28 03:49:15'),
+('213213213', 'Senin', 'JK03', '2024-07-28 03:49:27', '2024-07-28 03:49:27'),
+('213213213', 'Selasa', 'JK02', '2024-07-28 03:49:27', '2024-07-28 03:49:27'),
+('213213213', 'Rabu', 'JK01', '2024-07-28 03:49:27', '2024-07-28 03:49:27'),
+('213213213', 'Kamis', 'JK01', '2024-07-28 03:49:27', '2024-07-28 03:49:27'),
+('213213213', 'Jumat', 'JK02', '2024-07-28 03:49:27', '2024-07-28 03:49:27'),
+('213213213', 'Sabtu', 'JK03', '2024-07-28 03:49:27', '2024-07-28 03:49:27'),
+('213213213', 'Minggu', 'JK02', '2024-07-28 03:49:27', '2024-07-28 03:49:27'),
+('333333333', 'Senin', 'JK01', '2024-07-28 03:49:34', '2024-07-28 03:49:34'),
+('333333333', 'Selasa', NULL, '2024-07-28 03:49:34', '2024-07-28 03:49:34'),
+('333333333', 'Rabu', 'JK02', '2024-07-28 03:49:34', '2024-07-28 03:49:34'),
+('333333333', 'Kamis', NULL, '2024-07-28 03:49:34', '2024-07-28 03:49:34'),
+('333333333', 'Jumat', 'JK03', '2024-07-28 03:49:34', '2024-07-28 03:49:34'),
+('333333333', 'Sabtu', NULL, '2024-07-28 03:49:34', '2024-07-28 03:49:34'),
+('333333333', 'Minggu', 'JK02', '2024-07-28 03:49:34', '2024-07-28 03:49:34'),
+('123123123', 'Senin', 'JK01', '2024-07-28 03:49:40', '2024-07-28 03:49:40'),
+('123123123', 'Selasa', 'JK02', '2024-07-28 03:49:40', '2024-07-28 03:49:40'),
+('123123123', 'Rabu', 'JK03', '2024-07-28 03:49:40', '2024-07-28 03:49:40'),
+('123123123', 'Kamis', 'JK01', '2024-07-28 03:49:40', '2024-07-28 03:49:40'),
+('123123123', 'Jumat', 'JK02', '2024-07-28 03:49:40', '2024-07-28 03:49:40'),
+('123123123', 'Sabtu', 'JK03', '2024-07-28 03:49:40', '2024-07-28 03:49:40'),
+('123123123', 'Minggu', 'JK02', '2024-07-28 03:49:40', '2024-07-28 03:49:40'),
+('222-222-222', 'Senin', NULL, '2024-07-28 03:49:44', NULL),
+('222-222-222', 'Selasa', NULL, '2024-07-28 03:49:44', NULL),
+('222-222-222', 'Rabu', NULL, '2024-07-28 03:49:44', NULL),
+('222-222-222', 'Kamis', NULL, '2024-07-28 03:49:44', NULL),
+('222-222-222', 'Jumat', NULL, '2024-07-28 03:49:44', NULL),
+('222-222-222', 'Sabtu', NULL, '2024-07-28 03:49:44', NULL),
+('222-222-222', 'Minggu', 'JK02', '2024-07-28 03:49:44', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kantor_cabang`
+-- Struktur dari tabel `kantor_cabang`
 --
 
 CREATE TABLE `kantor_cabang` (
-  `kode_cabang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_cabang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `lokasi_kantor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_cabang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_cabang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lokasi_kantor` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `radius` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `kantor_cabang`
+-- Dumping data untuk tabel `kantor_cabang`
 --
 
 INSERT INTO `kantor_cabang` (`kode_cabang`, `nama_cabang`, `lokasi_kantor`, `radius`, `created_at`, `updated_at`) VALUES
@@ -307,25 +321,25 @@ INSERT INTO `kantor_cabang` (`kode_cabang`, `nama_cabang`, `lokasi_kantor`, `rad
 -- --------------------------------------------------------
 
 --
--- Table structure for table `karyawan`
+-- Struktur dari tabel `karyawan`
 --
 
 CREATE TABLE `karyawan` (
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_lengkap` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `jabatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_departemen` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cabang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `no_wa` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nik` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_lengkap` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jabatan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_departemen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_cabang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `no_wa` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `karyawan`
+-- Dumping data untuk tabel `karyawan`
 --
 
 INSERT INTO `karyawan` (`nik`, `nama_lengkap`, `foto`, `jabatan`, `kode_departemen`, `kode_cabang`, `no_wa`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
@@ -341,19 +355,19 @@ INSERT INTO `karyawan` (`nik`, `nama_lengkap`, `foto`, `jabatan`, `kode_departem
 -- --------------------------------------------------------
 
 --
--- Table structure for table `lokasi_kantor`
+-- Struktur dari tabel `lokasi_kantor`
 --
 
 CREATE TABLE `lokasi_kantor` (
   `id` bigint UNSIGNED NOT NULL,
-  `lokasi_kantor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lokasi_kantor` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `radius` smallint DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `lokasi_kantor`
+-- Dumping data untuk tabel `lokasi_kantor`
 --
 
 INSERT INTO `lokasi_kantor` (`id`, `lokasi_kantor`, `radius`, `created_at`, `updated_at`) VALUES
@@ -362,19 +376,19 @@ INSERT INTO `lokasi_kantor` (`id`, `lokasi_kantor`, `radius`, `created_at`, `upd
 -- --------------------------------------------------------
 
 --
--- Table structure for table `master_cuti`
+-- Struktur dari tabel `master_cuti`
 --
 
 CREATE TABLE `master_cuti` (
-  `kode_cuti` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_cuti` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_cuti` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_cuti` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `jumlah_hari` smallint DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `master_cuti`
+-- Dumping data untuk tabel `master_cuti`
 --
 
 INSERT INTO `master_cuti` (`kode_cuti`, `nama_cuti`, `jumlah_hari`, `created_at`, `updated_at`) VALUES
@@ -387,17 +401,17 @@ INSERT INTO `master_cuti` (`kode_cuti`, `nama_cuti`, `jumlah_hari`, `created_at`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `migrations`
+-- Struktur dari tabel `migrations`
 --
 
 CREATE TABLE `migrations` (
   `id` int UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `migrations`
+-- Dumping data untuk tabel `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -427,66 +441,69 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (35, '2024_07_23_132656_update_id_to_kode_izin_in_pengajuan_izin_table', 19),
 (36, '2024_07_23_133500_update_kode_izin_in_pengajuan_izin_table', 20),
 (38, '2024_07_23_141508_create_master_cuti_table', 21),
-(40, '2024_07_23_161528_add_kode_cuti_to_pengajuan_izin_table', 22);
+(42, '2024_07_23_161528_add_kode_cuti_to_pengajuan_izin_table', 22),
+(43, '2024_07_28_104311_add_status_to_presensi_table', 22),
+(44, '2024_07_28_113700_add_kode_izin_to_presensi_table', 23);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `password_resets`
+-- Struktur dari tabel `password_resets`
 --
 
 CREATE TABLE `password_resets` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pengajuan_izin`
+-- Struktur dari tabel `pengajuan_izin`
 --
 
 CREATE TABLE `pengajuan_izin` (
-  `kode_izin` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_izin` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nik` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tanggal_izin_dari` date DEFAULT NULL,
   `tanggal_izin_sampai` date DEFAULT NULL,
-  `jumlah_hari` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jumlah_hari` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `kode_cuti` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` enum('sakit','izin','cuti') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status_approved` tinyint(1) NOT NULL DEFAULT '0',
-  `keterangan` text COLLATE utf8mb4_unicode_ci,
-  `surat_sakit` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `keterangan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `surat_sakit` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `pengajuan_izin`
+-- Dumping data untuk tabel `pengajuan_izin`
 --
 
 INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_izin_sampai`, `jumlah_hari`, `kode_cuti`, `status`, `status_approved`, `keterangan`, `surat_sakit`, `created_at`, `updated_at`) VALUES
 ('IA0724001', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'izin', 2, 'Acara Healing', NULL, '2024-07-23 07:02:40', '2024-07-24 04:59:06'),
-('IA0724005', '123123123', '2024-07-26', '2024-08-02', '8 Hari', NULL, 'izin', 0, 'Tugas Luar Kota', NULL, '2024-07-24 07:26:57', NULL),
-('IC0724004', '123123123', '2024-07-24', '2024-07-27', '4 Hari', 'C002', 'cuti', 1, 'Demam', NULL, '2024-07-23 09:21:34', NULL),
-('IC0824001', '123123123', '2024-08-04', '2024-08-10', '7 Hari', 'C005', 'cuti', 0, 'Honeymoon di Bali', NULL, '2024-07-24 07:18:34', '2024-07-24 07:23:58'),
-('IS0624001', '123123123', '2024-06-01', '2024-06-30', '30 Hari', NULL, 'sakit', 0, 'Sakit dikit', 'IS0624001.png', '2024-07-26 08:45:52', NULL),
-('IS0724005', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'sakit', 0, 'Demam', 'IS0724005.png', '2024-07-24 07:55:10', '2024-07-24 07:57:49');
+('IA0724005', '123123123', '2024-07-26', '2024-08-02', '8 Hari', NULL, 'izin', 1, 'Tugas Luar Kota', NULL, '2024-07-24 07:26:57', NULL),
+('IC0724004', '123123123', '2024-07-24', '2024-07-27', '4 Hari', 'C002', 'cuti', 1, 'Demam', NULL, '2024-07-23 09:21:34', '2024-07-28 03:45:38'),
+('IC0824001', '123123123', '2024-08-04', '2024-08-10', '7 Hari', 'C005', 'cuti', 1, 'Honeymoon di Bali', NULL, '2024-07-24 07:18:34', '2024-07-28 03:45:28'),
+('IS0624001', '123123123', '2024-06-01', '2024-06-30', '30 Hari', NULL, 'sakit', 2, 'Sakit dikit', 'IS0624001.png', '2024-07-26 08:45:52', NULL),
+('IS0724005', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'sakit', 1, 'Demam', 'IS0724005.png', '2024-07-24 07:55:10', '2024-07-24 07:57:49'),
+('IS0724006', '123123123', '2024-07-29', '2024-07-29', '1 Hari', NULL, 'sakit', 0, 'sakit bentar', 'IS0724006.png', '2024-07-28 04:56:18', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `personal_access_tokens`
+-- Struktur dari tabel `personal_access_tokens`
 --
 
 CREATE TABLE `personal_access_tokens` (
   `id` bigint UNSIGNED NOT NULL,
-  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tokenable_id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -496,7 +513,7 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `presensi`
+-- Struktur dari tabel `presensi`
 --
 
 CREATE TABLE `presensi` (
@@ -509,76 +526,61 @@ CREATE TABLE `presensi` (
   `foto_keluar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `lokasi_masuk` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `lokasi_keluar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `kode_jam_kerja` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_jam_kerja` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_izin` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `presensi`
+-- Dumping data untuk tabel `presensi`
 --
 
-INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_keluar`, `foto_masuk`, `foto_keluar`, `lokasi_masuk`, `lokasi_keluar`, `kode_jam_kerja`, `created_at`, `updated_at`) VALUES
-(59, '123123123', '2024-06-26', '08:41:06', '15:47:43', 'public/uploads/absensi/123123123-2024-06-26-154106-masuk.png', 'public/uploads/absensi/123123123-2024-06-27-103908-keluar.png', '-6.1965,106.8413', '-6.2017103,106.8421285', 'JK02', '2024-06-26 08:41:06', '2024-06-27 03:39:08'),
-(60, '321321321', '2024-06-26', '15:47:43', '15:48:10', 'public/uploads/absensi/321321321-2024-06-26-154743-masuk.png', 'public/uploads/absensi/321321321-2024-06-26-154810-keluar.png', '-6.2017112,106.8421335', '-6.2017112,106.8421335', 'JK02', '2024-06-26 08:47:43', '2024-06-26 08:48:10'),
-(63, '123123123', '2024-06-27', '10:42:07', '10:42:20', 'public/uploads/absensi/123123123-2024-06-27-104207-masuk.png', 'public/uploads/absensi/123123123-2024-06-27-104220-keluar.png', '-6.2488576,106.6500096', '-6.2488576,106.6500096', 'JK02', '2024-06-27 03:42:07', '2024-06-27 03:42:20'),
-(64, '321321321', '2024-06-27', '10:43:04', '10:43:14', 'public/uploads/absensi/321321321-2024-06-27-104304-masuk.png', 'public/uploads/absensi/321321321-2024-06-27-104314-keluar.png', '-6.2488576,106.6500096', '-6.2488576,106.6500096', 'JK02', '2024-06-27 03:43:04', '2024-06-27 03:43:14'),
-(65, '213213213', '2024-06-27', '10:44:46', '10:44:58', 'public/uploads/absensi/213213213-2024-06-27-104446-masuk.png', 'public/uploads/absensi/213213213-2024-06-27-104458-keluar.png', '-6.2017015,106.8421304', '-6.2017015,106.8421304', 'JK02', '2024-06-27 03:44:46', '2024-06-27 03:44:58'),
-(66, '123123123', '2024-06-28', '10:06:16', NULL, 'public/uploads/absensi/123123123-2024-06-28-100616-masuk.png', NULL, '-6.2017097,106.8421288', NULL, 'JK02', '2024-06-28 03:06:16', NULL),
-(67, '321321321', '2024-06-28', '10:07:39', NULL, 'public/uploads/absensi/321321321-2024-06-28-100739-masuk.png', NULL, '-6.2017097,106.8421288', NULL, 'JK02', '2024-06-28 03:07:39', NULL),
-(68, '213213213', '2024-06-28', '10:08:23', NULL, 'public/uploads/absensi/213213213-2024-06-28-100823-masuk.png', NULL, '-6.2017092,106.8421308', NULL, 'JK02', '2024-06-28 03:08:23', NULL),
-(69, '123123123', '2024-07-01', '11:15:34', '11:15:47', 'public/uploads/absensi/123123123-2024-07-01-111534-masuk.png', 'public/uploads/absensi/123123123-2024-07-01-111547-keluar.png', '-6.2017126,106.8421311', '-6.2017092,106.8421305', 'JK02', '2024-07-01 04:15:34', '2024-07-01 04:15:47'),
-(70, '213213213', '2024-07-01', '11:16:20', '11:16:29', 'public/uploads/absensi/213213213-2024-07-01-111620-masuk.png', 'public/uploads/absensi/213213213-2024-07-01-111629-keluar.png', '-6.2017092,106.8421305', '-6.2017092,106.8421305', 'JK02', '2024-07-01 04:16:20', '2024-07-01 04:16:29'),
-(71, '321321321', '2024-07-01', '11:17:04', '11:17:12', 'public/uploads/absensi/321321321-2024-07-01-111704-masuk.png', 'public/uploads/absensi/321321321-2024-07-01-111712-keluar.png', '-6.2017089,106.8421297', '-6.2017089,106.8421297', 'JK02', '2024-07-01 04:17:04', '2024-07-01 04:17:12'),
-(72, '123456789', '2024-07-01', '11:17:38', '11:17:47', 'public/uploads/absensi/123456789-2024-07-01-111738-masuk.png', 'public/uploads/absensi/123456789-2024-07-01-111747-keluar.png', '-6.2017095,106.8421289', '-6.2017095,106.8421289', 'JK02', '2024-07-01 04:17:38', '2024-07-01 04:17:47'),
-(73, '369258147', '2024-07-01', '11:18:23', '11:18:31', 'public/uploads/absensi/369258147-2024-07-01-111823-masuk.png', 'public/uploads/absensi/369258147-2024-07-01-111831-keluar.png', '-6.2017089,106.8421334', '-6.2017089,106.8421334', 'JK02', '2024-07-01 04:18:23', '2024-07-01 04:18:31'),
-(74, '123123123', '2024-07-02', '08:01:59', '10:02:26', 'public/uploads/absensi/123123123-2024-07-02-100159-masuk.png', 'public/uploads/absensi/123123123-2024-07-02-100226-keluar.png', '-6.2017102,106.8421316', '-6.2017122,106.8421298', 'JK02', '2024-07-02 03:01:59', '2024-07-02 03:02:26'),
-(75, '213213213', '2024-07-02', '09:03:00', '10:03:11', 'public/uploads/absensi/213213213-2024-07-02-100300-masuk.png', 'public/uploads/absensi/213213213-2024-07-02-100311-keluar.png', '-6.2017122,106.8421298', '-6.2017109,106.8421309', 'JK02', '2024-07-02 03:03:00', '2024-07-02 03:03:11'),
-(76, '321321321', '2024-07-02', '09:03:51', '10:04:02', 'public/uploads/absensi/321321321-2024-07-02-100351-masuk.png', 'public/uploads/absensi/321321321-2024-07-02-100402-keluar.png', '-6.2017109,106.8421309', '-6.2017109,106.8421309', 'JK02', '2024-07-02 03:03:51', '2024-07-02 03:04:02'),
-(77, '123456789', '2024-07-02', '10:04:35', '10:04:51', 'public/uploads/absensi/123456789-2024-07-02-100435-masuk.png', 'public/uploads/absensi/123456789-2024-07-02-100451-keluar.png', '-6.2017085,106.8421292', '-6.2017085,106.8421292', 'JK02', '2024-07-02 03:04:35', '2024-07-02 03:04:51'),
-(78, '369258147', '2024-07-02', '10:05:22', '10:05:43', 'public/uploads/absensi/369258147-2024-07-02-100522-masuk.png', 'public/uploads/absensi/369258147-2024-07-02-100543-keluar.png', '-6.201712,106.8421314', '-6.201712,106.8421314', 'JK02', '2024-07-02 03:05:22', '2024-07-02 03:05:43'),
-(79, '369258147', '2024-07-03', '14:02:03', '14:02:14', 'public/uploads/absensi/369258147-2024-07-03-140203-masuk.png', 'public/uploads/absensi/369258147-2024-07-03-140214-keluar.png', '-6.2017064,106.8421417', '-6.2017085,106.84214', 'JK02', '2024-07-03 07:02:03', '2024-07-03 07:02:14'),
-(80, '123456789', '2024-07-03', '14:02:44', '14:02:53', 'public/uploads/absensi/123456789-2024-07-03-140244-masuk.png', 'public/uploads/absensi/123456789-2024-07-03-140253-keluar.png', '-6.2017085,106.84214', '-6.2017085,106.84214', 'JK02', '2024-07-03 07:02:44', '2024-07-03 07:02:53'),
-(81, '321321321', '2024-07-03', '14:03:29', '14:03:53', 'public/uploads/absensi/321321321-2024-07-03-140329-masuk.png', 'public/uploads/absensi/321321321-2024-07-03-140353-keluar.png', '-6.2017085,106.84214', '-6.2017085,106.84214', 'JK02', '2024-07-03 07:03:29', '2024-07-03 07:03:53'),
-(82, '213213213', '2024-07-03', '14:04:21', '14:04:32', 'public/uploads/absensi/213213213-2024-07-03-140421-masuk.png', 'public/uploads/absensi/213213213-2024-07-03-140432-keluar.png', '-6.2017069,106.8421366', '-6.2017069,106.8421366', 'JK02', '2024-07-03 07:04:21', '2024-07-03 07:04:32'),
-(83, '123123123', '2024-07-03', '14:04:59', '14:05:14', 'public/uploads/absensi/123123123-2024-07-03-140459-masuk.png', 'public/uploads/absensi/123123123-2024-07-03-140514-keluar.png', '-6.2017069,106.8421366', '-6.2017069,106.8421366', 'JK02', '2024-07-03 07:04:59', '2024-07-03 07:05:14'),
-(84, '369258147', '2024-07-04', '12:51:15', '12:51:28', 'public/uploads/absensi/369258147-2024-07-04-125115-masuk.png', 'public/uploads/absensi/369258147-2024-07-04-125128-keluar.png', '-6.2016967,106.8421446', '-6.2016967,106.8421446', 'JK02', '2024-07-04 05:51:15', '2024-07-04 05:51:28'),
-(85, '123456789', '2024-07-04', '12:54:56', '12:55:11', 'public/uploads/absensi/123456789-2024-07-04-125456-masuk.png', 'public/uploads/absensi/123456789-2024-07-04-125511-keluar.png', '-6.201708,106.8421385', '-6.1341696,106.82368', 'JK02', '2024-07-04 05:54:56', '2024-07-04 05:55:11'),
-(86, '321321321', '2024-07-04', '12:55:55', '12:56:09', 'public/uploads/absensi/321321321-2024-07-04-125555-masuk.png', 'public/uploads/absensi/321321321-2024-07-04-125609-keluar.png', '-6.1341696,106.82368', '-6.1341696,106.82368', 'JK02', '2024-07-04 05:55:55', '2024-07-04 05:56:09'),
-(87, '213213213', '2024-07-04', '12:56:55', '12:57:24', 'public/uploads/absensi/213213213-2024-07-04-125655-masuk.png', 'public/uploads/absensi/213213213-2024-07-04-125724-keluar.png', '-6.1341696,106.82368', '-6.1341696,106.82368', 'JK02', '2024-07-04 05:56:55', '2024-07-04 05:57:24'),
-(90, '123123123', '2024-07-04', '14:41:50', '14:42:02', 'public/uploads/absensi/123123123-2024-07-04-144150-masuk.png', 'public/uploads/absensi/123123123-2024-07-04-144202-keluar.png', '-6.2017041,106.8421404', '-6.2017041,106.8421404', 'JK02', '2024-07-04 07:41:50', '2024-07-04 07:42:02'),
-(91, '123123123', '2024-07-05', '11:33:57', '11:34:06', 'public/uploads/absensi/123123123-2024-07-05-113357-masuk.png', 'public/uploads/absensi/123123123-2024-07-05-113406-keluar.png', '-6.2017005,106.8421405', '-6.2017005,106.8421405', 'JK02', '2024-07-05 04:33:57', '2024-07-05 04:34:06'),
-(92, '213213213', '2024-07-05', '11:34:32', '11:34:42', 'public/uploads/absensi/213213213-2024-07-05-113432-masuk.png', 'public/uploads/absensi/213213213-2024-07-05-113442-keluar.png', '-6.2017005,106.8421405', '-6.2017005,106.8421405', 'JK02', '2024-07-05 04:34:32', '2024-07-05 04:34:42'),
-(93, '321321321', '2024-07-05', '11:36:42', '11:36:51', 'public/uploads/absensi/321321321-2024-07-05-113642-masuk.png', 'public/uploads/absensi/321321321-2024-07-05-113651-keluar.png', '-6.2017066,106.8421392', '-6.2017066,106.8421392', 'JK02', '2024-07-05 04:36:42', '2024-07-05 04:36:51'),
-(94, '123456789', '2024-07-05', '11:49:07', '11:49:15', 'public/uploads/absensi/123456789-2024-07-05-114907-masuk.png', 'public/uploads/absensi/123456789-2024-07-05-114915-keluar.png', '-6.2017099,106.8421426', '-6.2017099,106.8421426', 'JK02', '2024-07-05 04:49:07', '2024-07-05 04:49:15'),
-(95, '369258147', '2024-07-05', '11:49:53', '11:50:04', 'public/uploads/absensi/369258147-2024-07-05-114953-masuk.png', 'public/uploads/absensi/369258147-2024-07-05-115004-keluar.png', '-6.2017005,106.8421405', '-6.2017005,106.8421405', 'JK02', '2024-07-05 04:49:53', '2024-07-05 04:50:04'),
-(96, '321321321', '2024-07-10', '16:15:05', '16:15:19', 'public/uploads/absensi/321321321-2024-07-10-161505-masuk.png', 'public/uploads/absensi/321321321-2024-07-10-161519-keluar.png', '-6.2017049,106.84214', '-6.2017061,106.8421378', 'JK02', '2024-07-10 09:15:05', '2024-07-10 09:15:19'),
-(97, '123123123', '2024-07-10', '16:21:26', '16:21:36', 'public/uploads/absensi/123123123-2024-07-10-162126-masuk.png', 'public/uploads/absensi/123123123-2024-07-10-162136-keluar.png', '-6.2016955,106.8421458', '-6.2016955,106.8421458', 'JK02', '2024-07-10 09:21:26', '2024-07-10 09:21:36'),
-(101, '123123123', '2024-07-16', '12:09:32', '16:00:03', 'public/uploads/absensi/123123123-2024-07-16-120932-masuk.png', 'public/uploads/absensi/123123123-2024-07-16-160003-keluar.png', '-6.2016958,106.8421862', '-6.2016952,106.8421862', 'JK02', '2024-07-16 05:09:32', '2024-07-16 09:00:03'),
-(102, '369258147', '2024-07-16', '12:48:32', '16:01:10', 'public/uploads/absensi/369258147-2024-07-16-124832-masuk.png', 'public/uploads/absensi/369258147-2024-07-16-160110-keluar.png', '-6.2016963,106.8421898', '-6.2016994,106.8421952', 'JK02', '2024-07-16 05:48:32', '2024-07-16 09:01:10'),
-(103, '123456789', '2024-07-16', '16:02:25', '16:02:40', 'public/uploads/absensi/123456789-2024-07-16-160225-masuk.png', 'public/uploads/absensi/123456789-2024-07-16-160240-keluar.png', '-6.2016962,106.8421918', '-6.2016983,106.8421903', 'JK03', '2024-07-16 09:02:25', '2024-07-16 09:02:40'),
-(104, '321321321', '2024-07-16', '16:06:17', '16:07:37', 'public/uploads/absensi/321321321-2024-07-16-160617-masuk.png', 'public/uploads/absensi/321321321-2024-07-16-160737-keluar.png', '-6.2016917,106.8421936', '-6.2016952,106.8421881', 'JK03', '2024-07-16 09:06:17', '2024-07-16 09:07:37'),
-(105, '123123123', '2024-07-19', '08:53:39', '16:04:36', 'public/uploads/absensi/123123123-2024-07-19-085339-masuk.png', 'public/uploads/absensi/123123123-2024-07-19-160436-keluar.png', '-6.2016965,106.8421866', '-6.2016976,106.8421972', 'JK02', '2024-07-19 01:53:39', '2024-07-19 09:04:36');
+INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_keluar`, `foto_masuk`, `foto_keluar`, `lokasi_masuk`, `lokasi_keluar`, `kode_jam_kerja`, `status`, `kode_izin`, `created_at`, `updated_at`) VALUES
+(107, '123123123', '2024-07-28', '10:53:37', NULL, 'public/uploads/absensi/123123123-2024-07-28-105337-masuk.png', NULL, '-6.22592,106.8302336', NULL, 'JK02', 'hadir', NULL, '2024-07-28 03:53:37', NULL),
+(163, '123123123', '2024-08-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
+(164, '123123123', '2024-08-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
+(165, '123123123', '2024-08-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
+(166, '123123123', '2024-08-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
+(167, '123123123', '2024-08-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
+(168, '123123123', '2024-08-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
+(169, '123123123', '2024-08-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-28 04:45:49', NULL),
+(218, '123123123', '2024-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
+(219, '123123123', '2024-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
+(220, '123123123', '2024-07-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
+(221, '123123123', '2024-07-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
+(222, '123123123', '2024-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
+(223, '123123123', '2024-07-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
+(224, '123123123', '2024-08-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
+(225, '123123123', '2024-08-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-28 04:46:19', NULL),
+(226, '123123123', '2024-07-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724005', '2024-07-28 04:46:29', NULL),
+(227, '123123123', '2024-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724005', '2024-07-28 04:46:29', NULL),
+(228, '123123123', '2024-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724005', '2024-07-28 04:46:29', NULL),
+(229, '123123123', '2024-07-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', '2024-07-28 04:46:34', NULL),
+(230, '123123123', '2024-07-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', '2024-07-28 04:46:34', NULL),
+(231, '123123123', '2024-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', '2024-07-28 04:46:34', NULL),
+(232, '123123123', '2024-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', '2024-07-28 04:46:34', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktur dari tabel `users`
 --
 
 CREATE TABLE `users` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data untuk tabel `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
@@ -590,80 +592,80 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `re
 --
 
 --
--- Indexes for table `departemen`
+-- Indeks untuk tabel `departemen`
 --
 ALTER TABLE `departemen`
   ADD PRIMARY KEY (`kode_departemen`);
 
 --
--- Indexes for table `failed_jobs`
+-- Indeks untuk tabel `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
--- Indexes for table `gaji`
+-- Indeks untuk tabel `gaji`
 --
 ALTER TABLE `gaji`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `jam_kerja`
+-- Indeks untuk tabel `jam_kerja`
 --
 ALTER TABLE `jam_kerja`
   ADD PRIMARY KEY (`kode_jam_kerja`);
 
 --
--- Indexes for table `jam_kerja_dept`
+-- Indeks untuk tabel `jam_kerja_dept`
 --
 ALTER TABLE `jam_kerja_dept`
   ADD PRIMARY KEY (`kode_jk_dept`);
 
 --
--- Indexes for table `kantor_cabang`
+-- Indeks untuk tabel `kantor_cabang`
 --
 ALTER TABLE `kantor_cabang`
   ADD PRIMARY KEY (`kode_cabang`);
 
 --
--- Indexes for table `karyawan`
+-- Indeks untuk tabel `karyawan`
 --
 ALTER TABLE `karyawan`
   ADD PRIMARY KEY (`nik`);
 
 --
--- Indexes for table `lokasi_kantor`
+-- Indeks untuk tabel `lokasi_kantor`
 --
 ALTER TABLE `lokasi_kantor`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `master_cuti`
+-- Indeks untuk tabel `master_cuti`
 --
 ALTER TABLE `master_cuti`
   ADD PRIMARY KEY (`kode_cuti`);
 
 --
--- Indexes for table `migrations`
+-- Indeks untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `password_resets`
+-- Indeks untuk tabel `password_resets`
 --
 ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Indexes for table `pengajuan_izin`
+-- Indeks untuk tabel `pengajuan_izin`
 --
 ALTER TABLE `pengajuan_izin`
   ADD PRIMARY KEY (`kode_izin`);
 
 --
--- Indexes for table `personal_access_tokens`
+-- Indeks untuk tabel `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`),
@@ -671,60 +673,60 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Indexes for table `presensi`
+-- Indeks untuk tabel `presensi`
 --
 ALTER TABLE `presensi`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `failed_jobs`
+-- AUTO_INCREMENT untuk tabel `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `gaji`
+-- AUTO_INCREMENT untuk tabel `gaji`
 --
 ALTER TABLE `gaji`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `lokasi_kantor`
+-- AUTO_INCREMENT untuk tabel `lokasi_kantor`
 --
 ALTER TABLE `lokasi_kantor`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `migrations`
+-- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
--- AUTO_INCREMENT for table `personal_access_tokens`
+-- AUTO_INCREMENT untuk tabel `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `presensi`
+-- AUTO_INCREMENT untuk tabel `presensi`
 --
 ALTER TABLE `presensi`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=233;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;

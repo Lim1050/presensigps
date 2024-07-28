@@ -28,7 +28,7 @@ class DashboardController extends Controller
                                 ->where('presensi.nik', $nik)
                                 ->whereRaw('MONTH(presensi.tanggal_presensi) = ?', [$bulan_ini])
                                 ->whereRaw('YEAR(presensi.tanggal_presensi) = ?', [$tahun_ini])
-                                ->orderBy('presensi.tanggal_presensi')
+                                ->orderBy('presensi.tanggal_presensi', 'desc')
                                 ->get();
 
         $rekap_presensi = DB::table('presensi')

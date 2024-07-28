@@ -95,6 +95,15 @@ Route::middleware(['auth:user'])->group(function () {
     // Master Cuti delete
     Route::get('/admin/cuti/delete/{kode_cuti}', [IzinController::class, 'CutiMasterDelete'])->name('admin.cuti.delete');
 
+    // persetujuan sakit izin
+    Route::get('/admin/persetujuan/sakit/izin', [IzinController::class, 'PersetujuanSakitIzin'])->name('admin.persetujuan.sakit.izin');
+    // approval sakit izin
+    Route::post('/admin/approval/sakit/izin', [IzinController::class, 'ApprovalSakitIzin'])->name('admin.approval.sakit.izin');
+    // batalkan sakit izin
+    Route::get('/admin/batalkan/sakit/izin/{kode_izin}', [IzinController::class, 'BatalkanSakitIzin'])->name('admin.batalkan.sakit.izin');
+    // cek pengajuan sakit/izin
+    Route::post('/admin/cek/pengajuan/sakit-izin', [IzinController::class, 'CekPengajuanSakitIzin'])->name('admin.cek.pengajuan.sakit-izin');
+
     // laporan presensi
     Route::get('/admin/laporan/presensi', [PresensiController::class, 'LaporanPresensi'])->name('admin.laporan.presensi');
     // print laporan presensi
@@ -111,14 +120,6 @@ Route::middleware(['auth:user'])->group(function () {
     // tampilkan peta
     Route::post('/admin/presensi/tampilkanpeta', [PresensiController::class, 'TampilkanPeta'])->name('admin.presensi.tampilkanpeta');
 
-    // persetujuan sakit izin
-    Route::get('/admin/persetujuan/sakit/izin', [PresensiController::class, 'PersetujuanSakitIzin'])->name('admin.persetujuan.sakit.izin');
-    // approval sakit izin
-    Route::post('/admin/approval/sakit/izin', [PresensiController::class, 'ApprovalSakitIzin'])->name('admin.approval.sakit.izin');
-    // batalkan sakit izin
-    Route::get('/admin/batalkan/sakit/izin/{kode_izin}', [PresensiController::class, 'BatalkanSakitIzin'])->name('admin.batalkan.sakit.izin');
-    // cek pengajuan sakit/izin
-    // Route::post('/admin/cek/pengajuan/sakit-izin', [PresensiController::class, 'CekPengajuanSakitIzin'])->name('admin.cek.pengajuan.sakit-izin');
 
     // Konfigurasi Lokasi Kantor
     Route::get('/admin/konfigurasi/lokasi/kantor', [KonfigurasiController::class, 'LokasiKantor'])->name('admin.konfigurasi.lokasi.kantor');
