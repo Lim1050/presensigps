@@ -1,0 +1,17 @@
+Struktur table jabatan
+kode_jabatan
+nama_jabatan
+
+Struktur table gaji
+kode_gaji
+kode_jabatan
+nama_gaji
+jumlah_gaji
+
+ubah table karyawan tambahkan kode_jabatan
+
+join table presensi, karyawan, jabatan, gaji untuk penghitungan gaji
+
+buat view untuk manage gaji
+
+jika ada izin maka gaji berkurang sesuai jumlah izinnya

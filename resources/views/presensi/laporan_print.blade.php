@@ -55,14 +55,17 @@
         {
             list($h, $m, $s) = explode(":", $jam_masuk);
             $dtAwal = mktime($h, $m, $s, "1", "1", "1");
+
             list($h, $m, $s) = explode(":", $jam_keluar);
             $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
+
             $dtSelisih = $dtAkhir - $dtAwal;
             $totalmenit = $dtSelisih / 60;
             $jam = explode(".", $totalmenit / 60);
             $sisamenit = ($totalmenit / 60) - $jam[0];
             $sisamenit2 = $sisamenit * 60;
             $jml_jam = $jam[0];
+
             return $jml_jam . " jam " . round($sisamenit2) . " menit";
         }
     @endphp
@@ -169,18 +172,16 @@
                         Tepat Waktu
                     @endif
                 </td>
-                <td>
+                {{-- <td>
                     @if ($item->jam_keluar != null)
                         @php
                             $jumlah_jam_kerja = selisih($item->jam_masuk, $item->jam_keluar);
                         @endphp
+                        {{ $jumlah_jam_kerja }}
                     @else
-                        @php
-                            $jumlah_jam_kerja = 0;
-                        @endphp
+                        0
                     @endif
-                    {{ $jumlah_jam_kerja }}
-                </td>
+                </td> --}}
                 {{-- <td>
                     @php
 
