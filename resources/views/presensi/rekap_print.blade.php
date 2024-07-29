@@ -74,46 +74,35 @@
         <tr>
             <th rowspan="2">NIK</th>
             <th rowspan="2">Nama Karyawan</th>
-            <th colspan="31">Tanggal</th>
+            <th colspan="{{ $jml_hari }}">Bulan {{ $months[$bulan] }} {{ $tahun }}</th>
             <th rowspan="2">Hadir</th>
             <th rowspan="2">Terlambat</th>
         </tr>
         <tr>
-            @for ($i=1; $i <= 31; $i++)
-            <th>{{ $i }}</th>
-            @endfor
+            @foreach ( $range_tanggal as $tanggal)
+            @if ($tanggal != NULL)
+                <th>{{ date("d", strtotime($tanggal)) }}</th>
+            @endif
+            @endforeach
         </tr>
         @foreach ($rekap as $r)
         <tr>
             <td>{{ $r->nik }}</td>
             <td>{{ $r->nama_lengkap }}</td>
+
             <?php
-                $total_hadir = 0;
-                $total_terlambat = 0;
-                for($i=1; $i<=31; $i++){
-                    $tanggal = "tanggal_" . $i;
-
-                    if (empty($r->$tanggal)) {
-                        $hadir = ['',''];
-                        $total_hadir +=0;
-                    } else {
-                        $hadir = explode("-", $r->$tanggal);
-                        $total_hadir += 1;
-                        if ($hadir[0] > $r->jam_masuk_kerja ) {
-                            $total_terlambat += 1;
-                        }
-                    }
+                for ($i=1; $i <= $jml_hari; $i++) {
+                    $tgl = "tgl_".$i;
+                    $data_presensi = explode("|", $r->$tgl);
             ?>
-            <td style="text-align: center; font-size: 9px">
-                <span style="color: {{ $hadir[0] > $r->jam_masuk_kerja ? "red" : ""}}"  >{{ !empty($hadir[0]) ? $hadir[0] : '-' }}</span></br>
-                <span style="color: {{ $hadir[0] < $r->jam_pulang ? "red" : ""}}"  >{{ $hadir[1] }}</span>
+            <td>
+                @if ($r->$tgl != NULL)
+                    {{ $data_presensi[2] }}
+                @endif
             </td>
-
             <?php
                 }
             ?>
-            <td style="text-align: center">{{ $total_hadir }}</td>
-            <td style="text-align: center">{{ $total_terlambat }}</td>
 
         </tr>
         @endforeach

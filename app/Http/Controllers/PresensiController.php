@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\LaporanPresensiExport;
+use App\Models\Karyawan;
 
 class PresensiController extends Controller
 {
@@ -459,6 +460,10 @@ class PresensiController extends Controller
     {
         $bulan = $request->bulan;
         $tahun = $request->tahun;
+        $start = $tahun . "-" . $bulan . "-01";
+        $dari = date("Y-m-d", strtotime($start));
+        // dd($dari);
+        $sampai = date("Y-m-t", strtotime($dari));
 
         $months = [
             '',
@@ -476,46 +481,392 @@ class PresensiController extends Controller
             'Desember',
         ];
 
-        $rekap = DB::table('presensi as p')
-                    ->selectRaw('p.nik, k.nama_lengkap,
-                        MAX(IF(DAY(p.tanggal_presensi) = 1, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_1,
-                        MAX(IF(DAY(p.tanggal_presensi) = 2, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_2,
-                        MAX(IF(DAY(p.tanggal_presensi) = 3, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_3,
-                        MAX(IF(DAY(p.tanggal_presensi) = 4, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_4,
-                        MAX(IF(DAY(p.tanggal_presensi) = 5, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_5,
-                        MAX(IF(DAY(p.tanggal_presensi) = 6, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_6,
-                        MAX(IF(DAY(p.tanggal_presensi) = 7, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_7,
-                        MAX(IF(DAY(p.tanggal_presensi) = 8, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_8,
-                        MAX(IF(DAY(p.tanggal_presensi) = 9, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_9,
-                        MAX(IF(DAY(p.tanggal_presensi) = 10, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_10,
-                        MAX(IF(DAY(p.tanggal_presensi) = 11, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_11,
-                        MAX(IF(DAY(p.tanggal_presensi) = 12, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_12,
-                        MAX(IF(DAY(p.tanggal_presensi) = 13, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_13,
-                        MAX(IF(DAY(p.tanggal_presensi) = 14, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_14,
-                        MAX(IF(DAY(p.tanggal_presensi) = 15, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_15,
-                        MAX(IF(DAY(p.tanggal_presensi) = 16, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_16,
-                        MAX(IF(DAY(p.tanggal_presensi) = 17, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_17,
-                        MAX(IF(DAY(p.tanggal_presensi) = 18, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_18,
-                        MAX(IF(DAY(p.tanggal_presensi) = 19, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_19,
-                        MAX(IF(DAY(p.tanggal_presensi) = 20, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_20,
-                        MAX(IF(DAY(p.tanggal_presensi) = 21, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_21,
-                        MAX(IF(DAY(p.tanggal_presensi) = 22, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_22,
-                        MAX(IF(DAY(p.tanggal_presensi) = 23, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_23,
-                        MAX(IF(DAY(p.tanggal_presensi) = 24, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_24,
-                        MAX(IF(DAY(p.tanggal_presensi) = 25, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_25,
-                        MAX(IF(DAY(p.tanggal_presensi) = 26, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_26,
-                        MAX(IF(DAY(p.tanggal_presensi) = 27, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_27,
-                        MAX(IF(DAY(p.tanggal_presensi) = 28, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_28,
-                        MAX(IF(DAY(p.tanggal_presensi) = 29, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_29,
-                        MAX(IF(DAY(p.tanggal_presensi) = 30, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_30,
-                        MAX(IF(DAY(p.tanggal_presensi) = 31, CONCAT(p.jam_masuk, "-", IFNULL(p.jam_keluar,"Belum Absen")), "")) as tanggal_31,
-                        j.jam_masuk as jam_masuk_kerja, j.jam_pulang')
-                    ->leftJoin('karyawan as k', 'p.nik', '=', 'k.nik')
-                    ->leftJoin('jam_kerja as j', 'p.kode_jam_kerja', '=', 'j.kode_jam_kerja')
-                    ->whereRaw('MONTH(p.tanggal_presensi) = ?', [$bulan])
-                    ->whereRaw('YEAR(p.tanggal_presensi) = ?', [$tahun])
-                    ->groupBy('p.nik', 'k.nama_lengkap', 'j.jam_masuk', 'j.jam_pulang')
-                    ->get();
+        while(strtotime($dari) <= strtotime($sampai)){
+            $range_tanggal[] = $dari;
+            $dari = date("Y-m-d", strtotime("+1 day", strtotime($dari)));
+        }
+        $jml_hari = count($range_tanggal);
+        $last_range = $jml_hari - 1;
+        $sampai = $range_tanggal[$last_range];
+
+        if($jml_hari == 30){
+            array_push($range_tanggal, NULL);
+        } elseif ($jml_hari == 29) {
+            array_push($range_tanggal, NULL, NULL);
+        } elseif ($jml_hari == 28) {
+            array_push($range_tanggal, NULL, NULL, NULL);
+        }
+
+        // dd($range_tanggal);
+
+        $query = Karyawan::query();
+        $query->selectRaw("karyawan.nik,
+                            karyawan.nama_lengkap,
+                            karyawan.jabatan,
+                            presensi.tgl_1,
+                            presensi.tgl_2,
+                            presensi.tgl_3,
+                            presensi.tgl_4,
+                            presensi.tgl_5,
+                            presensi.tgl_6,
+                            presensi.tgl_7,
+                            presensi.tgl_8,
+                            presensi.tgl_9,
+                            presensi.tgl_10,
+                            presensi.tgl_11,
+                            presensi.tgl_12,
+                            presensi.tgl_13,
+                            presensi.tgl_14,
+                            presensi.tgl_15,
+                            presensi.tgl_16,
+                            presensi.tgl_17,
+                            presensi.tgl_18,
+                            presensi.tgl_19,
+                            presensi.tgl_20,
+                            presensi.tgl_21,
+                            presensi.tgl_22,
+                            presensi.tgl_23,
+                            presensi.tgl_24,
+                            presensi.tgl_25,
+                            presensi.tgl_26,
+                            presensi.tgl_27,
+                            presensi.tgl_28,
+                            presensi.tgl_29,
+                            presensi.tgl_30,
+                            presensi.tgl_31"
+                        );
+        $query->leftJoin(
+            DB::raw("(
+                    SELECT
+                    presensi.nik,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[0]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_1,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[1]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_2,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[2]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_3,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[3]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_4,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[4]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_5,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[5]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_6,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[6]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_7,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[7]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_8,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[8]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_9,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[9]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_10,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[10]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_11,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[11]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_12,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[12]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_13,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[13]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_14,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[14]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_15,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[15]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_16,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[16]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_17,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[17]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_18,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[18]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_19,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[19]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_20,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[20]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_21,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[21]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_22,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[22]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_23,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[23]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_24,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[24]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_25,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[25]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_26,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[26]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_27,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[27]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_28,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[28]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_29,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[29]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_30,
+                    MAX(IF(tanggal_presensi = '$range_tanggal[30]', CONCAT(
+                        IFNULL(presensi.jam_masuk, 'NA'), '|',
+                        IFNULL(presensi.jam_keluar, 'NA'), '|',
+                        IFNULL(presensi.status, 'NA') , '|',
+                        IFNULL(jam_kerja.nama_jam_kerja, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_masuk, 'NA') , '|',
+                        IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
+                        IFNULL(presensi.kode_izin, 'NA') , '|',
+                        IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
+                    ), NULL)) AS tgl_31
+                FROM
+                    presensi
+                LEFT JOIN
+                    jam_kerja ON presensi.kode_jam_kerja = jam_kerja.kode_jam_kerja
+                LEFT JOIN
+                    pengajuan_izin ON presensi.kode_izin = pengajuan_izin.kode_izin
+                WHERE
+                    presensi.tanggal_presensi BETWEEN  '$range_tanggal[0]' AND '$sampai'
+                GROUP BY
+                    presensi.nik
+                ) presensi"),
+                function ($join) {
+                    $join->on('karyawan.nik', '=', 'presensi.nik');
+            }
+        );
+
+        $query->orderBy('nama_lengkap');
+        $rekap = $query->get();
 
         // dd($rekap);
 
@@ -527,7 +878,7 @@ class PresensiController extends Controller
             header("Content-Disposition: attachment; filename=Laporan_Presensi_$time.xls");
         }
 
-        return view('presensi.rekap_print', compact('bulan', 'tahun', 'months', 'rekap'));
+        return view('presensi.rekap_print', compact('bulan', 'tahun', 'months', 'rekap', 'range_tanggal', 'jml_hari'));
     }
 
 }

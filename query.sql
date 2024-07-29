@@ -67,7 +67,7 @@ LEFT JOIN (
             IFNULL(jam_kerja.jam_pulang, 'NA') , '|',
             IFNULL(presensi.kode_izin, 'NA') , '|',
             IFNULL(pengajuan_izin.keterangan, 'NA') , '|'
-        ), NULL)) AS tgl_3,0
+        ), NULL)) AS tgl_3,
         MAX(IF(tanggal_presensi = '2024-07-04', CONCAT(
             IFNULL(presensi.jam_masuk, 'NA'), '|',
             IFNULL(presensi.jam_keluar, 'NA'), '|',
