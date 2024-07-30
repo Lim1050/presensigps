@@ -16,7 +16,7 @@
     }
 @endphp
 @foreach ($presensi as $item)
-
+    @if ($item->status=="hadir")
     <tr>
         <td class="text-center">{{ $loop->iteration }}</td>
         <td>{{ $item->nik }}</td>
@@ -38,6 +38,7 @@
                 {{-- <span class="badge bg-danger" style="color: white">Belum Absen Pulang</span> --}}
             @endif
         </td>
+        <td><span class="badge bg-success" style="color: white">{{ $item->status }}</span></td>
         <td>
             @if ($item->jam_masuk >= $item->jam_masuk_kerja)
                 @php
@@ -51,6 +52,25 @@
         <td>
             <a href="#" class="btn btn-primary showmap" id="{{ $item->id }}" data-toggle="modal" data-target="#modalShowMap"> <i class="bi bi-geo-alt"></i></a>
         </td>
+    </tr>
+    @else
+    <tr>
+        <td class="text-center">{{ $loop->iteration }}</td>
+        <td>{{ $item->nik }}</td>
+        <td>{{ $item->nama_lengkap }}</td>
+        <td>{{ $item->jabatan }}</td>
+        <td>{{ $item->nama_departemen }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><span class="badge {{ $item->status == 'izin' ? 'bg-primary' : ($item->status == 'sakit' ? 'bg-danger' : 'bg-secondary') }}" style="color: white">{{ $item->status }}</span></td>
+        <td>{{ $item->keterangan_izin }}</td>
+        <td></td>
+    </tr>
+    @endif
+
 @endforeach
 
 <script>

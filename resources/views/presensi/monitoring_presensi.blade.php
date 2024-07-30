@@ -71,6 +71,7 @@
                                     <th>Foto Masuk</th>
                                     <th>Jam Pulang</th>
                                     <th>Foto Pulang</th>
+                                    <th>Status</th>
                                     <th>Keterangan</th>
                                     <th>Lokasi</th>
                                 </tr>

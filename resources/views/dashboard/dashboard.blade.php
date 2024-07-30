@@ -250,6 +250,7 @@
                     }
                 </style>
                 @foreach ($history_bulan_ini as $bulan_ini)
+                @if ($bulan_ini->status == "hadir")
                     <div class="card mb-1">
                         <div class="card-body">
                             <div class="historycontent">
@@ -296,6 +297,52 @@
                             </div>
                         </div>
                     </div>
+                @elseif ($bulan_ini->status=="izin")
+                    <div class="card mb-1">
+                        <div class="card-body">
+                            <div class="historycontent">
+                                <div class="iconpresensi">
+                                    <ion-icon style="font-size: 48px" name="reader-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
+                                </div>
+                                <div class="datapresensi">
+                                    <h3 style="line-height: 3px">{{ strtoupper($bulan_ini->status) }}
+                                    <h4 style="margin: 0px !important;">{{ date("d-m-Y", strtotime($bulan_ini->tanggal_presensi)) }}</h4>
+                                    <p>{{ $bulan_ini->keterangan }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif ($bulan_ini->status=="sakit")
+                    <div class="card mb-1">
+                        <div class="card-body">
+                            <div class="historycontent">
+                                <div class="iconpresensi">
+                                    <ion-icon style="font-size: 48px" name="medkit-outline" role="img" class="md hydrated text-danger" aria-label="checkmark"></ion-icon>
+                                </div>
+                                <div class="datapresensi">
+                                    <h3 style="line-height: 3px">{{ strtoupper($bulan_ini->status) }}
+                                    <h4 style="margin: 0px !important;">{{ date("d-m-Y", strtotime($bulan_ini->tanggal_presensi)) }}</h4>
+                                    <p>{{ $bulan_ini->keterangan }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif ($bulan_ini->status=="cuti")
+                    <div class="card mb-1">
+                        <div class="card-body">
+                            <div class="historycontent">
+                                <div class="iconpresensi">
+                                    <ion-icon style="font-size: 48px" name="calendar-outline" role="img" class="md hydrated text-secondary" aria-label="checkmark"></ion-icon>
+                                </div>
+                                <div class="datapresensi">
+                                    <h3 style="line-height: 3px">{{ strtoupper($bulan_ini->status )}}
+                                    <h4 style="margin: 0px !important;">{{ date("d-m-Y", strtotime($bulan_ini->tanggal_presensi)) }}</h4>
+                                    <p>{{ $bulan_ini->keterangan }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 @endforeach
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel">

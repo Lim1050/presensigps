@@ -15,3 +15,11 @@ join table presensi, karyawan, jabatan, gaji untuk penghitungan gaji
 buat view untuk manage gaji
 
 jika ada izin maka gaji berkurang sesuai jumlah izinnya
+
+tambahan mei
+cuma keinget yang katanya kamu lupa terkait kalau cuti atau izin itu buat absen di off
+juga sistem gaji
+dibikin simple jdi perhitungannya berapa kali dia izin atau cuti itu yg bakal berkurang nanti nya/kepotong
+ga bnyk sih yg perlu direvisi, itu doang
+sama aku ngomong yg perihal tampilan kalau loading
+ada beberapa error juga kan kemarin pas kmu ke mentor mu

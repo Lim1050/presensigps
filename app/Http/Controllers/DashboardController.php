@@ -23,8 +23,9 @@ class DashboardController extends Controller
                                 ->first();
 
         $history_bulan_ini = DB::table('presensi')
-                                ->select('presensi.*', 'jam_kerja.nama_jam_kerja', 'jam_kerja.jam_masuk as jam_kerja_masuk', 'jam_kerja.jam_pulang')
+                                ->select('presensi.*', 'jam_kerja.nama_jam_kerja', 'jam_kerja.jam_masuk as jam_kerja_masuk', 'jam_kerja.jam_pulang', 'pengajuan_izin.keterangan')
                                 ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+                                ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
                                 ->where('presensi.nik', $nik)
                                 ->whereRaw('MONTH(presensi.tanggal_presensi) = ?', [$bulan_ini])
                                 ->whereRaw('YEAR(presensi.tanggal_presensi) = ?', [$tahun_ini])
@@ -35,6 +36,7 @@ class DashboardController extends Controller
                             ->selectRaw('COUNT(nik) as jml_hadir, SUM(IF(presensi.jam_masuk > jam_kerja.jam_masuk,1,0)) as jml_terlambat')
                             ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
                             ->where('nik', $nik)
+                            ->where('status', 'hadir')
                             ->whereRaw('MONTH(tanggal_presensi)="' . $bulan_ini . '"')
                             ->whereRaw('YEAR(tanggal_presensi)="' . $tahun_ini . '"')
                             ->first();

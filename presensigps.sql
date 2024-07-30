@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 29, 2024 at 04:17 PM
+-- Generation Time: Jul 30, 2024 at 03:50 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -175,13 +175,6 @@ INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `
 ('JBKSIT', 'Jumat', 'JK03', '2024-07-18 05:38:46', NULL),
 ('JBKSIT', 'Sabtu', 'JK03', '2024-07-18 05:38:46', NULL),
 ('JBKSIT', 'Minggu', 'JK03', '2024-07-18 05:38:46', NULL),
-('JBKSFIN', 'Senin', 'JK03', NULL, '2024-07-18 07:41:16'),
-('JBKSFIN', 'Selasa', NULL, NULL, '2024-07-18 07:41:16'),
-('JBKSFIN', 'Rabu', 'JK03', NULL, '2024-07-18 07:41:16'),
-('JBKSFIN', 'Kamis', NULL, NULL, '2024-07-18 07:41:16'),
-('JBKSFIN', 'Jumat', 'JK03', NULL, '2024-07-18 07:41:16'),
-('JBKSFIN', 'Sabtu', NULL, NULL, '2024-07-18 07:41:16'),
-('JBKSFIN', 'Minggu', 'JK03', NULL, '2024-07-18 07:41:16'),
 ('JJKTTSM', 'Senin', 'JK03', NULL, '2024-07-18 08:29:34'),
 ('JJKTTSM', 'Selasa', 'JK02', NULL, '2024-07-18 08:29:34'),
 ('JJKTTSM', 'Rabu', 'JK03', NULL, '2024-07-18 08:29:34'),
@@ -216,7 +209,14 @@ INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `
 ('JBKSSM', 'Kamis', 'JK03', '2024-07-19 07:07:49', NULL),
 ('JBKSSM', 'Jumat', 'JK01', '2024-07-19 07:07:49', NULL),
 ('JBKSSM', 'Sabtu', 'JK02', '2024-07-19 07:07:49', NULL),
-('JBKSSM', 'Minggu', 'JK02', '2024-07-19 07:07:49', NULL);
+('JBKSSM', 'Minggu', 'JK02', '2024-07-19 07:07:49', NULL),
+('JBKSFIN', 'Senin', 'JK03', NULL, '2024-07-30 07:19:28'),
+('JBKSFIN', 'Selasa', 'JK02', NULL, '2024-07-30 07:19:28'),
+('JBKSFIN', 'Rabu', 'JK03', NULL, '2024-07-30 07:19:28'),
+('JBKSFIN', 'Kamis', NULL, NULL, '2024-07-30 07:19:28'),
+('JBKSFIN', 'Jumat', 'JK03', NULL, '2024-07-30 07:19:28'),
+('JBKSFIN', 'Sabtu', NULL, NULL, '2024-07-30 07:19:28'),
+('JBKSFIN', 'Minggu', 'JK03', NULL, '2024-07-30 07:19:28');
 
 -- --------------------------------------------------------
 
@@ -350,7 +350,8 @@ INSERT INTO `karyawan` (`nik`, `nama_lengkap`, `foto`, `jabatan`, `kode_departem
 ('321321321', 'Purnama R Salim', '321321321_1719807141.png', 'Head Finance', 'FIN', 'JKTP', '08123456789', '$2y$10$iyjXNfqYeuZTj3iE/U9WKeWHlTZ7DoiWQIgaaDp53GxZ4B2DDvE1a', NULL, '2024-06-21 01:22:30', '2024-07-16 09:05:35'),
 ('333333333', 'Ridho', '333333333_1721293448.png', 'Recepcionist', 'HR', 'BKS', '0833333333333', '$2y$10$n2wY2wxFJyHwufrCqBJyFeT0yfxsRcsAlyRneOOyuwx0bYqMnGZ/y', NULL, '2024-07-17 07:43:12', '2024-07-18 09:04:08'),
 ('369258147', 'Ling Mei', '369258147_1719807170.png', 'Assistance Accountant', 'FIN', 'JKTP', '123456789', '$2y$10$IXxUEvNVZY1S/QuQ2qQBie.m0LgTz4Pp8qy7LEC5NYuWR1GLP7V22', NULL, '2024-06-28 07:26:47', '2024-07-16 05:47:25'),
-('444444444', 'Abrar', '444444444_1721372945.jpg', 'Asistance IT', 'IT', 'BKS', '0834444444444', '$2y$10$/UW.ORjK5zgS/Rq6wtIU3eyA0Z.FVvlVSXjVv0uqy.g6dYyFfTw7.', NULL, '2024-07-19 07:09:05', NULL);
+('444444444', 'Abrar', '444444444_1721372945.jpg', 'Asistance IT', 'IT', 'BKS', '0834444444444', '$2y$10$/UW.ORjK5zgS/Rq6wtIU3eyA0Z.FVvlVSXjVv0uqy.g6dYyFfTw7.', NULL, '2024-07-19 07:09:05', NULL),
+('555555555', 'Sidqy Anwar', '555555555_1722323769.jpg', 'Debtcollector', 'FIN', 'BKS', '0855555555555', '$2y$10$z2BPEScdYN8KSWsB0nOcau2mCM5Cvk6zenK.mPz6PHNck/lJqEV6W', NULL, '2024-07-30 07:16:09', '2024-07-30 07:16:54');
 
 -- --------------------------------------------------------
 
@@ -483,13 +484,16 @@ CREATE TABLE `pengajuan_izin` (
 --
 
 INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_izin_sampai`, `jumlah_hari`, `kode_cuti`, `status`, `status_approved`, `keterangan`, `surat_sakit`, `created_at`, `updated_at`) VALUES
-('IA0724001', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'izin', 0, 'Acara Healing', NULL, '2024-07-23 07:02:40', '2024-07-24 04:59:06'),
-('IA0724005', '123123123', '2024-07-26', '2024-08-02', '8 Hari', NULL, 'izin', 0, 'Tugas Luar Kota', NULL, '2024-07-24 07:26:57', NULL),
-('IC0724004', '123123123', '2024-07-24', '2024-07-27', '4 Hari', 'C002', 'cuti', 0, 'Demam', NULL, '2024-07-23 09:21:34', '2024-07-28 03:45:38'),
+('IA0724001', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'izin', 2, 'Acara Healing', NULL, '2024-07-23 07:02:40', '2024-07-24 04:59:06'),
+('IA0724005', '123123123', '2024-07-27', '2024-07-27', '1 Hari', NULL, 'izin', 1, 'Tugas Luar Kota', NULL, '2024-07-24 07:26:57', '2024-07-30 05:43:43'),
+('IA0724007', '555555555', '2024-07-30', '2024-07-30', '1 Hari', NULL, 'izin', 1, 'libur bentar', NULL, '2024-07-30 07:38:42', NULL),
+('IC0724004', '123123123', '2024-07-25', '2024-07-26', '2 Hari', 'C002', 'cuti', 1, 'Demam', NULL, '2024-07-23 09:21:34', '2024-07-30 05:44:30'),
+('IC0724008', '333333333', '2024-07-30', '2024-07-30', '1 Hari', 'C001', 'cuti', 1, 'capek', NULL, '2024-07-30 07:39:58', NULL),
 ('IC0824001', '123123123', '2024-08-04', '2024-08-10', '7 Hari', 'C005', 'cuti', 1, 'Honeymoon di Bali', NULL, '2024-07-24 07:18:34', '2024-07-28 03:45:28'),
 ('IS0624001', '123123123', '2024-06-01', '2024-06-30', '30 Hari', NULL, 'sakit', 1, 'Sakit dikit', 'IS0624001.png', '2024-07-26 08:45:52', NULL),
-('IS0724005', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'sakit', 1, 'Demam', 'IS0724005.png', '2024-07-24 07:55:10', '2024-07-24 07:57:49'),
-('IS0724006', '123123123', '2024-07-29', '2024-07-29', '1 Hari', NULL, 'sakit', 1, 'sakit bentar', 'IS0724006.png', '2024-07-28 04:56:18', NULL);
+('IS0724005', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'sakit', 2, 'Demam', 'IS0724005.png', '2024-07-24 07:55:10', '2024-07-24 07:57:49'),
+('IS0724006', '123123123', '2024-07-29', '2024-07-29', '1 Hari', NULL, 'sakit', 1, 'sakit bentar', 'IS0724006.png', '2024-07-28 04:56:18', NULL),
+('IS0724007', '444444444', '2024-07-30', '2024-07-30', '1 Hari', NULL, 'sakit', 1, 'pileg', NULL, '2024-07-30 07:39:16', NULL);
 
 -- --------------------------------------------------------
 
@@ -547,9 +551,6 @@ INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_kelua
 (238, '123123123', '2024-08-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-29 09:10:43', NULL),
 (239, '123123123', '2024-08-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-29 09:10:43', NULL),
 (240, '123123123', '2024-07-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724006', '2024-07-29 09:10:51', NULL),
-(244, '123123123', '2024-07-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724005', '2024-07-29 09:11:10', NULL),
-(245, '123123123', '2024-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724005', '2024-07-29 09:11:10', NULL),
-(246, '123123123', '2024-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724005', '2024-07-29 09:11:10', NULL),
 (247, '123123123', '2024-06-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
 (248, '123123123', '2024-06-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
 (249, '123123123', '2024-06-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
@@ -579,7 +580,14 @@ INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_kelua
 (273, '123123123', '2024-06-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
 (274, '123123123', '2024-06-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
 (275, '123123123', '2024-06-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(276, '123123123', '2024-06-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL);
+(276, '123123123', '2024-06-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
+(277, '123123123', '2024-07-30', '11:13:14', NULL, 'public/uploads/absensi/123123123-2024-07-30-111314-masuk.png', NULL, '-6.201695,106.8421801', NULL, 'JK02', 'hadir', NULL, '2024-07-30 04:13:14', NULL),
+(278, '123123123', '2024-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-30 05:44:59', NULL),
+(279, '123123123', '2024-07-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', '2024-07-30 05:45:06', NULL),
+(280, '123123123', '2024-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', '2024-07-30 05:45:06', NULL),
+(281, '555555555', '2024-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724007', '2024-07-30 07:40:09', NULL),
+(282, '333333333', '2024-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724008', '2024-07-30 07:40:11', NULL),
+(283, '444444444', '2024-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724007', '2024-07-30 07:40:13', NULL);
 
 -- --------------------------------------------------------
 
@@ -742,7 +750,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `presensi`
 --
 ALTER TABLE `presensi`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=277;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=284;
 
 --
 -- AUTO_INCREMENT for table `users`

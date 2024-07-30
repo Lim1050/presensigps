@@ -75,8 +75,11 @@
             <th rowspan="2">NIK</th>
             <th rowspan="2">Nama Karyawan</th>
             <th colspan="{{ $jml_hari }}">Bulan {{ $months[$bulan] }} {{ $tahun }}</th>
-            <th rowspan="2">Hadir</th>
-            <th rowspan="2">Terlambat</th>
+            <th rowspan="2">H</th>
+            <th rowspan="2">I</th>
+            <th rowspan="2">S</th>
+            <th rowspan="2">C</th>
+            <th rowspan="2">A</th>
         </tr>
         <tr>
             @foreach ( $range_tanggal as $tanggal)
@@ -91,18 +94,51 @@
             <td>{{ $r->nama_lengkap }}</td>
 
             <?php
+                $jml_hadir = 0;
+                $jml_izin = 0;
+                $jml_sakit = 0;
+                $jml_cuti = 0;
+                $jml_alpa = 0;
+                $color = "";
                 for ($i=1; $i <= $jml_hari; $i++) {
                     $tgl = "tgl_".$i;
                     $data_presensi = explode("|", $r->$tgl);
+
+                    if ($r->$tgl != NULL) {
+                        $status = $data_presensi[2];
+                    } else {
+                        $status = "";
+                    }
+
+                    if($status == 'hadir'){
+                        $jml_hadir +=1;
+                        $color = "green";
+                    } elseif($status == 'izin'){
+                        $jml_izin +=1;
+                        $color = "blue";
+                    } elseif($status == 'sakit'){
+                        $jml_sakit +=1;
+                        $color = "red";
+                    } elseif($status == 'cuti'){
+                        $jml_cuti +=1;
+                        $color = "grey";
+                    } elseif($status == ''){
+                        $jml_alpa +=1;
+                        $color = "white";
+                    }
+
             ?>
-            <td>
-                @if ($r->$tgl != NULL)
-                    {{ $data_presensi[2] }}
-                @endif
+            <td style="text-align: center; background-color: {{ $color }}; color:white">
+                {{ $status }}
             </td>
             <?php
                 }
             ?>
+            <td style="text-align: center">{{ !empty($jml_hadir) ? $jml_hadir : "" }}</td>
+            <td style="text-align: center">{{ !empty($jml_izin) ? $jml_izin : "" }}</td>
+            <td style="text-align: center">{{ !empty($jml_sakit) ? $jml_sakit : "" }}</td>
+            <td style="text-align: center">{{ !empty($jml_cuti) ? $jml_cuti : "" }}</td>
+            <td style="text-align: center">{{ !empty($jml_alpa) ? $jml_alpa : "" }}</td>
 
         </tr>
         @endforeach
