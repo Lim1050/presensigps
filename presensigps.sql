@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 30, 2024 at 03:50 PM
+-- Generation Time: Jul 31, 2024 at 03:54 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -346,7 +346,7 @@ INSERT INTO `karyawan` (`nik`, `nama_lengkap`, `foto`, `jabatan`, `kode_departem
 ('123123123', 'Salim Purnama Ramadhan', '123123123_1720603406.png', 'Head IT', 'IT', 'JKTP', '08123456789', '$2y$10$NBvJhmZ0TWDts4FcZ4oBduCgFafZex/8WfCakwD4KjTqafnemB7fa', NULL, '2024-06-21 01:22:30', '2024-07-10 09:23:26'),
 ('123456789', 'Mei Ling', '123456789_1719807160.png', 'Head Accountant', 'FIN', 'JKTP', '08147258369', '$2y$10$NiSacYyb3uDeR2eWQ/j.MeFEE/g8Eh5SAhp.ErErDgsg46ST8Q1Lq', NULL, '2024-06-28 07:19:07', '2024-07-10 08:51:11'),
 ('213213213', 'Ramadhan S Purnama', '213213213_1719807132.png', 'Head HRD', 'HR', 'JKTT', '08123456789', '$2y$10$iyjXNfqYeuZTj3iE/U9WKeWHlTZ7DoiWQIgaaDp53GxZ4B2DDvE1a', NULL, '2024-06-21 01:22:30', '2024-07-10 08:50:57'),
-('222-222-222', 'Ujang', '222-222-222_1721201871.png', 'Head Operations', 'OPS', 'BKS', '0822222222222', '$2y$10$7AK7gdSf0cx8yhVpTRi/luMC9AKXN6M7fikDLL1UGjmVHnRxovP32', NULL, '2024-07-17 07:37:52', '2024-07-19 07:09:29'),
+('222222222', 'Ujang', '222-222-222_1721201871.png', 'Head Operations', 'OPS', 'JKTP', '0822222222222', '$2y$10$h2rLaVb8RNUmUNLh1cq1HutsniyW6O18v7.Hg.WLaWfefSq3GA6B.', NULL, '2024-07-17 07:37:52', '2024-07-31 08:10:16'),
 ('321321321', 'Purnama R Salim', '321321321_1719807141.png', 'Head Finance', 'FIN', 'JKTP', '08123456789', '$2y$10$iyjXNfqYeuZTj3iE/U9WKeWHlTZ7DoiWQIgaaDp53GxZ4B2DDvE1a', NULL, '2024-06-21 01:22:30', '2024-07-16 09:05:35'),
 ('333333333', 'Ridho', '333333333_1721293448.png', 'Recepcionist', 'HR', 'BKS', '0833333333333', '$2y$10$n2wY2wxFJyHwufrCqBJyFeT0yfxsRcsAlyRneOOyuwx0bYqMnGZ/y', NULL, '2024-07-17 07:43:12', '2024-07-18 09:04:08'),
 ('369258147', 'Ling Mei', '369258147_1719807170.png', 'Assistance Accountant', 'FIN', 'JKTP', '123456789', '$2y$10$IXxUEvNVZY1S/QuQ2qQBie.m0LgTz4Pp8qy7LEC5NYuWR1GLP7V22', NULL, '2024-06-28 07:26:47', '2024-07-16 05:47:25'),
@@ -581,7 +581,7 @@ INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_kelua
 (274, '123123123', '2024-06-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
 (275, '123123123', '2024-06-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
 (276, '123123123', '2024-06-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(277, '123123123', '2024-07-30', '11:13:14', NULL, 'public/uploads/absensi/123123123-2024-07-30-111314-masuk.png', NULL, '-6.201695,106.8421801', NULL, 'JK02', 'hadir', NULL, '2024-07-30 04:13:14', NULL),
+(277, '123123123', '2024-07-30', '11:13:14', '15:13:14', 'public/uploads/absensi/123123123-2024-07-30-111314-masuk.png', 'public/uploads/absensi/123123123-2024-07-30-111314-masuk.png', '-6.201695,106.8421801', '-6.201695,106.8421801', 'JK02', 'hadir', NULL, '2024-07-30 04:13:14', NULL),
 (278, '123123123', '2024-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-30 05:44:59', NULL),
 (279, '123123123', '2024-07-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', '2024-07-30 05:45:06', NULL),
 (280, '123123123', '2024-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', '2024-07-30 05:45:06', NULL),

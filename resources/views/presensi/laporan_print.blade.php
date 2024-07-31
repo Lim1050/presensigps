@@ -50,23 +50,25 @@
 <!-- Set also "landscape" if you need -->
 <body class="A4">
     @php
-        // Function Untuk Menghitung Selisih Jam
-        function selisih($jam_masuk, $jam_keluar)
-        {
-            list($h, $m, $s) = explode(":", $jam_masuk);
-            $dtAwal = mktime($h, $m, $s, "1", "1", "1");
+        if (! function_exists('selisih')) {
+            // Function Untuk Menghitung Selisih Jam
+            function selisih($jam_masuk, $jam_keluar)
+            {
+                list($h, $m, $s) = explode(":", $jam_masuk);
+                $dtAwal = mktime($h, $m, $s, "1", "1", "1");
 
-            list($h, $m, $s) = explode(":", $jam_keluar);
-            $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
+                list($h, $m, $s) = explode(":", $jam_keluar);
+                $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
 
-            $dtSelisih = $dtAkhir - $dtAwal;
-            $totalmenit = $dtSelisih / 60;
-            $jam = explode(".", $totalmenit / 60);
-            $sisamenit = ($totalmenit / 60) - $jam[0];
-            $sisamenit2 = $sisamenit * 60;
-            $jml_jam = $jam[0];
+                $dtSelisih = $dtAkhir - $dtAwal;
+                $totalmenit = $dtSelisih / 60;
+                $jam = explode(".", $totalmenit / 60);
+                $sisamenit = ($totalmenit / 60) - $jam[0];
+                $sisamenit2 = $sisamenit * 60;
+                $jml_jam = $jam[0];
 
-            return $jml_jam . " jam " . round($sisamenit2) . " menit";
+                return $jml_jam . " jam " . round($sisamenit2) . " menit";
+            }
         }
     @endphp
     <!-- Each sheet element should have the class "sheet" -->
@@ -133,12 +135,14 @@
             <th>Foto Masuk</th>
             <th>Jam Pulang</th>
             <th>Foto Pulang</th>
+            <th>Status</th>
             <th>Keterangan</th>
             <th>Jumlah Jam</th>
             {{-- <th>Gaji</th> --}}
         </tr>
         @foreach ($presensi as $item)
-            <tr style="text-align: center">
+            @if ($item->status == 'hadir')
+                <tr style="text-align: center">
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ date("d-m-Y", strtotime($item->tanggal_presensi)) }}</td>
                 <td>{{ $item->jam_masuk }}</td>
@@ -162,9 +166,11 @@
                     </svg>
                     @endif
                 </td>
+                <td>{{ $item->status }}</td>
                 <td>
                     @php
                         $terlambat = selisih($item->jam_masuk_kerja, $item->jam_masuk);
+                        // dd($terlambat);
                     @endphp
                     @if ($item->jam_masuk >= $item->jam_masuk_kerja)
                         Terlambat {{ $terlambat }}
@@ -172,7 +178,7 @@
                         Tepat Waktu
                     @endif
                 </td>
-                {{-- <td>
+                <td>
                     @if ($item->jam_keluar != null)
                         @php
                             $jumlah_jam_kerja = selisih($item->jam_masuk, $item->jam_keluar);
@@ -181,19 +187,25 @@
                     @else
                         0
                     @endif
-                </td> --}}
-                {{-- <td>
-                    @php
-
-                        $hasil = hitung_gaji($item->jam_masuk, $item->jam_keluar, 100000);
-                        // dd($hasil['gaji'])
-                    @endphp
-                    {{ $hasil['gaji'] }}
-                </td> --}}
+                </td>
             </tr>
+            @else
+            <tr style="text-align: center">
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ date("d-m-Y", strtotime($item->tanggal_presensi)) }}</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>{{ $item->status }}</td>
+                <td>{{ $item->keterangan }}</td>
+                <td>-</td>
+            </tr>
+            @endif
+
         @endforeach
             <tr>
-                <td colspan="8">
+                <td colspan="9">
                     Total Masuk : {{ $total_hari }} hari, <br>
                     Gaji per Hari : Rp {{ $gaji_harian }}, <br>
                     Total Gaji : Rp {{ $total_gaji }}
