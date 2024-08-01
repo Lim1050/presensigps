@@ -17,12 +17,12 @@
     <div class="col" style="margin-top: 70px;">
         @php
             $messagesuccess = Session::get('success');
-            $messageerror = Session::get('error');
+            $messageerror = Session::get('warning');
         @endphp
         @if (Session::get('success'))
             <div class="alert alert-success">{{ $messagesuccess }}</div>
-        @elseif (Session::get('error'))
-            <div class="alert alert-error">{{ $messageerror }}</div>
+        @elseif (Session::get('warning'))
+            <div class="alert alert-warning">{{ $messageerror }}</div>
         @endif
     </div>
 </div>
@@ -92,8 +92,8 @@
 
                         </div>
                         <div class="datapresensi">
-                            <h3 style="line-height: 3px">{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} ({{ $izin->status == "izin" ? "Izin" : ($izin->status == "sakit" ? "Sakit" : "Cuti")}})</h3>
-                            <small>{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} s/d {{ date("d-m-Y",strtotime($izin->tanggal_izin_sampai)) }} ({{ hitunghari($izin->tanggal_izin_dari, $izin->tanggal_izin_sampai) }} Hari) </small>
+                            <h3 style="line-height: 3px">{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} ({{ $izin->status == "izin" ? "Izin" : ($izin->status == "sakit" ? "Sakit" : "Cuti")}} {{ hitunghari($izin->tanggal_izin_dari, $izin->tanggal_izin_sampai) }} Hari)</h3>
+                            <small>{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} s/d {{ date("d-m-Y",strtotime($izin->tanggal_izin_sampai)) }}</small>
 
                             <h4 >{{ $izin->keterangan }}</h4>
 

@@ -80,9 +80,9 @@
         <div class="col">
             @if ($cek_masuk > 0 && empty($foto_keluar))
                 <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
-            @elseif ($cek_masuk == 0))
+            @elseif ($cek_masuk == 0)
                 <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>
-            @elseif ($cek_keluar == 1 && $cek_masuk == 1))
+            @elseif ($cek_keluar == 1 && $cek_masuk == 1)
                 <button id="sudahabsen" class="btn btn-secondary btn-block"><ion-icon name="camera-outline" @disabled(true)></ion-icon>Sudah Absen</button>
             @endif
         </div>

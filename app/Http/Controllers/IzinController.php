@@ -93,12 +93,34 @@ class IzinController extends Controller
             'created_at' => Carbon::now()
         ];
 
-        $save = DB::table('pengajuan_izin')->insert($data);
+        // Cek sudah absen atau belum
+        $cek_presensi = DB::table('presensi')->whereBetween('tanggal_presensi', [$tanggal_izin_dari, $tanggal_izin_sampai])->where('nik', $nik);
 
-        if($save){
-            return redirect()->route('izin')->with(['success' => 'Data berhasil disimpan!']);
+        // Cek sudah diajukan izin atau belum
+        $cek_pengajuan = DB::table('pengajuan_izin')->whereRaw('"' . $tanggal_izin_dari . '" BETWEEN tanggal_izin_dari AND tanggal_izin_sampai' )->where('nik', $nik);
+
+        $data_presensi = $cek_presensi->get();
+
+        if($cek_presensi->count() > 0) {
+            $tanggal = "";
+            foreach ($data_presensi as $data) {
+                $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
+            }
+            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
+        } else if($cek_pengajuan > 0){
+            $tanggal = "";
+            foreach ($data_presensi as $data) {
+                $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
+            }
+            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
         } else {
-            return redirect()->back()->with(['error' => 'Data gagal disimpan!']);
+            $save = DB::table('pengajuan_izin')->insert($data);
+
+            if($save){
+                return redirect()->route('izin')->with(['success' => 'Data berhasil disimpan!']);
+            } else {
+                return redirect()->back()->with(['warning' => 'Data gagal disimpan!']);
+            }
         }
     }
     public function EditIzinAbsen($kode_izin)
@@ -177,18 +199,34 @@ class IzinController extends Controller
             'created_at' => Carbon::now()
         ];
 
-        $save = DB::table('pengajuan_izin')->insert($data);
+        // Cek sudah absen atau belum
+        $cek_presensi = DB::table('presensi')->whereBetween('tanggal_presensi', [$tanggal_izin_dari, $tanggal_izin_sampai])->where('nik', $nik);
 
-        if($save){
-            //Simpan File Surat Sakit
-            if ($request->hasFile('surat_sakit')) {
-            $surat_sakit = $kode_izin . "." . $request->file('surat_sakit')->getClientOriginalExtension();
-            $folderPath = "public/uploads/surat_sakit/";
-            $request->file('surat_sakit')->storeAs($folderPath, $surat_sakit);
+        // Cek sudah diajukan izin atau belum
+        $cek_pengajuan = DB::table('pengajuan_izin')->whereRaw('"' . $tanggal_izin_dari . '" BETWEEN tanggal_izin_dari AND tanggal_izin_sampai' )->where('nik', $nik);
+
+        $data_presensi = $cek_presensi->get();
+
+        if($cek_presensi->count() > 0) {
+            $tanggal = "";
+            foreach ($data_presensi as $data) {
+                $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
             }
-            return redirect()->route('izin')->with(['success' => 'Data berhasil disimpan!']);
+            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
+        } else if($cek_pengajuan > 0){
+            $tanggal = "";
+            foreach ($data_presensi as $data) {
+                $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
+            }
+            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
         } else {
-            return redirect()->back()->with(['error' => 'Data gagal disimpan!']);
+            $save = DB::table('pengajuan_izin')->insert($data);
+
+            if($save){
+                return redirect()->route('izin')->with(['success' => 'Data berhasil disimpan!']);
+            } else {
+                return redirect()->back()->with(['warning' => 'Data gagal disimpan!']);
+            }
         }
     }
     public function EditIzinSakit($kode_izin)
@@ -338,6 +376,24 @@ class IzinController extends Controller
 
         $kode_izin = buatkode($last_kode_izin, $format, 3);
 
+        // hitung jumlah hari yang diajukan
+        $jumlah_hari = hitunghari($tanggal_izin_dari, $tanggal_izin_sampai);
+
+        // Cek jumlah maksimal cuti
+        $cuti = DB::table('master_cuti')->where('kode_cuti', $kode_cuti)->first();
+
+        $jml_max_cuti = $cuti->jumlah_hari;
+
+        // cek jumlah cuti yang sudah digunakan pada tahun tersebut
+        $cuti_digunakan = DB::table('presensi')
+                            ->whereRaw('YEAR(tanggal_presensi)="' . $tahun . '"')
+                            ->where('status', 'cuti')
+                            ->where('nik', $nik)
+                            ->count();
+
+        $sisa_cuti = $jml_max_cuti - $cuti_digunakan;
+
+
         $data = [
             'kode_izin' => $kode_izin,
             'nik' => $nik,
@@ -350,12 +406,36 @@ class IzinController extends Controller
             'created_at' => Carbon::now()
         ];
 
-        $save = DB::table('pengajuan_izin')->insert($data);
+        // Cek sudah absen atau belum
+        $cek_presensi = DB::table('presensi')->whereBetween('tanggal_presensi', [$tanggal_izin_dari, $tanggal_izin_sampai])->where('nik', $nik);
 
-        if($save){
-            return redirect()->route('izin')->with(['success' => 'Data berhasil disimpan!']);
+        // Cek sudah diajukan izin atau belum
+        $cek_pengajuan = DB::table('pengajuan_izin')->whereRaw('"' . $tanggal_izin_dari . '" BETWEEN tanggal_izin_dari AND tanggal_izin_sampai' )->where('nik', $nik);
+
+        $data_presensi = $cek_presensi->get();
+
+        if($jumlah_hari > $sisa_cuti){
+            return redirect()->route('izin')->with(['warning' => 'Jumlah Hari Melebihi Batas Maksimal Jatah Cuti, Sisa Cuti ' . $sisa_cuti . 'Hari']);
+        } else if($cek_presensi->count() > 0) {
+            $tanggal = "";
+            foreach ($data_presensi as $data) {
+                $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
+            }
+            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
+        } else if($cek_pengajuan > 0){
+            $tanggal = "";
+            foreach ($data_presensi as $data) {
+                $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
+            }
+            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
         } else {
-            return redirect()->back()->with(['error' => 'Data gagal disimpan!']);
+            $save = DB::table('pengajuan_izin')->insert($data);
+
+            if($save){
+                return redirect()->route('izin')->with(['success' => 'Data berhasil disimpan!']);
+            } else {
+                return redirect()->back()->with(['warning' => 'Data gagal disimpan!']);
+            }
         }
     }
     public function EditIzinCuti($kode_izin)
