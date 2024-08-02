@@ -94,12 +94,20 @@ class IzinController extends Controller
         ];
 
         // Cek sudah absen atau belum
-        $cek_presensi = DB::table('presensi')->whereBetween('tanggal_presensi', [$tanggal_izin_dari, $tanggal_izin_sampai])->where('nik', $nik);
+        $cek_presensi = DB::table('presensi')
+                            ->whereBetween('tanggal_presensi', [$tanggal_izin_dari, $tanggal_izin_sampai])
+                            ->where('nik', $nik);
 
         // Cek sudah diajukan izin atau belum
-        $cek_pengajuan = DB::table('pengajuan_izin')->whereRaw('"' . $tanggal_izin_dari . '" BETWEEN tanggal_izin_dari AND tanggal_izin_sampai' )->where('nik', $nik);
+        $cek_pengajuan = DB::table('pengajuan_izin')
+                            ->whereRaw('"' . $tanggal_izin_dari . '" BETWEEN tanggal_izin_dari AND tanggal_izin_sampai' )
+                            ->where('nik', $nik);
+
+        // dd($cek_pengajuan);
 
         $data_presensi = $cek_presensi->get();
+        $data_pengajuan = $cek_pengajuan->get();
+        // dd($data_pengajuan);
 
         if($cek_presensi->count() > 0) {
             $tanggal = "";
@@ -107,12 +115,12 @@ class IzinController extends Controller
                 $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
             }
             return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
-        } else if($cek_pengajuan > 0){
+        } else if($cek_pengajuan->count() > 0){
             $tanggal = "";
-            foreach ($data_presensi as $data) {
-                $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
+            foreach ($data_pengajuan as $data) {
+                $tanggal .= date('d-m-Y', strtotime($data->tanggal_izin_dari)) . " s/d " . date('d-m-Y', strtotime($data->tanggal_izin_sampai)) . " , ";
             }
-            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
+            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah mengajukan Izin Absen/Sakit/Cuti!']);
         } else {
             $save = DB::table('pengajuan_izin')->insert($data);
 
@@ -200,12 +208,20 @@ class IzinController extends Controller
         ];
 
         // Cek sudah absen atau belum
-        $cek_presensi = DB::table('presensi')->whereBetween('tanggal_presensi', [$tanggal_izin_dari, $tanggal_izin_sampai])->where('nik', $nik);
+        $cek_presensi = DB::table('presensi')
+                            ->whereBetween('tanggal_presensi', [$tanggal_izin_dari, $tanggal_izin_sampai])
+                            ->where('nik', $nik);
 
         // Cek sudah diajukan izin atau belum
-        $cek_pengajuan = DB::table('pengajuan_izin')->whereRaw('"' . $tanggal_izin_dari . '" BETWEEN tanggal_izin_dari AND tanggal_izin_sampai' )->where('nik', $nik);
+        $cek_pengajuan = DB::table('pengajuan_izin')
+                            ->whereRaw('"' . $tanggal_izin_dari . '" BETWEEN tanggal_izin_dari AND tanggal_izin_sampai' )
+                            ->where('nik', $nik);
+
+        // dd($cek_pengajuan);
 
         $data_presensi = $cek_presensi->get();
+        $data_pengajuan = $cek_pengajuan->get();
+        // dd($data_pengajuan);
 
         if($cek_presensi->count() > 0) {
             $tanggal = "";
@@ -213,12 +229,12 @@ class IzinController extends Controller
                 $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
             }
             return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
-        } else if($cek_pengajuan > 0){
+        } else if($cek_pengajuan->count() > 0){
             $tanggal = "";
-            foreach ($data_presensi as $data) {
-                $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
+            foreach ($data_pengajuan as $data) {
+                $tanggal .= date('d-m-Y', strtotime($data->tanggal_izin_dari)) . " s/d " . date('d-m-Y', strtotime($data->tanggal_izin_sampai)) . " , ";
             }
-            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
+            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah mengajukan Izin Absen/Sakit/Cuti!']);
         } else {
             $save = DB::table('pengajuan_izin')->insert($data);
 
@@ -407,27 +423,33 @@ class IzinController extends Controller
         ];
 
         // Cek sudah absen atau belum
-        $cek_presensi = DB::table('presensi')->whereBetween('tanggal_presensi', [$tanggal_izin_dari, $tanggal_izin_sampai])->where('nik', $nik);
+        $cek_presensi = DB::table('presensi')
+                            ->whereBetween('tanggal_presensi', [$tanggal_izin_dari, $tanggal_izin_sampai])
+                            ->where('nik', $nik);
 
         // Cek sudah diajukan izin atau belum
-        $cek_pengajuan = DB::table('pengajuan_izin')->whereRaw('"' . $tanggal_izin_dari . '" BETWEEN tanggal_izin_dari AND tanggal_izin_sampai' )->where('nik', $nik);
+        $cek_pengajuan = DB::table('pengajuan_izin')
+                            ->whereRaw('"' . $tanggal_izin_dari . '" BETWEEN tanggal_izin_dari AND tanggal_izin_sampai' )
+                            ->where('nik', $nik);
+
+        // dd($cek_pengajuan);
 
         $data_presensi = $cek_presensi->get();
+        $data_pengajuan = $cek_pengajuan->get();
+        // dd($data_pengajuan);
 
-        if($jumlah_hari > $sisa_cuti){
-            return redirect()->route('izin')->with(['warning' => 'Jumlah Hari Melebihi Batas Maksimal Jatah Cuti, Sisa Cuti ' . $sisa_cuti . 'Hari']);
-        } else if($cek_presensi->count() > 0) {
+        if($cek_presensi->count() > 0) {
             $tanggal = "";
             foreach ($data_presensi as $data) {
                 $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
             }
             return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
-        } else if($cek_pengajuan > 0){
+        } else if($cek_pengajuan->count() > 0){
             $tanggal = "";
-            foreach ($data_presensi as $data) {
-                $tanggal .= date('d-m-Y', strtotime($data->tanggal_presensi)) . ", ";
+            foreach ($data_pengajuan as $data) {
+                $tanggal .= date('d-m-Y', strtotime($data->tanggal_izin_dari)) . " s/d " . date('d-m-Y', strtotime($data->tanggal_izin_sampai)) . " , ";
             }
-            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah melakukan absen masuk atau sudah mengajukan Izin Absen/Sakit/Cuti!']);
+            return redirect()->route('izin')->with(['warning' => 'Tidak dapat melakukan pengajuan pada tanggal ' . $tanggal . ' Anda sudah mengajukan Izin Absen/Sakit/Cuti!']);
         } else {
             $save = DB::table('pengajuan_izin')->insert($data);
 

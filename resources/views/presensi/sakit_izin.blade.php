@@ -40,6 +40,16 @@
                     position: absolute;
                     right: 20px;
                 }
+                .fixed-top {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    z-index: 1030; /* z-index tinggi untuk memastikan di atas elemen lainnya */
+                    background-color: white; /* Pastikan background-color diatur agar tidak transparan */
+                    padding: 10px; /* Tambahkan padding untuk memberikan sedikit ruang */
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Tambahkan shadow untuk efek visual */
+                }
             </style>
             <form action="{{ route('izin') }}" method="GET">
                 <div class="row">
@@ -75,44 +85,48 @@
                         </div>
                     </div>
                 </div>
-
             </form>
-            @foreach ($dataIzin as $izin)
-            <div class="card mb-1 card_izin" kode_izin="{{ $izin->kode_izin }}" status_approved="{{ $izin->status_approved }}" data-toggle="modal" data-target="#actionSheetIconed">
-                <div class="card-body">
-                    <div class="historycontent">
-                        <div class="iconpresensi">
-                            @if ($izin->status == "izin")
-                            <ion-icon style="font-size: 40px;" name="reader-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
-                            @elseif ($izin->status == "sakit")
-                            <ion-icon style="font-size: 40px;" name="medkit-outline" role="img" class="md hydrated text-danger" aria-label="checkmark"></ion-icon>
-                            @elseif ($izin->status == "cuti")
-                            <ion-icon style="font-size: 40px;" name="calendar-outline" role="img" class="md hydrated text-secondary" aria-label="checkmark"></ion-icon>
-                            @endif
-
-                        </div>
-                        <div class="datapresensi">
-                            <h3 style="line-height: 3px">{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} ({{ $izin->status == "izin" ? "Izin" : ($izin->status == "sakit" ? "Sakit" : "Cuti")}} {{ hitunghari($izin->tanggal_izin_dari, $izin->tanggal_izin_sampai) }} Hari)</h3>
-                            <small>{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} s/d {{ date("d-m-Y",strtotime($izin->tanggal_izin_sampai)) }}</small>
-
-                            <h4 >{{ $izin->keterangan }}</h4>
-
-                                @if ($izin->status == "cuti")
-                                <p class="text-secondary"><ion-icon name="calendar-outline"></ion-icon> {{ $izin->nama_cuti }}</p>
+            {{-- style="position: fixed; width:100%; overflow-y:scroll; height:1000px;" --}}
+            <div class="row">
+                <div class="col">
+                @foreach ($dataIzin as $izin)
+                <div class="card mb-1 card_izin" kode_izin="{{ $izin->kode_izin }}" status_approved="{{ $izin->status_approved }}" data-toggle="modal" data-target="#actionSheetIconed">
+                    <div class="card-body">
+                        <div class="historycontent">
+                            <div class="iconpresensi">
+                                @if ($izin->status == "izin")
+                                <ion-icon style="font-size: 40px;" name="reader-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
+                                @elseif ($izin->status == "sakit")
+                                <ion-icon style="font-size: 40px;" name="medkit-outline" role="img" class="md hydrated text-danger" aria-label="checkmark"></ion-icon>
+                                @elseif ($izin->status == "cuti")
+                                <ion-icon style="font-size: 40px;" name="calendar-outline" role="img" class="md hydrated text-secondary" aria-label="checkmark"></ion-icon>
                                 @endif
 
-                                @if (!empty($izin->surat_sakit))
-                                    <a href="#" class="text-danger"><ion-icon name="document-attach-outline"></ion-icon> Lihat Surat Sakit</a>
-                                @endif
+                            </div>
+                            <div class="datapresensi">
+                                <h3 style="line-height: 3px">{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} ({{ $izin->status == "izin" ? "Izin" : ($izin->status == "sakit" ? "Sakit" : "Cuti")}} {{ hitunghari($izin->tanggal_izin_dari, $izin->tanggal_izin_sampai) }} Hari)</h3>
+                                <small>{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} s/d {{ date("d-m-Y",strtotime($izin->tanggal_izin_sampai)) }}</small>
 
-                        </div>
-                        <div class="status">
-                            <span class="{{ $izin->status_approved == "1" ? "text-success" : ($izin->status_approved == "2" ? "text-danger" : "text-warning")}}">{{ $izin->status_approved == "1" ? "Diterima" : ($izin->status_approved == "2" ? "Ditolak" : "Menunggu") }}</span>
+                                <h4 >{{ $izin->keterangan }}</h4>
+
+                                    @if ($izin->status == "cuti")
+                                    <p class="text-secondary"><ion-icon name="calendar-outline"></ion-icon> {{ $izin->nama_cuti }}</p>
+                                    @endif
+
+                                    @if (!empty($izin->surat_sakit))
+                                        <a href="#" class="text-danger"><ion-icon name="document-attach-outline"></ion-icon> Lihat Surat Sakit</a>
+                                    @endif
+
+                            </div>
+                            <div class="status">
+                                <span class="{{ $izin->status_approved == "1" ? "text-success" : ($izin->status_approved == "2" ? "text-danger" : "text-warning")}}">{{ $izin->status_approved == "1" ? "Diterima" : ($izin->status_approved == "2" ? "Ditolak" : "Menunggu") }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+                @endforeach
+                </div>
             </div>
-            @endforeach
         </div>
     </div>
 </div>

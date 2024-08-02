@@ -127,9 +127,10 @@
                                 <td>{{ $item->no_wa }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <a href="{{ route('admin.karyawan.edit', $item->nik) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
-                                        <a href="{{ route('admin.karyawan.setting', $item->nik) }}" class="btn btn-secondary "><i class="bi bi-gear"></i> Setting</a>
-                                        <a href="{{ route('admin.karyawan.delete', $item->nik) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
+                                        <a href="{{ route('admin.karyawan.edit', Crypt::encrypt($item->nik)) }}" class="btn btn-warning" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{{ route('admin.karyawan.setting', Crypt::encrypt($item->nik)) }}" class="btn btn-secondary" title="Setting"><i class="bi bi-gear"></i></a>
+                                        <a href="{{ route('admin.karyawan.reset.password', Crypt::encrypt($item->nik)) }}" class="btn btn-primary" title="Reset Password"><i class="bi bi-key"></i></a>
+                                        <a href="{{ route('admin.karyawan.delete', Crypt::encrypt($item->nik)) }}" class="btn btn-danger delete-confirm" title="Delete"><i class="bi bi-trash3"></i></a>
                                     </div>
                                 </td>
                             </tr>

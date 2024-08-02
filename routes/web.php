@@ -61,6 +61,8 @@ Route::middleware(['auth:user'])->group(function () {
     Route::post('/admin/karyawan/setting/store', [KaryawanController::class, 'KaryawanSettingStore'])->name('admin.karyawan.setting.store');
     // Karyawan setting update
     Route::post('/admin/karyawan/setting/update', [KaryawanController::class, 'KaryawanSettingUpdate'])->name('admin.karyawan.setting.update');
+    // Karyawan reset password
+    Route::get('/admin/karyawan/reset/password/{nik}', [KaryawanController::class, 'KaryawanResetPassword'])->name('admin.karyawan.reset.password');
     // Karyawan delete
     Route::get('/admin/karyawan/delete/{nik}', [KaryawanController::class, 'KaryawanDelete'])->name('admin.karyawan.delete');
 

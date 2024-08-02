@@ -7,6 +7,7 @@ use App\Models\JamKerjaKaryawan;
 use App\Models\Karyawan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -234,6 +235,23 @@ class KaryawanController extends Controller
         } catch (\Throwable $e){
             DB::rollBack();
             return redirect()->route('admin.karyawan')->with(['warning' => 'Jam Kerja Gagal Diupdate!']);
+        }
+    }
+
+    public function KaryawanResetPassword($nik)
+    {
+        $nik = Crypt::decrypt($nik);
+        $password = Hash::make('password123');
+
+        $reset_pass = DB::table('karyawan')
+            ->where('nik', $nik)
+            ->update([
+                'password' => $password
+            ]);
+        if ($reset_pass) {
+            return redirect()->back()->with(['success' => 'Password Berhasil Direset!']);
+        } else {
+            return redirect()->back()->with(['warning' => 'Password Gagal Direset!']);
         }
     }
 }
