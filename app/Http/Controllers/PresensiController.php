@@ -109,8 +109,17 @@ class PresensiController extends Controller
             // dd($jam_kerja_karyawan);
         }
 
+        $presensi_hari_ini = DB::table('presensi')
+                                ->select('presensi.*', 'pengajuan_izin.keterangan')
+                                ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
+                                ->where('presensi.nik', $nik)
+                                ->where('tanggal_presensi', $hari_ini)
+                                ->first();
+
         if($jam_kerja_karyawan == null){
             return view('presensi.jadwal_kosong', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan', 'cek_izin'));
+        }else if ($cek_izin !== null && ($cek_izin->status !== 'hadir')) {
+            return view('presensi.jadwal_izin', compact('presensi_hari_ini','nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan', 'cek_izin'));
         }else{
             return view('presensi.create_presensi', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan', 'cek_izin'));
         }

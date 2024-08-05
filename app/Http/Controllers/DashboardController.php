@@ -18,7 +18,9 @@ class DashboardController extends Controller
         $nama = Auth::guard('karyawan')->user()->nama_lengkap;
         $jabatan = Auth::guard('karyawan')->user()->jabatan;
         $presensi_hari_ini = DB::table('presensi')
-                                ->where('nik', $nik)
+                                ->select('presensi.*', 'pengajuan_izin.keterangan')
+                                ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
+                                ->where('presensi.nik', $nik)
                                 ->where('tanggal_presensi', $hari_ini)
                                 ->first();
 
@@ -33,14 +35,18 @@ class DashboardController extends Controller
                                 ->get();
 
         $rekap_presensi = DB::table('presensi')
-                            ->selectRaw('COUNT(nik) as jml_hadir, SUM(IF(presensi.jam_masuk > jam_kerja.jam_masuk,1,0)) as jml_terlambat')
+                            ->selectRaw('
+                            SUM(IF(status="hadir",1,0))as jml_hadir,
+                            SUM(IF(status="izin",1,0))as jml_izin,
+                            SUM(IF(status="sakit",1,0))as jml_sakit,
+                            SUM(IF(status="cuti",1,0))as jml_cuti,
+                            SUM(IF(presensi.jam_masuk > jam_kerja.jam_masuk,1,0)) as jml_terlambat')
                             ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
                             ->where('nik', $nik)
-                            ->where('status', 'hadir')
                             ->whereRaw('MONTH(tanggal_presensi)="' . $bulan_ini . '"')
                             ->whereRaw('YEAR(tanggal_presensi)="' . $tahun_ini . '"')
                             ->first();
-
+        // dd($rekap_presensi);
         $leaderboards = DB::table('presensi')
                             ->join('karyawan', 'presensi.nik', '=', 'karyawan.nik')
                             ->where('tanggal_presensi', $hari_ini)
@@ -69,30 +75,34 @@ class DashboardController extends Controller
         $monthName = $months[$bulan_ini];
 
         // rekap izin sakit
-        $rekap_sakit_izin = DB::table('pengajuan_izin')
-            ->selectRaw('SUM(IF(status="izin",1,0)) as jumlah_izin, SUM(IF(status="sakit",1,0)) as jumlah_sakit, SUM(IF(status="cuti",1,0)) as jumlah_cuti')
-            ->where('nik', $nik)
-            ->whereRaw('MONTH(tanggal_izin_dari)="' . $bulan_ini . '"')
-            ->whereRaw('YEAR(tanggal_izin_dari)="' . $tahun_ini . '"')
-            ->where('status_approved', 1)
-            ->first();
+        // $rekap_sakit_izin = DB::table('pengajuan_izin')
+        //     ->selectRaw('SUM(IF(status="izin",1,0)) as jumlah_izin, SUM(IF(status="sakit",1,0)) as jumlah_sakit, SUM(IF(status="cuti",1,0)) as jumlah_cuti')
+        //     ->where('nik', $nik)
+        //     ->whereRaw('MONTH(tanggal_izin_dari)="' . $bulan_ini . '"')
+        //     ->whereRaw('YEAR(tanggal_izin_dari)="' . $tahun_ini . '"')
+        //     ->where('status_approved', 1)
+        //     ->first();
 
-        return view('dashboard.dashboard', compact('rekap_presensi', 'monthName', 'tahun_ini', 'nama','jabatan','presensi_hari_ini', 'history_bulan_ini', 'leaderboards', 'rekap_sakit_izin'));
+        return view('dashboard.dashboard', compact('rekap_presensi', 'monthName', 'tahun_ini', 'nama','jabatan','presensi_hari_ini', 'history_bulan_ini', 'leaderboards'));
     }
 
     public function AdminDashboard()
     {
         $hari_ini = date("Y-m-d");
+        $bulan_ini = date("m");
+        $tahun_ini = date("Y");
         $rekap_presensi = DB::table('presensi')
-                            ->selectRaw('COUNT(nik) as jumlah_hadir, SUM(IF(jam_masuk > "09:00",1,0)) as jumlah_terlambat')
+                            ->selectRaw('
+                            SUM(IF(status="hadir",1,0))as jml_hadir,
+                            SUM(IF(status="izin",1,0))as jml_izin,
+                            SUM(IF(status="sakit",1,0))as jml_sakit,
+                            SUM(IF(status="cuti",1,0))as jml_cuti,
+                            SUM(IF(presensi.jam_masuk > jam_kerja.jam_masuk,1,0)) as jml_terlambat')
+                            ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
                             ->where('tanggal_presensi', $hari_ini)
-                            ->first();
-        $rekap_sakit_izin = DB::table('pengajuan_izin')
-                            ->selectRaw('SUM(IF(status = "sakit",1,0)) as jumlah_sakit, SUM(IF(status = "izin",1,0)) as jumlah_izin, SUM(IF(status = "cuti",1,0)) as jumlah_cuti')
-                            ->where('tanggal_izin_dari', $hari_ini)
                             ->first();
         $jumlah_karyawan = DB::table('karyawan')->count('nik');
 
-        return view('dashboard.admin_dashboard', compact('rekap_presensi', 'rekap_sakit_izin', 'jumlah_karyawan'));
+        return view('dashboard.admin_dashboard', compact('rekap_presensi', 'jumlah_karyawan'));
     }
 }

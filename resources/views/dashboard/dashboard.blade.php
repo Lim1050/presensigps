@@ -98,7 +98,57 @@
 <div class="section mt-2" id="presence-section">
     <div class="todaypresence">
         <div class="row">
+            @if ($presensi_hari_ini != null && $presensi_hari_ini->status != 'hadir')
+            <div class="col-12 text-center">
+                @if ($presensi_hari_ini->status == 'izin')
+                    <div class="card bg-primary">
+                        <div class="card-body">
+                            <div class="historycontent">
+                                <div class="iconpresensi">
+                                    <ion-icon style="font-size: 48px" name="reader-outline" role="img" class="md hydrated" aria-label="checkmark"></ion-icon>
+                                </div>
+                                <div class="datapresensi">
+                                    <h3 class="presencetitle" style="line-height: 3px">{{ date("d-m-Y", strtotime($presensi_hari_ini->tanggal_presensi)) }}</h3>
+                                    <h4  class="presencetitle" style="margin: 0px !important;">Hari ini Anda sedang {{ strtoupper($presensi_hari_ini->status )}}</h4>
+                                    <p>{{ $presensi_hari_ini->keterangan }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif ($presensi_hari_ini->status == 'sakit')
+                    <div class="card bg-danger">
+                        <div class="card-body">
+                            <div class="historycontent">
+                                <div class="iconpresensi">
+                                    <ion-icon style="font-size: 48px" name="medkit-outline" role="img" class="md hydrated" aria-label="checkmark"></ion-icon>
+                                </div>
+                                <div class="datapresensi">
+                                    <h3 class="presencetitle" style="line-height: 3px">{{ date("d-m-Y", strtotime($presensi_hari_ini->tanggal_presensi)) }}</h3>
+                                    <h4  class="presencetitle" style="margin: 0px !important;">Hari ini Anda sedang {{ strtoupper($presensi_hari_ini->status )}}</h4>
+                                    <p>{{ $presensi_hari_ini->keterangan }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif ($presensi_hari_ini->status == 'cuti')
+                    <div class="card bg-secondary">
+                        <div class="card-body">
+                            <div class="historycontent">
+                                <div class="iconpresensi">
+                                    <ion-icon style="font-size: 48px" name="calendar-outline" role="img" class="md hydrated" aria-label="checkmark"></ion-icon>
+                                </div>
+                                <div class="datapresensi">
+                                    <h3 class="presencetitle" style="line-height: 3px">{{ date("d-m-Y", strtotime($presensi_hari_ini->tanggal_presensi)) }}</h3>
+                                    <h4  class="presencetitle" style="margin: 0px !important;">Hari ini Anda sedang {{ strtoupper($presensi_hari_ini->status )}}</h4>
+                                    <p>{{ $presensi_hari_ini->keterangan }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
+            </div>
+            @else
             <div class="col-6">
                 <div class="card gradasigreen">
                     <div class="card-body">
@@ -174,6 +224,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 
@@ -193,7 +244,7 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
-                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_sakit_izin->jumlah_sakit }}</span>
+                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_presensi->jml_sakit }}</span>
                         <ion-icon name="medkit-outline" style="font-size: 1.6rem" class="text-danger mb-1"></ion-icon>
                         <br>
                         <span style="font-size: 0.8rem; font-weight:500" class="text-danger">Sakit</span>
@@ -203,7 +254,7 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
-                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_sakit_izin->jumlah_izin }}</span>
+                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_presensi->jml_izin }}</span>
                         <ion-icon name="reader-outline" style="font-size: 1.6rem" class="text-primary mb-1"></ion-icon>
                         <br>
                         <span style="font-size: 0.8rem; font-weight:500" class="text-primary">Izin</span>
@@ -213,7 +264,7 @@
             <div class="col-3">
                 <div class="card">
                     <div class="card-body text-center" style="padding: 12px 12px; line-height:0.8rem !important">
-                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_sakit_izin->jumlah_cuti }}</span>
+                        <span class="badge bg-danger" style="position: absolute; top:3px; right: 5px; font-size:0.7rem; z-index:999">{{ $rekap_presensi->jml_cuti }}</span>
                         <ion-icon name="calendar-outline" style="font-size: 1.6rem" class="text-secondary mb-1"></ion-icon>
                         <br>
                         <span style="font-size: 0.8rem; font-weight:500" class="text-secondary">Cuti</span>

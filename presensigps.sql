@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 05, 2024 at 04:15 PM
--- Server version: 8.0.33
--- PHP Version: 8.2.4
+-- Waktu pembuatan: 05 Agu 2024 pada 16.10
+-- Versi server: 8.0.35
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `departemen`
+-- Struktur dari tabel `departemen`
 --
 
 CREATE TABLE `departemen` (
@@ -35,7 +35,7 @@ CREATE TABLE `departemen` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `departemen`
+-- Dumping data untuk tabel `departemen`
 --
 
 INSERT INTO `departemen` (`kode_departemen`, `nama_departemen`, `created_at`, `updated_at`) VALUES
@@ -49,7 +49,7 @@ INSERT INTO `departemen` (`kode_departemen`, `nama_departemen`, `created_at`, `u
 -- --------------------------------------------------------
 
 --
--- Table structure for table `failed_jobs`
+-- Struktur dari tabel `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
@@ -65,7 +65,7 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `gaji`
+-- Struktur dari tabel `gaji`
 --
 
 CREATE TABLE `gaji` (
@@ -83,7 +83,7 @@ CREATE TABLE `gaji` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja`
+-- Struktur dari tabel `jam_kerja`
 --
 
 CREATE TABLE `jam_kerja` (
@@ -98,7 +98,7 @@ CREATE TABLE `jam_kerja` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja`
+-- Dumping data untuk tabel `jam_kerja`
 --
 
 INSERT INTO `jam_kerja` (`kode_jam_kerja`, `nama_jam_kerja`, `awal_jam_masuk`, `jam_masuk`, `akhir_jam_masuk`, `jam_pulang`, `created_at`, `updated_at`) VALUES
@@ -109,7 +109,7 @@ INSERT INTO `jam_kerja` (`kode_jam_kerja`, `nama_jam_kerja`, `awal_jam_masuk`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja_dept`
+-- Struktur dari tabel `jam_kerja_dept`
 --
 
 CREATE TABLE `jam_kerja_dept` (
@@ -121,7 +121,7 @@ CREATE TABLE `jam_kerja_dept` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja_dept`
+-- Dumping data untuk tabel `jam_kerja_dept`
 --
 
 INSERT INTO `jam_kerja_dept` (`kode_jk_dept`, `kode_cabang`, `kode_departemen`, `created_at`, `updated_at`) VALUES
@@ -138,7 +138,7 @@ INSERT INTO `jam_kerja_dept` (`kode_jk_dept`, `kode_cabang`, `kode_departemen`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja_dept_detail`
+-- Struktur dari tabel `jam_kerja_dept_detail`
 --
 
 CREATE TABLE `jam_kerja_dept_detail` (
@@ -150,7 +150,7 @@ CREATE TABLE `jam_kerja_dept_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja_dept_detail`
+-- Dumping data untuk tabel `jam_kerja_dept_detail`
 --
 
 INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `created_at`, `updated_at`) VALUES
@@ -221,7 +221,7 @@ INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja_karyawan`
+-- Struktur dari tabel `jam_kerja_karyawan`
 --
 
 CREATE TABLE `jam_kerja_karyawan` (
@@ -233,7 +233,7 @@ CREATE TABLE `jam_kerja_karyawan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja_karyawan`
+-- Dumping data untuk tabel `jam_kerja_karyawan`
 --
 
 INSERT INTO `jam_kerja_karyawan` (`nik`, `hari`, `kode_jam_kerja`, `created_at`, `updated_at`) VALUES
@@ -297,7 +297,7 @@ INSERT INTO `jam_kerja_karyawan` (`nik`, `hari`, `kode_jam_kerja`, `created_at`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kantor_cabang`
+-- Struktur dari tabel `kantor_cabang`
 --
 
 CREATE TABLE `kantor_cabang` (
@@ -310,7 +310,7 @@ CREATE TABLE `kantor_cabang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `kantor_cabang`
+-- Dumping data untuk tabel `kantor_cabang`
 --
 
 INSERT INTO `kantor_cabang` (`kode_cabang`, `nama_cabang`, `lokasi_kantor`, `radius`, `created_at`, `updated_at`) VALUES
@@ -321,7 +321,7 @@ INSERT INTO `kantor_cabang` (`kode_cabang`, `nama_cabang`, `lokasi_kantor`, `rad
 -- --------------------------------------------------------
 
 --
--- Table structure for table `karyawan`
+-- Struktur dari tabel `karyawan`
 --
 
 CREATE TABLE `karyawan` (
@@ -339,14 +339,14 @@ CREATE TABLE `karyawan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `karyawan`
+-- Dumping data untuk tabel `karyawan`
 --
 
 INSERT INTO `karyawan` (`nik`, `nama_lengkap`, `foto`, `jabatan`, `kode_departemen`, `kode_cabang`, `no_wa`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
 ('123123123', 'Salim Purnama Ramadhan', '123123123_1720603406.png', 'Head IT', 'IT', 'JKTP', '08123456789', '$2y$10$NBvJhmZ0TWDts4FcZ4oBduCgFafZex/8WfCakwD4KjTqafnemB7fa', NULL, '2024-06-21 01:22:30', '2024-07-10 09:23:26'),
 ('123456789', 'Mei Ling', '123456789_1719807160.png', 'Head Accountant', 'FIN', 'JKTP', '08147258369', '$2y$10$NiSacYyb3uDeR2eWQ/j.MeFEE/g8Eh5SAhp.ErErDgsg46ST8Q1Lq', NULL, '2024-06-28 07:19:07', '2024-07-10 08:51:11'),
 ('213213213', 'Ramadhan S Purnama', '213213213_1719807132.png', 'Head HRD', 'HR', 'JKTT', '08123456789', '$2y$10$iyjXNfqYeuZTj3iE/U9WKeWHlTZ7DoiWQIgaaDp53GxZ4B2DDvE1a', NULL, '2024-06-21 01:22:30', '2024-07-10 08:50:57'),
-('222222222', 'Ujang', '222-222-222_1721201871.png', 'Head Operations', 'OPS', 'JKTP', '0822222222222', '$2y$10$h2rLaVb8RNUmUNLh1cq1HutsniyW6O18v7.Hg.WLaWfefSq3GA6B.', NULL, '2024-07-17 07:37:52', '2024-07-31 08:10:16'),
+('222222222', 'Ujang', '222-222-222_1721201871.png', 'Head Operations', 'OPS', 'JKTP', '0822222222222', '$2y$10$ZVRKYmoOqeB3zY3iRZ7Fe.UQIOXku0slcNTCuXxZcAflWmYiqt8y.', NULL, '2024-07-17 07:37:52', '2024-07-31 08:10:16'),
 ('321321321', 'Purnama R Salim', '321321321_1719807141.png', 'Head Finance', 'FIN', 'JKTP', '08123456789', '$2y$10$iyjXNfqYeuZTj3iE/U9WKeWHlTZ7DoiWQIgaaDp53GxZ4B2DDvE1a', NULL, '2024-06-21 01:22:30', '2024-07-16 09:05:35'),
 ('333333333', 'Ridho', '333333333_1721293448.png', 'Recepcionist', 'HR', 'BKS', '0833333333333', '$2y$10$n2wY2wxFJyHwufrCqBJyFeT0yfxsRcsAlyRneOOyuwx0bYqMnGZ/y', NULL, '2024-07-17 07:43:12', '2024-07-18 09:04:08'),
 ('369258147', 'Ling Mei', '369258147_1719807170.png', 'Assistance Accountant', 'FIN', 'JKTP', '123456789', '$2y$10$IXxUEvNVZY1S/QuQ2qQBie.m0LgTz4Pp8qy7LEC5NYuWR1GLP7V22', NULL, '2024-06-28 07:26:47', '2024-07-16 05:47:25'),
@@ -356,7 +356,7 @@ INSERT INTO `karyawan` (`nik`, `nama_lengkap`, `foto`, `jabatan`, `kode_departem
 -- --------------------------------------------------------
 
 --
--- Table structure for table `lokasi_kantor`
+-- Struktur dari tabel `lokasi_kantor`
 --
 
 CREATE TABLE `lokasi_kantor` (
@@ -368,7 +368,7 @@ CREATE TABLE `lokasi_kantor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `lokasi_kantor`
+-- Dumping data untuk tabel `lokasi_kantor`
 --
 
 INSERT INTO `lokasi_kantor` (`id`, `lokasi_kantor`, `radius`, `created_at`, `updated_at`) VALUES
@@ -377,7 +377,7 @@ INSERT INTO `lokasi_kantor` (`id`, `lokasi_kantor`, `radius`, `created_at`, `upd
 -- --------------------------------------------------------
 
 --
--- Table structure for table `master_cuti`
+-- Struktur dari tabel `master_cuti`
 --
 
 CREATE TABLE `master_cuti` (
@@ -389,7 +389,7 @@ CREATE TABLE `master_cuti` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `master_cuti`
+-- Dumping data untuk tabel `master_cuti`
 --
 
 INSERT INTO `master_cuti` (`kode_cuti`, `nama_cuti`, `jumlah_hari`, `created_at`, `updated_at`) VALUES
@@ -402,7 +402,7 @@ INSERT INTO `master_cuti` (`kode_cuti`, `nama_cuti`, `jumlah_hari`, `created_at`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `migrations`
+-- Struktur dari tabel `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -412,7 +412,7 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `migrations`
+-- Dumping data untuk tabel `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -449,7 +449,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `password_resets`
+-- Struktur dari tabel `password_resets`
 --
 
 CREATE TABLE `password_resets` (
@@ -461,7 +461,7 @@ CREATE TABLE `password_resets` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pengajuan_izin`
+-- Struktur dari tabel `pengajuan_izin`
 --
 
 CREATE TABLE `pengajuan_izin` (
@@ -480,7 +480,7 @@ CREATE TABLE `pengajuan_izin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `pengajuan_izin`
+-- Dumping data untuk tabel `pengajuan_izin`
 --
 
 INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_izin_sampai`, `jumlah_hari`, `kode_cuti`, `status`, `status_approved`, `keterangan`, `surat_sakit`, `created_at`, `updated_at`) VALUES
@@ -499,7 +499,7 @@ INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `personal_access_tokens`
+-- Struktur dari tabel `personal_access_tokens`
 --
 
 CREATE TABLE `personal_access_tokens` (
@@ -518,7 +518,7 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `presensi`
+-- Struktur dari tabel `presensi`
 --
 
 CREATE TABLE `presensi` (
@@ -539,7 +539,7 @@ CREATE TABLE `presensi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `presensi`
+-- Dumping data untuk tabel `presensi`
 --
 
 INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_keluar`, `foto_masuk`, `foto_keluar`, `lokasi_masuk`, `lokasi_keluar`, `kode_jam_kerja`, `status`, `kode_izin`, `created_at`, `updated_at`) VALUES
@@ -596,7 +596,7 @@ INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_kelua
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktur dari tabel `users`
 --
 
 CREATE TABLE `users` (
@@ -611,7 +611,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data untuk tabel `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
@@ -623,80 +623,80 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `re
 --
 
 --
--- Indexes for table `departemen`
+-- Indeks untuk tabel `departemen`
 --
 ALTER TABLE `departemen`
   ADD PRIMARY KEY (`kode_departemen`);
 
 --
--- Indexes for table `failed_jobs`
+-- Indeks untuk tabel `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
--- Indexes for table `gaji`
+-- Indeks untuk tabel `gaji`
 --
 ALTER TABLE `gaji`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `jam_kerja`
+-- Indeks untuk tabel `jam_kerja`
 --
 ALTER TABLE `jam_kerja`
   ADD PRIMARY KEY (`kode_jam_kerja`);
 
 --
--- Indexes for table `jam_kerja_dept`
+-- Indeks untuk tabel `jam_kerja_dept`
 --
 ALTER TABLE `jam_kerja_dept`
   ADD PRIMARY KEY (`kode_jk_dept`);
 
 --
--- Indexes for table `kantor_cabang`
+-- Indeks untuk tabel `kantor_cabang`
 --
 ALTER TABLE `kantor_cabang`
   ADD PRIMARY KEY (`kode_cabang`);
 
 --
--- Indexes for table `karyawan`
+-- Indeks untuk tabel `karyawan`
 --
 ALTER TABLE `karyawan`
   ADD PRIMARY KEY (`nik`);
 
 --
--- Indexes for table `lokasi_kantor`
+-- Indeks untuk tabel `lokasi_kantor`
 --
 ALTER TABLE `lokasi_kantor`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `master_cuti`
+-- Indeks untuk tabel `master_cuti`
 --
 ALTER TABLE `master_cuti`
   ADD PRIMARY KEY (`kode_cuti`);
 
 --
--- Indexes for table `migrations`
+-- Indeks untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `password_resets`
+-- Indeks untuk tabel `password_resets`
 --
 ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Indexes for table `pengajuan_izin`
+-- Indeks untuk tabel `pengajuan_izin`
 --
 ALTER TABLE `pengajuan_izin`
   ADD PRIMARY KEY (`kode_izin`);
 
 --
--- Indexes for table `personal_access_tokens`
+-- Indeks untuk tabel `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`),
@@ -704,60 +704,60 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Indexes for table `presensi`
+-- Indeks untuk tabel `presensi`
 --
 ALTER TABLE `presensi`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `failed_jobs`
+-- AUTO_INCREMENT untuk tabel `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `gaji`
+-- AUTO_INCREMENT untuk tabel `gaji`
 --
 ALTER TABLE `gaji`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `lokasi_kantor`
+-- AUTO_INCREMENT untuk tabel `lokasi_kantor`
 --
 ALTER TABLE `lokasi_kantor`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `migrations`
+-- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
--- AUTO_INCREMENT for table `personal_access_tokens`
+-- AUTO_INCREMENT untuk tabel `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `presensi`
+-- AUTO_INCREMENT untuk tabel `presensi`
 --
 ALTER TABLE `presensi`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=287;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;

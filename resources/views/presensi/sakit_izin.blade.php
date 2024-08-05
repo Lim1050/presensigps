@@ -38,7 +38,8 @@
                 }
                 .status {
                     position: absolute;
-                    right: 20px;
+                    right: 5px;
+                    bottom: 20px;
                 }
                 .fixed-top {
                     position: fixed;
@@ -119,7 +120,7 @@
 
                             </div>
                             <div class="status">
-                                <span class="{{ $izin->status_approved == "1" ? "text-success" : ($izin->status_approved == "2" ? "text-danger" : "text-warning")}}">{{ $izin->status_approved == "1" ? "Diterima" : ($izin->status_approved == "2" ? "Ditolak" : "Menunggu") }}</span>
+                                <span class="status {{ $izin->status_approved == "1" ? "text-success" : ($izin->status_approved == "2" ? "text-danger" : "text-warning")}}">{{ $izin->status_approved == "1" ? "Diterima" : ($izin->status_approved == "2" ? "Ditolak" : "Menunggu") }}</span>
                             </div>
                         </div>
                     </div>

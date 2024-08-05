@@ -7,6 +7,11 @@
 
 <!-- Content Row -->
 <div class="row">
+    <div class="col mb-2">
+        <h3 class="h4 mb-0 text-gray-800">Rekap Presensi Hari Ini {{ date("d-m-Y") }}</h3>
+    </div>
+</div>
+<div class="row">
     <!-- Jumlah Karyawan -->
     <div class="col-xl-2 col-md-6 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
@@ -33,7 +38,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                             Total Hadir</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_presensi->jumlah_hadir != null ? $rekap_presensi->jumlah_hadir : 0 }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_presensi->jml_hadir != null ? $rekap_presensi->jml_hadir : 0 }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="bi bi-fingerprint fa-2x text-success"></i>
@@ -51,7 +56,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                             Karyawan Sakit</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_sakit_izin->jumlah_sakit != null ? $rekap_sakit_izin->jumlah_sakit : 0 }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_presensi->jml_sakit != null ? $rekap_presensi->jml_sakit : 0 }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="bi bi-capsule fa-2x text-danger"></i>
@@ -69,7 +74,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             Karyawan Izin</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_sakit_izin->jumlah_izin != null ? $rekap_sakit_izin->jumlah_izin : 0}}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_presensi->jml_izin != null ? $rekap_presensi->jml_izin : 0}}</div>
                     </div>
                     <div class="col-auto">
                         <i class="bi bi-file-text fa-2x text-primary"></i>
@@ -87,7 +92,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
                             Karyawan Cuti</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_sakit_izin->jumlah_cuti != null ? $rekap_sakit_izin->jumlah_cuti : 0}}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_presensi->jml_cuti != null ? $rekap_presensi->jml_cuti : 0}}</div>
                     </div>
                     <div class="col-auto">
                         <i class="bi bi-calendar3 fa-2x text-secondary"></i>
@@ -105,7 +110,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                             Karyawan Terlambat</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_presensi->jumlah_terlambat != null ? $rekap_presensi->jumlah_terlambat : 0}}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $rekap_presensi->jml_terlambat != null ? $rekap_presensi->jml_terlambat : 0}}</div>
                     </div>
                     <div class="col-auto">
                         <i class="bi bi-clock fa-2x text-warning"></i>
