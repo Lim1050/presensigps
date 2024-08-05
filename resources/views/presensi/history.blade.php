@@ -16,28 +16,26 @@
 <div class="row" style="margin-top: 70px">
     <div class="col">
         <div class="row">
-            <div class="col-12">
+            <div class="col-6">
                 <div class="form-group">
-                    <select name="bulan" id="bulan" class="form-control">
+                    <select name="bulan" id="bulan" class="form-control selectmaterialize">
                         <option value="">Bulan</option>
-                        @for ($i = 1; $i<=12; $i++)
-                            <option value="{{ $i }}" {{ date("m") == $i ? 'selected' : '' }}>{{ $months[$i] }}</option>
+                        @for ($i = 1; $i <= 12; $i++)
+                            <option value="{{ $i }}" {{ Request('bulan') == $i ? 'selected' : '' }}>{{ $months[$i] }}</option>
                         @endfor
                     </select>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
+            <div class="col-6">
                 <div class="form-group">
-                    <select name="tahun" id="tahun" class="form-control">
+                    <select name="tahun" id="tahun" class="form-control selectmaterialize">
                         <option value="">Tahun</option>
                         @php
-                            $tahun_mulai = 2000;
+                            $tahun_mulai = 2020;
                             $tahun_sekarang = date("Y");
                         @endphp
                         @for ($tahun=$tahun_mulai; $tahun <= $tahun_sekarang; $tahun++)
-                            <option value="{{ $tahun }}" {{ date("Y") == $tahun ? 'selected' : '' }}>{{ $tahun }}</option>
+                            <option value="{{ $tahun }}" {{ Request('tahun') == $tahun ? 'selected' : '' }}>{{ $tahun }}</option>
                         @endfor
                     </select>
                 </div>
@@ -52,7 +50,7 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row" style="margin-bottom:100px;">
     <div class="col" id="showHistory">
 
     </div>

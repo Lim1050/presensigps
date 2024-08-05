@@ -78,7 +78,9 @@
     </div>
     <div class="row">
         <div class="col">
-            @if ($cek_masuk > 0 && empty($foto_keluar))
+            @if ($cek_masuk > 0 && empty($foto_keluar) && ($cek_izin->status == 'izin' || $cek_izin->status == 'sakit' || $cek_izin->status == 'cuti'))
+                <button id="sudahabsen" class="btn btn-secondary btn-block"><ion-icon name="camera-outline" @disabled(true)></ion-icon>{{ $cek_izin->status }}</button>
+            @elseif ($cek_masuk > 0 && empty($foto_keluar))
                 <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
             @elseif ($cek_masuk == 0)
                 <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>

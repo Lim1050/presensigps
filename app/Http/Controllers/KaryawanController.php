@@ -28,6 +28,7 @@ class KaryawanController extends Controller
             $query->where('karyawan.kode_departemen', $request->kode_departemen);
         }
         $karyawan = $query->paginate('10');
+        // dd($karyawan);
 
 
         $departemen = DB::table('departemen')->get();
@@ -88,7 +89,7 @@ class KaryawanController extends Controller
 
     public function KaryawanEdit(Request $request, $nik)
     {
-        $nik = $request->nik;
+        $nik = Crypt::decrypt($request->nik);
         $departemen = DB::table('departemen')->get();
         $cabang = DB::table('kantor_cabang')->orderBy('kode_cabang')->get();
         $karyawan = DB::table('karyawan')->where('nik', $nik)->first();
@@ -146,6 +147,7 @@ class KaryawanController extends Controller
 
     public function KaryawanDelete($nik)
     {
+        $nik = Crypt::decrypt($nik);
         // Ambil data karyawan berdasarkan NIK
         $karyawan = DB::table('karyawan')->where('nik', $nik)->first();
 
@@ -172,7 +174,7 @@ class KaryawanController extends Controller
 
     public function KaryawanSetting(Request $request, $nik)
     {
-        $nik = $request->nik;
+        $nik = Crypt::decrypt($request->nik);
         $karyawan = DB::table('karyawan')->where('nik', $nik)->first();
         $jam_kerja = DB::table('jam_kerja')->orderBy('kode_jam_kerja')->get();
         $cek_jam_kerja_karyawan = DB::table('jam_kerja_karyawan')->where('nik', $nik)->count();

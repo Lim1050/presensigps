@@ -104,19 +104,32 @@
                     <div class="card-body">
                         <div class="presencecontent">
                             <div class="iconpresence">
-                            @if ($presensi_hari_ini != null)
-                                @php
-                                    $path = Storage::url($presensi_hari_ini->foto_masuk);
-                                @endphp
-                                <img src="{{ url($path) }}" alt="" class="imaged w48 ">
+                                @if ($presensi_hari_ini != null && $presensi_hari_ini->status == 'hadir')
+                                    @php
+                                        $path = Storage::url($presensi_hari_ini->foto_masuk);
+                                    @endphp
+                                    <img src="{{ url($path) }}" alt="" class="imaged w48">
+                                @elseif ($presensi_hari_ini != null && $presensi_hari_ini->status == 'izin')
+                                    <ion-icon name="reader-outline"></ion-icon>
+                                @elseif ($presensi_hari_ini != null && $presensi_hari_ini->status == 'sakit')
+                                    <ion-icon name="medkit-outline"></ion-icon>
+                                @elseif ($presensi_hari_ini != null && $presensi_hari_ini->status == 'cuti')
+                                    <ion-icon name="calendar-outline"></ion-icon>
+                                @else
+                                    <ion-icon name="camera"></ion-icon>
+                                @endif
+                            </div>
+
+                            @if ($presensi_hari_ini == null || $presensi_hari_ini->status == 'hadir')
+                                <div class="presencedetail">
+                                    <h4 class="presencetitle">Masuk</h4>
+                                    <span>{{ $presensi_hari_ini != null ? $presensi_hari_ini->jam_masuk : 'Belum Absen' }}</span>
+                                </div>
                             @else
-                                <ion-icon name="camera"></ion-icon>
+                                <div class="presencedetail">
+                                    <h4 class="presencetitle">{{ strtoupper($presensi_hari_ini->status) }}</h4>
+                                </div>
                             @endif
-                            </div>
-                            <div class="presencedetail">
-                                <h4 class="presencetitle">Masuk</h4>
-                                <span>{{ $presensi_hari_ini != null ? $presensi_hari_ini->jam_masuk : 'Belum Absen' }}</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -127,18 +140,36 @@
                         <div class="presencecontent">
                             <div class="iconpresence">
                                 @if ($presensi_hari_ini != null && $presensi_hari_ini->foto_keluar != null)
-                                @php
-                                    $path = Storage::url($presensi_hari_ini->foto_keluar);
-                                @endphp
-                                <img src="{{ url($path) }}" alt="" class="imaged w48 ">
+                                    @php
+                                        $path = Storage::url($presensi_hari_ini->foto_keluar);
+                                    @endphp
+                                    <img src="{{ url($path) }}" alt="" class="imaged w48">
+                                @elseif ($presensi_hari_ini != null && $presensi_hari_ini->status == 'izin')
+                                    <ion-icon name="reader-outline"></ion-icon>
+                                @elseif ($presensi_hari_ini != null && $presensi_hari_ini->status == 'sakit')
+                                    <ion-icon name="medkit-outline"></ion-icon>
+                                @elseif ($presensi_hari_ini != null && $presensi_hari_ini->status == 'cuti')
+                                    <ion-icon name="calendar-outline"></ion-icon>
                                 @else
                                     <ion-icon name="camera"></ion-icon>
                                 @endif
                             </div>
-                            <div class="presencedetail">
-                                <h4 class="presencetitle">Pulang</h4>
-                                <span>{{ $presensi_hari_ini != null && $presensi_hari_ini->jam_keluar != null? $presensi_hari_ini->jam_keluar : 'Belum Absen' }}</span>
-                            </div>
+
+                            @if ($presensi_hari_ini != null && $presensi_hari_ini->foto_keluar != null)
+                                <div class="presencedetail">
+                                    <h4 class="presencetitle">Pulang</h4>
+                                    <span>{{ $presensi_hari_ini->jam_keluar != null ? $presensi_hari_ini->jam_keluar : 'Belum Absen' }}</span>
+                                </div>
+                            @elseif ($presensi_hari_ini != null && $presensi_hari_ini->status != 'hadir')
+                                <div class="presencedetail">
+                                    <h4 class="presencetitle">{{ strtoupper($presensi_hari_ini->status)}}</h4>
+                                </div>
+                            @else
+                                <div class="presencedetail">
+                                    <h4 class="presencetitle">Pulang</h4>
+                                    <span>Belum Absen</span>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -350,14 +381,21 @@
                     @foreach ($leaderboards as $leaderboard)
                     <li>
                         <div class="item">
-                            <img src="assets/img/sample/avatar/avatar1.jpg" alt="image" class="image">
+                            @php
+                                $path = Storage::url("uploads/karyawan/".$leaderboard->foto)
+                            @endphp
+                            <img src="{{ url($path) }}" alt="image" class="image">
                             <div class="in">
                                 <div>
                                     {{ $leaderboard->nama_lengkap }}
                                     <br>
                                     <small class="text-muted">{{ $leaderboard->jabatan }}</small>
                                 </div>
+                                @if ($leaderboard->status == 'hadir')
                                 <span class="badge {{ $leaderboard->jam_masuk < "09:00" ? "badge-success" : "badge-warning"}}">{{ $leaderboard->jam_masuk < "09:00" ? $leaderboard->jam_masuk : "Telat " . $leaderboard->jam_masuk}}</span>
+                                @else
+                                <span class="badge badge-secondary">{{ $leaderboard->status}}</span>
+                                @endif
 
                             </div>
                         </div>

@@ -74,6 +74,11 @@ class PresensiController extends Controller
                         ->where('nik', $nik)
                         ->whereNotNull('foto_keluar')
                         ->count();
+        $cek_izin = DB::table('presensi')
+                    ->where('tanggal_presensi', $hari_ini)
+                    ->where('nik', $nik)
+                    ->first();
+        // dd($cek_izin->status);
 
         $foto_keluar = DB::table('presensi')
                         ->where('nik', $nik)
@@ -105,9 +110,9 @@ class PresensiController extends Controller
         }
 
         if($jam_kerja_karyawan == null){
-            return view('presensi.jadwal_kosong', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan'));
+            return view('presensi.jadwal_kosong', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan', 'cek_izin'));
         }else{
-            return view('presensi.create_presensi', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan'));
+            return view('presensi.create_presensi', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan', 'cek_izin'));
         }
         // dd($jam_kerja_karyawan);
     }
@@ -270,12 +275,16 @@ class PresensiController extends Controller
         $nik = Auth::guard('karyawan')->user()->nik;
 
         // tampilkan data presensi sesuai bulan dan tahun
+
         $history = DB::table('presensi')
-            ->whereRaw('MONTH(tanggal_presensi)="' . $bulan . '"')
-            ->whereRaw('YEAR(tanggal_presensi)="' . $tahun . '"')
-            ->where('nik', $nik)
-            ->orderBy('tanggal_presensi')
-            ->get();
+                                ->select('presensi.*', 'jam_kerja.nama_jam_kerja', 'jam_kerja.jam_masuk as jam_kerja_masuk', 'jam_kerja.jam_pulang', 'pengajuan_izin.keterangan')
+                                ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+                                ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
+                                ->where('presensi.nik', $nik)
+                                ->whereRaw('MONTH(presensi.tanggal_presensi) = ?', [$bulan])
+                                ->whereRaw('YEAR(presensi.tanggal_presensi) = ?', [$tahun])
+                                ->orderBy('presensi.tanggal_presensi', 'desc')
+                                ->get();
 
         return view('presensi.gethistory', compact('history'));
     }

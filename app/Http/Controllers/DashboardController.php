@@ -47,6 +47,8 @@ class DashboardController extends Controller
                             ->orderBy('jam_masuk', 'ASC')
                             ->get();
 
+        // dd($leaderboards);
+
         // dd($rekap_presensi);
         $months = [
             '01' => 'Januari',
