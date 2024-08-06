@@ -68,7 +68,7 @@
         </div>
     </div>
     <div class="jam-digital-malasngoding">
-        <p>{{ $nama_hari }},{{ date("d-m-Y") }}</p>
+        <p>{{ $hari_ini }}</p>
         <p id="jam"></p>
         <p>{{ $jam_kerja_karyawan->nama_jam_kerja }}</p>
         <p>Awal Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->awal_jam_masuk)) }}</p>
@@ -80,7 +80,7 @@
         <div class="col">
             @if ($cek_masuk > 0 && empty($foto_keluar) && ($cek_izin->status == 'izin' || $cek_izin->status == 'sakit' || $cek_izin->status == 'cuti'))
                 <button id="sudahabsen" class="btn btn-secondary btn-block"><ion-icon name="camera-outline" @disabled(true)></ion-icon>{{ $cek_izin->status }}</button>
-            @elseif ($cek_masuk > 0 && empty($foto_keluar))
+            @elseif ($cek_lintas_hari == 1 || ($cek_masuk > 0 && empty($foto_keluar)))
                 <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
             @elseif ($cek_masuk == 0)
                 <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>

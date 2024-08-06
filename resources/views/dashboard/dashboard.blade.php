@@ -95,21 +95,31 @@
         </div>
     </div>
 </div>
+<style>
+    .center-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        }
+</style>
 <div class="section mt-2" id="presence-section">
     <div class="todaypresence">
         <div class="row">
             @if ($presensi_hari_ini != null && $presensi_hari_ini->status != 'hadir')
-            <div class="col-12 text-center">
+            <div class="col-12 text-center mb-1">
                 @if ($presensi_hari_ini->status == 'izin')
                     <div class="card bg-primary">
                         <div class="card-body">
-                            <div class="historycontent">
-                                <div class="iconpresensi">
+                            <div>
+                                <div>
                                     <ion-icon style="font-size: 48px" name="reader-outline" role="img" class="md hydrated" aria-label="checkmark"></ion-icon>
                                 </div>
-                                <div class="datapresensi">
-                                    <h3 class="presencetitle" style="line-height: 3px">{{ date("d-m-Y", strtotime($presensi_hari_ini->tanggal_presensi)) }}</h3>
-                                    <h4  class="presencetitle" style="margin: 0px !important;">Hari ini Anda sedang {{ strtoupper($presensi_hari_ini->status )}}</h4>
+                                <div>
+                                    <h3 class="presencetitle mt-1" style="line-height: 3px">{{ date("d-m-Y", strtotime($presensi_hari_ini->tanggal_presensi)) }}</h3>
+                                    <h4  class="presencetitle mt-1" style="margin: 0px !important;">Hari ini Anda sedang {{ strtoupper($presensi_hari_ini->status )}}</h4>
                                     <p>{{ $presensi_hari_ini->keterangan }}</p>
                                 </div>
                             </div>
@@ -118,13 +128,13 @@
                 @elseif ($presensi_hari_ini->status == 'sakit')
                     <div class="card bg-danger">
                         <div class="card-body">
-                            <div class="historycontent">
-                                <div class="iconpresensi">
+                            <div>
+                                <div>
                                     <ion-icon style="font-size: 48px" name="medkit-outline" role="img" class="md hydrated" aria-label="checkmark"></ion-icon>
                                 </div>
-                                <div class="datapresensi">
-                                    <h3 class="presencetitle" style="line-height: 3px">{{ date("d-m-Y", strtotime($presensi_hari_ini->tanggal_presensi)) }}</h3>
-                                    <h4  class="presencetitle" style="margin: 0px !important;">Hari ini Anda sedang {{ strtoupper($presensi_hari_ini->status )}}</h4>
+                                <div>
+                                    <h3 class="presencetitle mt-1" style="line-height: 3px">{{ date("d-m-Y", strtotime($presensi_hari_ini->tanggal_presensi)) }}</h3>
+                                    <h4  class="presencetitle mt-1" style="margin: 0px !important;">Hari ini Anda sedang {{ strtoupper($presensi_hari_ini->status )}}</h4>
                                     <p>{{ $presensi_hari_ini->keterangan }}</p>
                                 </div>
                             </div>
@@ -133,13 +143,13 @@
                 @elseif ($presensi_hari_ini->status == 'cuti')
                     <div class="card bg-secondary">
                         <div class="card-body">
-                            <div class="historycontent">
-                                <div class="iconpresensi">
+                            <div>
+                                <div>
                                     <ion-icon style="font-size: 48px" name="calendar-outline" role="img" class="md hydrated" aria-label="checkmark"></ion-icon>
                                 </div>
-                                <div class="datapresensi">
-                                    <h3 class="presencetitle" style="line-height: 3px">{{ date("d-m-Y", strtotime($presensi_hari_ini->tanggal_presensi)) }}</h3>
-                                    <h4  class="presencetitle" style="margin: 0px !important;">Hari ini Anda sedang {{ strtoupper($presensi_hari_ini->status )}}</h4>
+                                <div>
+                                    <h3 class="presencetitle mt-1" style="line-height: 3px">{{ date("d-m-Y", strtotime($presensi_hari_ini->tanggal_presensi)) }}</h3>
+                                    <h4  class="presencetitle mt-1" style="margin: 0px !important;">Hari ini Anda sedang {{ strtoupper($presensi_hari_ini->status )}}</h4>
                                     <p>{{ $presensi_hari_ini->keterangan }}</p>
                                 </div>
                             </div>
@@ -301,28 +311,6 @@
         </div>
         <div class="tab-content mt-2" style="margin-bottom:100px;">
             <div class="tab-pane fade show active" id="home" role="tabpanel">
-                {{-- <ul class="listview image-listview">
-                    @foreach ($history_bulan_ini as $bulan_ini)
-                    @php
-                        $path = Storage::url($bulan_ini->foto_masuk);
-                    @endphp
-                    <li>
-                        <div class="item">
-                            <div class="icon-box bg-primary">
-                                <ion-icon name="checkmark-circle-outline" role="img" class="md hydrated"
-                                    aria-label="checkmark"></ion-icon>
-                            </div>
-                            <div class="in">
-                                <div>{{ date("d-m-Y", strtotime($bulan_ini->tanggal_presensi)) }}</div>
-                                <div>
-                                    <span class="badge {{ $bulan_ini->jam_masuk < "09:00" ? "badge-success" : "badge-warning"}}">{{ $bulan_ini->jam_masuk < "09:00" ? $bulan_ini->jam_masuk : "Telat " . $bulan_ini->jam_masuk}}</span>
-                                    <span class="badge badge-danger">{{ $bulan_ini->jam_keluar != null ? $bulan_ini->jam_keluar : 'Belum Absen'}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    @endforeach
-                </ul> --}}
                 <style>
                     .historycontent{
                         display: flex;

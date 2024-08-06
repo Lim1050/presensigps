@@ -90,6 +90,7 @@
                                 <th>Jam Masuk</th>
                                 <th>Akhir Jam Masuk</th>
                                 <th>Jam Pulang</th>
+                                <th>Lintas Hari</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -104,6 +105,13 @@
                                 <td class="text-center">{{ $item->akhir_jam_masuk }}</td>
                                 <td class="text-center">{{ $item->jam_pulang }}</td>
                                 <td class="text-center">
+                                    @if ($item->lintas_hari == 1)
+                                        <span class="badge bg-success" style="color: white"><i class="bi bi-check2"></i></span>
+                                    @else
+                                        <span class="badge bg-danger" style="color: white"><i class="bi bi-x-lg"></i></span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
                                     <div class="btn-group ">
                                         <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#modalEditJamKerja"
                                             data-kode_jam_kerja="{{ $item->kode_jam_kerja }}"
@@ -111,7 +119,9 @@
                                             data-awal="{{ $item->awal_jam_masuk }}"
                                             data-masuk="{{ $item->jam_masuk }}"
                                             data-akhir="{{ $item->akhir_jam_masuk }}"
-                                            data-pulang="{{ $item->jam_pulang }}"><i class="bi bi-pencil-square"></i> Edit</a>
+                                            data-pulang="{{ $item->jam_pulang }}"
+                                            data-lintas_hari="{{ $item->lintas_hari }}"
+                                            ><i class="bi bi-pencil-square"></i> Edit</a>
                                         <a href="{{ route('admin.konfigurasi.jam.kerja.delete', $item->kode_jam_kerja) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
                                     </div>
                                 </td>
@@ -163,7 +173,13 @@
                     <div class="form-group">
                         <input type="time" class="form-control" id="jam_pulang" name="jam_pulang" placeholder=" Jam Pulang">
                     </div>
-
+                    <div class="form-group">
+                        <select name="lintas_hari" id="lintas_hari" class="form-control">
+                            <option value="">Lintas Hari</option>
+                            <option value="1">Aktif</option>
+                            <option value="0">Tidak Aktif</option>
+                        </select>
+                    </div>
                     <div class="row mt-2">
                         <div class="col-12">
                             <div class="form-group">
@@ -215,6 +231,13 @@
                         <label for="jam_pulang">Jam Pulang</label>
                         <input type="time" class="form-control" id="jam_pulang" name="jam_pulang">
                     </div>
+                    <div class="form-group">
+                        <select name="lintas_hari" id="lintas_hari" class="form-control">
+                            <option value="">Lintas Hari</option>
+                            <option value="1">Aktif</option>
+                            <option value="0">Tidak Aktif</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -259,6 +282,7 @@
             var jam_masuk = $("#jam_masuk").val();
             var akhir_jam_masuk = $("#akhir_jam_masuk").val();
             var jam_pulang = $("#jam_pulang").val();
+            var lintas_hari = $("#lintas_hari").val();
 
 
             if(kode_jam_kerja==""){
@@ -321,6 +345,16 @@
                     $("#jam_pulang").focus();
                 });
                 return false;
+            } else if (lintas_hari==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Lintas Hari Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#lintas_hari").focus();
+                });
+                return false;
             }
         });
 
@@ -333,6 +367,7 @@
         var masuk = button.data('masuk');
         var akhir = button.data('akhir');
         var pulang = button.data('pulang');
+        var lintas_hari = button.data('lintas_hari');
 
         var modal = $(this);
         modal.find('.modal-body #kode_jam_kerja').val(kode_jam_kerja);
@@ -341,6 +376,7 @@
         modal.find('.modal-body #jam_masuk').val(masuk);
         modal.find('.modal-body #akhir_jam_masuk').val(akhir);
         modal.find('.modal-body #jam_pulang').val(pulang);
+        modal.find('.modal-body #lintas_hari').val(lintas_hari);
 
         // Update form action URL with the id
         var formAction = "{{ route('admin.konfigurasi.jam.kerja.update', ['kode_jam_kerja' => ':kode_jam_kerja']) }}";

@@ -47,6 +47,7 @@ class KonfigurasiController extends Controller
         $jam_masuk = $request->jam_masuk;
         $akhir_jam_masuk = $request->akhir_jam_masuk;
         $jam_pulang = $request->jam_pulang;
+        $lintas_hari = $request->lintas_hari;
 
         try {
             $data = [
@@ -56,6 +57,7 @@ class KonfigurasiController extends Controller
                 'jam_masuk' => $jam_masuk,
                 'akhir_jam_masuk' => $akhir_jam_masuk,
                 'jam_pulang' => $jam_pulang,
+                'lintas_hari' => $lintas_hari,
                 'created_at' => Carbon::now()
             ];
 
@@ -79,6 +81,7 @@ class KonfigurasiController extends Controller
         $jam_masuk = $request->jam_masuk;
         $akhir_jam_masuk = $request->akhir_jam_masuk;
         $jam_pulang = $request->jam_pulang;
+        $lintas_hari = $request->lintas_hari;
 
         try {
             $data = [
@@ -87,6 +90,7 @@ class KonfigurasiController extends Controller
                 'jam_masuk' => $jam_masuk,
                 'akhir_jam_masuk' => $akhir_jam_masuk,
                 'jam_pulang' => $jam_pulang,
+                'lintas_hari' => $lintas_hari,
                 'updated_at' => Carbon::now()
             ];
 

@@ -167,7 +167,7 @@
 {{-- Jquery mask --}}
 <script src="{{ asset('assets/js/jquery.mask.min.js') }}"></script>
 
-    @stack('myscript')
+@stack('myscript')
 </body>
 
 </html>
