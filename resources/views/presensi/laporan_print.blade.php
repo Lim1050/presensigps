@@ -49,28 +49,6 @@
 <!-- Set "A5", "A4" or "A3" for class name -->
 <!-- Set also "landscape" if you need -->
 <body class="A4">
-    @php
-        if (! function_exists('selisih')) {
-            // Function Untuk Menghitung Selisih Jam
-            function selisih($jam_masuk, $jam_keluar)
-            {
-                list($h, $m, $s) = explode(":", $jam_masuk);
-                $dtAwal = mktime($h, $m, $s, "1", "1", "1");
-
-                list($h, $m, $s) = explode(":", $jam_keluar);
-                $dtAkhir = mktime($h, $m, $s, "1", "1", "1");
-
-                $dtSelisih = $dtAkhir - $dtAwal;
-                $totalmenit = $dtSelisih / 60;
-                $jam = explode(".", $totalmenit / 60);
-                $sisamenit = ($totalmenit / 60) - $jam[0];
-                $sisamenit2 = $sisamenit * 60;
-                $jml_jam = $jam[0];
-
-                return $jml_jam . " jam " . round($sisamenit2) . " menit";
-            }
-        }
-    @endphp
     <!-- Each sheet element should have the class "sheet" -->
     <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
     <section class="sheet padding-10mm">
@@ -168,8 +146,9 @@
                 </td>
                 <td>{{ $item->status }}</td>
                 <td>
+
                     @php
-                        $terlambat = selisih($item->jam_masuk_kerja, $item->jam_masuk);
+                        $terlambat = hitungjamkerja($item->jam_masuk_kerja, $item->jam_masuk);
                         // dd($terlambat);
                     @endphp
                     @if ($item->jam_masuk >= $item->jam_masuk_kerja)
@@ -181,8 +160,14 @@
                 <td>
                     @if ($item->jam_keluar != null)
                         @php
-                            $jumlah_jam_kerja = selisih($item->jam_masuk, $item->jam_keluar);
+                            $tgl_masuk = $item->tanggal_presensi;
+                            $tgl_pulang = $item->lintas_hari == 1 ? date('Y-m-d', strtotime('+1 days', strtotime($tgl_masuk))) : $tgl_masuk;
+                            $jam_masuk = $tgl_masuk . ' ' . $item->jam_masuk;
+                            $jam_pulang = $tgl_pulang . ' ' . $item->jam_keluar;
+
+                            $jumlah_jam_kerja = hitungjamkerja($jam_masuk, $jam_pulang);
                         @endphp
+
                         {{ $jumlah_jam_kerja }}
                     @else
                         0

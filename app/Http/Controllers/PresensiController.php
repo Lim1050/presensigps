@@ -73,9 +73,11 @@ class PresensiController extends Controller
                                     ->where('tanggal_presensi', $tgl_sebelumnya)
                                     ->where('nik', $nik)
                                     ->first();
+        // dd($cek_presensi_sebelumnya);
         $cek_lintas_hari = $cek_presensi_sebelumnya != null ? $cek_presensi_sebelumnya->lintas_hari : 0;
+        // dd($cek_lintas_hari);
 
-        if($cek_lintas_hari == 1 ){
+        if($cek_lintas_hari == 1 && $cek_presensi_sebelumnya->foto_keluar == null){
             $hari_ini = $tgl_sebelumnya;
         }
 
@@ -160,7 +162,7 @@ class PresensiController extends Controller
 
         $kode_departemen = Auth::guard('karyawan')->user()->kode_departemen;
         $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
-        $tgl_presensi = $cek_lintas_hari == 1 ? $tgl_sebelumnya : date("Y-m-d");
+        $tgl_presensi = $cek_lintas_hari == 1 && $cek_presensi_sebelumnya->foto_keluar == null ? $tgl_sebelumnya : date("Y-m-d");
         $jam_presensi = date("H:i:s");
         $jam = explode(":", $jam_presensi);
         $jam_save = $jam[0] . $jam[1] . $jam[2];
@@ -452,7 +454,7 @@ class PresensiController extends Controller
                     ->first();
 
         $presensi = DB::table('presensi')
-                    ->select('presensi.*', 'jam_kerja.jam_masuk as jam_masuk_kerja', 'jam_kerja.jam_pulang as jam_pulang_kerja', 'jam_kerja.nama_jam_kerja', 'pengajuan_izin.keterangan')
+                    ->select('presensi.*', 'jam_kerja.jam_masuk as jam_masuk_kerja', 'jam_kerja.jam_pulang as jam_pulang_kerja', 'jam_kerja.nama_jam_kerja', 'pengajuan_izin.keterangan', 'jam_kerja.lintas_hari')
                     ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
                     ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
                     ->where('presensi.nik', $nik)
@@ -508,13 +510,18 @@ class PresensiController extends Controller
             'Desember',
         ];
 
-        return view('presensi.rekap_presensi', compact('months'));
+        $departemen = DB::table('departemen')->get();
+        // dd($departemen);
+
+        return view('presensi.rekap_presensi', compact('months', 'departemen'));
     }
 
     public function RekapPrint(Request $request)
     {
         $bulan = $request->bulan;
         $tahun = $request->tahun;
+        $kode_departemen = $request->kode_departemen;
+        // dd($kode_departemen);
         $start = $tahun . "-" . $bulan . "-01";
         $dari = date("Y-m-d", strtotime($start));
         // dd($dari);
@@ -578,7 +585,8 @@ class PresensiController extends Controller
                             $field_date
                             karyawan.nik,
                             karyawan.nama_lengkap,
-                            karyawan.jabatan
+                            karyawan.jabatan,
+                            karyawan.kode_departemen
                             "
                         );
         $query->leftJoin(
@@ -601,6 +609,9 @@ class PresensiController extends Controller
                     $join->on('karyawan.nik', '=', 'presensi.nik');
             }
         );
+        if (!empty($kode_departemen)) {
+            $query->where('kode_departemen', $kode_departemen);
+        }
 
         $query->orderBy('nama_lengkap');
         $rekap = $query->get();

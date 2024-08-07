@@ -80,10 +80,10 @@
         <div class="col">
             @if ($cek_masuk > 0 && empty($foto_keluar) && ($cek_izin->status == 'izin' || $cek_izin->status == 'sakit' || $cek_izin->status == 'cuti'))
                 <button id="sudahabsen" class="btn btn-secondary btn-block"><ion-icon name="camera-outline" @disabled(true)></ion-icon>{{ $cek_izin->status }}</button>
-            @elseif ($cek_lintas_hari == 1 || ($cek_masuk > 0 && empty($foto_keluar)))
-                <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
             @elseif ($cek_masuk == 0)
-                <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>
+                    <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>
+            @elseif (($cek_masuk > 0 && empty($foto_keluar))|| ($cek_lintas_hari == 1 && $cek_presensi_sebelumnya->foto_keluar == null) )
+                <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
             @elseif ($cek_keluar == 1 && $cek_masuk == 1)
                 <button id="sudahabsen" class="btn btn-secondary btn-block"><ion-icon name="camera-outline" @disabled(true)></ion-icon>Sudah Absen</button>
             @endif
