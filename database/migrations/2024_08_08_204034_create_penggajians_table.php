@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('gaji', function (Blueprint $table) {
+        Schema::create('penggajian', function (Blueprint $table) {
             $table->id();
-            $table->string('nik')->nullable();
-            $table->integer('bulan')->nullable();
-            $table->integer('tahun')->nullable();
-            $table->integer('jumlah_masuk')->nullable();
-            $table->decimal('gaji_per_hari', 8, 2)->nullable();
-            $table->decimal('total_gaji', 8, 2)->nullable();
+            $table->string('nik')->index()->nullable();
+            $table->decimal('gaji', 10, 2)->default(0);
+            $table->decimal('potongan', 10, 2)->default(0);
+            $table->decimal('total_gaji', 10, 2)->default(0);
+            $table->date('tanggal_gaji')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gaji');
+        Schema::dropIfExists('penggajian');
     }
 };

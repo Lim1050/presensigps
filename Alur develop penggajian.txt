@@ -1,16 +1,35 @@
 Struktur table jabatan
-kode_jabatan
-nama_jabatan
+Schema::create('jabatan', function (Blueprint $table) {
+    $table->string('kode_jabatan', 255)->primary();
+    $table->string('nama_jabatan', 255);
+    $table->timestamps();
+});
 
 Struktur table gaji
-kode_gaji
-kode_jabatan
-nama_gaji
-jumlah_gaji
+Schema::create('gaji', function (Blueprint $table) {
+    $table->string('kode_gaji', 255)->primary();
+    $table->string('kode_jabatan', 255);
+    $table->string('nama_gaji', 255);
+    $table->decimal('jumlah_gaji', 10, 2);
+    $table->timestamps();
+
+    $table->foreign('kode_jabatan')->references('kode_jabatan')->on('jabatan')->onDelete('cascade');
+});
+
+Struktur tabel penggajian
+Schema::create('penggajian', function (Blueprint $table) {
+    $table->id();
+    $table->string('nik')->index();
+    $table->decimal('gaji', 10, 2);
+    $table->decimal('potongan', 10, 2)->default(0);
+    $table->decimal('total_gaji', 10, 2);
+    $table->date('tanggal_gaji');
+    $table->timestamps();
+});
 
 ubah table karyawan tambahkan kode_jabatan
 
-join table presensi, karyawan, jabatan, gaji untuk penghitungan gaji
+join table presensi, karyawan, jabatan, gaji untuk penghitungan gaji (penggajian)
 
 buat view untuk manage gaji
 
@@ -23,3 +42,71 @@ dibikin simple jdi perhitungannya berapa kali dia izin atau cuti itu yg bakal be
 ga bnyk sih yg perlu direvisi, itu doang
 sama aku ngomong yg perihal tampilan kalau loading
 ada beberapa error juga kan kemarin pas kmu ke mentor mu
+
+
+prompt gpt
+buatkan sistem penggajian pada aplikasi presensi,
+sesuaikan dengan tabel karyawan
+nik varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  nama_lengkap varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  foto varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  jabatan varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  kode_departemen varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  kode_cabang varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  no_wa varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  password varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  remember_token varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  created_at timestamp NULL DEFAULT NULL,
+  updated_at timestamp NULL DEFAULT NULL
+
+tabel presensi
+id bigint UNSIGNED NOT NULL,
+  nik varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  tanggal_presensi varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  jam_masuk time DEFAULT NULL,
+  jam_keluar time DEFAULT NULL,
+  foto_masuk varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  foto_keluar varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  lokasi_masuk text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  lokasi_keluar text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  kode_jam_kerja varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  status char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  kode_izin varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  created_at timestamp NULL DEFAULT NULL,
+  updated_at timestamp NULL DEFAULT NULL
+
+tabel pengajuan_izin
+kode_izin varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  nik varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  tanggal_izin_dari date DEFAULT NULL,
+  tanggal_izin_sampai date DEFAULT NULL,
+  jumlah_hari varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  kode_cuti varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  status enum('sakit','izin','cuti') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  status_approved tinyint(1) NOT NULL DEFAULT '0',
+  keterangan text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  surat_sakit varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  created_at timestamp NULL DEFAULT NULL,
+  updated_at timestamp NULL DEFAULT NULL
+
+Struktur table jabatan
+Schema::create('jabatan', function (Blueprint $table) {
+    $table->string('kode_jabatan', 255)->primary();
+    $table->string('nama_jabatan', 255);
+    $table->timestamps();
+});
+
+Struktur table gaji
+Schema::create('gaji', function (Blueprint $table) {
+    $table->string('kode_gaji', 255)->primary();
+    $table->string('kode_jabatan', 255);
+    $table->string('nama_gaji', 255);
+    $table->decimal('jumlah_gaji', 10, 2);
+    $table->timestamps();
+
+    $table->foreign('kode_jabatan')->references('kode_jabatan')->on('jabatan')->onDelete('cascade');
+});
+
+buatkan struktur tabel penggajian untuk menyimpan data total gaji yang didapatkan oleh karyawan berdasarkan jabatannya karena masing masing jabatan memiliki jenis gaji yang berbeda tergantung jabatannya, jumlah presensinya, jumlah tidak hadirnya (sakit/izin/cuti), dijadikan satu tabel,
+
+buatkan implementasi pada model, controller, dan view nya
