@@ -9,7 +9,11 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,12 +47,13 @@ Route::middleware(['guest:user'])->group(function () {
     Route::post('/admin/proses/login', [AuthController::class, 'AdminProsesLogin'])->name('admin.proses.login');
 });
 
-Route::middleware(['auth:user'])->group(function () {
+// Route::middleware(['auth:user'])->group(function () {
+Route::group(['middleware' => ['role:admin,user']], function () {
     // admin dashboard
     Route::get('/admin/dashboard', [DashboardController::class, 'AdminDashboard'])->name('admin.dashboard');
 
     // Karyawan Index
-    Route::get('/admin/karyawan', [KaryawanController::class, 'KaryawanIndex'])->name('admin.karyawan');
+    Route::get('/admin/karyawan', [KaryawanController::class, 'KaryawanIndex'])->name('admin.karyawan')->middleware('permission:view-karyawan,user');
     // Karyawan Store
     Route::post('/admin/karyawan/store', [KaryawanController::class, 'KaryawanStore'])->name('admin.karyawan.store');
     // Karyawan edit
@@ -67,7 +72,7 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/admin/karyawan/delete/{nik}', [KaryawanController::class, 'KaryawanDelete'])->name('admin.karyawan.delete');
 
     // departemen Index
-    Route::get('/admin/departemen', [DepartemenController::class, 'DepartemenIndex'])->name('admin.departemen');
+    Route::get('/admin/departemen', [DepartemenController::class, 'DepartemenIndex'])->name('admin.departemen')->middleware('permission:view-departemen,user');
     // departemen Store
     Route::post('/admin/departemen/store', [DepartemenController::class, 'DepartemenStore'])->name('admin.departemen.store');
     // departemen edit
@@ -152,6 +157,9 @@ Route::middleware(['auth:user'])->group(function () {
     // Konfigurasi Jam Kerja Departement delete
     Route::get('/admin/konfigurasi/jam-kerja-dept/delete/{kode_jk_dept}', [KonfigurasiController::class, 'JamKerjaDeptDelete'])->name('admin.konfigurasi.jam-kerja-dept.delete');
 
+    // Konfigurasi User
+    Route::get('/admin/konfigurasi/user', [UserController::class, 'UserIndex'])->name('admin.konfigurasi.user');
+
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
 });
@@ -222,4 +230,34 @@ Route::middleware(['auth:karyawan'])->group(function () {
     Route::get('/logout', [AuthController::class, 'Logout'])->name('logout');
 });
 
+Route::get('/create-role-permission', function () {
+    try {
+        Role::create(['name' => 'admin']);
+        Permission::create(['name' => 'view-karyawan']);
+        Permission::create(['name' => 'view-departemen']);
+        echo "Success";
+    } catch (\Throwable $th) {
+        echo "Error";
+    }
+});
 
+Route::get('/give-user-role', function() {
+    try {
+        $user = User::findOrFail(2);
+        $user->assignRole('admin');
+        echo "Success";
+    } catch (\Throwable $th) {
+        echo "Error";
+    }
+});
+
+Route::get('/give-role-permission', function() {
+    try {
+        $role = Role::findOrFail(1);
+        $permission = 'view-departemen';
+        $role->givePermissionTo($permission);
+        echo "Success";
+    } catch (\Throwable $th) {
+        echo "Error";
+    }
+});
