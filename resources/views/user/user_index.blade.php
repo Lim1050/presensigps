@@ -93,6 +93,7 @@
                         <thead>
                             <tr class="text-center">
                                 <th>No</th>
+                                <th>Username</th>
                                 <th>Nama</th>
                                 <th>Email</th>
                                 <th>Foto</th>
@@ -107,6 +108,7 @@
                             @foreach ($user as $item)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $item->username }}</td>
                                     <td class="text-center">{{ $item->name }}</td>
                                     <td class="text-center">{{ $item->email }}</td>
                                     <td class="text-center">{{ $item->foto }}</td>
@@ -116,15 +118,16 @@
                                     <td class="text-center">{{ $item->no_hp }}</td>
                                     <td class="text-center">
                                         <div class="btn-group ">
-                                            <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#modalEditJamKerja"
-                                                {{-- data-kode_jam_kerja="{{ $item->kode_jam_kerja }}"
-                                                data-nama="{{ $item->nama_jam_kerja }}"
-                                                data-awal="{{ $item->awal_jam_masuk }}"
-                                                data-masuk="{{ $item->jam_masuk }}"
-                                                data-akhir="{{ $item->akhir_jam_masuk }}"
-                                                data-pulang="{{ $item->jam_pulang }}"
-                                                data-lintas_hari="{{ $item->lintas_hari }}" --}}
-                                                ><i class="bi bi-pencil-square"></i> Edit</a>
+                                            <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#modalEditUser"
+                                                data-username="{{ $item->username }}"
+                                                data-name="{{ $item->name }}"
+                                                data-email="{{ $item->email }}"
+                                                data-foto="{{ $item->foto }}"
+                                                data-role_name="{{ $item->role_name }}"
+                                                data-nama_departemen="{{ $item->kode_departemen }}"
+                                                data-nama_cabang="{{ $item->kode_cabang }}"
+                                                data-no_hp="{{ $item->no_hp }}">
+                                                <i class="bi bi-pencil-square"></i> Edit</a>
                                             <a href="#" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
                                         </div>
                                     </td>
@@ -139,63 +142,78 @@
     </div>
 </div>
 
-<!-- Modal Input Karyawan -->
-<div class="modal fade" id="modalInputKaryawan" tabindex="-1" aria-labelledby="modalInputKaryawanLabel" aria-hidden="true">
+<!-- Modal Input User -->
+<div class="modal fade" id="modalInputUser" tabindex="-1" aria-labelledby="modalInputUserLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalInputKaryawanLabel">Input Data Karyawan</h5>
+                <h5 class="modal-title" id="modalInputUserLabel">Input Data User</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.karyawan.store') }}" method="POST" id="formKaryawan" enctype="multipart/form-data">
+                <form action="{{ route('admin.konfigurasi.user.store') }}" method="POST" id="formUser" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <div class="icon-placeholder">
-                            <i class="bi bi-upc-scan"></i>
-                            <input type="text" class="form-control" id="nik" name="nik" placeholder=" NIK">
+                            <i class="bi bi-person-badge"></i>
+                            <input type="text" class="form-control" id="username" name="username" placeholder=" username">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="icon-placeholder">
                             <i class="bi bi-person-fill"></i>
-                            <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" placeholder=" Nama Lengkap">
+                            <input type="text" class="form-control" id="name" name="name" placeholder=" Nama Lengkap">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="icon-placeholder">
+                            <i class="bi bi-envelope-fill"></i>
+                            <input type="email" class="form-control" id="email" name="email" placeholder=" Email">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="icon-placeholder">
                             <i class="bi bi-telephone-fill"></i>
-                            <input type="text" class="form-control" id="no_wa" name="no_wa" placeholder=" Nomor HP">
+                            <input type="text" class="form-control" id="no_hp" name="no_hp" placeholder=" Nomor HP">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="icon-placeholder">
-                            <i class="bi bi-person-vcard"></i>
-                            <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder=" Jabatan">
+                            <i class="bi bi-key-fill"></i>
+                            <input type="password" class="form-control" id="password" name="password" placeholder=" Password">
                         </div>
                     </div>
+
                     <div class="form-group">
-                        <select name="kode_departemen" id="kode_departement" class="form-control">
+                        <select name="role" id="role" class="form-control">
+                            <option value="">Pilih Role</option>
+                            @foreach ($role as $item)
+                            <option value="{{ $item->name }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="kode_departemen" id="kode_departemen" class="form-control">
                             <option value="">Pilih Departemen</option>
-                            {{-- @foreach ($departemen as $item)
-                            <option {{ Request('kode_departemen') == $item->kode_departemen ? 'selected' : '' }} value="{{ $item->kode_departemen }}">{{ $item->nama_departemen }}</option>
-                            @endforeach --}}
+                            @foreach ($departemen as $item)
+                            <option value="{{ $item->kode_departemen }}">{{ $item->nama_departemen }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
                         <select name="kode_cabang" id="kode_cabang" class="form-control">
                             <option value="">Pilih Cabang</option>
-                            {{-- @foreach ($cabang as $item)
-                            <option {{ Request('kode_cabang') == $item->kode_cabang ? 'selected' : '' }} value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
-                            @endforeach --}}
+                            @foreach ($cabang as $item)
+                            <option value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="input-group mb-3">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="foto" name="foto">
-                            <label class="custom-file-label" for="foto"  aria-describedby="inputGroupFileAddon02"><i class="bi bi-image"></i> Pilih Foto Karyawan</label>
+                            <label class="custom-file-label" for="foto"  aria-describedby="inputGroupFileAddon02"><i class="bi bi-image"></i> Pilih Foto User</label>
                         </div>
                     </div>
                     <div class="preview-container">
@@ -215,13 +233,97 @@
     </div>
 </div>
 
+{{-- modal edit user --}}
+<div class="modal fade" id="modalEditUser" tabindex="-1" aria-labelledby="modalEditUserLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditUserLabel">Edit Data User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.konfigurasi.user.update', ['username' => 0]) }}" method="POST" id="formEditUser" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-group">
+                        <div class="icon-placeholder">
+                            <i class="bi bi-person-badge"></i>
+                            <input type="text" class="form-control" id="edit_username" name="username" placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="icon-placeholder">
+                            <i class="bi bi-person-fill"></i>
+                            <input type="text" class="form-control" id="edit_name" name="name" placeholder="Nama Lengkap">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="icon-placeholder">
+                            <i class="bi bi-envelope-fill"></i>
+                            <input type="email" class="form-control" id="edit_email" name="email" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="icon-placeholder">
+                            <i class="bi bi-telephone-fill"></i>
+                            <input type="text" class="form-control" id="edit_no_hp" name="no_hp" placeholder="Nomor HP">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <select name="role" id="edit_role" class="form-control">
+                            <option value="">Pilih Role</option>
+                            @foreach ($role as $item)
+                                <option value="{{ $item->name }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="kode_departemen" id="edit_kode_departemen" class="form-control">
+                            <option value="">Pilih Departemen</option>
+                            @foreach ($departemen as $item)
+                                <option value="{{ $item->kode_departemen }}">{{ $item->nama_departemen }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="kode_cabang" id="edit_kode_cabang" class="form-control">
+                            <option value="">Pilih Cabang</option>
+                            @foreach ($cabang as $item)
+                                <option value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="edit_foto" name="foto" accept="image/*">
+                            <label class="custom-file-label" for="foto"><i class="bi bi-image"></i> Pilih Foto User</label>
+                        </div>
+                    </div>
+                    <div class="preview-container">
+                        <img id="edit_imgPreview" src="#" alt="Your Image" style="max-width: 100%; height: auto;">
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-arrow-bar-up"></i> Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('myscript')
 <script>
 
-    $(function(){
-        $("#nik").mask("000000000");
-        $("#no_wa").mask("0000000000000");
-    });
+    // $(function(){
+    //     $("#nik").mask("000000000");
+    //     $("#no_wa").mask("0000000000000");
+    // });
 
     // preview image
     $(document).ready(function () {
@@ -263,63 +365,85 @@
     });
 
     // Validasi form
-        $("#formKaryawan").submit(function(){
-            var nik = $("#nik").val();
-            var nama_lengkap = $("#nama_lengkap").val();
-            var no_wa = $("#no_wa").val();
-            var jabatan = $("#jabatan").val();
-            var kode_departement = $("#kode_departement").val();
+        $("#formUser").submit(function(){
+            var username = $("#username").val();
+            var name = $("#name").val();
+            var email = $("#email").val();
+            var no_hp = $("#no_hp").val();
+            var password = $("#password").val();
+            var role = $("#role").val();
+            var kode_departemen = $("#kode_departemen").val();
             var kode_cabang = $("#kode_cabang").val();
             var foto = $("#foto").val();
 
-            if(nik==""){
+            if(username==""){
                 Swal.fire({
                 title: 'Oops!',
-                text: 'NIK Harus Diisi!',
+                text: 'Username Harus Diisi!',
                 icon: 'warning',
                 confirmButtonText: 'Ok'
                 }).then((result)=>{
-                    $("#nik").focus();
+                    $("#username").focus();
                 });
                 return false;
-            } else if (nama_lengkap==""){
+            } else if (name==""){
                 Swal.fire({
                 title: 'Oops!',
-                text: 'Nama Harus Diisi!',
+                text: 'Nama Lengkap Harus Diisi!',
                 icon: 'warning',
                 confirmButtonText: 'Ok'
                 }).then((result)=>{
-                    $("#nama_lengkap").focus();
+                    $("#name").focus();
                 });
                 return false;
-            } else if (no_wa==""){
+            } else if (email==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Email Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#email").focus();
+                });
+                return false;
+            } else if (no_hp==""){
                 Swal.fire({
                 title: 'Oops!',
                 text: 'Nomor HP Harus Diisi!',
                 icon: 'warning',
                 confirmButtonText: 'Ok'
                 }).then((result)=>{
-                    $("#no_wa").focus();
+                    $("#no_hp").focus();
                 });
                 return false;
-            } else if (jabatan==""){
+            } else if (password==""){
                 Swal.fire({
                 title: 'Oops!',
-                text: 'Jabatan Harus Diisi!',
+                text: 'Password Harus Diisi!',
                 icon: 'warning',
                 confirmButtonText: 'Ok'
                 }).then((result)=>{
-                    $("#jabatan").focus();
+                    $("#password").focus();
                 });
                 return false;
-            } else if (kode_departement==""){
+            } else if (role==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Role Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#role").focus();
+                });
+                return false;
+            } else if (kode_departemen==""){
                 Swal.fire({
                 title: 'Oops!',
                 text: 'Departemen Harus Diisi!',
                 icon: 'warning',
                 confirmButtonText: 'Ok'
                 }).then((result)=>{
-                    $("#kode_departement").focus();
+                    $("#kode_departemen").focus();
                 });
                 return false;
             } else if (kode_cabang==""){
@@ -344,6 +468,49 @@
                 return false;
             }
         });
+
+    // Send Data to modal edit user
+    $('#modalEditUser').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var username = button.data('username');
+    var name = button.data('name');
+    var email = button.data('email');
+    var foto = button.data('foto');
+    var role_name = button.data('role_name');
+    var nama_departemen = button.data('nama_departemen');
+    var nama_cabang = button.data('nama_cabang');
+    var no_hp = button.data('no_hp');
+
+    var modal = $(this);
+    modal.find('.modal-body #edit_username').val(username);
+    modal.find('.modal-body #edit_name').val(name);
+    modal.find('.modal-body #edit_email').val(email);
+    modal.find('.modal-body #edit_role').val(role_name);
+    modal.find('.modal-body #edit_kode_departemen').val(nama_departemen);
+    modal.find('.modal-body #edit_kode_cabang').val(nama_cabang);
+    modal.find('.modal-body #edit_no_hp').val(no_hp);
+
+    // Pratinjau gambar jika ada
+    if (foto) {
+        modal.find('.modal-body #edit_imgPreview').attr('src', '/public/uploads/user/' + foto);
+    } else {
+        modal.find('.modal-body #edit_imgPreview').attr('src', '#');
+    }
+
+    // Update form action URL with the username
+    var formAction = "{{ route('admin.konfigurasi.user.update', ['username' => ':username']) }}";
+    formAction = formAction.replace(':username', username);
+    $('#formEditUser').attr('action', formAction);
+});
+
+// Pratinjau gambar saat mengupload file baru
+$('#edit_foto').change(function(){
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        $('#edit_imgPreview').attr('src', e.target.result);
+    }
+    reader.readAsDataURL(this.files[0]);
+});
 </script>
 
 

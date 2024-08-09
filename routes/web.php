@@ -159,6 +159,10 @@ Route::group(['middleware' => ['role:admin,user']], function () {
 
     // Konfigurasi User
     Route::get('/admin/konfigurasi/user', [UserController::class, 'UserIndex'])->name('admin.konfigurasi.user');
+    // Konfigurasi User Store
+    Route::post('/admin/konfigurasi/user/store', [UserController::class, 'UserStore'])->name('admin.konfigurasi.user.store');
+    // Konfigurasi User Update
+    Route::put('/admin/konfigurasi/user/update/{username}', [UserController::class, 'UserUpdate'])->name('admin.konfigurasi.user.update');
 
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
@@ -232,9 +236,9 @@ Route::middleware(['auth:karyawan'])->group(function () {
 
 Route::get('/create-role-permission', function () {
     try {
-        Role::create(['name' => 'admin']);
-        Permission::create(['name' => 'view-karyawan']);
-        Permission::create(['name' => 'view-departemen']);
+        Role::create(['name' => 'admin-presensi']);
+        // Permission::create(['name' => 'view-karyawan']);
+        // Permission::create(['name' => 'view-departemen']);
         echo "Success";
     } catch (\Throwable $th) {
         echo "Error";
