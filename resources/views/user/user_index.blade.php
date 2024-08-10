@@ -28,6 +28,14 @@
         object-fit: cover;
         display: none; /* Initially hide the image */
     }
+
+    #edit_imgPreview {
+    display: block; /* Pastikan gambar ditampilkan */
+    visibility: visible; /* Pastikan gambar terlihat */
+    opacity: 1; /* Pastikan gambar tidak transparan */
+    max-width: 100%; /* Gambar disesuaikan dengan lebar container */
+    height: auto; /* Menjaga rasio gambar */
+}
 </style>
 
 <!-- Page Heading -->
@@ -119,15 +127,18 @@
                                     <td class="text-center">
                                         <div class="btn-group ">
                                             <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#modalEditUser"
+                                                data-id="{{ $item->id }}"
                                                 data-username="{{ $item->username }}"
                                                 data-name="{{ $item->name }}"
                                                 data-email="{{ $item->email }}"
+                                                {{-- data-password="{{ $item->password }}" --}}
                                                 data-foto="{{ $item->foto }}"
-                                                data-role_name="{{ $item->role_name }}"
+                                                data-role_id="{{ $item->role_id }}"
                                                 data-nama_departemen="{{ $item->kode_departemen }}"
                                                 data-nama_cabang="{{ $item->kode_cabang }}"
                                                 data-no_hp="{{ $item->no_hp }}">
-                                                <i class="bi bi-pencil-square"></i> Edit</a>
+                                                <i class="bi bi-pencil-square"></i> Edit
+                                            </a>
                                             <a href="#" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
                                         </div>
                                     </td>
@@ -244,9 +255,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.konfigurasi.user.update', ['username' => 0]) }}" method="POST" id="formEditUser" enctype="multipart/form-data">
+                <form action="{{ route('admin.konfigurasi.user.update', ['id' => 0]) }}" method="POST" id="formEditUser" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+
+                    <input type="hidden" class="form-control" id="id" name="id" placeholder="id">
+
                     <div class="form-group">
                         <div class="icon-placeholder">
                             <i class="bi bi-person-badge"></i>
@@ -267,6 +281,18 @@
                     </div>
                     <div class="form-group">
                         <div class="icon-placeholder">
+                            <i class="bi bi-key-fill"></i>
+                            <input type="password" class="form-control" id="edit_password" name="password" placeholder="Password Baru (opsional)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="icon-placeholder">
+                            <i class="bi bi-key-fill"></i>
+                            <input type="password" class="form-control" id="edit_password_confirmation" name="password_confirmation" placeholder="Konfirmasi Password Baru">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="icon-placeholder">
                             <i class="bi bi-telephone-fill"></i>
                             <input type="text" class="form-control" id="edit_no_hp" name="no_hp" placeholder="Nomor HP">
                         </div>
@@ -275,7 +301,7 @@
                         <select name="role" id="edit_role" class="form-control">
                             <option value="">Pilih Role</option>
                             @foreach ($role as $item)
-                                <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -298,7 +324,7 @@
                     <div class="input-group mb-3">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="edit_foto" name="foto" accept="image/*">
-                            <label class="custom-file-label" for="foto"><i class="bi bi-image"></i> Pilih Foto User</label>
+                            <label class="custom-file-label" for="edit_foto"><i class="bi bi-image"></i> Pilih Foto User</label>
                         </div>
                     </div>
                     <div class="preview-container">
@@ -469,37 +495,43 @@
             }
         });
 
-    // Send Data to modal edit user
-    $('#modalEditUser').on('show.bs.modal', function (event) {
+    // Mengisi Data pada Modal Edit User
+$('#modalEditUser').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
+    var id = button.data('id');
     var username = button.data('username');
     var name = button.data('name');
     var email = button.data('email');
+    // var password = button.data('password');
     var foto = button.data('foto');
-    var role_name = button.data('role_name');
+    var role_id = button.data('role_id');
     var nama_departemen = button.data('nama_departemen');
     var nama_cabang = button.data('nama_cabang');
     var no_hp = button.data('no_hp');
 
     var modal = $(this);
+    modal.find('.modal-body #id').val(id);
     modal.find('.modal-body #edit_username').val(username);
     modal.find('.modal-body #edit_name').val(name);
     modal.find('.modal-body #edit_email').val(email);
-    modal.find('.modal-body #edit_role').val(role_name);
+    modal.find('.modal-body #edit_role').val(role_id);
     modal.find('.modal-body #edit_kode_departemen').val(nama_departemen);
     modal.find('.modal-body #edit_kode_cabang').val(nama_cabang);
     modal.find('.modal-body #edit_no_hp').val(no_hp);
+     // Bersihkan input password saat modal dibuka
+    modal.find('.modal-body #edit_password').val('');
+    modal.find('.modal-body #edit_password_confirmation').val('');
 
     // Pratinjau gambar jika ada
     if (foto) {
-        modal.find('.modal-body #edit_imgPreview').attr('src', '/public/uploads/user/' + foto);
+        modal.find('.modal-body #edit_imgPreview').attr('src', '{{ Storage::url('uploads/user/') }}' + foto);
     } else {
         modal.find('.modal-body #edit_imgPreview').attr('src', '#');
     }
 
-    // Update form action URL with the username
-    var formAction = "{{ route('admin.konfigurasi.user.update', ['username' => ':username']) }}";
-    formAction = formAction.replace(':username', username);
+    // Update URL form action dengan username yang sesuai
+    var formAction = "{{ route('admin.konfigurasi.user.update', ['id' => ':id']) }}";
+    formAction = formAction.replace(':id', id);
     $('#formEditUser').attr('action', formAction);
 });
 
@@ -507,6 +539,7 @@
 $('#edit_foto').change(function(){
     var reader = new FileReader();
     reader.onload = function(e) {
+        // Gantikan gambar lama dengan gambar baru yang diunggah
         $('#edit_imgPreview').attr('src', e.target.result);
     }
     reader.readAsDataURL(this.files[0]);

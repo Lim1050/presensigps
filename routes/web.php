@@ -162,7 +162,7 @@ Route::group(['middleware' => ['role:admin,user']], function () {
     // Konfigurasi User Store
     Route::post('/admin/konfigurasi/user/store', [UserController::class, 'UserStore'])->name('admin.konfigurasi.user.store');
     // Konfigurasi User Update
-    Route::put('/admin/konfigurasi/user/update/{username}', [UserController::class, 'UserUpdate'])->name('admin.konfigurasi.user.update');
+    Route::put('/admin/konfigurasi/user/update/{id}', [UserController::class, 'UserUpdate'])->name('admin.konfigurasi.user.update');
 
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
