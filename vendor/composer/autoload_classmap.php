@@ -20,6 +20,7 @@ return array(
     'App\\Http\\Controllers\\KonfigurasiController' => $baseDir . '/app/Http/Controllers/KonfigurasiController.php',
     'App\\Http\\Controllers\\PresensiController' => $baseDir . '/app/Http/Controllers/PresensiController.php',
     'App\\Http\\Controllers\\ProfileController' => $baseDir . '/app/Http/Controllers/ProfileController.php',
+    'App\\Http\\Controllers\\RoleController' => $baseDir . '/app/Http/Controllers/RoleController.php',
     'App\\Http\\Controllers\\UserController' => $baseDir . '/app/Http/Controllers/UserController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',

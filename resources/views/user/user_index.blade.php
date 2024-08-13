@@ -69,15 +69,15 @@
                     <div class="row mt-2">
                         <div class="col-6">
                             <div class="form-group">
-                                <input type="text" name="nama" id="nama" class="form-control" placeholder="Cari Nama User" value="{{ Request('nama') }}">
+                                <input type="text" name="cari_nama" id="cari_nama" class="form-control" placeholder="Cari Nama User" value="{{ Request('cari_nama') }}">
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group">
-                                <select name="role_name" id="role_name" class="form-control">
+                                <select name="cari_role" id="cari_role" class="form-control">
                                     <option value="">Pilih Role</option>
-                                    @foreach ($user as $item)
-                                    <option {{ Request('role_name') == $item->role_name ? 'selected' : '' }} value="{{ $item->role_name }}">{{ $item->role_name }}</option>
+                                    @foreach ($role as $item)
+                                    <option {{ Request('cari_role') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -119,7 +119,18 @@
                                     <td class="text-center">{{ $item->username }}</td>
                                     <td class="text-center">{{ $item->name }}</td>
                                     <td class="text-center">{{ $item->email }}</td>
-                                    <td class="text-center">{{ $item->foto }}</td>
+                                    <td>
+                                    <div class="text-center">
+                                        @if (empty($item->foto))
+                                            <img src="{{ asset('assets/img/sample/avatar/avatar1.jpg') }}" class="img-thumbnail" style="width: 70px; height: 70px;" alt="...">
+                                        @else
+                                            @php
+                                                $path = Storage::url("uploads/user/".$item->foto)
+                                            @endphp
+                                            <img src="{{ url($path) }}" class="img-thumbnail" style="width: 70px; height: 70px;" alt="...">
+                                        @endif
+                                    </div>
+                                </td>
                                     <td class="text-center">{{ $item->role_name }}</td>
                                     <td class="text-center">{{ $item->nama_departemen }}</td>
                                     <td class="text-center">{{ $item->nama_cabang }}</td>
@@ -133,20 +144,20 @@
                                                 data-email="{{ $item->email }}"
                                                 {{-- data-password="{{ $item->password }}" --}}
                                                 data-foto="{{ $item->foto }}"
-                                                data-role_id="{{ $item->role_id }}"
+                                                data-role_name="{{ $item->role_name }}"
                                                 data-nama_departemen="{{ $item->kode_departemen }}"
                                                 data-nama_cabang="{{ $item->kode_cabang }}"
                                                 data-no_hp="{{ $item->no_hp }}">
                                                 <i class="bi bi-pencil-square"></i> Edit
                                             </a>
-                                            <a href="#" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
+                                            <a href="{{ route('admin.konfigurasi.user.delete', $item->id) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
                                         </div>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    {{-- {{ $karyawan->links('vendor.pagination.bootstrap-5') }} --}}
+                    {{ $user->links('vendor.pagination.bootstrap-5') }}
                 </div>
             </div>
         </div>
@@ -301,7 +312,7 @@
                         <select name="role" id="edit_role" class="form-control">
                             <option value="">Pilih Role</option>
                             @foreach ($role as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                <option value="{{ $item->name }}">{{ $item->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -504,7 +515,7 @@ $('#modalEditUser').on('show.bs.modal', function (event) {
     var email = button.data('email');
     // var password = button.data('password');
     var foto = button.data('foto');
-    var role_id = button.data('role_id');
+    var role_name = button.data('role_name');
     var nama_departemen = button.data('nama_departemen');
     var nama_cabang = button.data('nama_cabang');
     var no_hp = button.data('no_hp');
@@ -514,7 +525,7 @@ $('#modalEditUser').on('show.bs.modal', function (event) {
     modal.find('.modal-body #edit_username').val(username);
     modal.find('.modal-body #edit_name').val(name);
     modal.find('.modal-body #edit_email').val(email);
-    modal.find('.modal-body #edit_role').val(role_id);
+    modal.find('.modal-body #edit_role').val(role_name);
     modal.find('.modal-body #edit_kode_departemen').val(nama_departemen);
     modal.find('.modal-body #edit_kode_cabang').val(nama_cabang);
     modal.find('.modal-body #edit_no_hp').val(no_hp);

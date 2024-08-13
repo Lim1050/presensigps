@@ -9,6 +9,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -47,13 +48,13 @@ Route::middleware(['guest:user'])->group(function () {
     Route::post('/admin/proses/login', [AuthController::class, 'AdminProsesLogin'])->name('admin.proses.login');
 });
 
-// Route::middleware(['auth:user'])->group(function () {
-Route::group(['middleware' => ['role:admin,user']], function () {
+Route::middleware(['auth:user'])->group(function () {
+// Route::group(['middleware' => ['role:super-admin|admin|development,user']], function () {
     // admin dashboard
     Route::get('/admin/dashboard', [DashboardController::class, 'AdminDashboard'])->name('admin.dashboard');
 
     // Karyawan Index
-    Route::get('/admin/karyawan', [KaryawanController::class, 'KaryawanIndex'])->name('admin.karyawan')->middleware('permission:view-karyawan,user');
+    Route::get('/admin/karyawan', [KaryawanController::class, 'KaryawanIndex'])->name('admin.karyawan');
     // Karyawan Store
     Route::post('/admin/karyawan/store', [KaryawanController::class, 'KaryawanStore'])->name('admin.karyawan.store');
     // Karyawan edit
@@ -72,7 +73,7 @@ Route::group(['middleware' => ['role:admin,user']], function () {
     Route::get('/admin/karyawan/delete/{nik}', [KaryawanController::class, 'KaryawanDelete'])->name('admin.karyawan.delete');
 
     // departemen Index
-    Route::get('/admin/departemen', [DepartemenController::class, 'DepartemenIndex'])->name('admin.departemen')->middleware('permission:view-departemen,user');
+    Route::get('/admin/departemen', [DepartemenController::class, 'DepartemenIndex'])->name('admin.departemen');
     // departemen Store
     Route::post('/admin/departemen/store', [DepartemenController::class, 'DepartemenStore'])->name('admin.departemen.store');
     // departemen edit
@@ -163,6 +164,24 @@ Route::group(['middleware' => ['role:admin,user']], function () {
     Route::post('/admin/konfigurasi/user/store', [UserController::class, 'UserStore'])->name('admin.konfigurasi.user.store');
     // Konfigurasi User Update
     Route::put('/admin/konfigurasi/user/update/{id}', [UserController::class, 'UserUpdate'])->name('admin.konfigurasi.user.update');
+    // Konfigurasi User delete
+    Route::get('/admin/konfigurasi/user/delete/{id}', [UserController::class, 'UserDelete'])->name('admin.konfigurasi.user.delete');
+
+    // Konfigurasi Role
+    Route::get('/admin/konfigurasi/role', [RoleController::class, 'RoleIndex'])->name('admin.konfigurasi.role');
+
+    // Konfigurasi Permission
+    Route::get('/admin/konfigurasi/permission', [RoleController::class, 'PermissionIndex'])->name('admin.konfigurasi.permission');
+    // Konfigurasi Permission Import
+    Route::get('/admin/konfigurasi/permission/import', [RoleController::class, 'PermissionImport'])->name('admin.konfigurasi.permission.import');
+    // Konfigurasi Permission Export
+    Route::get('/admin/konfigurasi/permission/export', [RoleController::class, 'PermissionExport'])->name('admin.konfigurasi.permission.export');
+    // Konfigurasi Permission Store
+    Route::post('/admin/konfigurasi/permission/store', [RoleController::class, 'PermissionStore'])->name('admin.konfigurasi.permission.store');
+    // Konfigurasi Permission Update
+    Route::put('/admin/konfigurasi/permission/update/{id}', [RoleController::class, 'PermissionUpdate'])->name('admin.konfigurasi.permission.update');
+    // Konfigurasi Permission delete
+    Route::get('/admin/konfigurasi/permission/delete/{id}', [RoleController::class, 'PermissionDelete'])->name('admin.konfigurasi.permission.delete');
 
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
@@ -234,34 +253,34 @@ Route::middleware(['auth:karyawan'])->group(function () {
     Route::get('/logout', [AuthController::class, 'Logout'])->name('logout');
 });
 
-Route::get('/create-role-permission', function () {
-    try {
-        Role::create(['name' => 'admin-presensi']);
-        // Permission::create(['name' => 'view-karyawan']);
-        // Permission::create(['name' => 'view-departemen']);
-        echo "Success";
-    } catch (\Throwable $th) {
-        echo "Error";
-    }
-});
+// Route::get('/create-role-permission', function () {
+//     try {
+//         Role::create(['name' => 'admin-presensi']);
+//         // Permission::create(['name' => 'view-karyawan']);
+//         // Permission::create(['name' => 'view-departemen']);
+//         echo "Success";
+//     } catch (\Throwable $th) {
+//         echo "Error";
+//     }
+// });
 
-Route::get('/give-user-role', function() {
-    try {
-        $user = User::findOrFail(2);
-        $user->assignRole('admin');
-        echo "Success";
-    } catch (\Throwable $th) {
-        echo "Error";
-    }
-});
+// Route::get('/give-user-role', function() {
+//     try {
+//         $user = User::findOrFail(2);
+//         $user->assignRole('admin');
+//         echo "Success";
+//     } catch (\Throwable $th) {
+//         echo "Error";
+//     }
+// });
 
-Route::get('/give-role-permission', function() {
-    try {
-        $role = Role::findOrFail(1);
-        $permission = 'view-departemen';
-        $role->givePermissionTo($permission);
-        echo "Success";
-    } catch (\Throwable $th) {
-        echo "Error";
-    }
-});
+// Route::get('/give-role-permission', function() {
+//     try {
+//         $role = Role::findOrFail(1);
+//         $permission = 'view-departemen';
+//         $role->givePermissionTo($permission);
+//         echo "Success";
+//     } catch (\Throwable $th) {
+//         echo "Error";
+//     }
+// });
