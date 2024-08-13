@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 13, 2024 at 03:06 PM
+-- Generation Time: Aug 13, 2024 at 04:02 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -617,7 +617,11 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `group_name`, `created_at
 (13, 'konfigurasi.jam-kerja-departemen', 'user', 'Konfigurasi', '2024-08-13 07:04:54', '2024-08-13 07:04:54'),
 (14, 'konfigurasi.user', 'user', 'Konfigurasi', '2024-08-13 07:05:08', '2024-08-13 07:05:08'),
 (15, 'konfigurasi.role', 'user', 'Konfigurasi', '2024-08-13 07:05:16', '2024-08-13 07:05:16'),
-(16, 'konfigurasi.permission', 'user', 'Konfigurasi', '2024-08-13 07:05:29', '2024-08-13 07:05:29');
+(16, 'konfigurasi.permission', 'user', 'Konfigurasi', '2024-08-13 07:05:29', '2024-08-13 07:05:29'),
+(18, 'dashboard.test', 'user', 'Dashboard', '2024-08-13 08:59:31', '2024-08-13 08:59:31'),
+(19, 'laporan.test', 'user', 'Laporan', '2024-08-13 08:59:31', '2024-08-13 08:59:31'),
+(20, 'master.test', 'user', 'Master', '2024-08-13 08:59:31', '2024-08-13 08:59:31'),
+(21, 'konfigurasi.test', 'user', 'Konfigurasi', '2024-08-13 08:59:31', '2024-08-13 08:59:31');
 
 -- --------------------------------------------------------
 
@@ -969,7 +973,7 @@ ALTER TABLE `penggajian`
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`

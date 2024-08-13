@@ -173,7 +173,7 @@
             </div>
             <div class="modal-body">
                 {{-- {{ route('admin.konfigurasi.permission.store') }} --}}
-                <form action="{{ route('admin.konfigurasi.permission.store') }}" method="POST" id="formPermission" enctype="multipart/form-data">
+                <form action="{{ route('admin.konfigurasi.permission.import') }}" method="POST" id="formPermission" enctype="multipart/form-data">
                     @csrf
                     <div class="input-group mb-3">
                         <div class="custom-file">

@@ -173,7 +173,7 @@ Route::middleware(['auth:user'])->group(function () {
     // Konfigurasi Permission
     Route::get('/admin/konfigurasi/permission', [RoleController::class, 'PermissionIndex'])->name('admin.konfigurasi.permission');
     // Konfigurasi Permission Import
-    Route::get('/admin/konfigurasi/permission/import', [RoleController::class, 'PermissionImport'])->name('admin.konfigurasi.permission.import');
+    Route::post('/admin/konfigurasi/permission/import', [RoleController::class, 'PermissionImport'])->name('admin.konfigurasi.permission.import');
     // Konfigurasi Permission Export
     Route::get('/admin/konfigurasi/permission/export', [RoleController::class, 'PermissionExport'])->name('admin.konfigurasi.permission.export');
     // Konfigurasi Permission Store

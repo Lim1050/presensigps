@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PermissionExport;
 use App\Http\Controllers\Controller;
+use App\Imports\PermissionImport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -51,8 +54,23 @@ class RoleController extends Controller
         try {
             Permission::find($id)->delete();
             return redirect()->back()->with('success', 'Data Berhasil Dihapus');
-        } catch (\Throwable $th) {
+        } catch (\Exception $e) {
             return redirect()->back()->with(['error' => 'Data Gagal Dihapus!']);
+        }
+    }
+
+    public function PermissionExport()
+    {
+        return Excel::download(new PermissionExport, 'permission.xlsx');
+    }
+
+    public function PermissionImport(Request $request)
+    {
+        try {
+            Excel::import(new PermissionImport, $request->import_file);
+            return redirect()->back()->with('success', 'Data Berhasil Diimport');
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => 'Data Gagal Diimport!']);
         }
     }
 
