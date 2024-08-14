@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 13, 2024 at 04:02 PM
+-- Generation Time: Aug 14, 2024 at 04:12 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -507,16 +507,6 @@ CREATE TABLE `model_has_roles` (
   `model_id` bigint UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `model_has_roles`
---
-
-INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
-(2, 'App\\Models\\User', 1),
-(3, 'App\\Models\\User', 2),
-(4, 'App\\Models\\User', 15),
-(1, 'App\\Models\\User', 16);
-
 -- --------------------------------------------------------
 
 --
@@ -745,10 +735,11 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'web', '2024-08-08 06:57:58', '2024-08-08 06:57:58'),
-(2, 'super-admin', 'web', '2024-08-09 07:01:29', '2024-08-09 07:01:29'),
-(3, 'development', 'web', '2024-08-09 07:02:09', '2024-08-09 07:02:09'),
-(4, 'admin-presensi', 'web', '2024-08-09 07:02:46', '2024-08-09 07:02:46');
+(6, 'admin', 'user', '2024-08-14 06:43:55', '2024-08-14 06:46:24'),
+(7, 'super-admin', 'user', '2024-08-14 06:44:04', '2024-08-14 06:46:30'),
+(8, 'development', 'user', '2024-08-14 06:44:12', '2024-08-14 06:46:36'),
+(9, 'admin-presensi', 'user', '2024-08-14 06:44:23', '2024-08-14 06:46:42'),
+(10, 'admin-gaji', 'user', '2024-08-14 06:44:33', '2024-08-14 06:44:33');
 
 -- --------------------------------------------------------
 
@@ -760,6 +751,80 @@ CREATE TABLE `role_has_permissions` (
   `permission_id` bigint UNSIGNED NOT NULL,
   `role_id` bigint UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `role_has_permissions`
+--
+
+INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
+(3, 6),
+(4, 6),
+(5, 6),
+(6, 6),
+(7, 6),
+(8, 6),
+(9, 6),
+(10, 6),
+(11, 6),
+(12, 6),
+(13, 6),
+(18, 6),
+(19, 6),
+(20, 6),
+(3, 7),
+(4, 7),
+(5, 7),
+(6, 7),
+(7, 7),
+(8, 7),
+(9, 7),
+(10, 7),
+(11, 7),
+(12, 7),
+(13, 7),
+(14, 7),
+(15, 7),
+(16, 7),
+(18, 7),
+(19, 7),
+(20, 7),
+(21, 7),
+(3, 8),
+(4, 8),
+(5, 8),
+(6, 8),
+(7, 8),
+(8, 8),
+(9, 8),
+(10, 8),
+(11, 8),
+(12, 8),
+(13, 8),
+(14, 8),
+(15, 8),
+(16, 8),
+(18, 8),
+(19, 8),
+(20, 8),
+(21, 8),
+(3, 9),
+(4, 9),
+(5, 9),
+(6, 9),
+(7, 9),
+(11, 9),
+(12, 9),
+(13, 9),
+(18, 9),
+(19, 9),
+(6, 10),
+(7, 10),
+(8, 10),
+(9, 10),
+(10, 10),
+(11, 10),
+(19, 10),
+(20, 10);
 
 -- --------------------------------------------------------
 
@@ -991,7 +1056,7 @@ ALTER TABLE `presensi`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`

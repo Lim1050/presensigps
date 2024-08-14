@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Exports\PermissionExport;
 use App\Http\Controllers\Controller;
 use App\Imports\PermissionImport;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -74,4 +76,73 @@ class RoleController extends Controller
         }
     }
 
-}
+    public function Roleindex()
+    {
+        $role = Role::all();
+
+        return view('user.role_index', compact('role'));
+    }
+
+    public function RoleStore(Request $request)
+    {
+        try {
+            Role::create([
+                'name' => $request->name,
+                'created_at' => Carbon::now()
+            ]);
+        return redirect()->back()->with('success', 'Data Berhasil Disimpan');
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
+        }
+    }
+
+    public function RoleUpdate(Request $request, $id)
+    {
+        // $id = $request->id;
+        try {
+            Role::find($id)->update([
+                'name' => $request->name,
+                'updated_at' => Carbon::now()
+            ]);
+        return redirect()->back()->with('success', 'Data Berhasil Diupdate');
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => 'Data Gagal Diupdate!']);
+        }
+    }
+
+    public function RoleDelete($id)
+    {
+        try {
+            Role::find($id)->delete();
+            return redirect()->back()->with('success', 'Data Berhasil Dihapus');
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => 'Data Gagal Dihapus!']);
+        }
+    }
+
+    public function RolesInPermissionsIndex()
+    {
+        $roles = Role::all();
+        $permissions = Permission::all();
+        $permission_groups = User::GetPermissionGroup();
+        return view('user.add_roles_in_permissions_index', compact('roles', 'permissions', 'permission_groups'));
+    }
+
+    public function RolesInPermissionsStore(Request $request)
+    {
+        $data = array();
+        $permissions = $request->permission;
+
+        try {
+            foreach ($permissions as $key => $item) {
+                $data['role_id'] = $request->role_id;
+                $data['permission_id'] = $item;
+
+                DB::table('role_has_permissions')->insert($data);
+            }
+            return redirect()->back()->with('success', 'Data Berhasil Disimpan');
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
+        }
+        }
+    }

@@ -169,6 +169,16 @@ Route::middleware(['auth:user'])->group(function () {
 
     // Konfigurasi Role
     Route::get('/admin/konfigurasi/role', [RoleController::class, 'RoleIndex'])->name('admin.konfigurasi.role');
+    // Konfigurasi role Import
+    Route::post('/admin/konfigurasi/role/import', [RoleController::class, 'RoleImport'])->name('admin.konfigurasi.role.import');
+    // Konfigurasi role Export
+    Route::get('/admin/konfigurasi/role/export', [RoleController::class, 'RoleExport'])->name('admin.konfigurasi.role.export');
+    // Konfigurasi role Store
+    Route::post('/admin/konfigurasi/role/store', [RoleController::class, 'RoleStore'])->name('admin.konfigurasi.role.store');
+    // Konfigurasi role Update
+    Route::put('/admin/konfigurasi/role/update/{id}', [RoleController::class, 'RoleUpdate'])->name('admin.konfigurasi.role.update');
+    // Konfigurasi role delete
+    Route::get('/admin/konfigurasi/role/delete/{id}', [RoleController::class, 'RoleDelete'])->name('admin.konfigurasi.role.delete');
 
     // Konfigurasi Permission
     Route::get('/admin/konfigurasi/permission', [RoleController::class, 'PermissionIndex'])->name('admin.konfigurasi.permission');
@@ -182,6 +192,11 @@ Route::middleware(['auth:user'])->group(function () {
     Route::put('/admin/konfigurasi/permission/update/{id}', [RoleController::class, 'PermissionUpdate'])->name('admin.konfigurasi.permission.update');
     // Konfigurasi Permission delete
     Route::get('/admin/konfigurasi/permission/delete/{id}', [RoleController::class, 'PermissionDelete'])->name('admin.konfigurasi.permission.delete');
+
+    // Konfigurasi Roles in Permission
+    Route::get('/admin/konfigurasi/add-role-in-permission', [RoleController::class, 'RolesInPermissionsIndex'])->name('admin.konfigurasi.add-role-in-permission');
+    // Konfigurasi Roles in Permission Store
+    Route::post('/admin/konfigurasi/add-role-in-permission-store', [RoleController::class, 'RolesInPermissionsStore'])->name('admin.konfigurasi.add-role-in-permission-store');
 
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
