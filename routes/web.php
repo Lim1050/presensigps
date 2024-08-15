@@ -4,7 +4,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CabangController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartemenController;
+use App\Http\Controllers\GajiController;
 use App\Http\Controllers\IzinController;
+use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\PresensiController;
@@ -102,6 +104,24 @@ Route::middleware(['auth:user'])->group(function () {
     Route::put('/admin/cuti/update/{kode_cuti}', [IzinController::class, 'CutiMasterUpdate'])->name('admin.cuti.update');
     // Master Cuti delete
     Route::get('/admin/cuti/delete/{kode_cuti}', [IzinController::class, 'CutiMasterDelete'])->name('admin.cuti.delete');
+
+    // Master Jabatan
+    Route::get('/admin/jabatan', [JabatanController::class, 'JabatanIndex'])->name('admin.jabatan');
+    // Master Jabatan Store
+    Route::post('/admin/jabatan/store', [JabatanController::class, 'JabatanStore'])->name('admin.jabatan.store');
+    // Master Jabatan Update
+    Route::put('/admin/jabatan/update/{kode_jabatan}', [JabatanController::class, 'JabatanUpdate'])->name('admin.jabatan.update');
+    // Master Jabatan
+    Route::get('/admin/jabatan/delete/{kode_jabatan}', [JabatanController::class, 'JabatanDelete'])->name('admin.jabatan.delete');
+
+    // Master Gaji
+    Route::get('/admin/gaji', [GajiController::class, 'GajiIndex'])->name('admin.gaji');
+    // Master Gaji Store
+    Route::post('/admin/gaji/store', [GajiController::class, 'GajiStore'])->name('admin.gaji.store');
+    // Master Gaji Update
+    Route::put('/admin/gaji/update/{kode_gaji}', [GajiController::class, 'GajiUpdate'])->name('admin.gaji.update');
+    // Master Gaji
+    Route::get('/admin/gaji/delete/{kode_gaji}', [gajiController::class, 'GajiDelete'])->name('admin.gaji.delete');
 
     // persetujuan sakit izin
     Route::get('/admin/persetujuan/sakit/izin', [IzinController::class, 'PersetujuanSakitIzin'])->name('admin.persetujuan.sakit.izin');

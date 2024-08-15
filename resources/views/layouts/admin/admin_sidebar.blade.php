@@ -60,16 +60,42 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*', 'admin/cuti*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseThree"
-            aria-expanded="{{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*', 'admin/cuti*']) ? 'true' : 'false' }}" aria-controls="collapseThree">
+        <a class="nav-link collapsed {{ request()->is(['admin/laporan/presensi*', 'admin/rekap/presensi*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            aria-expanded="{{ request()->is(['admin/laporan/presensi*', 'admin/rekap/presensi*']) ? 'true' : 'false' }}" aria-controls="collapseTwo">
+            <i class="bi bi-file-earmark fa-fw"></i>
+            <span>Penggajian</span>
+        </a>
+        <div id="collapseTwo" class="collapse {{ request()->is(['admin/laporan/presensi*', 'admin/rekap/presensi*']) ? 'show' : '' }} bg-red" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-danger py-2 collapse-inner rounded">
+                <a class="collapse-item {{ request()->is('admin/laporan/presensi*') ? 'active' : '' }}" href="{{ route('admin.laporan.presensi') }}">
+                <i class="bi bi-file-earmark-text fa-fw"></i>
+                <span>Laporan Presensi</span></a>
+
+                <a class="collapse-item {{ request()->is('admin/rekap/presensi*') ? 'active' : '' }}" href="{{ route('admin.rekap.presensi') }}">
+                <i class="bi bi-file-earmark-spreadsheet fa-fw"></i>
+                <span>Rekap Presensi</span></a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <li class="nav-item">
+        <a class="nav-link collapsed {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*', 'admin/cuti*', 'admin/jabatan*', 'admin/gaji*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseThree"
+            aria-expanded="{{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*', 'admin/cuti*', 'admin/jabatan*', 'admin/gaji*']) ? 'true' : 'false' }}" aria-controls="collapseThree">
             <i class="bi bi-archive fa-fw"></i>
             <span>Master</span>
         </a>
-        <div id="collapseThree" class="collapse bg-red {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*', 'admin/cuti*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseThree" class="collapse bg-red {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/cabang*', 'admin/cuti*', 'admin/jabatan*', 'admin/gaji*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
                 <a class="collapse-item {{ request()->is('admin/karyawan*') ? 'active' : '' }}" href="{{ route('admin.karyawan') }}">
-                <i class="bi bi-person-vcard fa-fw"></i>
+                <i class="bi bi-person fa-fw"></i>
                 <span>Karyawan</span></a>
+
+                <a class="collapse-item {{ request()->is('admin/jabatan*') ? 'active' : '' }}" href="{{ route('admin.jabatan') }}">
+                <i class="bi bi-person-vcard fa-fw"></i>
+                <span>Jabatan</span></a>
 
                 <a class="collapse-item {{ request()->is('admin/departemen*') ? 'active' : '' }}" href="{{ route('admin.departemen') }}">
                 <i class="bi bi-building fa-fw"></i>
@@ -82,6 +108,10 @@
                 <a class="collapse-item {{ request()->is('admin/cuti*') ? 'active' : '' }}" href="{{ route('admin.cuti') }}">
                 <i class="bi bi-calendar3 fa-fw"></i>
                 <span>Cuti</span></a>
+
+                <a class="collapse-item {{ request()->is('admin/gaji*') ? 'active' : '' }}" href="{{ route('admin.gaji') }}">
+                <i class="bi bi-cash fa-fw"></i>
+                <span>Gaji</span></a>
             </div>
         </div>
     </li>

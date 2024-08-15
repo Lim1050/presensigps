@@ -13,4 +13,8 @@ class presensi extends Model
     protected $primaryKey = "id";
     protected $guarded = [];
 
+    public function karyawan()
+    {
+        return $this->belongsTo(Karyawan::class, 'nik', 'nik');
+    }
 }

@@ -12,4 +12,11 @@ class Jabatan extends Model
     protected $primaryKey = "kode_jabatan";
     public $incrementing = false;
     protected $guarded = [];
+    // protected $keyType = 'string';
+
+    public function gaji()
+    {
+        return $this->hasMany(Gaji::class, 'kode_jabatan', 'kode_jabatan');
+    }
+
 }

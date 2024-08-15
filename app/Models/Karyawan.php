@@ -16,6 +16,7 @@ class Karyawan extends Authenticatable
     protected $primaryKey = "nik";
     public $incrementing = false;
     protected $guarded = [];
+    protected $keyType = 'string';
 
     /**
      * The attributes that should be hidden for serialization.
@@ -35,4 +36,14 @@ class Karyawan extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function presensi()
+    {
+        return $this->hasMany(presensi::class, 'nik', 'nik');
+    }
+
+    public function penggajian()
+    {
+        return $this->hasMany(Penggajian::class, 'nik', 'nik');
+    }
 }

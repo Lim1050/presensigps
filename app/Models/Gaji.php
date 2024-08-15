@@ -12,4 +12,10 @@ class Gaji extends Model
     protected $primaryKey = "kode_gaji";
     public $incrementing = false;
     protected $guarded = [];
+    protected $keyType = 'string';
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'kode_jabatan', 'kode_jabatan');
+    }
 }

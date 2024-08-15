@@ -12,4 +12,9 @@ class Penggajian extends Model
     protected $primaryKey = "id";
     public $incrementing = false;
     protected $guarded = [];
+
+    public function karyawan()
+    {
+        return $this->belongsTo(Karyawan::class, 'nik', 'nik');
+    }
 }
