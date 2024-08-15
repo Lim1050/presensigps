@@ -122,7 +122,7 @@ class RoleController extends Controller
 
     public function RolesInPermissionsIndex()
     {
-        $roles = Role::all();
+        $roles = Role::all()->sortBy('name');
         $permissions = Permission::all();
         $permission_groups = User::GetPermissionGroup();
         return view('user.add_roles_in_permissions_index', compact('roles', 'permissions', 'permission_groups'));
@@ -144,5 +144,43 @@ class RoleController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with(['error' => 'Data Gagal Disimpan!']);
         }
+    }
+
+    public function RolesInPermissionsEdit($id)
+    {
+        $roles = Role::find($id);
+        $permissions = Permission::all();
+        // dd($permissions);
+        $permission_groups = User::GetPermissionGroup();
+        return view('user.add_roles_in_permissions_edit', compact('roles', 'permissions', 'permission_groups'));
+    }
+
+    public function RolesInPermissionsUpdate(Request $request, $id)
+    {
+        $roles = Role::find($id);
+        $permissions = $request->permission;
+
+        // dd($permissions);
+
+        if(!empty($permissions)){
+            $roles->syncPermissions($permissions);
+            return redirect()->route('admin.konfigurasi.add-role-in-permission')->with('success', 'Data Berhasil Diperbarui');
+        } elseif (empty($permissions)) {
+            $roles->revokePermissionTo($permissions);
+            return redirect()->route('admin.konfigurasi.add-role-in-permission')->with('success', 'Data Berhasil Diperbarui');
+        } else {
+            return redirect()->back()->with(['error' => 'Data Gagal Diperbarui!']);
         }
     }
+
+    public function RolesInPermissionsDelete($id)
+    {
+        $roles = Role::find($id);
+        if (!is_null($roles)){
+            $roles->delete();
+            return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
+        } else {
+            return redirect()->back()->with(['error' => 'Data Gagal Dihapus!']);
+        }
+    }
+}

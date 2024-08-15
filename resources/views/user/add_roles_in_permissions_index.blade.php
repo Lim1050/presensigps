@@ -79,12 +79,14 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="btn-group ">
-                                            <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#modalEditRole"
-                                                {{-- data-id="{{ $item->id }}"
-                                                data-name="{{ $item->name }}" --}}
-                                                ><i class="bi bi-pencil-square"></i> Edit</a>
+                                            {{-- <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#modalEditRolePermission"
+                                                data-id="{{ $item->id }}"
+                                                data-name="{{ $item->name }}"
+                                                data-permission="{{ $item->permissions->name }}"
+                                                ><i class="bi bi-pencil-square"></i> Edit</a> --}}
                                                 {{-- {{ route('admin.konfigurasi.role.delete', $item->id) }} --}}
-                                            <a href="#" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
+                                            <a href="{{ route('admin.konfigurasi.add-role-in-permission-edit', $item->id) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
+                                            <a href="{{ route('admin.konfigurasi.add-role-in-permission-delete', $item->id) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -170,6 +172,29 @@
             $('input[type=checkbox]').prop('checked',false)
 
         }
+    });
+
+    $(".delete-confirm").click(function (e){
+        e.preventDefault();
+        var url = $(this).attr('href');
+        Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Data Ini Akan Dihapus!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, hapus!"
+        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+            Swal.fire({
+            title: "Terhapus!",
+            text: "Data Sudah dihapus.",
+            icon: "success"
+            });
+        }
+        });
     });
 </script>
 

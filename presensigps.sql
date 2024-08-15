@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 14, 2024 at 04:12 PM
+-- Generation Time: Aug 15, 2024 at 04:04 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -507,6 +507,18 @@ CREATE TABLE `model_has_roles` (
   `model_id` bigint UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `model_has_roles`
+--
+
+INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
+(7, 'App\\Models\\User', 1),
+(8, 'App\\Models\\User', 2),
+(6, 'App\\Models\\User', 17),
+(12, 'App\\Models\\User', 18),
+(9, 'App\\Models\\User', 19),
+(11, 'App\\Models\\User', 21);
+
 -- --------------------------------------------------------
 
 --
@@ -739,7 +751,8 @@ INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VAL
 (7, 'super-admin', 'user', '2024-08-14 06:44:04', '2024-08-14 06:46:30'),
 (8, 'development', 'user', '2024-08-14 06:44:12', '2024-08-14 06:46:36'),
 (9, 'admin-presensi', 'user', '2024-08-14 06:44:23', '2024-08-14 06:46:42'),
-(10, 'admin-gaji', 'user', '2024-08-14 06:44:33', '2024-08-14 06:44:33');
+(11, 'test-role', 'user', '2024-08-15 07:26:37', '2024-08-15 07:26:37'),
+(12, 'admin-gaji', 'user', '2024-08-15 07:29:16', '2024-08-15 07:29:16');
 
 -- --------------------------------------------------------
 
@@ -768,9 +781,6 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (11, 6),
 (12, 6),
 (13, 6),
-(18, 6),
-(19, 6),
-(20, 6),
 (3, 7),
 (4, 7),
 (5, 7),
@@ -785,10 +795,6 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (14, 7),
 (15, 7),
 (16, 7),
-(18, 7),
-(19, 7),
-(20, 7),
-(21, 7),
 (3, 8),
 (4, 8),
 (5, 8),
@@ -803,10 +809,6 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (14, 8),
 (15, 8),
 (16, 8),
-(18, 8),
-(19, 8),
-(20, 8),
-(21, 8),
 (3, 9),
 (4, 9),
 (5, 9),
@@ -815,16 +817,15 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (11, 9),
 (12, 9),
 (13, 9),
-(18, 9),
-(19, 9),
-(6, 10),
-(7, 10),
-(8, 10),
-(9, 10),
-(10, 10),
-(11, 10),
-(19, 10),
-(20, 10);
+(3, 12),
+(4, 12),
+(5, 12),
+(6, 12),
+(7, 12),
+(8, 12),
+(9, 12),
+(10, 12),
+(11, 12);
 
 -- --------------------------------------------------------
 
@@ -854,10 +855,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `name`, `email`, `email_verified_at`, `password`, `foto`, `role`, `kode_departemen`, `kode_cabang`, `no_hp`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'superadmin', 'Super Admin', 'super_admin@presensi.com', NULL, '$2y$10$t5ZzX/KcfTGcwBq2DP9Qxu4F1kpw3x03V.9tF0NR0HOKxGmR7Wt3.', 'superadmin_1723444778.jpeg', 'super-admin', 'IT', 'JKTP', '08123456789', NULL, '2024-06-27 03:51:34', '2024-08-12 07:26:19'),
-(2, 'admindev', 'Admin Dev', 'admin_dev@presensi.com', NULL, '$2y$10$PtlgeqTpFD.acYy1AVw8COgx0otYyR3GJZZkTuNwaG94GxowhjHYe', 'admindev_1723444789.jpeg', 'development', 'IT', 'JKTP', '0897654321', NULL, '2024-06-27 03:51:34', '2024-08-12 07:26:14'),
-(15, 'test', 'Test', 'test_admin@presensi.com', NULL, '$2y$10$9Jsi9gbZvidUcAdNgU294eaJw4xb30d1dCZe8lWCMug0xc1Fypf/2', 'test_1723446334.png', 'admin-presensi', 'IT', 'JKTP', '081122334455', NULL, '2024-08-12 07:05:34', '2024-08-12 07:25:55'),
-(16, 'test1', 'Test 1', 'test_1_admin@presensi.com', NULL, '$2y$10$S4fbvNTcx4MoYYavQOUQ2.mnP4wk3QViIvx59qLLD3xUNs8oAlLPa', 'test1_1723446954.png', 'admin', 'HR', 'JKTT', '081122334455', NULL, '2024-08-12 07:15:54', '2024-08-12 07:26:25');
+(1, 'superadmin', 'Super Admin', 'super_admin@presensi.com', NULL, '$2y$10$SxmsWZ5q7ug9eq7cA0sLzOT2HjJ6fRRgeLSuyWcSX2J2nS0YV6ydy', 'superadmin_1723444778.jpeg', 'super-admin', 'IT', 'JKTP', '08123456789', NULL, '2024-06-27 03:51:34', '2024-08-15 09:03:54'),
+(2, 'admindev', 'Admin Dev', 'admin_dev@presensi.com', NULL, '$2y$10$e6mAMjamNr7Oy/mYkdJK0OHL7l55BEubGkJYgTvcsrIXzjzT2nayK', 'admindev_1723709310.jpeg', 'development', 'IT', 'JKTP', '0897654321', NULL, '2024-06-27 03:51:34', '2024-08-15 09:03:51'),
+(17, 'admin', 'Admin', 'admin@presensi.com', NULL, '$2y$10$LlpTAdvrMV7/4/WFXGPjp.TrUU5cPfHJgP/DFgwnNxwyZ7cy/qHo2', 'admin_1723709176.jpeg', 'admin', 'IT', 'JKTT', '08654321987', NULL, '2024-08-15 08:06:16', '2024-08-15 09:03:49'),
+(18, 'admingaji', 'Admin Gaji', 'admin_gaji@presensi.com', NULL, '$2y$10$2is9hbaVsOj.fnuZt/kIJus5TKrlM9iOJpEvW3RrGMq5jXWzYS2AK', 'admingaji_1723710387.jpeg', 'admin-gaji', 'FIN', 'BKS', '0808080808', NULL, '2024-08-15 08:23:26', '2024-08-15 09:03:52'),
+(19, 'adminpresensi', 'Admin Presensi', 'admin_presensi@presensi.com', NULL, '$2y$10$G2YDsXfkbG6Oq6Yvxj54QOrlssaX33Zoupp2eN/eewAGIqhdF8Mmu', 'adminpresensi_1723710353.png', 'admin-presensi', 'HR', 'JKTT', '090909090909', NULL, '2024-08-15 08:25:53', '2024-08-15 09:03:53'),
+(21, 'testadmin', 'Test Admin', 'test_admin@presensi.com', NULL, '$2y$10$5fy5DRZg8241lEKejcpKnuHfqFCZb6tCp0ebWExA3FXduYd395KQy', 'testadmin_1723711979.webp', 'test-role', 'OPS', 'BKS', '081122334455', NULL, '2024-08-15 08:52:59', '2024-08-15 09:03:56');
 
 --
 -- Indexes for dumped tables
@@ -1056,13 +1059,13 @@ ALTER TABLE `presensi`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Constraints for dumped tables

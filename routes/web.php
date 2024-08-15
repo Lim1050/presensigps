@@ -164,6 +164,8 @@ Route::middleware(['auth:user'])->group(function () {
     Route::post('/admin/konfigurasi/user/store', [UserController::class, 'UserStore'])->name('admin.konfigurasi.user.store');
     // Konfigurasi User Update
     Route::put('/admin/konfigurasi/user/update/{id}', [UserController::class, 'UserUpdate'])->name('admin.konfigurasi.user.update');
+    // Konfigurasi User reset password
+    Route::get('/admin/konfigurasi/user/reset/password/{id}', [UserController::class, 'UserResetPassword'])->name('admin.konfigurasi.user.reset.password');
     // Konfigurasi User delete
     Route::get('/admin/konfigurasi/user/delete/{id}', [UserController::class, 'UserDelete'])->name('admin.konfigurasi.user.delete');
 
@@ -197,6 +199,12 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/admin/konfigurasi/add-role-in-permission', [RoleController::class, 'RolesInPermissionsIndex'])->name('admin.konfigurasi.add-role-in-permission');
     // Konfigurasi Roles in Permission Store
     Route::post('/admin/konfigurasi/add-role-in-permission-store', [RoleController::class, 'RolesInPermissionsStore'])->name('admin.konfigurasi.add-role-in-permission-store');
+    // Konfigurasi Roles in Permission Edit
+    Route::get('/admin/konfigurasi/add-role-in-permission-edit/{id}', [RoleController::class, 'RolesInPermissionsEdit'])->name('admin.konfigurasi.add-role-in-permission-edit');
+    // Konfigurasi Roles in Permission update
+    Route::post('/admin/konfigurasi/add-role-in-permission-update/{id}', [RoleController::class, 'RolesInPermissionsUpdate'])->name('admin.konfigurasi.add-role-in-permission-update');
+    // Konfigurasi Roles in Permission Delete
+    Route::get('/admin/konfigurasi/add-role-in-permission-delete/{id}', [RoleController::class, 'RolesInPermissionsDelete'])->name('admin.konfigurasi.add-role-in-permission-delete');
 
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');

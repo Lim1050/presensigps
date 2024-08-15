@@ -187,8 +187,15 @@
                         <span class="mr-2 d-none d-lg-inline text-gray-600 small ">{{ Auth::guard('user')->user()->email }}</span>
                     </div>
                 </div>
-                <img class="img-profile rounded-circle"
-                    src="{{ asset('assets/img/undraw_profile.svg')}}">
+                @php
+                    $path = Storage::url("uploads/user/".Auth::guard('user')->user()->foto)
+                @endphp
+                @if ($path != null)
+                    <img class="img-profile rounded-circle" src="{{ url($path) }}">
+                @else
+                <img class="img-profile rounded-circle" src="{{ asset('assets/img/undraw_profile.svg')}}">
+                @endif
+
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

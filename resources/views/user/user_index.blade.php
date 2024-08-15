@@ -77,7 +77,7 @@
                                 <select name="cari_role" id="cari_role" class="form-control">
                                     <option value="">Pilih Role</option>
                                     @foreach ($role as $item)
-                                    <option {{ Request('cari_role') == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->name }}</option>
+                                    <option {{ Request('cari_role') == $item->name ? 'selected' : '' }} value="{{ $item->name }}">{{ $item->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -131,26 +131,27 @@
                                         @endif
                                     </div>
                                 </td>
-                                    <td class="text-center">{{ $item->role_name }}</td>
+                                    <td class="text-center">{{ $item->role }}</td>
                                     <td class="text-center">{{ $item->nama_departemen }}</td>
                                     <td class="text-center">{{ $item->nama_cabang }}</td>
                                     <td class="text-center">{{ $item->no_hp }}</td>
                                     <td class="text-center">
                                         <div class="btn-group ">
-                                            <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#modalEditUser"
+                                            <a href="#" class="btn btn-warning" title="Edit" data-toggle="modal" data-target="#modalEditUser"
                                                 data-id="{{ $item->id }}"
                                                 data-username="{{ $item->username }}"
                                                 data-name="{{ $item->name }}"
                                                 data-email="{{ $item->email }}"
                                                 {{-- data-password="{{ $item->password }}" --}}
                                                 data-foto="{{ $item->foto }}"
-                                                data-role_name="{{ $item->role_name }}"
+                                                data-role_name="{{ $item->role }}"
                                                 data-nama_departemen="{{ $item->kode_departemen }}"
                                                 data-nama_cabang="{{ $item->kode_cabang }}"
                                                 data-no_hp="{{ $item->no_hp }}">
-                                                <i class="bi bi-pencil-square"></i> Edit
+                                                <i class="bi bi-pencil-square"></i>
                                             </a>
-                                            <a href="{{ route('admin.konfigurasi.user.delete', $item->id) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
+                                            <a href="{{ route('admin.konfigurasi.user.reset.password', Crypt::encrypt($item->id)) }}" class="btn btn-primary" title="Reset Password"><i class="bi bi-key"></i></a>
+                                            <a href="{{ route('admin.konfigurasi.user.delete', Crypt::encrypt($item->id)) }}" title="Delete" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i></a>
                                         </div>
                                     </td>
                                 </tr>
