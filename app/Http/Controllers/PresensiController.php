@@ -585,7 +585,7 @@ class PresensiController extends Controller
                             $field_date
                             karyawan.nik,
                             karyawan.nama_lengkap,
-                            karyawan.jabatan,
+                            karyawan.kode_jabatan,
                             karyawan.kode_departemen
                             "
                         );

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Jabatan;
 use App\Models\JamKerjaKaryawan;
 use App\Models\Karyawan;
 use Carbon\Carbon;
@@ -16,25 +17,41 @@ class KaryawanController extends Controller
 {
     public function KaryawanIndex(Request $request)
     {
-
         $query = Karyawan::query();
-        $query->select('karyawan.*', 'nama_departemen');
+
+        // Mengambil data karyawan, jabatan, dan departemen
+        $query->select('karyawan.*', 'departemen.nama_departemen', 'jabatan.nama_jabatan');
         $query->join('departemen', 'karyawan.kode_departemen', '=', 'departemen.kode_departemen');
+        $query->leftJoin('jabatan', 'karyawan.kode_jabatan', '=', 'jabatan.kode_jabatan');
+
+        // Menyortir berdasarkan nama lengkap
         $query->orderBy('nama_lengkap');
+
+        // Filter berdasarkan nama karyawan jika diberikan
         if(!empty($request->nama_karyawan)){
             $query->where('nama_lengkap', 'like', '%' . $request->nama_karyawan . '%');
         }
+
+        // Filter berdasarkan kode departemen jika diberikan
         if(!empty($request->kode_departemen)){
             $query->where('karyawan.kode_departemen', $request->kode_departemen);
         }
-        $karyawan = $query->paginate('10');
-        // dd($karyawan);
 
+        // Filter berdasarkan kode jabatan jika diberikan
+        if(!empty($request->kode_jabatan)){
+            $query->where('karyawan.kode_jabatan', $request->kode_jabatan);
+        }
 
+        // Paginate hasil query
+        $karyawan = $query->paginate(10);
+
+        // Mengambil semua data jabatan, departemen, dan cabang untuk kebutuhan filter
+        $jabatan = Jabatan::all();
         $departemen = DB::table('departemen')->get();
         $cabang = DB::table('kantor_cabang')->orderBy('kode_cabang')->get();
 
-        return view('karyawan.karyawan_index', compact('karyawan', 'departemen', 'cabang'));
+        // Mengembalikan view dengan data karyawan, jabatan, departemen, dan cabang
+        return view('karyawan.karyawan_index', compact('karyawan', 'jabatan', 'departemen', 'cabang'));
     }
 
     public function KaryawanStore(Request $request)
@@ -42,7 +59,7 @@ class KaryawanController extends Controller
         $nik = $request->nik;
         $nama_lengkap = $request->nama_lengkap;
         $no_wa = $request->no_wa;
-        $jabatan = $request->jabatan;
+        $kode_jabatan = $request->kode_jabatan;
         $kode_departemen = $request->kode_departemen;
         $kode_cabang = $request->kode_cabang;
 
@@ -61,7 +78,7 @@ class KaryawanController extends Controller
                 'nama_lengkap' => $nama_lengkap,
                 'no_wa' => $no_wa,
                 'password' => Hash::make('password123'),
-                'jabatan' => $jabatan,
+                'kode_jabatan' => $kode_jabatan,
                 'kode_departemen' => $kode_departemen,
                 'kode_cabang' => $kode_cabang,
                 'foto' => $foto,
@@ -96,21 +113,23 @@ class KaryawanController extends Controller
         return view('karyawan.karyawan_edit', compact('nik', 'departemen', 'karyawan', 'cabang'));
     }
 
-    public function KaryawanUpdate(Request $request)
+    public function KaryawanUpdate(Request $request, $nik)
     {
         $nik = $request->nik;
         $nama_lengkap = $request->nama_lengkap;
         $no_wa = $request->no_wa;
-        $jabatan = $request->jabatan;
+        $kode_jabatan = $request->kode_jabatan;
         $kode_departemen = $request->kode_departemen;
         $kode_cabang = $request->kode_cabang;
-        $old_foto = $request->old_foto;
+
+        $karyawan = Karyawan::findOrFail($nik);
+
+        $old_foto = $karyawan->foto;
 
         // cek apakah ada foto dari form
         if($request->hasFile('foto')){
             $foto = $nik . "_" . time() . "." . $request->file('foto')->getClientOriginalExtension();
         } else {
-            // Jika tidak ada file foto yang diunggah, gunakan foto sebelumnya
             $foto = $old_foto;
         }
 
@@ -119,7 +138,7 @@ class KaryawanController extends Controller
                 'nama_lengkap' => $nama_lengkap,
                 'no_wa' => $no_wa,
                 // 'password' => Hash::make('password123'),
-                'jabatan' => $jabatan,
+                'kode_jabatan' => $kode_jabatan,
                 'kode_departemen' => $kode_departemen,
                 'kode_cabang' => $kode_cabang,
                 'foto' => $foto,

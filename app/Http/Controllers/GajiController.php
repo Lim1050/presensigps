@@ -12,7 +12,7 @@ class GajiController extends Controller
 {
     public function GajiIndex()
     {
-        $gaji = Gaji::with('jabatan')->get();
+        $gaji = Gaji::with('jabatan')->orderBy('kode_jabatan')->get();
         $jabatan = Jabatan::all();
         return view('gaji.gaji_index', compact('gaji', 'jabatan'));
     }

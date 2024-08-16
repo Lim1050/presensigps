@@ -37,6 +37,11 @@ class Karyawan extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'kode_jabatan', 'kode_jabatan');
+    }
+
     public function presensi()
     {
         return $this->hasMany(presensi::class, 'nik', 'nik');
@@ -45,5 +50,11 @@ class Karyawan extends Authenticatable
     public function penggajian()
     {
         return $this->hasMany(Penggajian::class, 'nik', 'nik');
+    }
+
+    // Relasi dengan model PengajuanIzin
+    public function pengajuanIzin()
+    {
+        return $this->hasMany(PengajuanIzin::class, 'nik', 'nik');
     }
 }

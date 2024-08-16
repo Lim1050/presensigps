@@ -345,7 +345,7 @@
                     <div class="row mt-2">
                         <div class="col-12">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-arrow-bar-up"></i> Update</button>
+                                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-arrow-bar-up"></i> Perbarui</button>
                             </div>
                         </div>
                     </div>

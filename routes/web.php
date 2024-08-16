@@ -9,10 +9,12 @@ use App\Http\Controllers\IzinController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KonfigurasiController;
+use App\Http\Controllers\PenggajianController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Models\Penggajian;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
@@ -62,7 +64,7 @@ Route::middleware(['auth:user'])->group(function () {
     // Karyawan edit
     Route::get('/admin/karyawan/edit/{nik}', [KaryawanController::class, 'KaryawanEdit'])->name('admin.karyawan.edit');
     // Karyawan update
-    Route::post('/admin/karyawan/update', [KaryawanController::class, 'KaryawanUpdate'])->name('admin.karyawan.update');
+    Route::put('/admin/karyawan/update/{nik}', [KaryawanController::class, 'KaryawanUpdate'])->name('admin.karyawan.update');
     // Karyawan setting
     Route::get('/admin/karyawan/setting/{nik}', [KaryawanController::class, 'KaryawanSetting'])->name('admin.karyawan.setting');
     // Karyawan setting store
@@ -148,6 +150,13 @@ Route::middleware(['auth:user'])->group(function () {
     // tampilkan peta
     Route::post('/admin/presensi/tampilkanpeta', [PresensiController::class, 'TampilkanPeta'])->name('admin.presensi.tampilkanpeta');
 
+    // Penggajian Index
+    Route::get('/admin/penggajian', [PenggajianController::class, 'PenggajianIndex'])->name('admin.penggajian');
+    // Penggajian Create
+    Route::get('/admin/penggajian/create', [PenggajianController::class, 'PenggajianCreate'])->name('admin.penggajian.create');
+    // Penggajian Store
+    Route::post('/admin/penggajian/store', [PenggajianController::class, 'PenggajianStore'])->name('admin.penggajian.store');
+    Route::get('/penggajian/hitung', [PenggajianController::class, 'hitungGaji'])->name('penggajian.hitung');
 
     // Konfigurasi Lokasi Kantor
     Route::get('/admin/konfigurasi/lokasi/kantor', [KonfigurasiController::class, 'LokasiKantor'])->name('admin.konfigurasi.lokasi.kantor');

@@ -60,20 +60,16 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/laporan/presensi*', 'admin/rekap/presensi*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseTwo"
-            aria-expanded="{{ request()->is(['admin/laporan/presensi*', 'admin/rekap/presensi*']) ? 'true' : 'false' }}" aria-controls="collapseTwo">
+        <a class="nav-link collapsed {{ request()->is(['admin/penggajian*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapsePenggajian"
+            aria-expanded="{{ request()->is(['admin/penggajian*']) ? 'true' : 'false' }}" aria-controls="collapsePenggajian">
             <i class="bi bi-file-earmark fa-fw"></i>
             <span>Penggajian</span>
         </a>
-        <div id="collapseTwo" class="collapse {{ request()->is(['admin/laporan/presensi*', 'admin/rekap/presensi*']) ? 'show' : '' }} bg-red" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapsePenggajian" class="collapse {{ request()->is(['admin/penggajian*']) ? 'show' : '' }} bg-red" aria-labelledby="headingPenggajian" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
-                <a class="collapse-item {{ request()->is('admin/laporan/presensi*') ? 'active' : '' }}" href="{{ route('admin.laporan.presensi') }}">
+                <a class="collapse-item {{ request()->is('admin/penggajian*') ? 'active' : '' }}" href="{{ route('admin.penggajian') }}">
                 <i class="bi bi-file-earmark-text fa-fw"></i>
-                <span>Laporan Presensi</span></a>
-
-                <a class="collapse-item {{ request()->is('admin/rekap/presensi*') ? 'active' : '' }}" href="{{ route('admin.rekap.presensi') }}">
-                <i class="bi bi-file-earmark-spreadsheet fa-fw"></i>
-                <span>Rekap Presensi</span></a>
+                <span>Penggajian Karyawan</span></a>
             </div>
         </div>
     </li>
