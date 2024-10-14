@@ -18,11 +18,6 @@ class KaryawanController extends Controller
     public function KaryawanIndex(Request $request)
     {
         $query = Karyawan::query();
-<<<<<<< HEAD
-        $query->select('karyawan.*', 'nama_departemen', 'nama_jabatan');
-        $query->join('departemen', 'karyawan.kode_departemen', '=', 'departemen.kode_departemen');
-        $query->join('jabatan', 'karyawan.kode_jabatan', '=', 'jabatan.kode_jabatan');
-=======
 
         // Mengambil data karyawan, jabatan, dan departemen
         $query->select('karyawan.*', 'departemen.nama_departemen', 'jabatan.nama_jabatan');
@@ -30,7 +25,6 @@ class KaryawanController extends Controller
         $query->leftJoin('jabatan', 'karyawan.kode_jabatan', '=', 'jabatan.kode_jabatan');
 
         // Menyortir berdasarkan nama lengkap
->>>>>>> 1a0d450a0dd891b35b54efcccdcb71ce88d1e4b6
         $query->orderBy('nama_lengkap');
 
         // Filter berdasarkan nama karyawan jika diberikan
@@ -43,13 +37,6 @@ class KaryawanController extends Controller
             $query->where('karyawan.kode_departemen', $request->kode_departemen);
         }
 
-<<<<<<< HEAD
-        $jabatan = DB::table('jabatan')->get();
-        $departemen = DB::table('departemen')->get();
-        $cabang = DB::table('kantor_cabang')->orderBy('kode_cabang')->get();
-
-        return view('karyawan.karyawan_index', compact('karyawan', 'departemen', 'cabang', 'jabatan'));
-=======
         // Filter berdasarkan kode jabatan jika diberikan
         if(!empty($request->kode_jabatan)){
             $query->where('karyawan.kode_jabatan', $request->kode_jabatan);
@@ -65,7 +52,6 @@ class KaryawanController extends Controller
 
         // Mengembalikan view dengan data karyawan, jabatan, departemen, dan cabang
         return view('karyawan.karyawan_index', compact('karyawan', 'jabatan', 'departemen', 'cabang'));
->>>>>>> 1a0d450a0dd891b35b54efcccdcb71ce88d1e4b6
     }
 
     public function KaryawanStore(Request $request)
@@ -153,11 +139,7 @@ class KaryawanController extends Controller
                 'nama_lengkap' => $nama_lengkap,
                 'no_wa' => $no_wa,
                 // 'password' => Hash::make('password123'),
-<<<<<<< HEAD
-                'kode_jabatan' => $jabatan,
-=======
                 'kode_jabatan' => $kode_jabatan,
->>>>>>> 1a0d450a0dd891b35b54efcccdcb71ce88d1e4b6
                 'kode_departemen' => $kode_departemen,
                 'kode_cabang' => $kode_cabang,
                 'foto' => $foto,

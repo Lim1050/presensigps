@@ -41,13 +41,8 @@
                     echo $namaSingkat;
                 @endphp
             </h2>
-<<<<<<< HEAD
             <span id="user-role">{{ Auth::guard('karyawan')->user()->kode_jabatan }}</span>
-            (<span id="user-role">{{ Auth::guard('karyawan')->user()->kode_cabang }}</span>)
-=======
-            <span id="user-role">{{ Auth::guard('karyawan')->user()->jabatan->kode_jabatan }}</span>
             <span id="user-role">{{ Auth::guard('karyawan')->user()->kode_cabang }}</span>
->>>>>>> 1a0d450a0dd891b35b54efcccdcb71ce88d1e4b6
         </div>
     </div>
 </div>

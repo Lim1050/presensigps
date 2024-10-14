@@ -196,7 +196,6 @@
                             <input type="text" class="form-control" id="no_wa" name="no_wa" placeholder=" Nomor HP">
                         </div>
                     </div>
-<<<<<<< HEAD
                     {{-- <div class="form-group">
                         <div class="icon-placeholder">
                             <i class="bi bi-person-vcard"></i>
@@ -208,14 +207,6 @@
                             <option value="">Pilih jabatan</option>
                             @foreach ($jabatan as $item)
                             <option {{ Request('kode_jabatan') == $item->kode_jabatan ? 'selected' : '' }} value="{{ $item->kode_jabatan }}">{{ $item->nama_jabatan }}</option>
-=======
-
-                    <div class="form-group">
-                        <select name="kode_jabatan" id="kode_jabatan" class="form-control">
-                            <option value="">Pilih Jabatan</option>
-                            @foreach ($jabatan as $item)
-                            <option value="{{ $item->kode_jabatan  }}">{{ $item->nama_jabatan }}</option>
->>>>>>> 1a0d450a0dd891b35b54efcccdcb71ce88d1e4b6
                             @endforeach
                         </select>
                     </div>

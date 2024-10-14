@@ -14,10 +14,10 @@ class Jabatan extends Model
     protected $guarded = [];
     // protected $keyType = 'string';
 
-    public function karyawan()
-    {
-        return $this->hasMany(Karyawan::class, 'kode_jabatan', 'kode_jabatan');
-    }
+    // public function karyawan()
+    // {
+    //     return $this->hasMany(Karyawan::class, 'kode_jabatan', 'kode_jabatan');
+    // }
 
     public function gaji()
     {
