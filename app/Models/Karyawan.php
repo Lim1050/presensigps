@@ -46,4 +46,9 @@ class Karyawan extends Authenticatable
     {
         return $this->hasMany(Penggajian::class, 'nik', 'nik');
     }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'kode_jabatan', 'kode_jabatan');
+    }
 }

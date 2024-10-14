@@ -59,11 +59,20 @@
             <input type="text" class="form-control" id="no_wa" name="no_wa" value="{{ $karyawan->no_wa }}">
         </div>
     </div>
-    <div class="form-group">
+    {{-- <div class="form-group">
         <div class="icon-placeholder">
             <i class="bi bi-person-vcard"></i>
             <input type="text" class="form-control" id="jabatan" name="jabatan" value="{{ $karyawan->jabatan }}">
         </div>
+    </div> --}}
+    <div class="form-group">
+        <label for=""><i class="bi bi-person-vcard"></i> Jabatan</label>
+        <select name="kode_jabatan" id="kode_jabatan" class="form-control">
+            <option value="">Pilih jabatan</option>
+            @foreach ($jabatan as $item)
+            <option {{ $karyawan->kode_jabatan == $item->kode_jabatan ? 'selected' : '' }} value="{{ $item->kode_jabatan }}">{{ $item->nama_jabatan }}</option>
+            @endforeach
+        </select>
     </div>
     <div class="form-group">
         <label for=""><i class="bi bi-building"></i> Departemen</label>

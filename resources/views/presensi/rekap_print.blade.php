@@ -61,11 +61,10 @@
             </td>
             <td>
                 <span id="title">
-                    REKAP PRESENSI KARYAWAN<br>
+                    REKAP PRESENSI SATPAM<br>
                     PERIODE {{ strtoupper($months[$bulan]) }} {{ $tahun }}<br>
-                    PT XYZ<br>
                 </span>
-                <span>Jl. baru no 3, kelurahan Agak Baru, Kota Baru Banget, Provinsi Sangat Baru, 12345</span>
+                {{-- <span>Jl. baru no 3, kelurahan Agak Baru, Kota Baru Banget, Provinsi Sangat Baru, 12345</span> --}}
             </td>
         </tr>
     </table>
@@ -147,15 +146,15 @@
     <table width="100%" style="margin-top: 50px">
         <tr>
             <td></td>
-            <td style="text-align: center">Kota Baru Banget, {{ date('d-m-Y') }}</td>
+            <td style="text-align: center">Jakarta, {{ date('d-m-Y') }}</td>
         </tr>
         <tr>
             <td style="text-align: center; vertical-align:bottom" height="100px" >
-                <u>Ramadhan S Purnama</u><br>
+                <u>Nama HRD</u><br>
                 <i><b>Head HRD</b></i>
             </td>
             <td style="text-align: center; vertical-align:bottom" height="100px" >
-                <u>Salim</u><br>
+                <u>Nama Direktur</u><br>
                 <i><b>Direktur</b></i>
             </td>
         </tr>

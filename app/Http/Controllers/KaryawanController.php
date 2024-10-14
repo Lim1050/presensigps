@@ -18,8 +18,9 @@ class KaryawanController extends Controller
     {
 
         $query = Karyawan::query();
-        $query->select('karyawan.*', 'nama_departemen');
+        $query->select('karyawan.*', 'nama_departemen', 'nama_jabatan');
         $query->join('departemen', 'karyawan.kode_departemen', '=', 'departemen.kode_departemen');
+        $query->join('jabatan', 'karyawan.kode_jabatan', '=', 'jabatan.kode_jabatan');
         $query->orderBy('nama_lengkap');
         if(!empty($request->nama_karyawan)){
             $query->where('nama_lengkap', 'like', '%' . $request->nama_karyawan . '%');
@@ -30,11 +31,11 @@ class KaryawanController extends Controller
         $karyawan = $query->paginate('10');
         // dd($karyawan);
 
-
+        $jabatan = DB::table('jabatan')->get();
         $departemen = DB::table('departemen')->get();
         $cabang = DB::table('kantor_cabang')->orderBy('kode_cabang')->get();
 
-        return view('karyawan.karyawan_index', compact('karyawan', 'departemen', 'cabang'));
+        return view('karyawan.karyawan_index', compact('karyawan', 'departemen', 'cabang', 'jabatan'));
     }
 
     public function KaryawanStore(Request $request)
@@ -42,7 +43,7 @@ class KaryawanController extends Controller
         $nik = $request->nik;
         $nama_lengkap = $request->nama_lengkap;
         $no_wa = $request->no_wa;
-        $jabatan = $request->jabatan;
+        $kode_jabatan = $request->kode_jabatan;
         $kode_departemen = $request->kode_departemen;
         $kode_cabang = $request->kode_cabang;
 
@@ -61,7 +62,7 @@ class KaryawanController extends Controller
                 'nama_lengkap' => $nama_lengkap,
                 'no_wa' => $no_wa,
                 'password' => Hash::make('password123'),
-                'jabatan' => $jabatan,
+                'kode_jabatan' => $kode_jabatan,
                 'kode_departemen' => $kode_departemen,
                 'kode_cabang' => $kode_cabang,
                 'foto' => $foto,
@@ -90,10 +91,11 @@ class KaryawanController extends Controller
     public function KaryawanEdit(Request $request, $nik)
     {
         $nik = Crypt::decrypt($request->nik);
+        $jabatan = DB::table('jabatan')->get();
         $departemen = DB::table('departemen')->get();
         $cabang = DB::table('kantor_cabang')->orderBy('kode_cabang')->get();
         $karyawan = DB::table('karyawan')->where('nik', $nik)->first();
-        return view('karyawan.karyawan_edit', compact('nik', 'departemen', 'karyawan', 'cabang'));
+        return view('karyawan.karyawan_edit', compact('nik', 'departemen', 'karyawan', 'cabang', 'jabatan'));
     }
 
     public function KaryawanUpdate(Request $request)
@@ -119,7 +121,7 @@ class KaryawanController extends Controller
                 'nama_lengkap' => $nama_lengkap,
                 'no_wa' => $no_wa,
                 // 'password' => Hash::make('password123'),
-                'jabatan' => $jabatan,
+                'kode_jabatan' => $jabatan,
                 'kode_departemen' => $kode_departemen,
                 'kode_cabang' => $kode_cabang,
                 'foto' => $foto,

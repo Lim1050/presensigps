@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 15 Agu 2024 pada 17.06
+-- Waktu pembuatan: 14 Okt 2024 pada 18.37
 -- Versi server: 8.0.35
 -- Versi PHP: 8.2.12
 
@@ -39,12 +39,15 @@ CREATE TABLE `departemen` (
 --
 
 INSERT INTO `departemen` (`kode_departemen`, `nama_departemen`, `created_at`, `updated_at`) VALUES
-('FIN', 'Finance', NULL, '2024-07-01 07:59:20'),
-('HR', 'Human Resources', NULL, NULL),
-('IT', 'Information Technology', NULL, NULL),
-('MKT', 'Marketing', NULL, NULL),
-('OPS', 'Operations', NULL, NULL),
-('SM', 'Social Media', '2024-07-01 07:34:32', NULL);
+('SAG', 'Security Area Gudang', '2024-10-14 15:28:21', NULL),
+('SAP', 'Security Area Pabrik', '2024-10-14 15:29:33', NULL),
+('SEC', 'Security', '2024-10-14 15:25:43', NULL),
+('SGP', 'Security Gedung Parkir', '2024-10-14 15:29:13', NULL),
+('SKP', 'Security Kantor Pusat', '2024-10-14 15:28:09', NULL),
+('SM', 'Security Mall', '2024-10-14 15:29:22', NULL),
+('SPMU', 'Security Pintu Masuk Utama', '2024-10-14 15:29:54', NULL),
+('TKM', 'Tim Keamanan Malam', '2024-10-14 15:30:05', NULL),
+('TRC', 'Tim Respon Cepat', '2024-10-14 15:29:45', NULL);
 
 -- --------------------------------------------------------
 
@@ -105,15 +108,16 @@ CREATE TABLE `jabatan` (
 --
 
 INSERT INTO `jabatan` (`kode_jabatan`, `nama_jabatan`, `created_at`, `updated_at`) VALUES
-('DEV', 'Developer', '2024-08-15 14:04:57', '2024-08-15 14:04:57'),
-('HAC', 'Head Accountant', '2024-08-15 14:01:24', '2024-08-15 14:01:24'),
-('HFIN', 'Head Finance', '2024-08-15 14:02:46', '2024-08-15 14:02:46'),
-('HHR', 'Head Human Resource', '2024-08-15 14:02:02', '2024-08-15 14:02:02'),
-('HIT', 'Head Information Technology', '2024-08-15 14:01:04', '2024-08-15 14:02:10'),
-('HOPS', 'Head Operations', '2024-08-15 14:02:23', '2024-08-15 14:02:23'),
-('HRD', 'Human Resource', '2024-08-15 14:05:32', '2024-08-15 14:05:32'),
+('KEPKAM', 'Kepala Keamanan', '2024-10-14 15:30:35', '2024-10-14 15:30:35'),
 ('MGR', 'Manager', '2024-08-15 14:04:41', '2024-08-15 14:04:41'),
-('MKTR', 'Marketing', '2024-08-15 14:05:47', '2024-08-15 14:05:47');
+('MKTR', 'Marketing', '2024-08-15 14:05:47', '2024-08-15 14:05:47'),
+('PCCTV', 'Petugas CCTV', '2024-10-14 15:31:15', '2024-10-14 15:31:15'),
+('PENMAL', 'Penjaga Malam', '2024-10-14 15:31:33', '2024-10-14 15:31:33'),
+('PKG', 'Petugas Kontrol Gedung', '2024-10-14 15:31:45', '2024-10-14 15:31:45'),
+('PPM', 'Petugas Pintu Masuk', '2024-10-14 15:31:24', '2024-10-14 15:31:24'),
+('SO', 'Security Officer', '2024-10-14 15:31:07', '2024-10-14 15:31:07'),
+('SUPKAM', 'Supervisor Keamanan', '2024-10-14 15:30:58', '2024-10-14 15:30:58'),
+('WAKAM', 'Wakil Kepala Keamanan', '2024-10-14 15:30:48', '2024-10-14 15:30:48');
 
 -- --------------------------------------------------------
 
@@ -140,7 +144,7 @@ CREATE TABLE `jam_kerja` (
 INSERT INTO `jam_kerja` (`kode_jam_kerja`, `nama_jam_kerja`, `awal_jam_masuk`, `jam_masuk`, `akhir_jam_masuk`, `jam_pulang`, `lintas_hari`, `created_at`, `updated_at`) VALUES
 ('JK01', 'Shift Pagi', '00:00:00', '01:00:00', '02:00:00', '08:00:00', '0', NULL, '2024-08-06 07:01:36'),
 ('JK02', 'Shift Siang', '08:00:00', '09:00:00', '10:00:00', '16:00:00', '0', NULL, '2024-08-06 06:22:14'),
-('JK03', 'Shift Malam', '16:00:00', '17:00:00', '18:00:00', '00:00:00', '1', NULL, '2024-08-06 07:02:32'),
+('JK03', 'Shift Malam', '16:00:00', '17:00:00', '18:00:00', '00:00:00', '1', NULL, '2024-10-14 16:35:25'),
 ('JKT', 'Test Lintas Hari', '14:00:00', '15:00:00', '16:00:00', '10:00:00', '1', '2024-08-06 06:54:12', '2024-08-06 07:57:38'),
 ('JKT01', 'Jam Kerja Test', '14:00:00', '15:00:00', '15:30:00', '16:00:00', '0', '2024-08-06 07:33:06', '2024-08-07 08:03:03');
 
@@ -163,14 +167,9 @@ CREATE TABLE `jam_kerja_dept` (
 --
 
 INSERT INTO `jam_kerja_dept` (`kode_jk_dept`, `kode_cabang`, `kode_departemen`, `created_at`, `updated_at`) VALUES
-('JBKSFIN', 'BKS', 'FIN', '2024-07-18 05:29:45', NULL),
-('JBKSHR', 'BKS', 'HR', '2024-07-19 07:06:10', NULL),
-('JBKSIT', 'BKS', 'IT', '2024-07-18 05:38:46', NULL),
-('JBKSMKT', 'BKS', 'MKT', '2024-07-19 07:06:32', NULL),
-('JBKSOPS', 'BKS', 'OPS', '2024-07-19 07:07:19', NULL),
 ('JBKSSM', 'BKS', 'SM', '2024-07-19 07:07:49', NULL),
-('JJKTPFIN', 'JKTP', 'FIN', '2024-07-18 05:37:26', NULL),
-('JJKTPIT', 'JKTP', 'IT', '2024-07-18 05:28:42', NULL),
+('JJKTPSKP', 'JKTP', 'SKP', '2024-10-14 15:57:27', NULL),
+('JJKTPTKM', 'JKTP', 'TKM', '2024-10-14 16:03:29', NULL),
 ('JJKTTSM', 'JKTT', 'SM', '2024-07-18 08:29:04', NULL);
 
 -- --------------------------------------------------------
@@ -192,27 +191,6 @@ CREATE TABLE `jam_kerja_dept_detail` (
 --
 
 INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `created_at`, `updated_at`) VALUES
-('JJKTPIT', 'Senin', 'JK03', '2024-07-18 05:28:42', NULL),
-('JJKTPIT', 'Selasa', 'JK03', '2024-07-18 05:28:42', NULL),
-('JJKTPIT', 'Rabu', 'JK02', '2024-07-18 05:28:42', NULL),
-('JJKTPIT', 'Kamis', 'JK02', '2024-07-18 05:28:42', NULL),
-('JJKTPIT', 'Jumat', 'JK02', '2024-07-18 05:28:42', NULL),
-('JJKTPIT', 'Sabtu', 'JK01', '2024-07-18 05:28:42', NULL),
-('JJKTPIT', 'Minggu', 'JK01', '2024-07-18 05:28:42', NULL),
-('JJKTPFIN', 'Senin', 'JK02', '2024-07-18 05:37:26', NULL),
-('JJKTPFIN', 'Selasa', 'JK02', '2024-07-18 05:37:26', NULL),
-('JJKTPFIN', 'Rabu', 'JK02', '2024-07-18 05:37:26', NULL),
-('JJKTPFIN', 'Kamis', 'JK02', '2024-07-18 05:37:26', NULL),
-('JJKTPFIN', 'Jumat', 'JK02', '2024-07-18 05:37:26', NULL),
-('JJKTPFIN', 'Sabtu', 'JK02', '2024-07-18 05:37:26', NULL),
-('JJKTPFIN', 'Minggu', 'JK02', '2024-07-18 05:37:26', NULL),
-('JBKSIT', 'Senin', 'JK03', '2024-07-18 05:38:46', NULL),
-('JBKSIT', 'Selasa', 'JK03', '2024-07-18 05:38:46', NULL),
-('JBKSIT', 'Rabu', 'JK03', '2024-07-18 05:38:46', NULL),
-('JBKSIT', 'Kamis', 'JK03', '2024-07-18 05:38:46', NULL),
-('JBKSIT', 'Jumat', 'JK03', '2024-07-18 05:38:46', NULL),
-('JBKSIT', 'Sabtu', 'JK03', '2024-07-18 05:38:46', NULL),
-('JBKSIT', 'Minggu', 'JK03', '2024-07-18 05:38:46', NULL),
 ('JJKTTSM', 'Senin', 'JK03', NULL, '2024-07-18 08:29:34'),
 ('JJKTTSM', 'Selasa', 'JK02', NULL, '2024-07-18 08:29:34'),
 ('JJKTTSM', 'Rabu', 'JK03', NULL, '2024-07-18 08:29:34'),
@@ -220,27 +198,6 @@ INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `
 ('JJKTTSM', 'Jumat', 'JK03', NULL, '2024-07-18 08:29:34'),
 ('JJKTTSM', 'Sabtu', 'JK02', NULL, '2024-07-18 08:29:34'),
 ('JJKTTSM', 'Minggu', 'JK03', NULL, '2024-07-18 08:29:34'),
-('JBKSHR', 'Senin', 'JK02', '2024-07-19 07:06:10', NULL),
-('JBKSHR', 'Selasa', 'JK02', '2024-07-19 07:06:10', NULL),
-('JBKSHR', 'Rabu', 'JK02', '2024-07-19 07:06:10', NULL),
-('JBKSHR', 'Kamis', 'JK02', '2024-07-19 07:06:10', NULL),
-('JBKSHR', 'Jumat', 'JK02', '2024-07-19 07:06:10', NULL),
-('JBKSHR', 'Sabtu', NULL, '2024-07-19 07:06:10', NULL),
-('JBKSHR', 'Minggu', NULL, '2024-07-19 07:06:10', NULL),
-('JBKSMKT', 'Senin', 'JK02', '2024-07-19 07:06:32', NULL),
-('JBKSMKT', 'Selasa', 'JK02', '2024-07-19 07:06:32', NULL),
-('JBKSMKT', 'Rabu', 'JK02', '2024-07-19 07:06:32', NULL),
-('JBKSMKT', 'Kamis', 'JK02', '2024-07-19 07:06:32', NULL),
-('JBKSMKT', 'Jumat', 'JK02', '2024-07-19 07:06:32', NULL),
-('JBKSMKT', 'Sabtu', NULL, '2024-07-19 07:06:32', NULL),
-('JBKSMKT', 'Minggu', NULL, '2024-07-19 07:06:32', NULL),
-('JBKSOPS', 'Senin', 'JK01', '2024-07-19 07:07:19', NULL),
-('JBKSOPS', 'Selasa', 'JK02', '2024-07-19 07:07:19', NULL),
-('JBKSOPS', 'Rabu', 'JK03', '2024-07-19 07:07:19', NULL),
-('JBKSOPS', 'Kamis', 'JK01', '2024-07-19 07:07:19', NULL),
-('JBKSOPS', 'Jumat', 'JK02', '2024-07-19 07:07:19', NULL),
-('JBKSOPS', 'Sabtu', 'JK03', '2024-07-19 07:07:19', NULL),
-('JBKSOPS', 'Minggu', 'JK01', '2024-07-19 07:07:19', NULL),
 ('JBKSSM', 'Senin', 'JK01', '2024-07-19 07:07:49', NULL),
 ('JBKSSM', 'Selasa', 'JK02', '2024-07-19 07:07:49', NULL),
 ('JBKSSM', 'Rabu', 'JK03', '2024-07-19 07:07:49', NULL),
@@ -248,13 +205,20 @@ INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `
 ('JBKSSM', 'Jumat', 'JK01', '2024-07-19 07:07:49', NULL),
 ('JBKSSM', 'Sabtu', 'JK02', '2024-07-19 07:07:49', NULL),
 ('JBKSSM', 'Minggu', 'JK02', '2024-07-19 07:07:49', NULL),
-('JBKSFIN', 'Senin', 'JK03', NULL, '2024-07-30 07:19:28'),
-('JBKSFIN', 'Selasa', 'JK02', NULL, '2024-07-30 07:19:28'),
-('JBKSFIN', 'Rabu', 'JK03', NULL, '2024-07-30 07:19:28'),
-('JBKSFIN', 'Kamis', NULL, NULL, '2024-07-30 07:19:28'),
-('JBKSFIN', 'Jumat', 'JK03', NULL, '2024-07-30 07:19:28'),
-('JBKSFIN', 'Sabtu', NULL, NULL, '2024-07-30 07:19:28'),
-('JBKSFIN', 'Minggu', 'JK03', NULL, '2024-07-30 07:19:28');
+('JJKTPSKP', 'Senin', 'JK02', '2024-10-14 15:57:27', NULL),
+('JJKTPSKP', 'Selasa', 'JK02', '2024-10-14 15:57:27', NULL),
+('JJKTPSKP', 'Rabu', 'JK02', '2024-10-14 15:57:27', NULL),
+('JJKTPSKP', 'Kamis', 'JK02', '2024-10-14 15:57:27', NULL),
+('JJKTPSKP', 'Jumat', 'JK02', '2024-10-14 15:57:27', NULL),
+('JJKTPSKP', 'Sabtu', 'JK02', '2024-10-14 15:57:27', NULL),
+('JJKTPSKP', 'Minggu', 'JK02', '2024-10-14 15:57:27', NULL),
+('JJKTPTKM', 'Senin', 'JK03', '2024-10-14 16:03:29', NULL),
+('JJKTPTKM', 'Selasa', 'JK03', '2024-10-14 16:03:29', NULL),
+('JJKTPTKM', 'Rabu', 'JK03', '2024-10-14 16:03:29', NULL),
+('JJKTPTKM', 'Kamis', 'JK03', '2024-10-14 16:03:29', NULL),
+('JJKTPTKM', 'Jumat', 'JK03', '2024-10-14 16:03:29', NULL),
+('JJKTPTKM', 'Sabtu', 'JK03', '2024-10-14 16:03:29', NULL),
+('JJKTPTKM', 'Minggu', 'JK03', '2024-10-14 16:03:29', NULL);
 
 -- --------------------------------------------------------
 
@@ -303,13 +267,6 @@ INSERT INTO `jam_kerja_karyawan` (`nik`, `hari`, `kode_jam_kerja`, `created_at`,
 ('222-222-222', 'Jumat', NULL, '2024-07-28 03:49:44', NULL),
 ('222-222-222', 'Sabtu', NULL, '2024-07-28 03:49:44', NULL),
 ('222-222-222', 'Minggu', 'JK02', '2024-07-28 03:49:44', NULL),
-('123123123', 'Senin', 'JK01', '2024-08-01 07:18:02', '2024-08-01 07:18:02'),
-('123123123', 'Selasa', 'JK02', '2024-08-01 07:18:02', '2024-08-01 07:18:02'),
-('123123123', 'Rabu', 'JK03', '2024-08-01 07:18:02', '2024-08-01 07:18:02'),
-('123123123', 'Kamis', 'JK03', '2024-08-01 07:18:02', '2024-08-01 07:18:02'),
-('123123123', 'Jumat', 'JK02', '2024-08-01 07:18:02', '2024-08-01 07:18:02'),
-('123123123', 'Sabtu', 'JK03', '2024-08-01 07:18:02', '2024-08-01 07:18:02'),
-('123123123', 'Minggu', 'JK02', '2024-08-01 07:18:02', '2024-08-01 07:18:02'),
 ('444444444', 'Senin', 'JK01', '2024-08-07 07:55:51', '2024-08-07 07:55:51'),
 ('444444444', 'Selasa', 'JK02', '2024-08-07 07:55:51', '2024-08-07 07:55:51'),
 ('444444444', 'Rabu', 'JK03', '2024-08-07 07:55:51', '2024-08-07 07:55:51'),
@@ -344,7 +301,21 @@ INSERT INTO `jam_kerja_karyawan` (`nik`, `hari`, `kode_jam_kerja`, `created_at`,
 ('333333333', 'Kamis', NULL, '2024-08-07 08:04:53', '2024-08-07 08:04:53'),
 ('333333333', 'Jumat', 'JK03', '2024-08-07 08:04:53', '2024-08-07 08:04:53'),
 ('333333333', 'Sabtu', NULL, '2024-08-07 08:04:53', '2024-08-07 08:04:53'),
-('333333333', 'Minggu', 'JK02', '2024-08-07 08:04:53', '2024-08-07 08:04:53');
+('333333333', 'Minggu', 'JK02', '2024-08-07 08:04:53', '2024-08-07 08:04:53'),
+('112233445', 'Senin', 'JK02', '2024-10-14 15:58:04', '2024-10-14 15:58:04'),
+('112233445', 'Selasa', 'JK02', '2024-10-14 15:58:04', '2024-10-14 15:58:04'),
+('112233445', 'Rabu', 'JK02', '2024-10-14 15:58:04', '2024-10-14 15:58:04'),
+('112233445', 'Kamis', 'JK02', '2024-10-14 15:58:04', '2024-10-14 15:58:04'),
+('112233445', 'Jumat', 'JK02', '2024-10-14 15:58:04', '2024-10-14 15:58:04'),
+('112233445', 'Sabtu', 'JK02', '2024-10-14 15:58:04', '2024-10-14 15:58:04'),
+('112233445', 'Minggu', 'JK02', '2024-10-14 15:58:04', '2024-10-14 15:58:04'),
+('123123123', 'Senin', 'JK03', '2024-10-14 16:28:24', '2024-10-14 16:28:24'),
+('123123123', 'Selasa', 'JK02', '2024-10-14 16:28:24', '2024-10-14 16:28:24'),
+('123123123', 'Rabu', 'JK03', '2024-10-14 16:28:24', '2024-10-14 16:28:24'),
+('123123123', 'Kamis', 'JK03', '2024-10-14 16:28:24', '2024-10-14 16:28:24'),
+('123123123', 'Jumat', 'JK02', '2024-10-14 16:28:24', '2024-10-14 16:28:24'),
+('123123123', 'Sabtu', 'JK03', '2024-10-14 16:28:24', '2024-10-14 16:28:24'),
+('123123123', 'Minggu', 'JK02', '2024-10-14 16:28:24', '2024-10-14 16:28:24');
 
 -- --------------------------------------------------------
 
@@ -396,15 +367,16 @@ CREATE TABLE `karyawan` (
 --
 
 INSERT INTO `karyawan` (`nik`, `nama_lengkap`, `foto`, `kode_jabatan`, `jabatan`, `kode_departemen`, `kode_cabang`, `no_wa`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-('123123123', 'Salim Purnama Ramadhan', '123123123_1720603406.png', NULL, 'Head IT', 'IT', 'JKTP', '08123456789', '$2y$10$NBvJhmZ0TWDts4FcZ4oBduCgFafZex/8WfCakwD4KjTqafnemB7fa', NULL, '2024-06-21 01:22:30', '2024-07-10 09:23:26'),
-('123456789', 'Mei Ling', '123456789_1719807160.png', NULL, 'Head Accountant', 'FIN', 'JKTP', '08147258369', '$2y$10$NiSacYyb3uDeR2eWQ/j.MeFEE/g8Eh5SAhp.ErErDgsg46ST8Q1Lq', NULL, '2024-06-28 07:19:07', '2024-07-10 08:51:11'),
-('213213213', 'Ramadhan S Purnama', '213213213_1719807132.png', NULL, 'Head HRD', 'HR', 'JKTT', '08123456789', '$2y$10$iyjXNfqYeuZTj3iE/U9WKeWHlTZ7DoiWQIgaaDp53GxZ4B2DDvE1a', NULL, '2024-06-21 01:22:30', '2024-07-10 08:50:57'),
-('222222222', 'Ujang', '222-222-222_1721201871.png', NULL, 'Head Operations', 'OPS', 'JKTP', '0822222222222', '$2y$10$ZVRKYmoOqeB3zY3iRZ7Fe.UQIOXku0slcNTCuXxZcAflWmYiqt8y.', NULL, '2024-07-17 07:37:52', '2024-07-31 08:10:16'),
-('321321321', 'Purnama R Salim', '321321321_1719807141.png', NULL, 'Head Finance', 'FIN', 'JKTP', '08123456789', '$2y$10$iyjXNfqYeuZTj3iE/U9WKeWHlTZ7DoiWQIgaaDp53GxZ4B2DDvE1a', NULL, '2024-06-21 01:22:30', '2024-07-16 09:05:35'),
-('333333333', 'Ridho', '333333333_1721293448.png', NULL, 'Recepcionist', 'HR', 'BKS', '0833333333333', '$2y$10$n2wY2wxFJyHwufrCqBJyFeT0yfxsRcsAlyRneOOyuwx0bYqMnGZ/y', NULL, '2024-07-17 07:43:12', '2024-07-18 09:04:08'),
-('369258147', 'Ling Mei', '369258147_1719807170.png', NULL, 'Assistance Accountant', 'FIN', 'JKTP', '123456789', '$2y$10$IXxUEvNVZY1S/QuQ2qQBie.m0LgTz4Pp8qy7LEC5NYuWR1GLP7V22', NULL, '2024-06-28 07:26:47', '2024-07-16 05:47:25'),
-('444444444', 'Abrar', '444444444_1721372945.jpg', NULL, 'Asistance IT', 'IT', 'BKS', '0834444444444', '$2y$10$za9w9xJv98V9YPB3f8U84.OPRJb5DbOY8T1z65qIwdylGXoA6acqy', NULL, '2024-07-19 07:09:05', '2024-08-02 08:04:19'),
-('555555555', 'Sidqy Anwar', '555555555_1722323769.jpg', NULL, 'Debtcollector', 'FIN', 'BKS', '0855555555555', '$2y$10$z2BPEScdYN8KSWsB0nOcau2mCM5Cvk6zenK.mPz6PHNck/lJqEV6W', NULL, '2024-07-30 07:16:09', '2024-07-30 07:16:54');
+('112233445', 'Test Karyawan', '112233445_1728920637.jpeg', 'KEPKAM', NULL, 'SKP', 'JKTP', '1122334455667', '$2y$10$0XL2yinuxM2giFvK9/rKWOtU6RdGFYhVN4aPkFFwychHOTLJRXTBG', NULL, '2024-10-14 15:43:57', NULL),
+('123123123', 'Salim Purnama Ramadhan', '123123123_1720603406.png', 'KEPKAM', 'Head IT', 'SAG', 'JKTP', '08123456789', '$2y$10$NBvJhmZ0TWDts4FcZ4oBduCgFafZex/8WfCakwD4KjTqafnemB7fa', NULL, '2024-06-21 01:22:30', '2024-07-10 09:23:26'),
+('123456789', 'Mei Ling', '123456789_1719807160.png', 'WAKAM', 'Head Accountant', 'SGP', 'JKTP', '08147258369', '$2y$10$NiSacYyb3uDeR2eWQ/j.MeFEE/g8Eh5SAhp.ErErDgsg46ST8Q1Lq', NULL, '2024-06-28 07:19:07', '2024-07-10 08:51:11'),
+('213213213', 'Ramadhan S Purnama', '213213213_1719807132.png', 'SUPKAM', 'Head HRD', 'SM', 'JKTT', '08123456789', '$2y$10$iyjXNfqYeuZTj3iE/U9WKeWHlTZ7DoiWQIgaaDp53GxZ4B2DDvE1a', NULL, '2024-06-21 01:22:30', '2024-07-10 08:50:57'),
+('222222222', 'Ujang', '222-222-222_1721201871.png', 'SO', 'Head Operations', 'SAP', 'JKTP', '0822222222222', '$2y$10$ZVRKYmoOqeB3zY3iRZ7Fe.UQIOXku0slcNTCuXxZcAflWmYiqt8y.', NULL, '2024-07-17 07:37:52', '2024-07-31 08:10:16'),
+('321321321', 'Purnama R Salim', '321321321_1719807141.png', 'PCCTV', 'Head Finance', 'TRC', 'JKTP', '08123456789', '$2y$10$iyjXNfqYeuZTj3iE/U9WKeWHlTZ7DoiWQIgaaDp53GxZ4B2DDvE1a', NULL, '2024-06-21 01:22:30', '2024-07-16 09:05:35'),
+('333333333', 'Ridho', '333333333_1721293448.png', 'PPM', 'Recepcionist', 'SPMU', 'BKS', '0833333333333', '$2y$10$n2wY2wxFJyHwufrCqBJyFeT0yfxsRcsAlyRneOOyuwx0bYqMnGZ/y', NULL, '2024-07-17 07:43:12', '2024-07-18 09:04:08'),
+('369258147', 'Ling Mei', '369258147_1719807170.png', 'PENMAL', 'Assistance Accountant', 'TKM', 'JKTP', '123456789', '$2y$10$IXxUEvNVZY1S/QuQ2qQBie.m0LgTz4Pp8qy7LEC5NYuWR1GLP7V22', NULL, '2024-06-28 07:26:47', '2024-07-16 05:47:25'),
+('444444444', 'Abrar', '444444444_1721372945.jpg', 'PKG', 'Asistance IT', 'TKM', 'BKS', '0834444444444', '$2y$10$za9w9xJv98V9YPB3f8U84.OPRJb5DbOY8T1z65qIwdylGXoA6acqy', NULL, '2024-07-19 07:09:05', '2024-08-02 08:04:19'),
+('555555555', 'Sidqy Anwar', '555555555_1722323769.jpg', 'SO', 'Debtcollector', 'TRC', 'BKS', '0855555555555', '$2y$10$z2BPEScdYN8KSWsB0nOcau2mCM5Cvk6zenK.mPz6PHNck/lJqEV6W', NULL, '2024-07-30 07:16:09', '2024-07-30 07:16:54');
 
 -- --------------------------------------------------------
 
@@ -880,12 +852,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `name`, `email`, `email_verified_at`, `password`, `foto`, `role`, `kode_departemen`, `kode_cabang`, `no_hp`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'superadmin', 'Super Admin', 'super_admin@presensi.com', NULL, '$2y$10$SxmsWZ5q7ug9eq7cA0sLzOT2HjJ6fRRgeLSuyWcSX2J2nS0YV6ydy', 'superadmin_1723444778.jpeg', 'super-admin', 'IT', 'JKTP', '08123456789', NULL, '2024-06-27 03:51:34', '2024-08-15 09:03:54'),
-(2, 'admindev', 'Admin Dev', 'admin_dev@presensi.com', NULL, '$2y$10$e6mAMjamNr7Oy/mYkdJK0OHL7l55BEubGkJYgTvcsrIXzjzT2nayK', 'admindev_1723709310.jpeg', 'development', 'IT', 'JKTP', '0897654321', NULL, '2024-06-27 03:51:34', '2024-08-15 09:03:51'),
-(17, 'admin', 'Admin', 'admin@presensi.com', NULL, '$2y$10$LlpTAdvrMV7/4/WFXGPjp.TrUU5cPfHJgP/DFgwnNxwyZ7cy/qHo2', 'admin_1723709176.jpeg', 'admin', 'IT', 'JKTT', '08654321987', NULL, '2024-08-15 08:06:16', '2024-08-15 09:03:49'),
-(18, 'admingaji', 'Admin Gaji', 'admin_gaji@presensi.com', NULL, '$2y$10$2is9hbaVsOj.fnuZt/kIJus5TKrlM9iOJpEvW3RrGMq5jXWzYS2AK', 'admingaji_1723710387.jpeg', 'admin-gaji', 'FIN', 'BKS', '0808080808', NULL, '2024-08-15 08:23:26', '2024-08-15 09:03:52'),
-(19, 'adminpresensi', 'Admin Presensi', 'admin_presensi@presensi.com', NULL, '$2y$10$G2YDsXfkbG6Oq6Yvxj54QOrlssaX33Zoupp2eN/eewAGIqhdF8Mmu', 'adminpresensi_1723710353.png', 'admin-presensi', 'HR', 'JKTT', '090909090909', NULL, '2024-08-15 08:25:53', '2024-08-15 09:03:53'),
-(21, 'testadmin', 'Test Admin', 'test_admin@presensi.com', NULL, '$2y$10$5fy5DRZg8241lEKejcpKnuHfqFCZb6tCp0ebWExA3FXduYd395KQy', 'testadmin_1723711979.webp', 'test-role', 'OPS', 'BKS', '081122334455', NULL, '2024-08-15 08:52:59', '2024-08-15 09:03:56');
+(1, 'superadmin', 'Super Admin', 'super_admin@presensi.com', NULL, '$2y$10$SxmsWZ5q7ug9eq7cA0sLzOT2HjJ6fRRgeLSuyWcSX2J2nS0YV6ydy', 'superadmin_1723444778.jpeg', 'super-admin', 'SKP', 'JKTP', '08123456789', NULL, '2024-06-27 03:51:34', '2024-08-15 09:03:54'),
+(2, 'admindev', 'Admin Dev', 'admin_dev@presensi.com', NULL, '$2y$10$e6mAMjamNr7Oy/mYkdJK0OHL7l55BEubGkJYgTvcsrIXzjzT2nayK', 'admindev_1723709310.jpeg', 'development', 'SKP', 'JKTP', '0897654321', NULL, '2024-06-27 03:51:34', '2024-08-15 09:03:51'),
+(17, 'admin', 'Admin', 'admin@presensi.com', NULL, '$2y$10$LlpTAdvrMV7/4/WFXGPjp.TrUU5cPfHJgP/DFgwnNxwyZ7cy/qHo2', 'admin_1723709176.jpeg', 'admin', 'SKP', 'JKTT', '08654321987', NULL, '2024-08-15 08:06:16', '2024-08-15 09:03:49'),
+(18, 'admingaji', 'Admin Gaji', 'admin_gaji@presensi.com', NULL, '$2y$10$2is9hbaVsOj.fnuZt/kIJus5TKrlM9iOJpEvW3RrGMq5jXWzYS2AK', 'admingaji_1723710387.jpeg', 'admin-gaji', 'SKP', 'BKS', '0808080808', NULL, '2024-08-15 08:23:26', '2024-08-15 09:03:52'),
+(19, 'adminpresensi', 'Admin Presensi', 'admin_presensi@presensi.com', NULL, '$2y$10$G2YDsXfkbG6Oq6Yvxj54QOrlssaX33Zoupp2eN/eewAGIqhdF8Mmu', 'adminpresensi_1723710353.png', 'admin-presensi', 'SKP', 'JKTT', '090909090909', NULL, '2024-08-15 08:25:53', '2024-08-15 09:03:53'),
+(21, 'testadmin', 'Test Admin', 'test_admin@presensi.com', NULL, '$2y$10$5fy5DRZg8241lEKejcpKnuHfqFCZb6tCp0ebWExA3FXduYd395KQy', 'testadmin_1723711979.webp', 'test-role', 'SKP', 'BKS', '081122334455', NULL, '2024-08-15 08:52:59', '2024-08-15 09:03:56');
 
 --
 -- Indexes for dumped tables
@@ -1078,7 +1050,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT untuk tabel `presensi`
 --
 ALTER TABLE `presensi`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=296;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=297;
 
 --
 -- AUTO_INCREMENT untuk tabel `roles`

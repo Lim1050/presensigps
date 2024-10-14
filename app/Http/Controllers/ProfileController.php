@@ -25,7 +25,7 @@ class ProfileController extends Controller
         // get data dari form
         $nik = Auth::guard('karyawan')->user()->nik;
         $nama_lengkap = $request->nama_lengkap;
-        $jabatan = $request->jabatan;
+        // $jabatan = $request->jabatan;
         $no_wa = $request->no_wa;
         $password = Hash::make($request->password);
 
@@ -61,7 +61,7 @@ class ProfileController extends Controller
         if(empty($request->password)){
             $data = [
             'nama_lengkap' => $nama_lengkap,
-            'jabatan' => $jabatan,
+            // 'jabatan' => $jabatan,
             'no_wa' => $no_wa,
             'foto' => $foto,
             'updated_at' => Carbon::now()
@@ -69,7 +69,7 @@ class ProfileController extends Controller
         } else {
             $data = [
             'nama_lengkap' => $nama_lengkap,
-            'jabatan' => $jabatan,
+            // 'jabatan' => $jabatan,
             'no_wa' => $no_wa,
             'foto' => $foto,
             'password' => $password,

@@ -60,11 +60,10 @@
             </td>
             <td>
                 <span id="title">
-                    LAPORAN PRESENSI KARYAWAN<br>
+                    LAPORAN PRESENSI SATPAM<br>
                     PERIODE {{ strtoupper($months[$bulan]) }} {{ $tahun }}<br>
-                    PT XYZ<br>
                 </span>
-                <span>Jl. baru no 3, kelurahan Agak Baru, Kota Baru Banget, Provinsi Sangat Baru, 12345</span>
+                {{-- <span>Jl. baru no 3, kelurahan Agak Baru, Kota Baru Banget, Provinsi Sangat Baru, 12345</span> --}}
             </td>
         </tr>
     </table>
@@ -91,7 +90,7 @@
         <tr>
             <td>Jabatan</td>
             <td>:</td>
-            <td>{{ $karyawan->jabatan }}</td>
+            <td>{{ $karyawan->nama_jabatan }}</td>
         </tr>
         <tr>
             <td>Departemen</td>
@@ -189,26 +188,26 @@
             @endif
 
         @endforeach
-            <tr>
+            {{-- <tr>
                 <td colspan="9">
                     Total Masuk : {{ $total_hari }} hari, <br>
                     Gaji per Hari : Rp {{ $gaji_harian }}, <br>
                     Total Gaji : Rp {{ $total_gaji }}
                 </td>
-            </tr>
+            </tr> --}}
     </table>
 
     <table width="100%" style="margin-top: 50px">
         <tr>
-            <td colspan="2" style="text-align: right">Kota Baru Banget, {{ date('d-m-Y') }}</td>
+            <td colspan="2" style="text-align: right">Jakarta, {{ date('d-m-Y') }}</td>
         </tr>
         <tr>
             <td style="text-align: center; vertical-align:bottom" height="100px" >
-                <u>Ramadhan S Purnama</u><br>
+                <u>Nama HRD</u><br>
                 <i><b>Head HRD</b></i>
             </td>
             <td style="text-align: center; vertical-align:bottom" height="100px" >
-                <u>Salim</u><br>
+                <u>Nama Direktur</u><br>
                 <i><b>Direktur</b></i>
             </td>
         </tr>

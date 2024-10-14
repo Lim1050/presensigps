@@ -64,7 +64,7 @@
                                     <th>No.</th>
                                     <th>NIK</th>
                                     <th>Nama Karyawan</th>
-                                    <th>Jabatan</th>
+                                    <th>Kode Jabatan</th>
                                     <th>Departemen</th>
                                     <th>Jadwal</th>
                                     <th>Jam Masuk</th>

@@ -48,12 +48,12 @@
                 <input type="text" class="form-control" value="{{ $karyawan->nama_lengkap }}" name="nama_lengkap" placeholder="Nama Lengkap" autocomplete="off">
             </div>
         </div>
-        <div class="form-group boxed">
+        {{-- <div class="form-group boxed">
             <div class="input-wrapper">
                 <label for="jabatan">Jabatan</label>
-                <input type="text" class="form-control" value="{{ $karyawan->jabatan }}" name="jabatan" placeholder="Jabatan" autocomplete="off">
+                <input type="text" class="form-control" value="{{ $karyawan->kode_jabatan }}" name="jabatan" placeholder="Jabatan" autocomplete="off" disabled>
             </div>
-        </div>
+        </div> --}}
         <div class="form-group boxed">
             <div class="input-wrapper">
                 <label for="no_wa">Nomor HP</label>

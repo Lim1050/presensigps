@@ -18,5 +18,9 @@ class Jabatan extends Model
     {
         return $this->hasMany(Gaji::class, 'kode_jabatan', 'kode_jabatan');
     }
+    public function karyawan()
+    {
+        return $this->hasMany(Karyawan::class, 'kode_jabatan', 'kode_jabatan');
+    }
 
 }

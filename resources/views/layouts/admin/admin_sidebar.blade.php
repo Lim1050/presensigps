@@ -56,7 +56,7 @@
         </div>
     </li>
 
-    <!-- Divider -->
+    {{-- <!-- Divider -->
     <hr class="sidebar-divider">
 
     <li class="nav-item">
@@ -76,7 +76,7 @@
                 <span>Rekap Presensi</span></a>
             </div>
         </div>
-    </li>
+    </li> --}}
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -109,9 +109,9 @@
                 <i class="bi bi-calendar3 fa-fw"></i>
                 <span>Cuti</span></a>
 
-                <a class="collapse-item {{ request()->is('admin/gaji*') ? 'active' : '' }}" href="{{ route('admin.gaji') }}">
+                {{-- <a class="collapse-item {{ request()->is('admin/gaji*') ? 'active' : '' }}" href="{{ route('admin.gaji') }}">
                 <i class="bi bi-cash fa-fw"></i>
-                <span>Gaji</span></a>
+                <span>Gaji</span></a> --}}
             </div>
         </div>
     </li>

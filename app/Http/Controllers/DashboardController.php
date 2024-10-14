@@ -16,7 +16,7 @@ class DashboardController extends Controller
         $tahun_ini = date("Y");
         $nik = Auth::guard('karyawan')->user()->nik;
         $nama = Auth::guard('karyawan')->user()->nama_lengkap;
-        $jabatan = Auth::guard('karyawan')->user()->jabatan;
+        $jabatan = Auth::guard('karyawan')->user()->kode_jabatan;
         $presensi_hari_ini = DB::table('presensi')
                                 ->select('presensi.*', 'pengajuan_izin.keterangan')
                                 ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')

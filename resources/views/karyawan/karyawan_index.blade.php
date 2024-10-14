@@ -121,7 +121,7 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td>{{ $item->jabatan }}</td>
+                                <td>{{ $item->nama_jabatan }}</td>
                                 <td>{{ $item->nama_departemen }}</td>
                                 <td>{{ $item->kode_cabang }}</td>
                                 <td>{{ $item->no_wa }}</td>
@@ -175,11 +175,19 @@
                             <input type="text" class="form-control" id="no_wa" name="no_wa" placeholder=" Nomor HP">
                         </div>
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <div class="icon-placeholder">
                             <i class="bi bi-person-vcard"></i>
                             <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder=" Jabatan">
                         </div>
+                    </div> --}}
+                    <div class="form-group">
+                        <select name="kode_jabatan" id="kode_jabatan" class="form-control">
+                            <option value="">Pilih jabatan</option>
+                            @foreach ($jabatan as $item)
+                            <option {{ Request('kode_jabatan') == $item->kode_jabatan ? 'selected' : '' }} value="{{ $item->kode_jabatan }}">{{ $item->nama_jabatan }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <select name="kode_departemen" id="kode_departement" class="form-control">

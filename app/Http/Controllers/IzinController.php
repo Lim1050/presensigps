@@ -521,7 +521,7 @@ class IzinController extends Controller
     {
 
         $query = PersetujuanSakitIzin::query();
-        $query->select('kode_izin', 'tanggal_izin_dari', 'tanggal_izin_sampai', 'pengajuan_izin.nik', 'nama_lengkap', 'jabatan', 'status', 'status_approved', 'keterangan');
+        $query->select('kode_izin', 'tanggal_izin_dari', 'tanggal_izin_sampai', 'pengajuan_izin.nik', 'nama_lengkap', 'kode_jabatan', 'status', 'status_approved', 'keterangan');
         $query->join('karyawan', 'pengajuan_izin.nik', '=', 'karyawan.nik');
         $query->orderBy('tanggal_izin_dari', 'desc');
 
@@ -534,8 +534,8 @@ class IzinController extends Controller
         if (!empty($request->nama_lengkap)) {
             $query->where('nama_lengkap', 'like', '%'. $request->nama_lengkap . '%');
         }
-        if (!empty($request->jabatan)) {
-            $query->where('jabatan', 'like', '%'. $request->jabatan . '%');
+        if (!empty($request->kode_jabatan)) {
+            $query->where('kode_jabatan', 'like', '%'. $request->kode_jabatan . '%');
         }
         if ($request->status_approved != '') {
             $query->where('status_approved', $request->status_approved);

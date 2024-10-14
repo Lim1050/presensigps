@@ -90,7 +90,7 @@
                             <div class="form-group">
                                 <div class="icon-placeholder">
                                     <i class="bi bi-person-vcard"></i>
-                                    <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder=" Jabatan" value="{{ Request('jabatan') }}">
+                                    <input type="text" class="form-control" id="kode_jabatan" name="kode_jabatan" placeholder=" Kode Jabatan" value="{{ Request('kode_jabatan') }}">
                                 </div>
                             </div>
                         </div>
@@ -122,7 +122,7 @@
                                         <th>No.</th>
                                         <th>NIK</th>
                                         <th>Nama Karyawan</th>
-                                        <th>Jabatan</th>
+                                        <th>Kode Jabatan</th>
                                         <th>Tanggal Izin Dari</th>
                                         <th>Tanggal Izin Sampai</th>
                                         <th>Status</th>
@@ -137,7 +137,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->nik }}</td>
                                         <td>{{ $item->nama_lengkap }}</td>
-                                        <td>{{ $item->jabatan }}</td>
+                                        <td>{{ $item->kode_jabatan }}</td>
                                         <td>{{ date('d-m-Y', strtotime($item->tanggal_izin_dari)) }}</td>
                                         <td>{{ date('d-m-Y', strtotime($item->tanggal_izin_sampai)) }}</td>
                                         <td>{{ $item->status == "sakit" ? "Sakit" : ($item->status == "izin" ? "Izin" : "Cuti") }}</td>

@@ -41,7 +41,7 @@
                     echo $namaSingkat;
                 @endphp
             </h2>
-            <span id="user-role">{{ Auth::guard('karyawan')->user()->jabatan }}</span>
+            <span id="user-role">{{ Auth::guard('karyawan')->user()->kode_jabatan }}</span>
             (<span id="user-role">{{ Auth::guard('karyawan')->user()->kode_cabang }}</span>)
         </div>
     </div>
@@ -428,7 +428,7 @@
                                 <div>
                                     {{ $leaderboard->nama_lengkap }}
                                     <br>
-                                    <small class="text-muted">{{ $leaderboard->jabatan }}</small>
+                                    <small class="text-muted">{{ $leaderboard->kode_jabatan }}</small>
                                 </div>
                                 @if ($leaderboard->status == 'hadir')
                                 <span class="badge {{ $leaderboard->jam_masuk < "09:00" ? "badge-success" : "badge-warning"}}">{{ $leaderboard->jam_masuk < "09:00" ? $leaderboard->jam_masuk : "Telat " . $leaderboard->jam_masuk}}</span>

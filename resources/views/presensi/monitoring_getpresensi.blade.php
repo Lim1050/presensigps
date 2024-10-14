@@ -21,7 +21,7 @@
         <td class="text-center">{{ $loop->iteration }}</td>
         <td>{{ $item->nik }}</td>
         <td>{{ $item->nama_lengkap }}</td>
-        <td>{{ $item->jabatan }}</td>
+        <td>{{ $item->kode_jabatan }}</td>
         <td>{{ $item->nama_departemen }}</td>
         <td>{{ $item->nama_jam_kerja }} <br> ({{ $item->jam_masuk_kerja }} s/d {{ $item->jam_pulang_kerja }})</td>
         <td>{{ $item->jam_masuk }}</td>
@@ -58,7 +58,7 @@
         <td class="text-center">{{ $loop->iteration }}</td>
         <td>{{ $item->nik }}</td>
         <td>{{ $item->nama_lengkap }}</td>
-        <td>{{ $item->jabatan }}</td>
+        <td>{{ $item->kode_jabatan }}</td>
         <td>{{ $item->nama_departemen }}</td>
         <td></td>
         <td></td>

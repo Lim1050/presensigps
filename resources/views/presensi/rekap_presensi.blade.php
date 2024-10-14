@@ -52,20 +52,20 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col">
                             <div class="form-group">
                                 <button type="submit" name="cetak" class="btn btn-primary w-100">
                                     <i class="bi bi-printer"></i> Cetak
                                 </button>
                             </div>
                         </div>
-                        <div class="col-6">
+                        {{-- <div class="col-6">
                             <div class="form-group">
                                 <button type="submit" name="export_excel" class="btn btn-success w-100">
                                     <i class="bi bi-file-earmark-spreadsheet"></i> Export Excel
                                 </button>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </form>
             </div>
