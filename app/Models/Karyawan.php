@@ -37,6 +37,11 @@ class Karyawan extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'kode_jabatan', 'kode_jabatan');
+    }
+
     public function presensi()
     {
         return $this->hasMany(presensi::class, 'nik', 'nik');
@@ -47,8 +52,15 @@ class Karyawan extends Authenticatable
         return $this->hasMany(Penggajian::class, 'nik', 'nik');
     }
 
+<<<<<<< HEAD
     public function jabatan()
     {
         return $this->belongsTo(Jabatan::class, 'kode_jabatan', 'kode_jabatan');
+=======
+    // Relasi dengan model PengajuanIzin
+    public function pengajuanIzin()
+    {
+        return $this->hasMany(PengajuanIzin::class, 'nik', 'nik');
+>>>>>>> 1a0d450a0dd891b35b54efcccdcb71ce88d1e4b6
     }
 }

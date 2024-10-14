@@ -28,6 +28,14 @@
         object-fit: cover;
         display: none; /* Initially hide the image */
     }
+
+    #edit_imgPreview {
+    display: block; /* Pastikan gambar ditampilkan */
+    visibility: visible; /* Pastikan gambar terlihat */
+    opacity: 1; /* Pastikan gambar tidak transparan */
+    max-width: 100%; /* Gambar disesuaikan dengan lebar container */
+    height: auto; /* Menjaga rasio gambar */
+}
 </style>
 
 <!-- Page Heading -->
@@ -127,7 +135,20 @@
                                 <td>{{ $item->no_wa }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <a href="{{ route('admin.karyawan.edit', Crypt::encrypt($item->nik)) }}" class="btn btn-warning" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                        {{-- <a href="{{ route('admin.karyawan.edit', Crypt::encrypt($item->nik)) }}" class="btn btn-warning" title="Edit"><i class="bi bi-pencil-square"></i></a> --}}
+
+                                        <a href="#" class="btn btn-warning" title="Edit" data-toggle="modal" data-target="#modalEditKaryawan"
+                                            data-nik="{{ $item->nik }}"
+                                            data-nama_lengkap="{{ $item->nama_lengkap }}"
+                                            data-foto="{{ $item->foto }}"
+                                            data-kode_jabatan="{{ $item->kode_jabatan }}"
+                                            {{-- data-password="{{ $item->password }}" --}}
+                                            data-kode_departemen="{{ $item->kode_departemen }}"
+                                            data-kode_cabang="{{ $item->kode_cabang }}"
+                                            data-no_wa="{{ $item->no_wa }}"
+                                        ><i class="bi bi-pencil-square"
+                                        ></i></a>
+
                                         <a href="{{ route('admin.karyawan.setting', Crypt::encrypt($item->nik)) }}" class="btn btn-secondary" title="Setting"><i class="bi bi-gear"></i></a>
                                         <a href="{{ route('admin.karyawan.reset.password', Crypt::encrypt($item->nik)) }}" class="btn btn-primary" title="Reset Password"><i class="bi bi-key"></i></a>
                                         <a href="{{ route('admin.karyawan.delete', Crypt::encrypt($item->nik)) }}" class="btn btn-danger delete-confirm" title="Delete"><i class="bi bi-trash3"></i></a>
@@ -175,6 +196,7 @@
                             <input type="text" class="form-control" id="no_wa" name="no_wa" placeholder=" Nomor HP">
                         </div>
                     </div>
+<<<<<<< HEAD
                     {{-- <div class="form-group">
                         <div class="icon-placeholder">
                             <i class="bi bi-person-vcard"></i>
@@ -186,9 +208,18 @@
                             <option value="">Pilih jabatan</option>
                             @foreach ($jabatan as $item)
                             <option {{ Request('kode_jabatan') == $item->kode_jabatan ? 'selected' : '' }} value="{{ $item->kode_jabatan }}">{{ $item->nama_jabatan }}</option>
+=======
+
+                    <div class="form-group">
+                        <select name="kode_jabatan" id="kode_jabatan" class="form-control">
+                            <option value="">Pilih Jabatan</option>
+                            @foreach ($jabatan as $item)
+                            <option value="{{ $item->kode_jabatan  }}">{{ $item->nama_jabatan }}</option>
+>>>>>>> 1a0d450a0dd891b35b54efcccdcb71ce88d1e4b6
                             @endforeach
                         </select>
                     </div>
+
                     <div class="form-group">
                         <select name="kode_departemen" id="kode_departement" class="form-control">
                             <option value="">Pilih Departemen</option>
@@ -219,6 +250,87 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary w-100"><i class="bi bi-send"></i> Simpan</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Karyawan -->
+<div class="modal fade" id="modalEditKaryawan" tabindex="-1" aria-labelledby="modalEditKaryawanLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditKaryawanLabel">Edit Data Karyawan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.karyawan.update', ['nik' => 0]) }}" method="POST" id="formEditKaryawan" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-group">
+                        <div class="icon-placeholder">
+                            <i class="bi bi-upc-scan"></i>
+                            <input type="text" class="form-control" id="edit_nik" name="nik" placeholder=" NIK">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="icon-placeholder">
+                            <i class="bi bi-person-fill"></i>
+                            <input type="text" class="form-control" id="edit_nama_lengkap" name="nama_lengkap" placeholder=" Nama Lengkap">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="icon-placeholder">
+                            <i class="bi bi-telephone-fill"></i>
+                            <input type="text" class="form-control" id="edit_no_wa" name="no_wa" placeholder=" Nomor HP">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <select name="kode_jabatan" id="edit_kode_jabatan" class="form-control">
+                            <option value="">Pilih Jabatan</option>
+                            @foreach ($jabatan as $item)
+                            <option value="{{ $item->kode_jabatan  }}">{{ $item->nama_jabatan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <select name="kode_departemen" id="edit_kode_departemen" class="form-control">
+                            <option value="">Pilih Departemen</option>
+                            @foreach ($departemen as $item)
+                            <option value="{{ $item->kode_departemen }}">{{ $item->nama_departemen }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="kode_cabang" id="edit_kode_cabang" class="form-control">
+                            <option value="">Pilih Cabang</option>
+                            @foreach ($cabang as $item)
+                            <option value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="editfoto" name="foto" accept="image/*">
+                            <label class="custom-file-label" for="edit_foto"  aria-describedby="inputGroupFileAddon02"><i class="bi bi-image"></i> Pilih Foto Karyawan</label>
+                        </div>
+                    </div>
+                    <div class="preview-container">
+                        <img id="edit_imgPreview" src="#" alt="Your Image" style="max-width: 100%; height: auto;">
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-arrow-bar-up"></i> Perbarui</button>
                             </div>
                         </div>
                     </div>
@@ -280,7 +392,7 @@
             var nik = $("#nik").val();
             var nama_lengkap = $("#nama_lengkap").val();
             var no_wa = $("#no_wa").val();
-            var jabatan = $("#jabatan").val();
+            var kode_jabatan = $("#kode_jabatan").val();
             var kode_departement = $("#kode_departement").val();
             var kode_cabang = $("#kode_cabang").val();
             var foto = $("#foto").val();
@@ -315,14 +427,14 @@
                     $("#no_wa").focus();
                 });
                 return false;
-            } else if (jabatan==""){
+            } else if (kode_jabatan==""){
                 Swal.fire({
                 title: 'Oops!',
                 text: 'Jabatan Harus Diisi!',
                 icon: 'warning',
                 confirmButtonText: 'Ok'
                 }).then((result)=>{
-                    $("#jabatan").focus();
+                    $("#kode_jabatan").focus();
                 });
                 return false;
             } else if (kode_departement==""){
@@ -356,6 +468,50 @@
                 });
                 return false;
             }
+        });
+
+
+        // Mengisi Data pada Modal Edit Karyawan
+        $('#modalEditKaryawan').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var nik = button.data('nik');
+            var nama_lengkap = button.data('nama_lengkap');
+            var foto = button.data('foto');
+            var kode_jabatan = button.data('kode_jabatan');
+            var kode_departemen = button.data('kode_departemen');
+            var kode_cabang = button.data('kode_cabang');
+            var no_wa = button.data('no_wa');
+            // var password = button.data('password');
+
+            var modal = $(this);
+            modal.find('.modal-body #edit_nik').val(nik);
+            modal.find('.modal-body #edit_nama_lengkap').val(nama_lengkap);
+            modal.find('.modal-body #edit_kode_jabatan').val(kode_jabatan);
+            modal.find('.modal-body #edit_kode_departemen').val(kode_departemen);
+            modal.find('.modal-body #edit_kode_cabang').val(kode_cabang);
+            modal.find('.modal-body #edit_no_wa').val(no_wa);
+
+            // Pratinjau gambar jika ada
+            if (foto) {
+                modal.find('.modal-body #edit_imgPreview').attr('src', '{{ Storage::url('uploads/karyawan/') }}' + foto);
+            } else {
+                modal.find('.modal-body #edit_imgPreview').attr('src', '#');
+            }
+
+            // Update URL form action dengan username yang sesuai
+            var formAction = "{{ route('admin.karyawan.update', ['nik' => ':nik']) }}";
+            formAction = formAction.replace(':nik', nik);
+            $('#formEditKaryawan').attr('action', formAction);
+        });
+
+        // Pratinjau gambar saat mengupload file baru
+        $('#edit_foto').change(function(){
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // Gantikan gambar lama dengan gambar baru yang diunggah
+                $('#edit_imgPreview').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
         });
 </script>
 

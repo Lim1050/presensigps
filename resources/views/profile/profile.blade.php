@@ -51,7 +51,11 @@
         {{-- <div class="form-group boxed">
             <div class="input-wrapper">
                 <label for="jabatan">Jabatan</label>
+<<<<<<< HEAD
                 <input type="text" class="form-control" value="{{ $karyawan->kode_jabatan }}" name="jabatan" placeholder="Jabatan" autocomplete="off" disabled>
+=======
+                <input type="text" class="form-control" value="{{ $karyawan->kode_jabatan }}" name="jabatan" placeholder="Jabatan" autocomplete="off">
+>>>>>>> 1a0d450a0dd891b35b54efcccdcb71ce88d1e4b6
             </div>
         </div> --}}
         <div class="form-group boxed">

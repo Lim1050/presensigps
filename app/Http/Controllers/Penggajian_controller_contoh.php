@@ -1,82 +1,50 @@
-<?php
-
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Gaji;
-use App\Models\Karyawan;
-use App\Models\PengajuanIzin;
 use App\Models\Penggajian;
-use App\Models\presensi;
-use Carbon\Carbon;
+use App\Models\Karyawan;
+use App\Models\Presensi;
+use App\Models\PengajuanIzin;
 use Illuminate\Http\Request;
 
 class PenggajianController extends Controller
 {
-    public function PenggajianIndex()
+    public function index()
     {
         $penggajian = Penggajian::with('karyawan')->get();
-        return view('penggajian.penggajian_index',compact('penggajian'));
+        return view('penggajian.index', compact('penggajian'));
     }
 
-    public function PenggajianCreate()
+    public function create()
     {
         $karyawan = Karyawan::all();
-        return view('penggajian.penggajian_create', compact('karyawan'));
+        return view('penggajian.create', compact('karyawan'));
     }
 
-    public function PenggajianStore(Request $request)
+    public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nik' => 'required',
             'tanggal_gaji' => 'required|date',
         ]);
 
         $karyawan = Karyawan::where('nik', $request->nik)->first();
-        $jabatan = $karyawan->jabatan;
+        $gaji = $karyawan->jabatan->gaji->jumlah_gaji;
 
-        // Mengambil data gaji berdasarkan jabatan
-        $gajiJabatan = Gaji::where('kode_jabatan', $jabatan->kode_jabatan)->sum('jumlah_gaji');
+        // Hitung potongan
+        $potongan = $this->hitungPotongan($request->nik, $request->tanggal_gaji);
 
-        // Menghitung jumlah hari dalam bulan tersebut
-        $totalHariDalamBulan = Carbon::parse($request->tanggal_gaji)->daysInMonth;
-
-        // Menghitung jumlah kehadiran
-        $totalKehadiran = Presensi::where('nik', $request->nik)
-                                    ->whereBetween('tanggal_presensi', [
-                                        Carbon::parse($request->tanggal_gaji)->startOfMonth(),
-                                        Carbon::parse($request->tanggal_gaji)->endOfMonth()
-                                    ])
-                                    ->count();
-
-        // Menghitung jumlah izin, sakit, dan cuti yang sudah disetujui
-        $totalIzin = PengajuanIzin::where('nik', $request->nik)
-                                    ->where('status_approved', 1)
-                                    ->whereIn('status', ['izin', 'sakit', 'cuti'])
-                                    ->whereBetween('tanggal_izin_dari', [
-                                        Carbon::parse($request->tanggal_gaji)->startOfMonth(),
-                                        Carbon::parse($request->tanggal_gaji)->endOfMonth()
-                                    ])
-                                    ->count();
-
-        // Menghitung total ketidakhadiran
-        $totalKetidakhadiran = $totalHariDalamBulan - $totalKehadiran;
-
-        // Potongan dihitung sebagai gaji per hari dikali dengan jumlah ketidakhadiran
-        $potongan = ($gajiJabatan / $totalHariDalamBulan) * $totalKetidakhadiran;
-
-        // Total gaji setelah potongan
-        $totalGaji = $gajiJabatan - $potongan;
+        // Hitung total gaji
+        $totalGaji = $gaji - $potongan;
 
         Penggajian::create([
             'nik' => $request->nik,
-            'gaji' => $gajiJabatan,
+            'gaji' => $gaji,
             'potongan' => $potongan,
             'total_gaji' => $totalGaji,
             'tanggal_gaji' => $request->tanggal_gaji,
         ]);
 
-        return redirect()->route('admin.penggajian')->with('success', 'Data penggajian berhasil ditambahkan.');
+        return redirect()->route('penggajian.index')->with('success', 'Data penggajian berhasil ditambahkan.');
     }
 
     public function show($id)
@@ -134,7 +102,7 @@ class PenggajianController extends Controller
         $tanggalSelesai = date('Y-m-t', strtotime($tanggal_gaji));
 
         // Hitung jumlah ketidakhadiran
-        $jumlahKetidakhadiran = presensi::where('nik', $nik)
+        $jumlahKetidakhadiran = Presensi::where('nik', $nik)
             ->whereBetween('tanggal_presensi', [$tanggalMulai, $tanggalSelesai])
             ->where('status', '!=', 'hadir')
             ->count();
