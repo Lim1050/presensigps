@@ -23,6 +23,7 @@ class GajiController extends Controller
             $request->validate([
                 'kode_gaji' => 'required|unique:gaji,kode_gaji|max:255',
                 'kode_jabatan' => 'required|exists:jabatan,kode_jabatan',
+                'jenis_gaji' => 'required',
                 'nama_gaji' => 'required|max:255',
                 'jumlah_gaji' => 'required|numeric',
             ]);
@@ -42,6 +43,7 @@ class GajiController extends Controller
         try {
             $request->validate([
                 'kode_jabatan' => 'required|exists:jabatan,kode_jabatan',
+                'jenis_gaji' => 'required',
                 'nama_gaji' => 'required|max:255',
                 'jumlah_gaji' => 'required|numeric',
             ]);

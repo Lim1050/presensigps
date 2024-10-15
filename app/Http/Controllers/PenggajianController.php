@@ -33,10 +33,44 @@ class PenggajianController extends Controller
         ]);
 
         $karyawan = Karyawan::where('nik', $request->nik)->first();
-        $jabatan = $karyawan->jabatan;
-
+        // $jabatan = $karyawan->kode_jabatan;
         // Mengambil data gaji berdasarkan jabatan
-        $gajiJabatan = Gaji::where('kode_jabatan', $jabatan->kode_jabatan)->sum('jumlah_gaji');
+        $gajiTetap = Gaji::where('kode_jabatan', $karyawan->kode_jabatan)
+                            ->where('jenis_gaji', 'Gaji tetap')
+                            ->first();
+        // dd($gajiTetap->jenis_gaji, $gajiTetap->jumlah_gaji);
+
+        $gajiTunjangan = Gaji::where('kode_jabatan', $karyawan->kode_jabatan)
+                            ->where('jenis_gaji', 'Tunjangan jabatan')
+                            ->first();
+        // dd($gajiTetap->jenis_gaji, $gajiTetap->jumlah_gaji, $gajiTunjangan->jenis_gaji, $gajiTunjangan->jumlah_gaji);
+
+        $gajiKaryawan = $gajiTetap->jumlah_gaji + $gajiTunjangan->jumlah_gaji;
+
+        // $gajiKaryawan = Gaji::where('kode_jabatan', operator: $karyawan->kode_jabatan)->sum('jumlah_gaji');
+        // dd($gajiKaryawan);
+
+        $bulanIndonesia = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+
+        // Mengambil bulan dari tanggal yang di-parse
+        $bulan = Carbon::parse($request->tanggal_gaji)->month;
+
+        // Mendapatkan nama bulan dalam bahasa Indonesia
+        $namaBulan = $bulanIndonesia[$bulan];
+        // dd($namaBulan);
 
         // Menghitung jumlah hari dalam bulan tersebut
         $totalHariDalamBulan = Carbon::parse($request->tanggal_gaji)->daysInMonth;
@@ -63,14 +97,18 @@ class PenggajianController extends Controller
         $totalKetidakhadiran = $totalHariDalamBulan - $totalKehadiran;
 
         // Potongan dihitung sebagai gaji per hari dikali dengan jumlah ketidakhadiran
-        $potongan = ($gajiJabatan / $totalHariDalamBulan) * $totalKetidakhadiran;
+        $potongan = ($gajiKaryawan / $totalHariDalamBulan) * $totalKetidakhadiran;
 
         // Total gaji setelah potongan
-        $totalGaji = $gajiJabatan - $potongan;
+        $totalGaji = $gajiKaryawan - $potongan;
 
         Penggajian::create([
             'nik' => $request->nik,
-            'gaji' => $gajiJabatan,
+            'bulan' => $namaBulan,
+            'jumlah_hari_dalam_bulan' => $totalHariDalamBulan,
+            'jumlah_hari_masuk' => $totalKehadiran,
+            'jumlah_hari_tidak_masuk' => $totalKetidakhadiran,
+            'gaji' => $gajiKaryawan,
             'potongan' => $potongan,
             'total_gaji' => $totalGaji,
             'tanggal_gaji' => $request->tanggal_gaji,
@@ -79,10 +117,10 @@ class PenggajianController extends Controller
         return redirect()->route('admin.penggajian')->with('success', 'Data penggajian berhasil ditambahkan.');
     }
 
-    public function show($id)
+    public function PenggajianShow($id)
     {
         $penggajian = Penggajian::with('karyawan')->findOrFail($id);
-        return view('penggajian.show', compact('penggajian'));
+        return view('penggajian.penggajian_show', compact('penggajian'));
     }
 
     public function edit($id)

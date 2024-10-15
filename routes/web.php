@@ -157,6 +157,7 @@ Route::middleware(['auth:user'])->group(function () {
     // Penggajian Store
     Route::post('/admin/penggajian/store', [PenggajianController::class, 'PenggajianStore'])->name('admin.penggajian.store');
     Route::get('/penggajian/hitung', [PenggajianController::class, 'hitungGaji'])->name('penggajian.hitung');
+    Route::get('/admin/penggajian/show/{id}', action: [PenggajianController::class, 'PenggajianShow'])->name('admin.penggajian.show');
 
     // Konfigurasi Lokasi Kantor
     Route::get('/admin/konfigurasi/lokasi/kantor', [KonfigurasiController::class, 'LokasiKantor'])->name('admin.konfigurasi.lokasi.kantor');

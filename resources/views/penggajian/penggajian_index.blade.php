@@ -86,8 +86,12 @@
                                 <th class="text-center">No</th>
                                 <th class="text-center">NIK</th>
                                 <th class="text-center">Nama Karyawan</th>
+                                <th class="text-center">Bulan</th>
+                                <th class="text-center">Jumlah Hari</th>
+                                <th class="text-center">Jumlah Masuk</th>
+                                <th class="text-center">Jumlah Tidak Masuk</th>
                                 <th class="text-center">Gaji</th>
-                                <th class="text-right">Potongan</th>
+                                <th class="text-center">Potongan</th>
                                 <th class="text-center">Total Gaji</th>
                                 <th class="text-center">Tanggal Gaji</th>
                                 <th class="text-center">Aksi</th>
@@ -96,22 +100,28 @@
                         <tbody>
                             @foreach($penggajian as $item)
                             <tr>
-                                <td>{{ $item->id }}</td>
-                                <td>{{ $item->nik }}</td>
-                                <td>{{ $item->karyawan->nama_lengkap }}</td>
-                                <td>{{ number_format($item->gaji, 2) }}</td>
-                                <td>{{ number_format($item->potongan, 2) }}</td>
-                                <td>{{ number_format($item->total_gaji, 2) }}</td>
-                                <td>{{ $item->tanggal_gaji }}</td>
-                                {{-- <td>
-                                    <a href="{{ route('penggajian.show', $item->id) }}" class="btn btn-info">Lihat</a>
-                                    <a href="{{ route('penggajian.edit', $item->id) }}" class="btn btn-warning">Edit</a>
-                                    <form action="{{ route('penggajian.destroy', $item->id) }}" method="POST" style="display:inline-block;">
+                                <td class="text-center">{{ $item->id }}</td>
+                                <td class="text-center">{{ $item->nik }}</td>
+                                <td class="text-center">{{ $item->karyawan->nama_lengkap }}</td>
+                                <td class="text-center">{{$item->bulan }}</td>
+                                <td class="text-center">{{$item->jumlah_hari_dalam_bulan }}</td>
+                                <td class="text-center">{{$item->jumlah_hari_masuk }}</td>
+                                <td class="text-center">{{$item->jumlah_hari_tidak_masuk }}</td>
+                                <td class="text-center">{{ number_format($item->gaji, 2) }}</td>
+                                <td class="text-center">
+                                    {{ number_format($item->potongan, 2) }}
+                                </td>
+                                <td class="text-center">{{ number_format($item->total_gaji, 2) }}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($item->tanggal_gaji)->translatedFormat('d F Y') }}</td>
+                                <td class="text-center">
+                                    <a href="{{ route('admin.penggajian.show', $item->id) }}" class="btn btn-info">Lihat</a>
+                                    <a href="#" class="btn btn-warning">Edit</a>
+                                    <form action="#" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</button>
                                     </form>
-                                </td> --}}
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

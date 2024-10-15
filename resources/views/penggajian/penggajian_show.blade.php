@@ -1,0 +1,102 @@
+@extends('layouts.admin.admin_master')
+@section('content')
+
+<style>
+    .icon-placeholder {
+        position: relative;
+        /* display: inline-block; */
+    }
+
+    .icon-placeholder input {
+        padding-left: 30px; /* Adjust padding to make room for the icon */
+    }
+
+    .icon-placeholder .bi {
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        /* color: #ccc; Icon color */
+    }
+
+    .preview-container {
+            margin-top: 20px;
+    }
+    .preview-container img {
+        width: 100px;
+        height: 150px;
+        object-fit: cover;
+        display: none; /* Initially hide the image */
+    }
+</style>
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Gaji Karyawan {{ $penggajian->karyawan->nama_lengkap }} Bulan {{ \Carbon\Carbon::parse($penggajian->tanggal_gaji)->translatedFormat('F Y') }}</h1>
+</div>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                {{-- table --}}
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <th>NIK</th>
+                                <td>{{ $penggajian->karyawan->nik }}</td>
+                            </tr>
+                            <tr>
+                                <th>Nama Karyawan</th>
+                                <td>{{ $penggajian->karyawan->nama_lengkap }}</td>
+                            </tr>
+                            <tr>
+                                <th>Bulan</th>
+                                <td>{{$penggajian->bulan }}</td>
+                            </tr>
+                            <tr>
+                                <th>Jumlah Hari</th>
+                                <td>{{$penggajian->jumlah_hari_dalam_bulan }}</td>
+                            </tr>
+                            <tr>
+                                <th>Jumlah Masuk</th>
+                                <td>{{$penggajian->jumlah_hari_masuk }}</td>
+                            </tr>
+                            <tr>
+                                <th>Jumlah Tidak Masuk</th>
+                                <td>{{$penggajian->jumlah_hari_tidak_masuk }}</td>
+                            </tr>
+                            <tr>
+                                <th>Gaji</th>
+                                <td>{{ number_format($penggajian->gaji, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Potongan = (Gaji / Jumlah Hari) x Jumlah Tidak Masuk</th>
+                                <td>
+                                    {{ number_format($penggajian->potongan, 2) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Total Gaji = Gaji - Potongan</th>
+                                <td>{{ number_format($penggajian->total_gaji, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Tanggal Gaji</th>
+                                <td>{{ \Carbon\Carbon::parse($penggajian->tanggal_gaji)->translatedFormat('d F Y') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {{-- {{ $jabatan->links('vendor.pagination.bootstrap-5') }} --}}
+                    <a href="{{ route('admin.penggajian') }}" class="btn btn-danger">Kembali</a>
+                </div>
+            </div>
+    </div>
+</div>
+
+@push('myscript')
+
+@endpush
+
+@endsection

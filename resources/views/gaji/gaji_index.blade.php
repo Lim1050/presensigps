@@ -86,6 +86,7 @@
                                 <th class="text-center">No</th>
                                 <th class="text-center">Kode Gaji</th>
                                 <th class="text-center">Jabatan</th>
+                                <th class="text-center">Jenis Gaji</th>
                                 <th class="text-center">Nama Gaji</th>
                                 <th class="text-right">Jumlah Gaji</th>
                                 <th class="text-center">Aksi</th>
@@ -97,7 +98,8 @@
                             <tr>
                                 <td class="text-center">{{ $loop->iteration}}</td>
                                 <td class="text-center">{{ $item->kode_gaji }}</td>
-                                <td class="text-center">{{ $item->jabatan->nama_jabatan }}</td>
+                                <td class="text-center">{{ $item->kode_jabatan }}</td>
+                                <td class="text-center">{{ $item->jenis_gaji }}</td>
                                 <td class="text-center">{{ $item->nama_gaji }}</td>
                                 <td class="text-right">Rp {{ $item->jumlah_gaji }}</td>
                                 <td class="text-center">
@@ -105,7 +107,8 @@
                                         {{-- <a href="{{ route('admin.jabatan.edit', $item->kode_jabatan) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a> --}}
                                         <a href="#" class="btn btn-warning" title="Edit" data-toggle="modal" data-target="#modalEditGaji"
                                                 data-kode_gaji="{{ $item->kode_gaji }}"
-                                                data-kode_jabatan="{{ $item->jabatan->kode_jabatan }}"
+                                                data-kode_jabatan="{{ $item->kode_jabatan }}"
+                                                data-jenis_gaji="{{ $item->jenis_gaji }}"
                                                 data-nama_gaji="{{ $item->nama_gaji }}"
                                                 data-jumlah_gaji="{{ $item->jumlah_gaji }}"
                                                 >
@@ -150,6 +153,13 @@
                             @foreach ($jabatan as $item)
                             <option value="{{ $item->kode_jabatan  }}">{{ $item->nama_jabatan }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="jenis_gaji" id="jenis_gaji" class="form-control">
+                            <option value="">Pilih Jenis Gaji</option>
+                            <option value="Gaji tetap">Gaji tetap</option>
+                            <option value="Tunjangan jabatan">Tunjangan jabatan</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -204,6 +214,13 @@
                             @foreach ($jabatan as $item)
                             <option value="{{ $item->kode_jabatan  }}">{{ $item->nama_jabatan }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="jenis_gaji" id="edit_jenis_gaji" class="form-control">
+                            <option value="">Pilih Jenis Gaji</option>
+                            <option value="Gaji tetap">Gaji tetap</option>
+                            <option value="Tunjangan jabatan">Tunjangan jabatan</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -315,12 +332,14 @@
             var button = $(event.relatedTarget);
             var kode_gaji = button.data('kode_gaji');
             var kode_jabatan = button.data('kode_jabatan');
+            var jenis_gaji = button.data('jenis_gaji');
             var nama_gaji = button.data('nama_gaji');
             var jumlah_gaji = button.data('jumlah_gaji');
 
             var modal = $(this);
             modal.find('.modal-body #edit_kode_gaji').val(kode_gaji);
             modal.find('.modal-body #edit_kode_jabatan').val(kode_jabatan);
+            modal.find('.modal-body #edit_jenis_gaji').val(jenis_gaji);
             modal.find('.modal-body #edit_nama_gaji').val(nama_gaji);
             modal.find('.modal-body #edit_jumlah_gaji').val(jumlah_gaji);
 
