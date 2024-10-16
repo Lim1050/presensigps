@@ -9,6 +9,7 @@ use App\Http\Controllers\IzinController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KonfigurasiController;
+use App\Http\Controllers\KonfigurasiGajiController;
 use App\Http\Controllers\PenggajianController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
@@ -158,6 +159,15 @@ Route::middleware(['auth:user'])->group(function () {
     Route::post('/admin/penggajian/store', [PenggajianController::class, 'PenggajianStore'])->name('admin.penggajian.store');
     Route::get('/penggajian/hitung', [PenggajianController::class, 'hitungGaji'])->name('penggajian.hitung');
     Route::get('/admin/penggajian/show/{id}', action: [PenggajianController::class, 'PenggajianShow'])->name('admin.penggajian.show');
+
+    // Konfigurasi Jenis Gaji
+    Route::get('/admin/konfigurasi/jenis/gaji', action: [KonfigurasiGajiController::class, 'KonfigurasiGajiIndex'])->name('admin.konfigurasi.jenis.gaji');
+    // Konfigurasi Jenis Gaji Store
+    Route::post('/admin/konfigurasi/jenis/gaji/store', [KonfigurasiGajiController::class, 'KonfigurasiGajiStore'])->name('admin.konfigurasi.jenis.gaji.store');
+    // Konfigurasi Jenis Gaji Update
+    Route::put('/admin/konfigurasi/jenis/gaji/update/{kode_jenis_gaji}', [KonfigurasiGajiController::class, 'KonfigurasiGajiUpdate'])->name('admin.konfigurasi.jenis.gaji.update');
+    // Kantor Jenis Gaji delete
+    Route::get('/admin/konfigurasi/jenis/gaji/delete/{kode_jenis_gaji}', [KonfigurasiGajiController::class, 'KonfigurasiGajiDelete'])->name('admin.konfigurasi.jenis.gaji.delete');
 
     // Konfigurasi Lokasi Kantor
     Route::get('/admin/konfigurasi/lokasi/kantor', [KonfigurasiController::class, 'LokasiKantor'])->name('admin.konfigurasi.lokasi.kantor');

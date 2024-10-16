@@ -98,8 +98,8 @@
                             <tr>
                                 <td class="text-center">{{ $loop->iteration}}</td>
                                 <td class="text-center">{{ $item->kode_gaji }}</td>
-                                <td class="text-center">{{ $item->kode_jabatan }}</td>
-                                <td class="text-center">{{ $item->jenis_gaji }}</td>
+                                <td class="text-center">{{ $item->jabatan->nama_jabatan }}</td>
+                                <td class="text-center">{{ $item->jenisGaji->jenis_gaji }}</td>
                                 <td class="text-center">{{ $item->nama_gaji }}</td>
                                 <td class="text-right">Rp {{ $item->jumlah_gaji }}</td>
                                 <td class="text-center">
@@ -108,7 +108,7 @@
                                         <a href="#" class="btn btn-warning" title="Edit" data-toggle="modal" data-target="#modalEditGaji"
                                                 data-kode_gaji="{{ $item->kode_gaji }}"
                                                 data-kode_jabatan="{{ $item->kode_jabatan }}"
-                                                data-jenis_gaji="{{ $item->jenis_gaji }}"
+                                                data-kode_jenis_gaji="{{ $item->kode_jenis_gaji }}"
                                                 data-nama_gaji="{{ $item->nama_gaji }}"
                                                 data-jumlah_gaji="{{ $item->jumlah_gaji }}"
                                                 >
@@ -156,12 +156,20 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <select name="kode_jenis_gaji" id="kode_jenis_gaji" class="form-control">
+                            <option value="">Pilih Jenis Gaji</option>
+                            @foreach ($jenis_gaji as $item)
+                            <option value="{{ $item->kode_jenis_gaji  }}">{{ $item->jenis_gaji }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    {{-- <div class="form-group">
                         <select name="jenis_gaji" id="jenis_gaji" class="form-control">
                             <option value="">Pilih Jenis Gaji</option>
                             <option value="Gaji tetap">Gaji tetap</option>
                             <option value="Tunjangan jabatan">Tunjangan jabatan</option>
                         </select>
-                    </div>
+                    </div> --}}
                     <div class="form-group">
                         <div class="icon-placeholder">
                             <i class="bi bi-cash"></i>
@@ -217,12 +225,20 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <select name="kode_jenis_gaji" id="edit_kode_jenis_gaji" class="form-control">
+                            <option value="">Pilih Jenis Gaji</option>
+                            @foreach ($jenis_gaji as $item)
+                            <option value="{{ $item->kode_jenis_gaji  }}">{{ $item->jenis_gaji }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    {{-- <div class="form-group">
                         <select name="jenis_gaji" id="edit_jenis_gaji" class="form-control">
                             <option value="">Pilih Jenis Gaji</option>
                             <option value="Gaji tetap">Gaji tetap</option>
                             <option value="Tunjangan jabatan">Tunjangan jabatan</option>
                         </select>
-                    </div>
+                    </div> --}}
                     <div class="form-group">
                         <div class="icon-placeholder">
                             <i class="bi bi-person-vcard"></i>
@@ -281,6 +297,7 @@
         $("#formGaji").submit(function(){
             var kode_gaji = $("#kode_gaji").val();
             var kode_jabatan = $("#kode_jabatan").val();
+            var kode_jenis_gaji = $("#kode_jenis_gaji").val();
             var nama_gaji = $("#nama_gaji").val();
             var jumlah_gaji = $("#jumlah_gaji").val();
 
@@ -304,7 +321,17 @@
                     $("#kode_jabatan").focus();
                 });
                 return false;
-            } else if (nama_gaji==""){
+            } else if (kode_jenis_gaji==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Jenis Gaji Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#kode_jenis_gaji").focus();
+                });
+                return false;
+            }else if (nama_gaji==""){
                 Swal.fire({
                 title: 'Oops!',
                 text: 'Nama Gaji Harus Diisi!',
@@ -332,14 +359,14 @@
             var button = $(event.relatedTarget);
             var kode_gaji = button.data('kode_gaji');
             var kode_jabatan = button.data('kode_jabatan');
-            var jenis_gaji = button.data('jenis_gaji');
+            var kode_jenis_gaji = button.data('kode_jenis_gaji');
             var nama_gaji = button.data('nama_gaji');
             var jumlah_gaji = button.data('jumlah_gaji');
 
             var modal = $(this);
             modal.find('.modal-body #edit_kode_gaji').val(kode_gaji);
             modal.find('.modal-body #edit_kode_jabatan').val(kode_jabatan);
-            modal.find('.modal-body #edit_jenis_gaji').val(jenis_gaji);
+            modal.find('.modal-body #edit_kode_jenis_gaji').val(kode_jenis_gaji);
             modal.find('.modal-body #edit_nama_gaji').val(nama_gaji);
             modal.find('.modal-body #edit_jumlah_gaji').val(jumlah_gaji);
 

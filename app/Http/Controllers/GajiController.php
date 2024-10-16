@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Gaji;
 use App\Models\Jabatan;
+use App\Models\KonfigurasiGaji;
 use App\Models\presensi;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,10 @@ class GajiController extends Controller
 {
     public function GajiIndex()
     {
-        $gaji = Gaji::with('jabatan')->orderBy('kode_jabatan')->get();
+        $gaji = Gaji::with('jabatan', 'jenisGaji')->orderBy('kode_jabatan')->get();
         $jabatan = Jabatan::all();
-        return view('gaji.gaji_index', compact('gaji', 'jabatan'));
+        $jenis_gaji = KonfigurasiGaji::all();
+        return view('gaji.gaji_index', compact('gaji', 'jabatan', 'jenis_gaji'));
     }
 
     public function GajiStore(Request $request)
@@ -23,7 +25,7 @@ class GajiController extends Controller
             $request->validate([
                 'kode_gaji' => 'required|unique:gaji,kode_gaji|max:255',
                 'kode_jabatan' => 'required|exists:jabatan,kode_jabatan',
-                'jenis_gaji' => 'required',
+                'kode_jenis_gaji' => 'required',
                 'nama_gaji' => 'required|max:255',
                 'jumlah_gaji' => 'required|numeric',
             ]);
@@ -43,7 +45,7 @@ class GajiController extends Controller
         try {
             $request->validate([
                 'kode_jabatan' => 'required|exists:jabatan,kode_jabatan',
-                'jenis_gaji' => 'required',
+                'kode_jenis_gaji' => 'required',
                 'nama_gaji' => 'required|max:255',
                 'jumlah_gaji' => 'required|numeric',
             ]);

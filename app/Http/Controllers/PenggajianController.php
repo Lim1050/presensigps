@@ -36,12 +36,12 @@ class PenggajianController extends Controller
         // $jabatan = $karyawan->kode_jabatan;
         // Mengambil data gaji berdasarkan jabatan
         $gajiTetap = Gaji::where('kode_jabatan', $karyawan->kode_jabatan)
-                            ->where('jenis_gaji', 'Gaji tetap')
+                            ->where('jenis_gaji', 'Gaji Tetap')
                             ->first();
         // dd($gajiTetap->jenis_gaji, $gajiTetap->jumlah_gaji);
 
         $gajiTunjangan = Gaji::where('kode_jabatan', $karyawan->kode_jabatan)
-                            ->where('jenis_gaji', 'Tunjangan jabatan')
+                            ->where('jenis_gaji', 'Tunjangan Jabatan')
                             ->first();
         // dd($gajiTetap->jenis_gaji, $gajiTetap->jumlah_gaji, $gajiTunjangan->jenis_gaji, $gajiTunjangan->jumlah_gaji);
 

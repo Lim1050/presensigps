@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 15, 2024 at 03:18 PM
+-- Generation Time: Oct 16, 2024 at 03:59 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -74,7 +74,8 @@ CREATE TABLE `failed_jobs` (
 CREATE TABLE `gaji` (
   `kode_gaji` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `kode_jabatan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `jenis_gaji` enum('Gaji tetap','Tunjangan jabatan') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_jenis_gaji` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jenis_gaji` enum('Gaji tetap','Tunjangan jabatan','Transportasi') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nama_gaji` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `jumlah_gaji` decimal(12,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -85,23 +86,24 @@ CREATE TABLE `gaji` (
 -- Dumping data for table `gaji`
 --
 
-INSERT INTO `gaji` (`kode_gaji`, `kode_jabatan`, `jenis_gaji`, `nama_gaji`, `jumlah_gaji`, `created_at`, `updated_at`) VALUES
-('GTKK', 'KEPKAM', 'Gaji tetap', 'Gaji Tetap Kepala Keamanan', 5000000.00, '2024-10-15 05:36:13', '2024-10-15 06:23:53'),
-('GTPC', 'PCCTV', 'Gaji tetap', 'Gaji Tetap Petugas CCTV', 4000000.00, '2024-10-15 05:38:02', '2024-10-15 06:24:09'),
-('GTPKG', 'PKG', 'Gaji tetap', 'Gaji Tetap Petugas Kontrol Gedung', 4000000.00, '2024-10-15 05:40:30', '2024-10-15 06:24:35'),
-('GTPM', 'PENMAL', 'Gaji tetap', 'Gaji Tetap Penjaga Malam', 4000000.00, '2024-10-15 05:39:09', '2024-10-15 06:24:20'),
-('GTPPM', 'PPM', 'Gaji tetap', 'Gaji Tetap Petugas Pintu Masuk', 3500000.00, '2024-10-15 05:41:57', '2024-10-15 06:24:48'),
-('GTSK', 'SUPKAM', 'Gaji tetap', 'Gaji Tetap Supervisor Keamanan', 5000000.00, '2024-10-15 05:45:15', '2024-10-15 06:25:10'),
-('GTSO', 'SO', 'Gaji tetap', 'Gaji Tetap Security Officer', 3750000.00, '2024-10-15 05:43:40', '2024-10-15 06:25:00'),
-('GTWKK', 'WAKAM', 'Gaji tetap', 'Gaji Tetap Wakil Kepala Keamanan', 4500000.00, '2024-10-15 05:46:22', '2024-10-15 06:25:25'),
-('TJKK', 'KEPKAM', 'Tunjangan jabatan', 'Tunjangan Jabatan Kepala Keamanan', 2500000.00, '2024-10-15 05:36:51', '2024-10-15 06:24:03'),
-('TJPC', 'PCCTV', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas CCTV', 2000000.00, '2024-10-15 05:38:38', '2024-10-15 06:24:13'),
-('TJPKG', 'PKG', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Kontrol Gedung', 2000000.00, '2024-10-15 05:41:04', '2024-10-15 06:24:42'),
-('TJPM', 'PENMAL', 'Tunjangan jabatan', 'Tunjangan Jabatan Penjaga Malam', 2000000.00, '2024-10-15 05:39:41', '2024-10-15 06:24:29'),
-('TJPPM', 'PPM', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Pintu Masuk', 1750000.00, '2024-10-15 05:42:50', '2024-10-15 06:24:54'),
-('TJSK', 'SUPKAM', 'Tunjangan jabatan', 'Tunjangan Jabatan Supervisor Keamanan', 2500000.00, '2024-10-15 05:45:44', '2024-10-15 06:25:20'),
-('TJSO', 'SO', 'Tunjangan jabatan', 'Tunjangan Jabatan Security Officer', 1875000.00, '2024-10-15 05:44:22', '2024-10-15 06:25:05'),
-('TJWKK', 'WAKAM', 'Tunjangan jabatan', 'Tunjangan Jabatan Wakil Kepala Keamanan', 2250000.00, '2024-10-15 05:47:11', '2024-10-15 06:25:30');
+INSERT INTO `gaji` (`kode_gaji`, `kode_jabatan`, `kode_jenis_gaji`, `jenis_gaji`, `nama_gaji`, `jumlah_gaji`, `created_at`, `updated_at`) VALUES
+('GTKK', 'KEPKAM', 'GT', 'Gaji tetap', 'Gaji Tetap Kepala Keamanan', 5000000.00, '2024-10-15 05:36:13', '2024-10-16 08:04:33'),
+('GTPC', 'PCCTV', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas CCTV', 4000000.00, '2024-10-15 05:38:02', '2024-10-16 08:06:29'),
+('GTPKG', 'PKG', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas Kontrol Gedung', 4000000.00, '2024-10-15 05:40:30', '2024-10-16 08:07:08'),
+('GTPM', 'PENMAL', 'GT', 'Gaji tetap', 'Gaji Tetap Penjaga Malam', 4000000.00, '2024-10-15 05:39:09', '2024-10-16 08:06:44'),
+('GTPPM', 'PPM', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas Pintu Masuk', 3500000.00, '2024-10-15 05:41:57', '2024-10-16 08:07:18'),
+('GTSK', 'SUPKAM', 'GT', 'Gaji tetap', 'Gaji Tetap Supervisor Keamanan', 5000000.00, '2024-10-15 05:45:15', '2024-10-16 08:07:43'),
+('GTSO', 'SO', 'GT', 'Gaji tetap', 'Gaji Tetap Security Officer', 3750000.00, '2024-10-15 05:43:40', '2024-10-16 08:07:31'),
+('GTWKK', 'WAKAM', 'GT', 'Gaji tetap', 'Gaji Tetap Wakil Kepala Keamanan', 4500000.00, '2024-10-15 05:46:22', '2024-10-16 08:07:53'),
+('TJKK', 'KEPKAM', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Kepala Keamanan', 2500000.00, '2024-10-15 05:36:51', '2024-10-16 08:06:22'),
+('TJPC', 'PCCTV', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas CCTV', 2000000.00, '2024-10-15 05:38:38', '2024-10-16 08:06:37'),
+('TJPKG', 'PKG', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Kontrol Gedung', 2000000.00, '2024-10-15 05:41:04', '2024-10-16 08:07:13'),
+('TJPM', 'PENMAL', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Penjaga Malam', 2000000.00, '2024-10-15 05:39:41', '2024-10-16 08:06:54'),
+('TJPPM', 'PPM', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Pintu Masuk', 1750000.00, '2024-10-15 05:42:50', '2024-10-16 08:07:24'),
+('TJSK', 'SUPKAM', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Supervisor Keamanan', 2500000.00, '2024-10-15 05:45:44', '2024-10-16 08:07:47'),
+('TJSO', 'SO', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Security Officer', 1875000.00, '2024-10-15 05:44:22', '2024-10-16 08:07:37'),
+('TJWKK', 'WAKAM', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Wakil Kepala Keamanan', 2250000.00, '2024-10-15 05:47:11', '2024-10-16 08:07:59'),
+('TST', 'PPM', 'MKN', NULL, 'TEST GAJI SO', 2222222.00, '2024-10-16 08:11:17', '2024-10-16 08:20:14');
 
 -- --------------------------------------------------------
 
@@ -392,6 +394,31 @@ INSERT INTO `karyawan` (`nik`, `nama_lengkap`, `foto`, `kode_jabatan`, `jabatan`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `konfigurasi_gaji`
+--
+
+CREATE TABLE `konfigurasi_gaji` (
+  `kode_jenis_gaji` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_gaji` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `keterangan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `konfigurasi_gaji`
+--
+
+INSERT INTO `konfigurasi_gaji` (`kode_jenis_gaji`, `jenis_gaji`, `keterangan`, `is_active`, `created_at`, `updated_at`) VALUES
+('GT', 'Gaji Tetap', 'Gaji Tetap', 1, '2024-10-16 07:16:12', '2024-10-16 07:16:12'),
+('MKN', 'Uang Makan', 'Uang Makan', 1, '2024-10-16 07:17:15', '2024-10-16 07:17:15'),
+('TJ', 'Tunjangan Jabatan', 'Tunjangan Jabatan', 1, '2024-10-16 07:16:27', '2024-10-16 07:16:27'),
+('TR', 'Transportasi', 'Transportasi', 1, '2024-10-16 07:16:52', '2024-10-16 07:16:52');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `lokasi_kantor`
 --
 
@@ -491,7 +518,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (55, '2024_08_09_142314_add_username_to_users_table', 28),
 (56, '2024_08_13_131219_add_group_name_to_permissions_table', 29),
 (57, '2024_10_15_131400_add_jenis_gaji_to_gaji_table', 30),
-(58, '2024_10_15_131631_add_fields_to_penggajian_table', 31);
+(58, '2024_10_15_131631_add_fields_to_penggajian_table', 31),
+(60, '2024_10_16_124430_create_konfigurasi_gaji_table', 32),
+(61, '2024_10_16_145441_add_kode_jenis_gaji_to_gaji_table', 33);
 
 -- --------------------------------------------------------
 
@@ -608,7 +637,8 @@ INSERT INTO `penggajian` (`id`, `nik`, `gaji`, `bulan`, `jumlah_hari_dalam_bulan
 (5, '123123123', 7500000.00, 'Juni', 30, 29, 1, 250000.00, 7250000.00, '2024-06-30', '2024-10-15 07:10:32', '2024-10-15 07:10:32'),
 (6, '123123123', 7500000.00, 'Juli', 31, 6, 25, 6048387.10, 1451612.90, '2024-07-31', '2024-10-15 07:11:03', '2024-10-15 07:11:03'),
 (8, '123123123', 7500000.00, 'Agustus', 31, 8, 23, 5564516.13, 1935483.87, '2024-08-31', '2024-10-15 07:11:40', '2024-10-15 07:11:40'),
-(9, '123123123', 7500000.00, 'September', 30, 0, 30, 7500000.00, 0.00, '2024-09-30', '2024-10-15 07:12:34', '2024-10-15 07:12:34');
+(9, '123123123', 7500000.00, 'September', 30, 0, 30, 7500000.00, 0.00, '2024-09-30', '2024-10-15 07:12:34', '2024-10-15 07:12:34'),
+(10, '123456789', 6750000.00, 'Juni', 30, 0, 30, 6750000.00, 0.00, '2024-06-30', '2024-10-16 08:54:37', '2024-10-16 08:54:37');
 
 -- --------------------------------------------------------
 
@@ -907,7 +937,8 @@ ALTER TABLE `failed_jobs`
 -- Indexes for table `gaji`
 --
 ALTER TABLE `gaji`
-  ADD PRIMARY KEY (`kode_gaji`);
+  ADD PRIMARY KEY (`kode_gaji`),
+  ADD KEY `gaji_kode_jenis_gaji_foreign` (`kode_jenis_gaji`);
 
 --
 -- Indexes for table `jabatan`
@@ -938,6 +969,12 @@ ALTER TABLE `kantor_cabang`
 --
 ALTER TABLE `karyawan`
   ADD PRIMARY KEY (`nik`);
+
+--
+-- Indexes for table `konfigurasi_gaji`
+--
+ALTER TABLE `konfigurasi_gaji`
+  ADD PRIMARY KEY (`kode_jenis_gaji`);
 
 --
 -- Indexes for table `lokasi_kantor`
@@ -1053,13 +1090,13 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `penggajian`
 --
 ALTER TABLE `penggajian`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1094,6 +1131,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `gaji`
+--
+ALTER TABLE `gaji`
+  ADD CONSTRAINT `gaji_kode_jenis_gaji_foreign` FOREIGN KEY (`kode_jenis_gaji`) REFERENCES `konfigurasi_gaji` (`kode_jenis_gaji`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `model_has_permissions`
