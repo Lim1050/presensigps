@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 16, 2024 at 03:59 PM
+-- Generation Time: Oct 17, 2024 at 03:15 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -103,7 +103,9 @@ INSERT INTO `gaji` (`kode_gaji`, `kode_jabatan`, `kode_jenis_gaji`, `jenis_gaji`
 ('TJSK', 'SUPKAM', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Supervisor Keamanan', 2500000.00, '2024-10-15 05:45:44', '2024-10-16 08:07:47'),
 ('TJSO', 'SO', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Security Officer', 1875000.00, '2024-10-15 05:44:22', '2024-10-16 08:07:37'),
 ('TJWKK', 'WAKAM', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Wakil Kepala Keamanan', 2250000.00, '2024-10-15 05:47:11', '2024-10-16 08:07:59'),
-('TST', 'PPM', 'MKN', NULL, 'TEST GAJI SO', 2222222.00, '2024-10-16 08:11:17', '2024-10-16 08:20:14');
+('TKK', 'KEPKAM', 'TR', NULL, 'Transportasi Kepala Keamanan', 100000.00, '2024-10-17 05:52:56', '2024-10-17 05:52:56'),
+('TST', 'PPM', 'MKN', NULL, 'TEST GAJI SO', 2222222.00, '2024-10-16 08:11:17', '2024-10-16 08:20:14'),
+('UMKK', 'KEPKAM', 'MKN', NULL, 'Uang Makan Kepala Keamanan', 50000.00, '2024-10-17 05:52:26', '2024-10-17 05:52:26');
 
 -- --------------------------------------------------------
 
@@ -520,7 +522,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (57, '2024_10_15_131400_add_jenis_gaji_to_gaji_table', 30),
 (58, '2024_10_15_131631_add_fields_to_penggajian_table', 31),
 (60, '2024_10_16_124430_create_konfigurasi_gaji_table', 32),
-(61, '2024_10_16_145441_add_kode_jenis_gaji_to_gaji_table', 33);
+(61, '2024_10_16_145441_add_kode_jenis_gaji_to_gaji_table', 33),
+(66, '2024_10_17_135500_add_salary_details_to_penggajian_table', 34);
 
 -- --------------------------------------------------------
 
@@ -617,6 +620,10 @@ INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_
 CREATE TABLE `penggajian` (
   `id` bigint UNSIGNED NOT NULL,
   `nik` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gaji_tetap` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `tunjangan_jabatan` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `uang_makan` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `transportasi` decimal(10,2) NOT NULL DEFAULT '0.00',
   `gaji` decimal(10,2) NOT NULL DEFAULT '0.00',
   `bulan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `jumlah_hari_dalam_bulan` int DEFAULT NULL,
@@ -633,12 +640,12 @@ CREATE TABLE `penggajian` (
 -- Dumping data for table `penggajian`
 --
 
-INSERT INTO `penggajian` (`id`, `nik`, `gaji`, `bulan`, `jumlah_hari_dalam_bulan`, `jumlah_hari_masuk`, `jumlah_hari_tidak_masuk`, `potongan`, `total_gaji`, `tanggal_gaji`, `created_at`, `updated_at`) VALUES
-(5, '123123123', 7500000.00, 'Juni', 30, 29, 1, 250000.00, 7250000.00, '2024-06-30', '2024-10-15 07:10:32', '2024-10-15 07:10:32'),
-(6, '123123123', 7500000.00, 'Juli', 31, 6, 25, 6048387.10, 1451612.90, '2024-07-31', '2024-10-15 07:11:03', '2024-10-15 07:11:03'),
-(8, '123123123', 7500000.00, 'Agustus', 31, 8, 23, 5564516.13, 1935483.87, '2024-08-31', '2024-10-15 07:11:40', '2024-10-15 07:11:40'),
-(9, '123123123', 7500000.00, 'September', 30, 0, 30, 7500000.00, 0.00, '2024-09-30', '2024-10-15 07:12:34', '2024-10-15 07:12:34'),
-(10, '123456789', 6750000.00, 'Juni', 30, 0, 30, 6750000.00, 0.00, '2024-06-30', '2024-10-16 08:54:37', '2024-10-16 08:54:37');
+INSERT INTO `penggajian` (`id`, `nik`, `gaji_tetap`, `tunjangan_jabatan`, `uang_makan`, `transportasi`, `gaji`, `bulan`, `jumlah_hari_dalam_bulan`, `jumlah_hari_masuk`, `jumlah_hari_tidak_masuk`, `potongan`, `total_gaji`, `tanggal_gaji`, `created_at`, `updated_at`) VALUES
+(16, '123123123', 5000000.00, 2500000.00, 1500000.00, 3000000.00, 12000000.00, 'Juni', 30, 29, 1, 150000.00, 11850000.00, '2024-06-30', '2024-10-17 07:06:06', '2024-10-17 07:06:06'),
+(17, '123123123', 5000000.00, 2500000.00, 1550000.00, 3100000.00, 12150000.00, 'Juli', 31, 6, 25, 3750000.00, 8400000.00, '2024-07-31', '2024-10-17 07:11:19', '2024-10-17 07:11:19'),
+(18, '123123123', 5000000.00, 2500000.00, 1550000.00, 3100000.00, 12150000.00, 'Agustus', 31, 8, 23, 3450000.00, 8700000.00, '2024-08-31', '2024-10-17 07:11:51', '2024-10-17 07:11:51'),
+(19, '123123123', 5000000.00, 2500000.00, 1500000.00, 3000000.00, 12000000.00, 'September', 30, 0, 30, 4500000.00, 7500000.00, '2024-09-30', '2024-10-17 07:12:15', '2024-10-17 07:12:15'),
+(20, '123123123', 5000000.00, 2500000.00, 1550000.00, 3100000.00, 12150000.00, 'Oktober', 31, 0, 31, 4650000.00, 7500000.00, '2024-10-31', '2024-10-17 07:13:01', '2024-10-17 07:56:37');
 
 -- --------------------------------------------------------
 
@@ -1090,13 +1097,13 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `penggajian`
 --
 ALTER TABLE `penggajian`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `permissions`

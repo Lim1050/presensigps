@@ -9,7 +9,9 @@
     }
 </style>
 <div class="section gradasired" id="user-section">
-    <a href="{{ route('logout') }}" class="btn btn-primary logout"><ion-icon name="log-out-outline"></ion-icon>Keluar</a><br>
+    <a href="#" class="btn btn-primary logout" id="logoutBtn">
+        <ion-icon name="log-out-outline"></ion-icon>Keluar
+    </a>
     <div id="user-detail">
         <div class="avatar">
             @if ((Auth::guard('karyawan')->user()->foto))
@@ -446,4 +448,33 @@
         </div>
     </div>
 </div>
+
+@push('myscript')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        logoutBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: "Apakah Anda yakin ingin keluar?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Keluar!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirect ke route logout
+                    window.location.href = "{{ route('logout') }}";
+                }
+            });
+        });
+    });
+</script>
+@endpush
 @endsection

@@ -57,7 +57,7 @@
                                 <td>{{$penggajian->bulan }}</td>
                             </tr>
                             <tr>
-                                <th>Jumlah Hari</th>
+                                <th>Jumlah Hari Dalam Bulan</th>
                                 <td>{{$penggajian->jumlah_hari_dalam_bulan }}</td>
                             </tr>
                             <tr>
@@ -69,18 +69,34 @@
                                 <td>{{$penggajian->jumlah_hari_tidak_masuk }}</td>
                             </tr>
                             <tr>
-                                <th>Gaji</th>
-                                <td>{{ number_format($penggajian->gaji, 2) }}</td>
+                                <th>Gaji Tetap</th>
+                                <td>Rp {{ number_format($penggajian->gaji_tetap, 2) }}</td>
                             </tr>
                             <tr>
-                                <th>Potongan = (Gaji / Jumlah Hari) x Jumlah Tidak Masuk</th>
+                                <th>Tunjangan Jabatan</th>
+                                <td>Rp {{ number_format($penggajian->tunjangan_jabatan, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Uang Makan</th>
+                                <td>Rp {{ number_format($penggajian->uang_makan, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Uang Transportasi</th>
+                                <td>Rp {{ number_format($penggajian->transportasi, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Sub Total Gaji</th>
+                                <td>Rp {{ number_format($penggajian->gaji, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Potongan = ((Uang Makan + Transportasi) / Jumlah Hari Dalam Bulan) x Jumlah Tidak Masuk</th>
                                 <td>
-                                    {{ number_format($penggajian->potongan, 2) }}
+                                    Rp {{ number_format($penggajian->potongan, 2) }}
                                 </td>
                             </tr>
                             <tr>
                                 <th>Total Gaji = Gaji - Potongan</th>
-                                <td>{{ number_format($penggajian->total_gaji, 2) }}</td>
+                                <td>Rp {{ number_format($penggajian->total_gaji, 2) }}</td>
                             </tr>
                             <tr>
                                 <th>Tanggal Gaji</th>

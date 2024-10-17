@@ -100,7 +100,7 @@
                         <tbody>
                             @foreach($penggajian as $item)
                             <tr>
-                                <td class="text-center">{{ $item->id }}</td>
+                                <td class="text-center">{{ $loop->iteration }}</td>
                                 <td class="text-center">{{ $item->nik }}</td>
                                 <td class="text-center">{{ $item->karyawan->nama_lengkap }}</td>
                                 <td class="text-center">{{$item->bulan }}</td>
@@ -114,13 +114,14 @@
                                 <td class="text-center">{{ number_format($item->total_gaji, 2) }}</td>
                                 <td class="text-center">{{ \Carbon\Carbon::parse($item->tanggal_gaji)->translatedFormat('d F Y') }}</td>
                                 <td class="text-center">
-                                    <a href="{{ route('admin.penggajian.show', $item->id) }}" class="btn btn-info">Lihat</a>
-                                    <a href="#" class="btn btn-warning">Edit</a>
-                                    <form action="#" method="POST" style="display:inline-block;">
+                                    <a href="{{ route('admin.penggajian.show', $item->id) }}" class="btn btn-info" title="Lihat"><i class="bi bi-list"></i></a>
+                                    <a href="{{ route('admin.penggajian.edit', $item->id) }}" class="btn btn-warning" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                    <a href="{{ route('admin.penggajian.delete', $item->id) }}" title="Delete" class="btn btn-danger delete-confirm"><i class="bi bi-trash"></i></a>
+                                    {{-- <form action="#" method="GET" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</button>
-                                    </form>
+                                        <button type="submit" class="btn btn-danger" onclick="confirmDelete({{ $item->id }})" title="Hapus"><i class="bi bi-trash"></i></button>
+                                    </form> --}}
                                 </td>
                             </tr>
                             @endforeach
@@ -133,116 +134,9 @@
     </div>
 </div>
 
-<!-- Modal Input Gaji -->
-{{-- <div class="modal fade" id="modalInputGaji" tabindex="-1" aria-labelledby="modalInputGajiLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalInputGajiLabel">Input Data Gaji</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('admin.gaji.store') }}" method="POST" id="formGaji" enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-group">
-                        <div class="icon-placeholder">
-                            <i class="bi bi-upc-scan"></i>
-                            <input type="text" class="form-control" id="kode_gaji" name="kode_gaji" placeholder=" Kode Gaji">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <select name="kode_jabatan" id="kode_jabatan" class="form-control">
-                            <option value="">Pilih Jabatan</option>
-                            @foreach ($jabatan as $item)
-                            <option value="{{ $item->kode_jabatan  }}">{{ $item->nama_jabatan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <div class="icon-placeholder">
-                            <i class="bi bi-cash"></i>
-                            <input type="text" class="form-control" id="nama_gaji" name="nama_gaji" placeholder=" Nama Gaji">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="icon-placeholder">
-                            <i class="bi bi-cash-stack"></i>
-                            <input type="number" class="form-control" id="jumlah_gaji" name="jumlah_gaji" placeholder=" Jumlah Gaji">
-                        </div>
-                    </div>
-
-                    <div class="row mt-2">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-send"></i> Simpan</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
-<!-- Modal Edit Gaji -->
-{{-- <div class="modal fade" id="modalEditGaji" tabindex="-1" aria-labelledby="modalEditGajiLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalEditGajiLabel">Edit Data Gaji</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('admin.gaji.update', ['kode_gaji' => 0]) }}" method="POST" id="formGaji" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-                    <div class="form-group">
-                        <div class="icon-placeholder">
-                            <i class="bi bi-upc-scan"></i>
-                            <input type="text" class="form-control" id="edit_kode_gaji" name="kode_gaji" placeholder=" Kode Gaji" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <select name="kode_jabatan" id="edit_kode_jabatan" class="form-control">
-                            <option value="">Pilih Jabatan</option>
-                            @foreach ($jabatan as $item)
-                            <option value="{{ $item->kode_jabatan  }}">{{ $item->nama_jabatan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <div class="icon-placeholder">
-                            <i class="bi bi-person-vcard"></i>
-                            <input type="text" class="form-control" id="edit_nama_gaji" name="nama_gaji" placeholder=" Nama Gaji">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="icon-placeholder">
-                            <i class="bi bi-person-vcard"></i>
-                            <input type="number" class="form-control" id="edit_jumlah_gaji" name="jumlah_gaji" placeholder=" Jumlah Gaji">
-                        </div>
-                    </div>
-
-                    <div class="row mt-2">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-send"></i> Simpan</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
-
-
 @push('myscript')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
     $(".delete-confirm").click(function (e){

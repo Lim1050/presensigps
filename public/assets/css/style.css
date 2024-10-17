@@ -4180,7 +4180,12 @@ textarea,
     color: #a1a1a2;
 }
 
-.form-group .clear-input {
+.form-group .input-wrapper {
+    position: relative;
+}
+
+.form-group .clear-input,
+.form-group .toggle-password {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4188,24 +4193,36 @@ textarea,
     height: 38px;
     font-size: 22px;
     position: absolute;
-    right: -10px;
     bottom: 0;
     width: 32px;
     opacity: 0.5;
+}
+
+.form-group .clear-input {
+    right: 32px; /* Memberikan ruang untuk toggle password */
     display: none;
 }
 
-.form-group .clear-input:hover,
-.form-group .clear-input:active {
-    opacity: 0.8;
+.form-group .toggle-password {
+    right: 0;
+    cursor: pointer;
 }
 
-.form-group .input-wrapper {
-    position: relative;
+.form-group .clear-input:hover,
+.form-group .clear-input:active,
+.form-group .toggle-password:hover,
+.form-group .toggle-password:active {
+    opacity: 0.8;
 }
 
 .form-group .input-wrapper.not-empty .clear-input {
     display: flex;
+}
+
+/* Menyesuaikan padding input untuk memberi ruang pada kedua ikon */
+.form-group input[type="password"],
+.form-group input[type="text"] {
+    padding-right: 70px; /* Memberikan ruang untuk kedua ikon */
 }
 
 .form-group .input-wrapper.active .label {

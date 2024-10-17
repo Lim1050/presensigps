@@ -63,8 +63,11 @@
                     <div class="form-group boxed">
                         <div class="input-wrapper">
                             <input type="password" name="password" class="form-control" id="password" placeholder="Password">
-                            <i class="clear-input">
+                            {{-- <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
+                            </i> --}}
+                            <i class="toggle-password">
+                                <ion-icon name="eye"></ion-icon>
                             </i>
                         </div>
                     </div>
@@ -73,7 +76,7 @@
                         {{-- <div>
                             <a href="page-register.html">Register Now</a>
                         </div> --}}
-                        <div><a href="page-forgot-password.html" class="text-muted">Lupa Password?</a></div>
+                        {{-- <div><a href="page-forgot-password.html" class="text-muted">Lupa Password?</a></div> --}}
                     </div>
 
                     <div class="form-group">
@@ -89,7 +92,32 @@
     <!-- * App Capsule -->
 
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePassword = document.querySelector('.toggle-password');
+            const password = document.querySelector('#password');
+            const clearInput = document.querySelector('.clear-input');
 
+            togglePassword.addEventListener('click', function () {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.querySelector('ion-icon').setAttribute('name', type === 'password' ? 'eye' : 'eye-off');
+            });
+
+            password.addEventListener('input', function() {
+                if (this.value) {
+                    this.parentElement.classList.add('not-empty');
+                } else {
+                    this.parentElement.classList.remove('not-empty');
+                }
+            });
+
+            clearInput.addEventListener('click', function() {
+                password.value = '';
+                password.parentElement.classList.remove('not-empty');
+            });
+        });
+    </script>
     <!-- ///////////// Js Files ////////////////////  -->
     <!-- Jquery -->
     <script src="{{ asset('assets/js/lib/jquery-3.4.1.min.js') }}"></script>
