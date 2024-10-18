@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 17, 2024 at 03:15 PM
+-- Generation Time: Oct 18, 2024 at 01:51 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -158,7 +158,7 @@ CREATE TABLE `jam_kerja` (
 
 INSERT INTO `jam_kerja` (`kode_jam_kerja`, `nama_jam_kerja`, `awal_jam_masuk`, `jam_masuk`, `akhir_jam_masuk`, `jam_pulang`, `lintas_hari`, `created_at`, `updated_at`) VALUES
 ('JK01', 'Shift Pagi', '00:00:00', '01:00:00', '02:00:00', '08:00:00', '0', NULL, '2024-08-06 07:01:36'),
-('JK02', 'Shift Siang', '08:00:00', '09:00:00', '10:00:00', '16:00:00', '0', NULL, '2024-08-06 06:22:14'),
+('JK02', 'Shift Siang', '13:00:00', '13:15:00', '13:30:00', '14:45:00', '0', NULL, '2024-10-18 06:09:08'),
 ('JK03', 'Shift Malam', '16:00:00', '17:00:00', '18:00:00', '00:00:00', '1', NULL, '2024-10-14 16:35:25'),
 ('JKT', 'Test Lintas Hari', '14:00:00', '15:00:00', '16:00:00', '10:00:00', '1', '2024-08-06 06:54:12', '2024-08-06 07:57:38'),
 ('JKT01', 'Jam Kerja Test', '14:00:00', '15:00:00', '15:30:00', '16:00:00', '0', '2024-08-06 07:33:06', '2024-08-07 08:03:03');
@@ -523,7 +523,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (58, '2024_10_15_131631_add_fields_to_penggajian_table', 31),
 (60, '2024_10_16_124430_create_konfigurasi_gaji_table', 32),
 (61, '2024_10_16_145441_add_kode_jenis_gaji_to_gaji_table', 33),
-(66, '2024_10_17_135500_add_salary_details_to_penggajian_table', 34);
+(66, '2024_10_17_135500_add_salary_details_to_penggajian_table', 34),
+(67, '2024_10_18_124338_add_change_notes_and_changed_by_to_penggajian_table', 35);
 
 -- --------------------------------------------------------
 
@@ -631,6 +632,8 @@ CREATE TABLE `penggajian` (
   `jumlah_hari_tidak_masuk` int DEFAULT NULL,
   `potongan` decimal(10,2) NOT NULL DEFAULT '0.00',
   `total_gaji` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `catatan_perubahan` text COLLATE utf8mb4_unicode_ci,
+  `diubah_oleh` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tanggal_gaji` date DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -640,12 +643,15 @@ CREATE TABLE `penggajian` (
 -- Dumping data for table `penggajian`
 --
 
-INSERT INTO `penggajian` (`id`, `nik`, `gaji_tetap`, `tunjangan_jabatan`, `uang_makan`, `transportasi`, `gaji`, `bulan`, `jumlah_hari_dalam_bulan`, `jumlah_hari_masuk`, `jumlah_hari_tidak_masuk`, `potongan`, `total_gaji`, `tanggal_gaji`, `created_at`, `updated_at`) VALUES
-(16, '123123123', 5000000.00, 2500000.00, 1500000.00, 3000000.00, 12000000.00, 'Juni', 30, 29, 1, 150000.00, 11850000.00, '2024-06-30', '2024-10-17 07:06:06', '2024-10-17 07:06:06'),
-(17, '123123123', 5000000.00, 2500000.00, 1550000.00, 3100000.00, 12150000.00, 'Juli', 31, 6, 25, 3750000.00, 8400000.00, '2024-07-31', '2024-10-17 07:11:19', '2024-10-17 07:11:19'),
-(18, '123123123', 5000000.00, 2500000.00, 1550000.00, 3100000.00, 12150000.00, 'Agustus', 31, 8, 23, 3450000.00, 8700000.00, '2024-08-31', '2024-10-17 07:11:51', '2024-10-17 07:11:51'),
-(19, '123123123', 5000000.00, 2500000.00, 1500000.00, 3000000.00, 12000000.00, 'September', 30, 0, 30, 4500000.00, 7500000.00, '2024-09-30', '2024-10-17 07:12:15', '2024-10-17 07:12:15'),
-(20, '123123123', 5000000.00, 2500000.00, 1550000.00, 3100000.00, 12150000.00, 'Oktober', 31, 0, 31, 4650000.00, 7500000.00, '2024-10-31', '2024-10-17 07:13:01', '2024-10-17 07:56:37');
+INSERT INTO `penggajian` (`id`, `nik`, `gaji_tetap`, `tunjangan_jabatan`, `uang_makan`, `transportasi`, `gaji`, `bulan`, `jumlah_hari_dalam_bulan`, `jumlah_hari_masuk`, `jumlah_hari_tidak_masuk`, `potongan`, `total_gaji`, `catatan_perubahan`, `diubah_oleh`, `tanggal_gaji`, `created_at`, `updated_at`) VALUES
+(16, '123123123', 5000000.00, 2500000.00, 1500000.00, 3000000.00, 12000000.00, 'Juni', 30, 29, 1, 150000.00, 11850000.00, NULL, NULL, '2024-06-30', '2024-10-17 07:06:06', '2024-10-17 07:06:06'),
+(17, '123123123', 5000000.00, 2500000.00, 1550000.00, 3100000.00, 12150000.00, 'Juli', 31, 6, 25, 3750000.00, 8400000.00, NULL, NULL, '2024-07-31', '2024-10-17 07:11:19', '2024-10-17 07:11:19'),
+(18, '123123123', 5000000.00, 2500000.00, 1550000.00, 3100000.00, 12150000.00, 'Agustus', 31, 8, 23, 3450000.00, 8700000.00, NULL, NULL, '2024-08-31', '2024-10-17 07:11:51', '2024-10-17 07:11:51'),
+(19, '123123123', 5000000.00, 2500000.00, 1500000.00, 3000000.00, 12000000.00, 'September', 30, 0, 30, 4500000.00, 7500000.00, NULL, NULL, '2024-09-30', '2024-10-17 07:12:15', '2024-10-17 07:12:15'),
+(20, '123123123', 5000000.00, 2500000.00, 1550000.00, 3100000.00, 12150000.00, 'Oktober', 31, 0, 31, 4650000.00, 7500000.00, NULL, NULL, '2024-10-31', '2024-10-17 07:13:01', '2024-10-17 07:56:37'),
+(25, '123456789', 4500000.00, 2250000.00, 0.00, 0.00, 6750000.00, 'Oktober', 31, 0, 31, 0.00, 6750000.00, NULL, NULL, '2024-10-31', '2024-10-18 04:17:21', '2024-10-18 04:17:21'),
+(26, '112233445', 5000000.00, 2500000.00, 1550000.00, 3100000.00, 12150000.00, 'Oktober', 31, 25, 6, 900000.00, 11250000.00, 'Test Catatan Perubahan', 'Super Admin', '2024-10-31', '2024-10-18 04:18:17', '2024-10-18 05:50:31'),
+(27, '222222222', 3750000.00, 1875000.00, 0.00, 0.00, 5625000.00, 'Oktober', 31, 20, 11, 0.00, 5625000.00, NULL, NULL, '2024-10-31', '2024-10-18 04:19:20', '2024-10-18 04:27:01');
 
 -- --------------------------------------------------------
 
@@ -787,7 +793,8 @@ INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_kelua
 (292, '333333333', '2024-08-06', '15:02:38', '15:04:32', 'public/uploads/absensi/333333333-2024-08-06-150238-masuk.png', 'public/uploads/absensi/333333333-2024-08-06-150432-keluar.png', '-6.2062592,106.8302336', '-6.2062592,106.8302336', 'JKT01', 'hadir', NULL, '2024-08-06 08:02:38', '2024-08-06 08:04:32'),
 (293, '222222222', '2024-08-07', '15:03:09', '16:14:55', 'public/uploads/absensi/222222222-2024-08-07-150309-masuk.png', 'public/uploads/absensi/222222222-2024-08-07-161455-keluar.png', '-6.1341696,106.82368', '-6.2016825,106.8421861', 'JKT01', 'hadir', NULL, '2024-08-07 08:03:09', '2024-08-07 09:14:55'),
 (294, '555555555', '2024-08-07', '15:03:56', '16:14:31', 'public/uploads/absensi/555555555-2024-08-07-150356-masuk.png', 'public/uploads/absensi/555555555-2024-08-07-161431-keluar.png', '-6.1341696,106.82368', '-6.2016842,106.842187', 'JKT01', 'hadir', NULL, '2024-08-07 08:03:56', '2024-08-07 09:14:31'),
-(295, '333333333', '2024-08-07', '15:05:19', '16:14:05', 'public/uploads/absensi/333333333-2024-08-07-150519-masuk.png', 'public/uploads/absensi/333333333-2024-08-07-161405-keluar.png', '-6.1341696,106.82368', '-6.2016842,106.842187', 'JKT01', 'hadir', NULL, '2024-08-07 08:05:19', '2024-08-07 09:14:05');
+(295, '333333333', '2024-08-07', '15:05:19', '16:14:05', 'public/uploads/absensi/333333333-2024-08-07-150519-masuk.png', 'public/uploads/absensi/333333333-2024-08-07-161405-keluar.png', '-6.1341696,106.82368', '-6.2016842,106.842187', 'JKT01', 'hadir', NULL, '2024-08-07 08:05:19', '2024-08-07 09:14:05'),
+(297, '123123123', '2024-10-18', '13:09:24', NULL, 'public/uploads/absensi/123123123-2024-10-18-130924-masuk.png', NULL, '-6.2017428,106.8420686', NULL, 'JK02', 'hadir', NULL, '2024-10-18 06:09:24', NULL);
 
 -- --------------------------------------------------------
 
@@ -1097,13 +1104,13 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT for table `penggajian`
 --
 ALTER TABLE `penggajian`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1121,7 +1128,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `presensi`
 --
 ALTER TABLE `presensi`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=297;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=298;
 
 --
 -- AUTO_INCREMENT for table `roles`
