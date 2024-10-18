@@ -159,6 +159,7 @@ Route::middleware(['auth:user'])->group(function () {
     Route::post('/admin/penggajian/store', [PenggajianController::class, 'PenggajianStore'])->name('admin.penggajian.store');
     Route::get('/penggajian/hitung', [PenggajianController::class, 'hitungGaji'])->name('penggajian.hitung');
     Route::get('/admin/penggajian/show/{id}', action: [PenggajianController::class, 'PenggajianShow'])->name('admin.penggajian.show');
+    Route::get('/admin/penggajian/export/{id}', [PenggajianController::class, 'ExportPDF'])->name('admin.penggajian.export');
     Route::get('/admin/penggajian/edit/{id}', action: [PenggajianController::class, 'PenggajianEdit'])->name('admin.penggajian.edit');
     Route::put('/admin/penggajian/update/{id}', action: [PenggajianController::class, 'PenggajianUpdate'])->name('admin.penggajian.update');
     Route::get('/admin/penggajian/delete/{id}', action: [PenggajianController::class, 'PenggajianDelete'])->name('admin.penggajian.delete');

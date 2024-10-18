@@ -82,11 +82,11 @@
                 <div class="table-responsive">
                     <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
-                            <tr class="text-center">
-                                <th>No</th>
-                                <th>Kode Departemen</th>
-                                <th>Nama Departemen</th>
-                                <th>Aksi</th>
+                            <tr>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Kode Departemen</th>
+                                <th class="text-center">Nama Departemen</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -156,6 +156,7 @@
 
 @push('myscript')
 <script>
+    let table = new DataTable('#dataTable');
 
     $(".delete-confirm").click(function (e){
         e.preventDefault();

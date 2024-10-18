@@ -55,7 +55,7 @@
         </div>
 
         {{-- form cari data Gaji --}}
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-12">
                 <form action="{{ route('admin.gaji') }}" method="GET">
                     <div class="row mt-2">
@@ -75,7 +75,7 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-12">
                 {{-- table --}}
@@ -269,6 +269,7 @@
 
 @push('myscript')
 <script>
+    let table = new DataTable('#dataTable');
 
     $(".delete-confirm").click(function (e){
         e.preventDefault();

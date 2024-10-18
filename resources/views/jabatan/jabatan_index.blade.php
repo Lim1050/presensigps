@@ -55,7 +55,7 @@
         </div>
 
         {{-- form cari data Jabatan --}}
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-12">
                 <form action="{{ route('admin.jabatan') }}" method="GET">
                     <div class="row mt-2">
@@ -75,18 +75,18 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-12">
                 {{-- table --}}
                 <div class="table-responsive">
                     <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
-                            <tr class="text-center">
-                                <th>No</th>
-                                <th>Kode Jabatan</th>
-                                <th>Nama Jabatan</th>
-                                <th>Aksi</th>
+                            <tr>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Kode Jabatan</th>
+                                <th class="text-center">Nama Jabatan</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -202,6 +202,7 @@
 
 @push('myscript')
 <script>
+    let table = new DataTable('#dataTable');
 
     $(".delete-confirm").click(function (e){
         e.preventDefault();

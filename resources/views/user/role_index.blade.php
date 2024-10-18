@@ -85,9 +85,9 @@
                     <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="text-center">
-                                <th>No</th>
-                                <th>Role</th>
-                                <th>Aksi</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Role</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -239,6 +239,7 @@
 
 @push('myscript')
 <script>
+    let table = new DataTable('#dataTable');
 
     document.getElementById('import_file').addEventListener('change', function(event) {
         var file = event.target.files[0];

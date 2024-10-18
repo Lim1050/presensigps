@@ -99,16 +99,16 @@
                 <div class="table-responsive">
                     <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
-                            <tr class="text-center">
-                                <th>No</th>
-                                <th>NIK</th>
-                                <th>Nama Karyawan</th>
-                                <th>Foto</th>
-                                <th>Jabatan</th>
-                                <th>Departemen</th>
-                                <th>Kantor</th>
-                                <th>No HP</th>
-                                <th>Aksi</th>
+                            <tr>
+                                <th class="text-center">No</th>
+                                <th class="text-center">NIK</th>
+                                <th class="text-center">Nama Karyawan</th>
+                                <th class="text-center">Foto</th>
+                                <th class="text-center">Jabatan</th>
+                                <th class="text-center">Departemen</th>
+                                <th class="text-center">Kantor</th>
+                                <th class="text-center">No HP</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -158,7 +158,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{ $karyawan->links('vendor.pagination.bootstrap-5') }}
+                    {{-- {{ $karyawan->links('vendor.pagination.bootstrap-5') }} --}}
                 </div>
             </div>
         </div>
@@ -333,6 +333,7 @@
 
 @push('myscript')
 <script>
+    let table = new DataTable('#dataTable');
 
     $(function(){
         $("#nik").mask("000000000");

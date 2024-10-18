@@ -32,7 +32,7 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Konfigurasi Jam Kerja</h1>
+    <h1 class="h3 mb-0 text-gray-800">Konfigurasi Jam Kerja Departement</h1>
 </div>
 
 <!-- DataTales Example -->
@@ -83,11 +83,11 @@
                     <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="text-center">
-                                <th>No</th>
-                                <th>Kode</th>
-                                <th>Cabang</th>
-                                <th>Departemen</th>
-                                <th>Aksi</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Kode</th>
+                                <th class="text-center">Cabang</th>
+                                <th class="text-center">Departemen</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -118,6 +118,7 @@
 
 @push('myscript')
 <script>
+    let table = new DataTable('#dataTable');
 
     $(".delete-confirm").click(function (e){
         e.preventDefault();

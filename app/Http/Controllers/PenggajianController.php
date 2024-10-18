@@ -8,8 +8,10 @@ use App\Models\Karyawan;
 use App\Models\PengajuanIzin;
 use App\Models\Penggajian;
 use App\Models\presensi;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PenggajianController extends Controller
 {
@@ -85,29 +87,32 @@ class PenggajianController extends Controller
         // $jabatan = $karyawan->kode_jabatan;
         // Mengambil data gaji berdasarkan jabatan
         $gajiTetap = Gaji::where('kode_jabatan', $karyawan->kode_jabatan)
-                            ->where('kode_jenis_gaji', 'GT')
-                            ->first();
-        // dd($gajiTetap->jenis_gaji, $gajiTetap->jumlah_gaji);
+                    ->where('kode_jenis_gaji', 'GT')
+                    ->first();
+        $gajiTetap = $gajiTetap ? $gajiTetap->jumlah_gaji : 0;
 
         $gajiTunjangan = Gaji::where('kode_jabatan', $karyawan->kode_jabatan)
                             ->where('kode_jenis_gaji', 'TJ')
                             ->first();
-        // dd($gajiTetap->jenis_gaji, $gajiTetap->jumlah_gaji, $gajiTunjangan->jenis_gaji, $gajiTunjangan->jumlah_gaji);
+        $gajiTunjangan = $gajiTunjangan ? $gajiTunjangan->jumlah_gaji : 0;
 
         $uangMakan = Gaji::where('kode_jabatan', $karyawan->kode_jabatan)
                             ->where('kode_jenis_gaji', 'MKN')
                             ->first();
+        $uangMakan = $uangMakan ? $uangMakan->jumlah_gaji : 0;
+
         $transportasi = Gaji::where('kode_jabatan', $karyawan->kode_jabatan)
                             ->where('kode_jenis_gaji', 'TR')
                             ->first();
+        $transportasi = $transportasi ? $transportasi->jumlah_gaji : 0;
 
-        $jumlahUangMakan = $uangMakan->jumlah_gaji * $totalHariDalamBulan;
-        $jumlahTransportasi = $transportasi->jumlah_gaji * $totalHariDalamBulan;
+        $jumlahUangMakan = $uangMakan * $totalHariDalamBulan;
+        $jumlahTransportasi = $transportasi * $totalHariDalamBulan;
 
-        $gajiKaryawan = $gajiTetap->jumlah_gaji + $gajiTunjangan->jumlah_gaji + $jumlahUangMakan + $jumlahTransportasi;
+        $gajiKaryawan = $gajiTetap + $gajiTunjangan + $jumlahUangMakan + $jumlahTransportasi;
 
         // Potongan dihitung sebagai gaji per hari dikali dengan jumlah ketidakhadiran
-        $potongan = ($uangMakan->jumlah_gaji + $transportasi->jumlah_gaji) * $totalKetidakhadiran;
+        $potongan = ($uangMakan + $transportasi) * $totalKetidakhadiran;
 
         // Total gaji setelah potongan
         $totalGaji = $gajiKaryawan - $potongan;
@@ -118,8 +123,8 @@ class PenggajianController extends Controller
             'jumlah_hari_dalam_bulan' => $totalHariDalamBulan,
             'jumlah_hari_masuk' => $totalKehadiran,
             'jumlah_hari_tidak_masuk' => $totalKetidakhadiran,
-            'gaji_tetap' => $gajiTetap->jumlah_gaji,
-            'tunjangan_jabatan' => $gajiTunjangan->jumlah_gaji,
+            'gaji_tetap' => $gajiTetap,
+            'tunjangan_jabatan' => $gajiTunjangan,
             'uang_makan' => $jumlahUangMakan,
             'transportasi' => $jumlahTransportasi,
             'gaji' => $gajiKaryawan,
@@ -136,6 +141,15 @@ class PenggajianController extends Controller
         $penggajian = Penggajian::with('karyawan')->findOrFail($id);
         return view('penggajian.penggajian_show', compact('penggajian'));
     }
+
+    public function ExportPDF($id)
+{
+    $penggajian = Penggajian::with('karyawan')->findOrFail($id);
+
+    $pdf = Pdf::loadView('penggajian.penggajian_export', compact('penggajian'));
+
+    return $pdf->download('penggajian_' . $penggajian->karyawan->nama_lengkap . '_' . $penggajian->bulan . '.pdf');
+}
 
     public function PenggajianEdit($id)
     {
@@ -156,6 +170,7 @@ class PenggajianController extends Controller
             'tunjangan_jabatan' => 'required|numeric',
             'uang_makan' => 'required|numeric',
             'transportasi' => 'required|numeric',
+            'catatan_perubahan' => 'required|string',
         ]);
 
         // Calculate gaji
@@ -181,6 +196,9 @@ class PenggajianController extends Controller
             'gaji' => $gaji,
             'potongan' => $potongan,
             'total_gaji' => $total_gaji,
+            'catatan_perubahan' => $validatedData['catatan_perubahan'],
+            'diubah_oleh' => Auth::user()->name,
+            'updated_at' => Carbon::now(),
             // 'tanggal_gaji' => Carbon::parse($validatedData['bulan'])->endOfMonth(),
         ]);
 

@@ -104,8 +104,18 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    @if($penggajian->diubah_oleh)
+                    <div class="alert alert-info mt-3">
+                        <strong>Informasi Perubahan:</strong><br>
+                        Dirubah pada {{ \Carbon\Carbon::parse($penggajian->tanggal_perubahan)->translatedFormat('d F Y H:i:s') }}
+                        oleh {{ $penggajian->diubah_oleh }}<br>
+                        Catatan: {{ $penggajian->catatan_perubahan }}
+                    </div>
+                    @endif
                     {{-- {{ $jabatan->links('vendor.pagination.bootstrap-5') }} --}}
                     <a href="{{ route('admin.penggajian') }}" class="btn btn-danger">Kembali</a>
+                    <a href="{{ route('admin.penggajian.export', $penggajian->id) }}" class="btn btn-primary">Export PDF</a>
                 </div>
             </div>
     </div>

@@ -46,6 +46,10 @@
     <!-- leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+
+
+
 </head>
 
 <body id="page-top">
@@ -166,6 +170,8 @@
 
 {{-- Jquery mask --}}
 <script src="{{ asset('assets/js/jquery.mask.min.js') }}"></script>
+
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
 @stack('myscript')
 </body>

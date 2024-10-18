@@ -61,12 +61,12 @@
                     <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="text-center">
-                                <th>No</th>
-                                <th>Kode Jenis Gaji</th>
-                                <th>Jenis Gaji</th>
-                                <th>Keterangan</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Kode Jenis Gaji</th>
+                                <th class="text-center">Jenis Gaji</th>
+                                <th class="text-center">Keterangan</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -206,6 +206,7 @@
 
 @push('myscript')
 <script>
+    let table = new DataTable('#dataTable');
 
     $(".delete-confirm").click(function (e){
         e.preventDefault();

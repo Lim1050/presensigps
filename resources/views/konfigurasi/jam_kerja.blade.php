@@ -83,15 +83,15 @@
                     <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="text-center">
-                                <th>No</th>
-                                <th>Kode Jam Kerja</th>
-                                <th>Nama Jam Kerja</th>
-                                <th>Awal Jam Masuk</th>
-                                <th>Jam Masuk</th>
-                                <th>Akhir Jam Masuk</th>
-                                <th>Jam Pulang</th>
-                                <th>Lintas Hari</th>
-                                <th>Aksi</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Kode Jam Kerja</th>
+                                <th class="text-center">Nama Jam Kerja</th>
+                                <th class="text-center">Awal Jam Masuk</th>
+                                <th class="text-center">Jam Masuk</th>
+                                <th class="text-center">Akhir Jam Masuk</th>
+                                <th class="text-center">Jam Pulang</th>
+                                <th class="text-center">Lintas Hari</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -250,6 +250,7 @@
 
 @push('myscript')
 <script>
+    let table = new DataTable('#dataTable');
 
     $(".delete-confirm").click(function (e){
         e.preventDefault();

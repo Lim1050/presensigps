@@ -75,6 +75,10 @@
                         <label for="transportasi">Uang Transportasi</label>
                         <input type="number" step="0.01" class="form-control" id="transportasi" name="transportasi" value="{{ $penggajian->transportasi }}" readonly>
                     </div>
+                    <div class="form-group">
+                        <label for="catatan_perubahan">Catatan Perubahan</label>
+                        <textarea class="form-control" id="catatan_perubahan" name="catatan_perubahan" rows="3" required></textarea>
+                    </div>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>

@@ -18,7 +18,7 @@
                 @php
                     $path = Storage::url("uploads/karyawan/".Auth::guard('karyawan')->user()->foto)
                 @endphp
-                <img src="{{ url($path) }}" alt="avatar" class="imaged w64 rounded" style="height: 60px">
+                <img src="{{ url($path) }}" alt="avatar" class="imaged w64 rounded" style="max-height: 60px; max-width: 60px; width: auto; height: auto;">
             @else
                 <img src="{{ asset('assets/img/sample/avatar/avatar1.jpg') }}" alt="avatar" class="imaged w64 rounded">
             @endif
@@ -433,7 +433,7 @@
                                     <small class="text-muted">{{ $leaderboard->kode_jabatan }}</small>
                                 </div>
                                 @if ($leaderboard->status == 'hadir')
-                                <span class="badge {{ $leaderboard->jam_masuk < "09:00" ? "badge-success" : "badge-warning"}}">{{ $leaderboard->jam_masuk < "09:00" ? $leaderboard->jam_masuk : "Telat " . $leaderboard->jam_masuk}}</span>
+                                <span class="badge {{ $leaderboard->jam_masuk < $leaderboard->jam_kerja_masuk ? "badge-success" : "badge-warning"}}">{{ $leaderboard->jam_masuk < $leaderboard->jam_kerja_masuk ? $leaderboard->jam_masuk : "Telat " . $leaderboard->jam_masuk}}</span>
                                 @else
                                 <span class="badge badge-secondary">{{ $leaderboard->status}}</span>
                                 @endif

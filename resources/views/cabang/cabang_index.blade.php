@@ -55,15 +55,15 @@
         </div>
 
         {{-- form cari data departemen --}}
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-12">
                 <form action="{{ route('admin.cabang') }}" method="GET">
                     <div class="row mt-2">
-                        <div class="col-6">
+                        <div class="col-6"> --}}
                             {{-- <div class="form-group">
                                 <input type="text" name="nama_departemen_cari" id="nama_departemen_cari" class="form-control" placeholder="Cari Nama Departemen" value="{{ Request('nama_departemen') }}">
                             </div> --}}
-                            <select name="kode_cabang" class="form-control" id="">
+                            {{-- <select name="kode_cabang" class="form-control" id="">
                                 <option value="">Semua Cabang</option>
                             </select>
                         </div>
@@ -78,20 +78,20 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-12">
                 {{-- table --}}
                 <div class="table-responsive">
                     <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
-                            <tr class="text-center">
-                                <th>No</th>
-                                <th>Kode Cabang</th>
-                                <th>Nama Cabang</th>
-                                <th>Lokasi Cabang</th>
-                                <th>Radius</th>
-                                <th>Aksi</th>
+                            <tr>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Kode Cabang</th>
+                                <th class="text-center">Nama Cabang</th>
+                                <th class="text-center">Lokasi Cabang</th>
+                                <th class="text-center">Radius</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -174,6 +174,7 @@
 
 @push('myscript')
 <script>
+    let table = new DataTable('#dataTable');
 
     $(".delete-confirm").click(function (e){
         e.preventDefault();

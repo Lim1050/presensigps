@@ -48,7 +48,9 @@ class DashboardController extends Controller
                             ->first();
         // dd($rekap_presensi);
         $leaderboards = DB::table('presensi')
+                            ->select('presensi.*', 'karyawan.*', 'jam_kerja.jam_masuk as jam_kerja_masuk')
                             ->join('karyawan', 'presensi.nik', '=', 'karyawan.nik')
+                            ->join('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
                             ->where('tanggal_presensi', $hari_ini)
                             ->orderBy('jam_masuk', 'ASC')
                             ->get();

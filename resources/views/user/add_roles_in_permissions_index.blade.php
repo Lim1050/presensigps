@@ -61,10 +61,10 @@
                     <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr class="text-center">
-                                <th>No</th>
-                                <th>Role</th>
-                                <th>Permission</th>
-                                <th>Aksi</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Role</th>
+                                <th class="text-center">Permission</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -165,6 +165,8 @@
 
 @push('myscript')
 <script>
+    let table = new DataTable('#dataTable');
+
     $('#CheckMain').click(function(){
         if ($(this).is(':checked')) {
             $('input[type=checkbox]').prop('checked',true)
