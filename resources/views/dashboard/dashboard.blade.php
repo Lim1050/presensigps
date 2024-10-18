@@ -18,7 +18,7 @@
                 @php
                     $path = Storage::url("uploads/karyawan/".Auth::guard('karyawan')->user()->foto)
                 @endphp
-                <img src="{{ url($path) }}" alt="avatar" class="imaged w64 rounded" style="max-height: 60px; max-width: 60px; width: auto; height: auto;">
+                <img src="{{ url($path) }}" alt="avatar" class="imaged w64 rounded" style="max-height: 60px; max-width: 60px; width: auto; height: auto; object-fit: cover;">
             @else
                 <img src="{{ asset('assets/img/sample/avatar/avatar1.jpg') }}" alt="avatar" class="imaged w64 rounded">
             @endif

@@ -250,6 +250,9 @@ Route::middleware(['auth:user'])->group(function () {
     // Konfigurasi Roles in Permission Delete
     Route::get('/admin/konfigurasi/add-role-in-permission-delete/{id}', [RoleController::class, 'RolesInPermissionsDelete'])->name('admin.konfigurasi.add-role-in-permission-delete');
 
+
+    // Admin Profile
+    Route::get('/admin/profile', [UserController::class, 'AdminProfile'])->name('admin.profile');
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
 });

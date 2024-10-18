@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -189,5 +190,11 @@ class UserController extends Controller
             return redirect()->back()->with(['error' => 'Password Gagal Direset!']);
         }
 
+    }
+
+    public function AdminProfile()
+    {
+        $user = Auth::user();
+        return view('profile.admin_profile', compact('user'));
     }
 }
