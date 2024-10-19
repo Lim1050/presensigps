@@ -253,6 +253,9 @@ Route::middleware(['auth:user'])->group(function () {
 
     // Admin Profile
     Route::get('/admin/profile', [UserController::class, 'AdminProfile'])->name('admin.profile');
+    Route::put('/admin/profile/update/foto', [UserController::class, 'AdminProfileUpdateFoto'])->name('admin.profile.update.foto');
+    Route::put('/admin/profile/update/detail', [UserController::class, 'AdminProfileUpdateDetail'])->name('admin.profile.update.detail');
+    Route::put('/admin/profile/update/password', action: [UserController::class, 'AdminProfileUpdatePassword'])->name('admin.profile.update.password');
     // Admin logout
     Route::get('/admin/logout', [AuthController::class, 'AdminLogout'])->name('admin.logout');
 });

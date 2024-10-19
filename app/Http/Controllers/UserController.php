@@ -197,4 +197,101 @@ class UserController extends Controller
         $user = Auth::user();
         return view('profile.admin_profile', compact('user'));
     }
+
+    public function AdminProfileUpdateFoto(Request $request)
+    {
+        try {
+            // Validasi input
+            $request->validate([
+                'foto' => 'required|image|mimes:jpeg,png|max:5120', // Maksimal 5MB
+            ]);
+
+            // Ambil pengguna yang sedang login
+            $user = Auth::user();
+
+            // Hapus foto lama jika ada
+            if ($user->foto) {
+                Storage::delete('public/uploads/user/' . $user->foto);
+            }
+
+            // Simpan foto baru
+            $fileName = $user->username . '_' . time() .  '.' .  $request->foto->extension();
+            $request->foto->storeAs('public/uploads/user', $fileName);
+
+            // Update nama file di database
+            $user->foto = $fileName;
+            $user->save();
+
+            return redirect()->back()->with('success', 'Foto profil berhasil diperbarui!');
+        } catch (\Exception $e) {
+            // dd($e);
+            return redirect()->back()->with('error', 'Foto profil gagal diperbarui! ' . $e->getMessage());
+        }
+
+    }
+    public function AdminProfileUpdateDetail(Request $request)
+    {
+        try {
+            // Validasi input
+            $request->validate([
+                'username' => 'required|string|max:255|unique:users,username,' . Auth::id(),
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,' . Auth::id(),
+                'no_hp' => 'nullable|string|max:15',
+            ]);
+
+            // Ambil pengguna yang sedang login
+            $user = Auth::user();
+
+            // Update detail pengguna hanya jika field diisi
+            if ($request->has('username')) {
+                $user->username = $request->username;
+            }
+            if ($request->has('name')) {
+                $user->name = $request->name;
+            }
+            if ($request->has('email')) {
+                $user->email = $request->email;
+            }
+            if ($request->has('no_hp')) {
+                $user->no_hp = $request->no_hp;
+            }
+
+            // Simpan perubahan ke database
+            $user->save();
+
+            return redirect()->back()->with('success', value: 'Detail akun berhasil diperbarui!');
+        } catch (\Exception $e) {
+            dd($e);
+            return redirect()->back()->with('error', 'Detail akun gagal diperbarui! ' . $e->getMessage());
+        }
+    }
+
+    public function AdminProfileUpdatePassword(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'current_password' => 'required|string',
+            'password' => 'required|string|min:8|confirmed', // Password baru harus memiliki minimal 8 karakter
+        ]);
+
+        // Ambil pengguna yang sedang login
+        $user = Auth::user();
+
+        try {
+            // Cek apakah password saat ini cocok
+            if (!Hash::check($request->current_password, $user->password)) {
+                return redirect()->back()->withErrors(['current_password' => 'Password saat ini tidak cocok.']);
+            }
+
+            // Update password baru
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return redirect()->back()->with('success', 'Password berhasil diperbarui!');
+        } catch (\Exception $e) {
+            // Tangani kesalahan yang mungkin terjadi
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat memperbarui password. Silakan coba lagi.']);
+        }
+    }
 }
