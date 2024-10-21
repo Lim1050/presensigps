@@ -72,5 +72,7 @@
         }); // end am4core.ready()
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
     {{-- script webcam --}}
     @stack('myscript')

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cabang;
+use App\Models\Departemen;
 use App\Models\Jabatan;
 use App\Models\JamKerjaKaryawan;
 use App\Models\Karyawan;
+use App\Models\LokasiPenugasan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -15,92 +18,159 @@ use Illuminate\Support\Facades\Storage;
 
 class KaryawanController extends Controller
 {
+    // public function KaryawanIndex(Request $request)
+    // {
+    //     $query = Karyawan::query();
+
+    //     // Mengambil data karyawan, jabatan, dan departemen
+    //     $query->select('karyawan.*', 'departemen.nama_departemen', 'jabatan.nama_jabatan');
+    //     $query->join('departemen', 'karyawan.kode_departemen', '=', 'departemen.kode_departemen');
+    //     $query->leftJoin('jabatan', 'karyawan.kode_jabatan', '=', 'jabatan.kode_jabatan');
+
+    //     // Menyortir berdasarkan nama lengkap
+    //     $query->orderBy('nama_lengkap');
+
+    //     // Filter berdasarkan nama karyawan jika diberikan
+    //     if(!empty($request->nama_karyawan)){
+    //         $query->where('nama_lengkap', 'like', '%' . $request->nama_karyawan . '%');
+    //     }
+
+    //     // Filter berdasarkan kode departemen jika diberikan
+    //     if(!empty($request->kode_departemen)){
+    //         $query->where('karyawan.kode_departemen', $request->kode_departemen);
+    //     }
+
+    //     // Filter berdasarkan kode jabatan jika diberikan
+    //     if(!empty($request->kode_jabatan)){
+    //         $query->where('karyawan.kode_jabatan', $request->kode_jabatan);
+    //     }
+
+    //     // Paginate hasil query
+    //     $karyawan = $query->get();
+
+    //     // Mengambil semua data jabatan, departemen, dan cabang untuk kebutuhan filter
+    //     $jabatan = Jabatan::all();
+    //     $departemen = DB::table('departemen')->get();
+    //     $cabang = DB::table('kantor_cabang')->orderBy('kode_cabang')->get();
+    //     $lokasi_penugasan = DB::table('lokasi_penugasan')->orderBy('kode_lokasi_penugasan')->get();
+
+    //     // Mengembalikan view dengan data karyawan, jabatan, departemen, dan cabang
+    //     return view('karyawan.karyawan_index', compact('karyawan', 'jabatan', 'departemen', 'cabang', 'lokasi_penugasan'));
+    // }
+
     public function KaryawanIndex(Request $request)
     {
-        $query = Karyawan::query();
+        $query = Karyawan::with(['departemen', 'jabatan', 'cabang', 'lokasiPenugasan'])
+            ->when($request->nama_karyawan, function ($q) use ($request) {
+                return $q->where('nama_lengkap', 'like', '%' . $request->nama_karyawan . '%');
+            })
+            ->when($request->kode_departemen, function ($q) use ($request) {
+                return $q->where('kode_departemen', $request->kode_departemen);
+            })
+            ->when($request->kode_jabatan, function ($q) use ($request) {
+                return $q->where('kode_jabatan', $request->kode_jabatan);
+            })
+            ->orderBy('nama_lengkap');
 
-        // Mengambil data karyawan, jabatan, dan departemen
-        $query->select('karyawan.*', 'departemen.nama_departemen', 'jabatan.nama_jabatan');
-        $query->join('departemen', 'karyawan.kode_departemen', '=', 'departemen.kode_departemen');
-        $query->leftJoin('jabatan', 'karyawan.kode_jabatan', '=', 'jabatan.kode_jabatan');
+        $karyawan = $query->get();
 
-        // Menyortir berdasarkan nama lengkap
-        $query->orderBy('nama_lengkap');
-
-        // Filter berdasarkan nama karyawan jika diberikan
-        if(!empty($request->nama_karyawan)){
-            $query->where('nama_lengkap', 'like', '%' . $request->nama_karyawan . '%');
-        }
-
-        // Filter berdasarkan kode departemen jika diberikan
-        if(!empty($request->kode_departemen)){
-            $query->where('karyawan.kode_departemen', $request->kode_departemen);
-        }
-
-        // Filter berdasarkan kode jabatan jika diberikan
-        if(!empty($request->kode_jabatan)){
-            $query->where('karyawan.kode_jabatan', $request->kode_jabatan);
-        }
-
-        // Paginate hasil query
-        $karyawan = $query->paginate(10);
-
-        // Mengambil semua data jabatan, departemen, dan cabang untuk kebutuhan filter
         $jabatan = Jabatan::all();
-        $departemen = DB::table('departemen')->get();
-        $cabang = DB::table('kantor_cabang')->orderBy('kode_cabang')->get();
+        $departemen = Departemen::all();
+        $cabang = Cabang::orderBy('kode_cabang')->get();
+        $lokasi_penugasan = LokasiPenugasan::orderBy('kode_lokasi_penugasan')->get();
 
-        // Mengembalikan view dengan data karyawan, jabatan, departemen, dan cabang
-        return view('karyawan.karyawan_index', compact('karyawan', 'jabatan', 'departemen', 'cabang'));
+        return view('karyawan.karyawan_index', compact('karyawan', 'jabatan', 'departemen', 'cabang', 'lokasi_penugasan'));
     }
+
+    // public function KaryawanStore(Request $request)
+    // {
+    //     $nik = $request->nik;
+    //     $nama_lengkap = $request->nama_lengkap;
+    //     $no_wa = $request->no_wa;
+    //     $kode_jabatan = $request->kode_jabatan;
+    //     $kode_departemen = $request->kode_departemen;
+    //     $kode_lokasi_penugasan = $request->kode_lokasi_penugasan;
+    //     $kode_cabang = $request->kode_cabang;
+
+    //     // get data karyawan dari table
+    //     // cek apakah ada foto dari form
+    //     if($request->hasFile('foto')){
+    //         $foto = $nik . "_" . time() . "." . $request->file('foto')->getClientOriginalExtension();
+    //     } else {
+    //         // Jika tidak ada file foto yang diunggah, gunakan foto default
+    //         $foto = null;
+    //     }
+
+    //     try {
+    //         $data = [
+    //             'nik' => $nik,
+    //             'nama_lengkap' => $nama_lengkap,
+    //             'no_wa' => $no_wa,
+    //             'password' => Hash::make('password123'),
+    //             'kode_jabatan' => $kode_jabatan,
+    //             'kode_departemen' => $kode_departemen,
+    //             'kode_lokasi_penugasan' => $kode_lokasi_penugasan,
+    //             'kode_cabang' => $kode_cabang,
+    //             'foto' => $foto,
+    //             'created_at' => Carbon::now()
+    //         ];
+    //         $save = DB::table('karyawan')->insert($data);
+    //         if($save){
+    //             // save foto ke storage
+    //         if($request->hasFile('foto')){
+    //             $folderPath = "public/uploads/karyawan/";
+    //             $request->file('foto')->storeAs($folderPath, $foto);
+    //         }
+    //         return redirect()->route('admin.karyawan')->with(['success' => 'Data Berhasil Disimpan!']);
+    //         }
+    //     } catch (\Exception $e) {
+    //         // dd($e->getCode());
+    //         if($e->getCode()==23000){
+    //             $message = " Data dengan NIK " . $nik . " Sudah ada!";
+    //         } else {
+    //             $message = " Hubungi Tim IT";
+    //         }
+    //         return redirect()->back()->with(['error' => 'Data Gagal Disimpan!' . $message]);
+    //     }
+    // }
 
     public function KaryawanStore(Request $request)
     {
-        $nik = $request->nik;
-        $nama_lengkap = $request->nama_lengkap;
-        $no_wa = $request->no_wa;
-        $kode_jabatan = $request->kode_jabatan;
-        $kode_departemen = $request->kode_departemen;
-        $kode_cabang = $request->kode_cabang;
-
-        // get data karyawan dari table
-        // cek apakah ada foto dari form
-        if($request->hasFile('foto')){
-            $foto = $nik . "_" . time() . "." . $request->file('foto')->getClientOriginalExtension();
-        } else {
-            // Jika tidak ada file foto yang diunggah, gunakan foto default
-            $foto = null;
-        }
+        $request->validate([
+            'nik' => 'required|unique:karyawan,nik',
+            'nama_lengkap' => 'required',
+            'no_wa' => 'required',
+            'kode_jabatan' => 'required',
+            'kode_departemen' => 'required',
+            'kode_lokasi_penugasan' => 'required',
+            'kode_cabang' => 'required',
+            'foto' => 'nullable|image|max:2048', // Maksimum 2MB
+        ]);
 
         try {
-            $data = [
-                'nik' => $nik,
-                'nama_lengkap' => $nama_lengkap,
-                'no_wa' => $no_wa,
-                'password' => Hash::make('password123'),
-                'kode_jabatan' => $kode_jabatan,
-                'kode_departemen' => $kode_departemen,
-                'kode_cabang' => $kode_cabang,
-                'foto' => $foto,
-                'created_at' => Carbon::now()
-            ];
-            $save = DB::table('karyawan')->insert($data);
-            if($save){
-                // save foto ke storage
-            if($request->hasFile('foto')){
-                $folderPath = "public/uploads/karyawan/";
-                $request->file('foto')->storeAs($folderPath, $foto);
-            }
-            return redirect()->route('admin.karyawan')->with(['success' => 'Data Berhasil Disimpan!']);
-            }
+            DB::transaction(function () use ($request) {
+                $foto = null;
+                if ($request->hasFile('foto')) {
+                    $foto = $request->nik . "_" . time() . "." . $request->file('foto')->getClientOriginalExtension();
+                    $request->file('foto')->storeAs('public/uploads/karyawan', $foto);
+                }
+
+                Karyawan::create([
+                    'nik' => $request->nik,
+                    'nama_lengkap' => $request->nama_lengkap,
+                    'no_wa' => $request->no_wa,
+                    'password' => Hash::make('password123'),
+                    'kode_jabatan' => $request->kode_jabatan,
+                    'kode_departemen' => $request->kode_departemen,
+                    'kode_lokasi_penugasan' => $request->kode_lokasi_penugasan,
+                    'kode_cabang' => $request->kode_cabang,
+                    'foto' => $foto,
+                ]);
+            });
+
+            return redirect()->route('admin.karyawan')->with('success', 'Data Berhasil Disimpan!');
         } catch (\Exception $e) {
-            // dd($e->getCode());
-            if($e->getCode()==23000){
-                $message = " Data dengan NIK " . $nik . " Sudah ada!";
-            } else {
-                $message = " Hubungi Tim IT";
-            }
-            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!' . $message]);
+            return redirect()->back()->with('error', 'Data Gagal Disimpan: ' . $e->getMessage());
         }
     }
 
@@ -122,6 +192,7 @@ class KaryawanController extends Controller
         $kode_jabatan = $request->kode_jabatan;
         $kode_departemen = $request->kode_departemen;
         $kode_cabang = $request->kode_cabang;
+        $kode_lokasi_penugasan = $request->kode_lokasi_penugasan;
 
         $karyawan = Karyawan::findOrFail($nik);
 
@@ -141,6 +212,7 @@ class KaryawanController extends Controller
                 // 'password' => Hash::make('password123'),
                 'kode_jabatan' => $kode_jabatan,
                 'kode_departemen' => $kode_departemen,
+                'kode_lokasi_penugasan' => $kode_lokasi_penugasan,
                 'kode_cabang' => $kode_cabang,
                 'foto' => $foto,
                 'updated_at' => Carbon::now()

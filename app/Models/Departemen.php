@@ -10,4 +10,9 @@ class Departemen extends Model
     use HasFactory;
     protected $table = "departemen";
     protected $guarded = [];
+
+    public function karyawan()
+    {
+        return $this->hasMany(Karyawan::class, 'kode_departemen', 'kode_departemen');
+    }
 }

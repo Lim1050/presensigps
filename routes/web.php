@@ -10,6 +10,7 @@ use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\KonfigurasiGajiController;
+use App\Http\Controllers\LokasiPenugasanController;
 use App\Http\Controllers\PenggajianController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
@@ -87,6 +88,17 @@ Route::middleware(['auth:user'])->group(function () {
     Route::post('/admin/departemen/update', [DepartemenController::class, 'DepartemenUpdate'])->name('admin.departemen.update');
     // departemen delete
     Route::get('/admin/departemen/delete/{kode_departemen}', [DepartemenController::class, 'DepartemenDelete'])->name('admin.departemen.delete');
+
+    // Lokasi Penugasan Index
+    Route::get('/admin/lokasi/penugasan', [LokasiPenugasanController::class, 'LokasiPenugasanIndex'])->name('admin.lokasi.penugasan');
+    // Lokasi Penugasan Store
+    Route::post('/admin/lokasi/penugasan/store', [LokasiPenugasanController::class, 'LokasiPenugasanStore'])->name('admin.lokasi.penugasan.store');
+    // Lokasi Penugasan edit
+    Route::get('/admin/lokasi/penugasan/edit/{kode_lokasi_penugasan}', [LokasiPenugasanController::class, 'LokasiPenugasanEdit'])->name('admin.lokasi.penugasan.edit');
+    // Lokasi Penugasan update
+    Route::put('/admin/lokasi/penugasan/update/{kode_lokasi_penugasan}', [LokasiPenugasanController::class, 'LokasiPenugasanUpdate'])->name('admin.lokasi.penugasan.update');
+    // Lokasi Penugasan delete
+    Route::delete('/admin/lokasi/penugasan/delete/{kode_lokasi_penugasan}', [LokasiPenugasanController::class, 'LokasiPenugasanDelete'])->name('admin.lokasi.penugasan.delete');
 
     // Kantor Cabang
     Route::get('/admin/cabang', [CabangController::class, 'CabangIndex'])->name('admin.cabang');
@@ -320,7 +332,10 @@ Route::middleware(['auth:karyawan'])->group(function () {
     // profile
     Route::get('/profile', [ProfileController::class, 'Profile'])->name('profile');
     // update profile
-    Route::post('/profile/update', [ProfileController::class, 'ProfileUpdate'])->name('profile.update');
+    // Route::post('/profile/update', [ProfileController::class, 'ProfileUpdate'])->name('profile.update');
+    Route::put('/profile/update/foto', action: [ProfileController::class, 'ProfileUpdateFoto'])->name('profile.update.foto');
+    Route::put('/profile/update/detail', [ProfileController::class, 'ProfileUpdateDetail'])->name('profile.update.detail');
+    Route::put('/profile/update/password', action: [ProfileController::class, 'ProfileUpdatePassword'])->name('profile.update.password');
 
     // logout
     Route::get('/logout', [AuthController::class, 'Logout'])->name('logout');

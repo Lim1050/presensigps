@@ -57,4 +57,19 @@ class Karyawan extends Authenticatable
     {
         return $this->hasMany(PengajuanIzin::class, 'nik', 'nik');
     }
+
+    public function lokasiPenugasan()
+    {
+        return $this->belongsTo(LokasiPenugasan::class, 'kode_lokasi_penugasan', 'kode_lokasi_penugasan');
+    }
+
+    public function Cabang()
+    {
+        return $this->belongsTo(Cabang::class, 'kode_cabang',  ownerKey: 'kode_cabang');
+    }
+
+    public function departemen()
+    {
+        return $this->belongsTo(Departemen::class, 'kode_departemen', 'kode_departemen');
+    }
 }

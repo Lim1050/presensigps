@@ -106,6 +106,7 @@
                                 <th class="text-center">Foto</th>
                                 <th class="text-center">Jabatan</th>
                                 <th class="text-center">Departemen</th>
+                                <th class="text-center">Lokasi Penugasan</th>
                                 <th class="text-center">Kantor</th>
                                 <th class="text-center">No HP</th>
                                 <th class="text-center">Aksi</th>
@@ -117,7 +118,7 @@
                                 $path = Storage::url("uploads/karyawan/".$item->foto)
                             @endphp
                             <tr>
-                                <td class="text-center">{{ $loop->iteration + $karyawan->firstItem() -1}}</td>
+                                <td class="text-center">{{ $loop->iteration}}</td>
                                 <td>{{ $item->nik }}</td>
                                 <td>{{ $item->nama_lengkap }}</td>
                                 <td>
@@ -129,9 +130,10 @@
                                         @endif
                                     </div>
                                 </td>
-                                <td>{{ $item->nama_jabatan }}</td>
-                                <td>{{ $item->nama_departemen }}</td>
-                                <td>{{ $item->kode_cabang }}</td>
+                                <td>{{ $item->jabatan->nama_jabatan }}</td>
+                                <td>{{ $item->departemen->nama_departemen }}</td>
+                                <td>{{ $item->lokasiPenugasan->nama_lokasi_penugasan ?? ''}}</td>
+                                <td>{{ $item->cabang->nama_cabang }}</td>
                                 <td>{{ $item->no_wa }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
@@ -144,6 +146,7 @@
                                             data-kode_jabatan="{{ $item->kode_jabatan }}"
                                             {{-- data-password="{{ $item->password }}" --}}
                                             data-kode_departemen="{{ $item->kode_departemen }}"
+                                            data-kode_lokasi_penugasan="{{ $item->kode_lokasi_penugasan }}"
                                             data-kode_cabang="{{ $item->kode_cabang }}"
                                             data-no_wa="{{ $item->no_wa }}"
                                         ><i class="bi bi-pencil-square"
@@ -216,6 +219,14 @@
                             <option value="">Pilih Departemen</option>
                             @foreach ($departemen as $item)
                             <option {{ Request('kode_departemen') == $item->kode_departemen ? 'selected' : '' }} value="{{ $item->kode_departemen }}">{{ $item->nama_departemen }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasant" class="form-control">
+                            <option value="">Pilih Lokasi Penugasan</option>
+                            @foreach ($lokasi_penugasan as $item)
+                            <option {{ Request('kode_lokasi_penugasan') == $item->kode_lokasi_penugasan ? 'selected' : '' }} value="{{ $item->kode_lokasi_penugasan }}">{{ $item->nama_lokasi_penugasan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -297,6 +308,14 @@
                             <option value="">Pilih Departemen</option>
                             @foreach ($departemen as $item)
                             <option value="{{ $item->kode_departemen }}">{{ $item->nama_departemen }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="kode_lokasi_penugasan" id="edit_kode_lokasi_penugasan" class="form-control">
+                            <option value="">Pilih Lokasi Penugasan</option>
+                            @foreach ($lokasi_penugasan as $item)
+                            <option value="{{ $item->kode_lokasi_penugasan }}">{{ $item->nama_lokasi_penugasan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -439,6 +458,16 @@
                     $("#kode_departement").focus();
                 });
                 return false;
+            } else if (kode_lokasi_penugasan==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Lokasi Penugasan Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#kode_lokasi_penugasan").focus();
+                });
+                return false;
             } else if (kode_cabang==""){
                 Swal.fire({
                 title: 'Oops!',
@@ -471,6 +500,7 @@
             var foto = button.data('foto');
             var kode_jabatan = button.data('kode_jabatan');
             var kode_departemen = button.data('kode_departemen');
+            var kode_lokasi_penugasan = button.data('kode_lokasi_penugasan');
             var kode_cabang = button.data('kode_cabang');
             var no_wa = button.data('no_wa');
             // var password = button.data('password');
@@ -480,6 +510,7 @@
             modal.find('.modal-body #edit_nama_lengkap').val(nama_lengkap);
             modal.find('.modal-body #edit_kode_jabatan').val(kode_jabatan);
             modal.find('.modal-body #edit_kode_departemen').val(kode_departemen);
+            modal.find('.modal-body #edit_kode_lokasi_penugasan').val(kode_lokasi_penugasan);
             modal.find('.modal-body #edit_kode_cabang').val(kode_cabang);
             modal.find('.modal-body #edit_no_wa').val(no_wa);
 

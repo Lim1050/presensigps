@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -96,69 +97,69 @@ class UserController extends Controller
     }
 
     public function UserUpdate(Request $request, $id)
-{
-    $username = $request->username;
-    $name = $request->name;
-    $email = $request->email;
-    $no_hp = $request->no_hp;
-    $password = $request->password ? Hash::make($request->password) : null;
-    $role = $request->role;
-    $kode_departemen = $request->kode_departemen;
-    $kode_cabang = $request->kode_cabang;
+    {
+        $username = $request->username;
+        $name = $request->name;
+        $email = $request->email;
+        $no_hp = $request->no_hp;
+        $password = $request->password ? Hash::make($request->password) : null;
+        $role = $request->role;
+        $kode_departemen = $request->kode_departemen;
+        $kode_cabang = $request->kode_cabang;
 
-    $user = User::findOrFail($id);
+        $user = User::findOrFail($id);
 
-    $old_foto = $user->foto;
+        $old_foto = $user->foto;
 
-    // cek apakah ada foto dari form
-    if($request->hasFile('foto')){
-        $foto = $username . "_" . time() . "." . $request->file('foto')->getClientOriginalExtension();
-    } else {
-        $foto = $old_foto;
-    }
-
-    // Set data yang akan diupdate
-    $user->username = $username;
-    $user->name = $name;
-    $user->email = $email;
-    $user->role = $role;
-    $user->no_hp = $no_hp;
-    $user->kode_departemen = $kode_departemen;
-    $user->kode_cabang = $kode_cabang;
-    $user->foto = $foto;
-
-    if ($password) {
-        $user->password = $password;
-    }
-
-    DB::beginTransaction();
-    try {
-        // Update data user
-        $user->save();
-
-        // Update role user
-        $user->syncRoles($role);
-
-        DB::commit();
-
-        // Handle file upload
+        // cek apakah ada foto dari form
         if($request->hasFile('foto')){
-            $folderPath = "public/uploads/user/";
-            $request->file('foto')->storeAs($folderPath, $foto);
-
-            // Hapus foto lama jika berbeda dengan foto baru
-            if ($old_foto !== $foto) {
-                Storage::delete($folderPath . $old_foto);
-            }
+            $foto = $username . "_" . time() . "." . $request->file('foto')->getClientOriginalExtension();
+        } else {
+            $foto = $old_foto;
         }
 
-        return redirect()->route('admin.konfigurasi.user')->with(['success' => 'Data Berhasil Diupdate!']);
-    } catch (\Throwable $e) {
-        DB::rollBack();
-        dd($e);
-        return redirect()->back()->with(['error' => 'Data Gagal Diupdate!']);
+        // Set data yang akan diupdate
+        $user->username = $username;
+        $user->name = $name;
+        $user->email = $email;
+        $user->role = $role;
+        $user->no_hp = $no_hp;
+        $user->kode_departemen = $kode_departemen;
+        $user->kode_cabang = $kode_cabang;
+        $user->foto = $foto;
+
+        if ($password) {
+            $user->password = $password;
+        }
+
+        DB::beginTransaction();
+        try {
+            // Update data user
+            $user->save();
+
+            // Update role user
+            $user->syncRoles($role);
+
+            DB::commit();
+
+            // Handle file upload
+            if($request->hasFile('foto')){
+                $folderPath = "public/uploads/user/";
+                $request->file('foto')->storeAs($folderPath, $foto);
+
+                // Hapus foto lama jika berbeda dengan foto baru
+                if ($old_foto !== $foto) {
+                    Storage::delete($folderPath . $old_foto);
+                }
+            }
+
+            return redirect()->route('admin.konfigurasi.user')->with(['success' => 'Data Berhasil Diupdate!']);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->back()->with(['error' => 'Data Gagal Diupdate!']);
+        }
     }
-}
 
 
     public function UserDelete($id)
@@ -198,16 +199,59 @@ class UserController extends Controller
         return view('profile.admin_profile', compact('user'));
     }
 
+    // public function AdminProfileUpdateFoto(Request $request)
+    // {
+    //     try {
+    //         // Validasi input
+    //         $request->validate([
+    //             'foto' => 'required|image|mimes:jpeg,png|max:5120', // Maksimal 5MB
+    //         ]);
+
+    //         // Ambil pengguna yang sedang login
+    //         $user = Auth::user();
+
+    //         // Hapus foto lama jika ada
+    //         if ($user->foto) {
+    //             Storage::delete('public/uploads/user/' . $user->foto);
+    //         }
+
+    //         // Simpan foto baru
+    //         $fileName = $user->username . '_' . time() .  '.' .  $request->foto->extension();
+    //         $request->foto->storeAs('public/uploads/user', $fileName);
+
+    //         // Update nama file di database
+    //         $user->foto = $fileName;
+    //         $user->save();
+
+    //         return redirect()->back()->with('success', 'Foto profil berhasil diperbarui!');
+    //     } catch (\Exception $e) {
+    //         // dd($e);
+    //         return redirect()->back()->with('error', 'Foto profil gagal diperbarui! ' . $e->getMessage());
+    //     }
+    // }
+
     public function AdminProfileUpdateFoto(Request $request)
     {
         try {
             // Validasi input
             $request->validate([
-                'foto' => 'required|image|mimes:jpeg,png|max:5120', // Maksimal 5MB
+                'croppedImage' => 'required',
             ]);
 
             // Ambil pengguna yang sedang login
             $user = Auth::user();
+
+            // Decode base64 image
+            $croppedImage = $request->input('croppedImage');
+            $image = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $croppedImage));
+
+            // Validasi ukuran file
+            if (strlen($image) > 5 * 1024 * 1024) { // 5MB dalam bytes
+                return redirect()->back()->with('error', 'Ukuran file tidak boleh lebih dari 5MB.');
+            }
+
+            // Generate nama file
+            $fileName = $user->username . '_' . time() . '.jpg';
 
             // Hapus foto lama jika ada
             if ($user->foto) {
@@ -215,8 +259,7 @@ class UserController extends Controller
             }
 
             // Simpan foto baru
-            $fileName = $user->username . '_' . time() .  '.' .  $request->foto->extension();
-            $request->foto->storeAs('public/uploads/user', $fileName);
+            Storage::put('public/uploads/user/' . $fileName, $image);
 
             // Update nama file di database
             $user->foto = $fileName;
@@ -224,10 +267,10 @@ class UserController extends Controller
 
             return redirect()->back()->with('success', 'Foto profil berhasil diperbarui!');
         } catch (\Exception $e) {
-            // dd($e);
-            return redirect()->back()->with('error', 'Foto profil gagal diperbarui! ' . $e->getMessage());
+            // Log error untuk debugging
+            Log::error('Error updating profile photo: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Foto profil gagal diperbarui! Silakan coba lagi.');
         }
-
     }
     public function AdminProfileUpdateDetail(Request $request)
     {

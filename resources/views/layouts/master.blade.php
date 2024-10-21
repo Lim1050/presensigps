@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> --}}
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+
     <link rel="manifest" href="__manifest.json">
     <style>
         .selectmaterialize {
