@@ -22,4 +22,13 @@ class Gaji extends Model
     {
         return $this->belongsTo(Jabatan::class, 'kode_jabatan', 'kode_jabatan');
     }
+
+    public function lokasiPenugasan()
+    {
+        return $this->belongsTo(LokasiPenugasan::class, 'kode_lokasi_penugasan', 'kode_lokasi_penugasan');
+    }
+    public function kantorCabang()
+    {
+        return $this->belongsTo(Cabang::class, 'kode_cabang', ownerKey: 'kode_cabang');
+    }
 }

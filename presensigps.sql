@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 21, 2024 at 04:13 PM
+-- Generation Time: Oct 22, 2024 at 03:25 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -74,6 +74,8 @@ CREATE TABLE `failed_jobs` (
 CREATE TABLE `gaji` (
   `kode_gaji` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `kode_jabatan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_lokasi_penugasan` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_cabang` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `kode_jenis_gaji` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `jenis_gaji` enum('Gaji tetap','Tunjangan jabatan','Transportasi') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nama_gaji` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -86,26 +88,25 @@ CREATE TABLE `gaji` (
 -- Dumping data for table `gaji`
 --
 
-INSERT INTO `gaji` (`kode_gaji`, `kode_jabatan`, `kode_jenis_gaji`, `jenis_gaji`, `nama_gaji`, `jumlah_gaji`, `created_at`, `updated_at`) VALUES
-('GTKK', 'KEPKAM', 'GT', 'Gaji tetap', 'Gaji Tetap Kepala Keamanan', 5000000.00, '2024-10-15 05:36:13', '2024-10-16 08:04:33'),
-('GTPC', 'PCCTV', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas CCTV', 4000000.00, '2024-10-15 05:38:02', '2024-10-16 08:06:29'),
-('GTPKG', 'PKG', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas Kontrol Gedung', 4000000.00, '2024-10-15 05:40:30', '2024-10-16 08:07:08'),
-('GTPM', 'PENMAL', 'GT', 'Gaji tetap', 'Gaji Tetap Penjaga Malam', 4000000.00, '2024-10-15 05:39:09', '2024-10-16 08:06:44'),
-('GTPPM', 'PPM', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas Pintu Masuk', 3500000.00, '2024-10-15 05:41:57', '2024-10-16 08:07:18'),
-('GTSK', 'SUPKAM', 'GT', 'Gaji tetap', 'Gaji Tetap Supervisor Keamanan', 5000000.00, '2024-10-15 05:45:15', '2024-10-16 08:07:43'),
-('GTSO', 'SO', 'GT', 'Gaji tetap', 'Gaji Tetap Security Officer', 3750000.00, '2024-10-15 05:43:40', '2024-10-16 08:07:31'),
-('GTWKK', 'WAKAM', 'GT', 'Gaji tetap', 'Gaji Tetap Wakil Kepala Keamanan', 4500000.00, '2024-10-15 05:46:22', '2024-10-16 08:07:53'),
-('TJKK', 'KEPKAM', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Kepala Keamanan', 2500000.00, '2024-10-15 05:36:51', '2024-10-16 08:06:22'),
-('TJPC', 'PCCTV', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas CCTV', 2000000.00, '2024-10-15 05:38:38', '2024-10-16 08:06:37'),
-('TJPKG', 'PKG', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Kontrol Gedung', 2000000.00, '2024-10-15 05:41:04', '2024-10-16 08:07:13'),
-('TJPM', 'PENMAL', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Penjaga Malam', 2000000.00, '2024-10-15 05:39:41', '2024-10-16 08:06:54'),
-('TJPPM', 'PPM', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Pintu Masuk', 1750000.00, '2024-10-15 05:42:50', '2024-10-16 08:07:24'),
-('TJSK', 'SUPKAM', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Supervisor Keamanan', 2500000.00, '2024-10-15 05:45:44', '2024-10-16 08:07:47'),
-('TJSO', 'SO', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Security Officer', 1875000.00, '2024-10-15 05:44:22', '2024-10-16 08:07:37'),
-('TJWKK', 'WAKAM', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Wakil Kepala Keamanan', 2250000.00, '2024-10-15 05:47:11', '2024-10-16 08:07:59'),
-('TKK', 'KEPKAM', 'TR', NULL, 'Transportasi Kepala Keamanan', 100000.00, '2024-10-17 05:52:56', '2024-10-17 05:52:56'),
-('TST', 'PPM', 'MKN', NULL, 'TEST GAJI SO', 2222222.00, '2024-10-16 08:11:17', '2024-10-16 08:20:14'),
-('UMKK', 'KEPKAM', 'MKN', NULL, 'Uang Makan Kepala Keamanan', 50000.00, '2024-10-17 05:52:26', '2024-10-17 05:52:26');
+INSERT INTO `gaji` (`kode_gaji`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_cabang`, `kode_jenis_gaji`, `jenis_gaji`, `nama_gaji`, `jumlah_gaji`, `created_at`, `updated_at`) VALUES
+('GTKK', 'KEPKAM', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Kepala Keamanan', 5000000.00, '2024-10-15 05:36:13', '2024-10-22 05:59:20'),
+('GTPC', 'PCCTV', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas CCTV', 4000000.00, '2024-10-15 05:38:02', '2024-10-22 05:56:21'),
+('GTPKG', 'PKG', 'SMB', 'BKS', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas Kontrol Gedung', 4000000.00, '2024-10-15 05:40:30', '2024-10-22 05:52:40'),
+('GTPM', 'PENMAL', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Penjaga Malam', 4000000.00, '2024-10-15 05:39:09', '2024-10-22 05:55:22'),
+('GTPPM', 'PPM', 'SMB', 'BKS', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas Pintu Masuk', 3500000.00, '2024-10-15 05:41:57', '2024-10-22 05:58:18'),
+('GTSK', 'SUPKAM', 'GR', 'JKTT', 'GT', 'Gaji tetap', 'Gaji Tetap Supervisor Keamanan', 5000000.00, '2024-10-15 05:45:15', '2024-10-22 05:57:32'),
+('GTSO', 'SO', 'SMB', 'BKS', 'GT', 'Gaji tetap', 'Gaji Tetap Security Officer', 3750000.00, '2024-10-15 05:43:40', '2024-10-22 05:54:44'),
+('GTWKK', 'WAKAM', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Wakil Kepala Keamanan', 4500000.00, '2024-10-15 05:46:22', '2024-10-22 05:55:49'),
+('TJKK', 'KEPKAM', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Kepala Keamanan', 2500000.00, '2024-10-15 05:36:51', '2024-10-22 05:59:26'),
+('TJPC', 'PCCTV', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas CCTV', 2000000.00, '2024-10-15 05:38:38', '2024-10-22 05:57:11'),
+('TJPKG', 'PKG', 'SMB', 'BKS', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Kontrol Gedung', 2000000.00, '2024-10-15 05:41:04', '2024-10-22 05:54:16'),
+('TJPM', 'PENMAL', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Penjaga Malam', 2000000.00, '2024-10-15 05:39:41', '2024-10-22 05:55:28'),
+('TJPPM', 'PPM', 'SMB', 'BKS', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Pintu Masuk', 1750000.00, '2024-10-15 05:42:50', '2024-10-22 05:58:26'),
+('TJSK', 'SUPKAM', 'GR', 'JKTT', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Supervisor Keamanan', 2500000.00, '2024-10-15 05:45:44', '2024-10-22 05:57:47'),
+('TJSO', 'SO', 'SMB', 'BKS', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Security Officer', 1875000.00, '2024-10-15 05:44:22', '2024-10-22 05:54:52'),
+('TJWKK', 'WAKAM', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Wakil Kepala Keamanan', 2250000.00, '2024-10-15 05:47:11', '2024-10-22 05:56:00'),
+('TKK', 'KEPKAM', 'MN', 'JKTP', 'TR', NULL, 'Transportasi Kepala Keamanan', 100000.00, '2024-10-17 05:52:56', '2024-10-22 05:59:34'),
+('UMKK', 'KEPKAM', 'MN', 'JKTP', 'MKN', NULL, 'Uang Makan Kepala Keamanan', 50000.00, '2024-10-17 05:52:26', '2024-10-22 05:59:49');
 
 -- --------------------------------------------------------
 
@@ -416,6 +417,7 @@ CREATE TABLE `konfigurasi_gaji` (
 
 INSERT INTO `konfigurasi_gaji` (`kode_jenis_gaji`, `jenis_gaji`, `keterangan`, `is_active`, `created_at`, `updated_at`) VALUES
 ('GT', 'Gaji Tetap', 'Gaji Tetap', 1, '2024-10-16 07:16:12', '2024-10-16 07:16:12'),
+('L', 'Lembur', 'Lembur', 1, '2024-10-22 06:05:31', '2024-10-22 06:05:31'),
 ('MKN', 'Uang Makan', 'Uang Makan', 1, '2024-10-16 07:17:15', '2024-10-16 07:17:15'),
 ('TJ', 'Tunjangan Jabatan', 'Tunjangan Jabatan', 1, '2024-10-16 07:16:27', '2024-10-16 07:16:27'),
 ('TR', 'Transportasi', 'Transportasi', 1, '2024-10-16 07:16:52', '2024-10-16 07:16:52');
@@ -553,7 +555,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (66, '2024_10_17_135500_add_salary_details_to_penggajian_table', 34),
 (67, '2024_10_18_124338_add_change_notes_and_changed_by_to_penggajian_table', 35),
 (68, '2024_10_21_134512_create_lokasi_penugasan_table', 36),
-(69, '2024_10_21_150922_update_karyawan_table_remove_jabatan_add_lokasi_penugasan', 37);
+(69, '2024_10_21_150922_update_karyawan_table_remove_jabatan_add_lokasi_penugasan', 37),
+(70, '2024_10_22_121028_add_kode_lokasi_and_cabang_to_gaji_table', 38);
 
 -- --------------------------------------------------------
 
@@ -981,7 +984,9 @@ ALTER TABLE `failed_jobs`
 --
 ALTER TABLE `gaji`
   ADD PRIMARY KEY (`kode_gaji`),
-  ADD KEY `gaji_kode_jenis_gaji_foreign` (`kode_jenis_gaji`);
+  ADD KEY `gaji_kode_jenis_gaji_foreign` (`kode_jenis_gaji`),
+  ADD KEY `gaji_kode_lokasi_penugasan_foreign` (`kode_lokasi_penugasan`),
+  ADD KEY `gaji_kode_cabang_foreign` (`kode_cabang`);
 
 --
 -- Indexes for table `jabatan`
@@ -1141,7 +1146,7 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `penggajian`
@@ -1187,7 +1192,9 @@ ALTER TABLE `users`
 -- Constraints for table `gaji`
 --
 ALTER TABLE `gaji`
-  ADD CONSTRAINT `gaji_kode_jenis_gaji_foreign` FOREIGN KEY (`kode_jenis_gaji`) REFERENCES `konfigurasi_gaji` (`kode_jenis_gaji`) ON DELETE SET NULL;
+  ADD CONSTRAINT `gaji_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE SET NULL,
+  ADD CONSTRAINT `gaji_kode_jenis_gaji_foreign` FOREIGN KEY (`kode_jenis_gaji`) REFERENCES `konfigurasi_gaji` (`kode_jenis_gaji`) ON DELETE SET NULL,
+  ADD CONSTRAINT `gaji_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `karyawan`

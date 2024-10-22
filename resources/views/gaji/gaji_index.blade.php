@@ -86,6 +86,8 @@
                                 <th class="text-center">No</th>
                                 <th class="text-center">Kode Gaji</th>
                                 <th class="text-center">Jabatan</th>
+                                <th class="text-center">Lokasi Penugasan</th>
+                                <th class="text-center">Cabang</th>
                                 <th class="text-center">Jenis Gaji</th>
                                 <th class="text-center">Nama Gaji</th>
                                 <th class="text-right">Jumlah Gaji</th>
@@ -99,6 +101,8 @@
                                 <td class="text-center">{{ $loop->iteration}}</td>
                                 <td class="text-center">{{ $item->kode_gaji }}</td>
                                 <td class="text-center">{{ $item->jabatan->nama_jabatan }}</td>
+                                <td class="text-center">{{ $item->lokasiPenugasan->nama_lokasi_penugasan ?? ''}}</td>
+                                <td class="text-center">{{ $item->kantorCabang->nama_cabang ?? ''}}</td>
                                 <td class="text-center">{{ $item->jenisGaji->jenis_gaji }}</td>
                                 <td class="text-center">{{ $item->nama_gaji }}</td>
                                 <td class="text-right">Rp {{ $item->jumlah_gaji }}</td>
@@ -108,6 +112,8 @@
                                         <a href="#" class="btn btn-warning" title="Edit" data-toggle="modal" data-target="#modalEditGaji"
                                                 data-kode_gaji="{{ $item->kode_gaji }}"
                                                 data-kode_jabatan="{{ $item->kode_jabatan }}"
+                                                data-kode_lokasi_penugasan="{{ $item->kode_lokasi_penugasan }}"
+                                                data-kode_cabang="{{ $item->kode_cabang }}"
                                                 data-kode_jenis_gaji="{{ $item->kode_jenis_gaji }}"
                                                 data-nama_gaji="{{ $item->nama_gaji }}"
                                                 data-jumlah_gaji="{{ $item->jumlah_gaji }}"
@@ -155,6 +161,25 @@
                             @endforeach
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <select name="kode_cabang" id="kode_cabang" class="form-control">
+                            <option value="">Pilih Kantor Cabang</option>
+                            @foreach ($cabang as $item)
+                            <option value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan" class="form-control">
+                            <option value="">Pilih Lokasi Penugasan</option>
+                            @foreach ($lokasi_penugasan as $item)
+                            <option value="{{ $item->kode_lokasi_penugasan }}" data-cabang="{{ $item->kode_cabang }}">{{ $item->nama_lokasi_penugasan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <select name="kode_jenis_gaji" id="kode_jenis_gaji" class="form-control">
                             <option value="">Pilih Jenis Gaji</option>
@@ -225,6 +250,22 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <select name="kode_cabang" id="edit_kode_cabang" class="form-control">
+                            <option value="">Pilih Kantor Cabang</option>
+                            @foreach ($cabang as $item)
+                            <option value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="kode_lokasi_penugasan" id="edit_kode_lokasi_penugasan" class="form-control">
+                            <option value="">Pilih Lokasi Penugasan</option>
+                            @foreach ($lokasi_penugasan as $item)
+                            <option value="{{ $item->kode_lokasi_penugasan }}" data-cabang="{{ $item->kode_cabang }}">{{ $item->nama_lokasi_penugasan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <select name="kode_jenis_gaji" id="edit_kode_jenis_gaji" class="form-control">
                             <option value="">Pilih Jenis Gaji</option>
                             @foreach ($jenis_gaji as $item)
@@ -268,6 +309,82 @@
 
 
 @push('myscript')
+<script>
+$(document).ready(function() {
+    // Ketika cabang dipilih
+    $('#kode_cabang').change(function() {
+        var selectedCabang = $(this).val();
+        if(selectedCabang) {
+            $('#kode_lokasi_penugasan option').each(function() {
+                if($(this).data('cabang') == selectedCabang || $(this).val() == '') {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        } else {
+            $('#kode_lokasi_penugasan option').show();
+        }
+        $('#kode_lokasi_penugasan').val('');
+    });
+
+    // Ketika lokasi penugasan dipilih
+    $('#kode_lokasi_penugasan').change(function() {
+        var selectedCabang = $(this).find(':selected').data('cabang');
+        if(selectedCabang) {
+            $('#kode_cabang').val(selectedCabang);
+        }
+    });
+
+    // Inisialisasi: sembunyikan lokasi penugasan yang tidak sesuai dengan cabang yang dipilih
+    $('#kode_cabang').trigger('change');
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    // Fungsi untuk memperbarui opsi lokasi penugasan berdasarkan cabang yang dipilih
+    function updateLokasiPenugasan() {
+        var selectedCabang = $('#edit_kode_cabang').val();
+        if(selectedCabang) {
+            $('#edit_kode_lokasi_penugasan option').each(function() {
+                if($(this).data('cabang') == selectedCabang || $(this).val() == '') {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        } else {
+            $('#edit_kode_lokasi_penugasan option').show();
+        }
+    }
+
+    // Ketika cabang dipilih
+    $('#edit_kode_cabang').change(function() {
+        updateLokasiPenugasan();
+        $('#edit_kode_lokasi_penugasan').val('');
+    });
+
+    // Ketika lokasi penugasan dipilih
+    $('#edit_kode_lokasi_penugasan').change(function() {
+        var selectedCabang = $(this).find(':selected').data('cabang');
+        if(selectedCabang) {
+            $('#edit_kode_cabang').val(selectedCabang);
+        }
+    });
+
+    // Inisialisasi: perbarui lokasi penugasan berdasarkan cabang yang mungkin sudah terpilih
+    updateLokasiPenugasan();
+
+    // Fungsi untuk mengatur nilai awal saat modal edit dibuka
+    window.setEditFormValues = function(kodeCabang, kodeLokasiPenugasan) {
+        $('#edit_kode_cabang').val(kodeCabang);
+        updateLokasiPenugasan();
+        $('#edit_kode_lokasi_penugasan').val(kodeLokasiPenugasan);
+    }
+});
+</script>
+
 <script>
     let table = new DataTable('#dataTable');
 
@@ -322,6 +439,26 @@
                     $("#kode_jabatan").focus();
                 });
                 return false;
+            }else if (kode_lokasi_penugasan==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Lokasi Penugasan Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#kode_lokasi_penugasan").focus();
+                });
+                return false;
+            }else if (kode_cabang==""){
+                Swal.fire({
+                title: 'Oops!',
+                text: 'Kantor Cabang Harus Diisi!',
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+                }).then((result)=>{
+                    $("#kode_cabang").focus();
+                });
+                return false;
             } else if (kode_jenis_gaji==""){
                 Swal.fire({
                 title: 'Oops!',
@@ -360,6 +497,8 @@
             var button = $(event.relatedTarget);
             var kode_gaji = button.data('kode_gaji');
             var kode_jabatan = button.data('kode_jabatan');
+            var kode_lokasi_penugasan = button.data('kode_lokasi_penugasan');
+            var kode_cabang = button.data('kode_cabang');
             var kode_jenis_gaji = button.data('kode_jenis_gaji');
             var nama_gaji = button.data('nama_gaji');
             var jumlah_gaji = button.data('jumlah_gaji');
@@ -367,6 +506,8 @@
             var modal = $(this);
             modal.find('.modal-body #edit_kode_gaji').val(kode_gaji);
             modal.find('.modal-body #edit_kode_jabatan').val(kode_jabatan);
+            modal.find('.modal-body #edit_kode_lokasi_penugasan').val(kode_lokasi_penugasan);
+            modal.find('.modal-body #edit_kode_cabang').val(kode_cabang);
             modal.find('.modal-body #edit_kode_jenis_gaji').val(kode_jenis_gaji);
             modal.find('.modal-body #edit_nama_gaji').val(nama_gaji);
             modal.find('.modal-body #edit_jumlah_gaji').val(jumlah_gaji);

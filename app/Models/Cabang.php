@@ -19,7 +19,7 @@ class Cabang extends Model
     {
         return $this->hasMany(LokasiPenugasan::class, 'kode_cabang', 'kode_cabang');
     }
-    public function Cabang()
+    public function karyawan()
     {
         return $this->hasMany(Karyawan::class, 'kode_cabang', 'kode_cabang');
     }

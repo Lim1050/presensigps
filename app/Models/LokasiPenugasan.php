@@ -23,4 +23,8 @@ class LokasiPenugasan extends Model
     {
         return $this->hasMany(Karyawan::class, 'kode_lokasi_penugasan',  'kode_lokasi_penugasan');
     }
+    public function gaji()
+    {
+        return $this->hasMany(Gaji::class, 'kode_lokasi_penugasan',  'kode_lokasi_penugasan');
+    }
 }
