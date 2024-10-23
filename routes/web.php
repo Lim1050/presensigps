@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CabangController;
+use App\Http\Controllers\CashbonController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartemenController;
 use App\Http\Controllers\GajiController;
 use App\Http\Controllers\IzinController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\KonfigurasiGajiController;
 use App\Http\Controllers\LokasiPenugasanController;
@@ -176,6 +178,9 @@ Route::middleware(['auth:user'])->group(function () {
     Route::put('/admin/penggajian/update/{id}', action: [PenggajianController::class, 'PenggajianUpdate'])->name('admin.penggajian.update');
     Route::get('/admin/penggajian/delete/{id}', action: [PenggajianController::class, 'PenggajianDelete'])->name('admin.penggajian.delete');
 
+    // Cashbon Index
+    Route::get('/admin/cashbon', [CashbonController::class, 'CashbonIndex'])->name('admin.cashbon');
+
     // Konfigurasi Jenis Gaji
     Route::get('/admin/konfigurasi/jenis/gaji', action: [KonfigurasiGajiController::class, 'KonfigurasiGajiIndex'])->name('admin.konfigurasi.jenis.gaji');
     // Konfigurasi Jenis Gaji Store
@@ -328,6 +333,15 @@ Route::middleware(['auth:karyawan'])->group(function () {
 
     // Izin sakit cuti delete
     Route::get('/izin/delete/{kode_izin}', [IzinController::class, 'DeleteIzin'])->name('izin.delete');
+
+    // keuangan
+    Route::get('/keuangan', [KeuanganController::class, 'KeuanganIndex'])->name('keuangan');
+    // keuangan gaji
+    Route::get('/keuangan/gaji', [KeuanganController::class, 'KeuanganGaji'])->name('keuangan.gaji');
+    // keuangan cashbon
+    Route::get('/keuangan/cashbon', [KeuanganController::class, 'KeuanganCashbon'])->name('keuangan.cashbon');
+    // keuangan cashbon create
+    Route::get('/keuangan/cashbon/create', [KeuanganController::class, 'KeuanganCashbonCreate'])->name('keuangan.cashbon.create');
 
     // profile
     Route::get('/profile', [ProfileController::class, 'Profile'])->name('profile');

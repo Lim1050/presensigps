@@ -51,6 +51,10 @@ class Karyawan extends Authenticatable
     {
         return $this->hasMany(Penggajian::class, 'nik', 'nik');
     }
+    public function cashbon()
+    {
+        return $this->hasMany(Cashbon::class, 'nik', 'nik');
+    }
 
     // Relasi dengan model PengajuanIzin
     public function pengajuanIzin()

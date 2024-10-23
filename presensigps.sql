@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 22, 2024 at 03:25 PM
+-- Generation Time: Oct 23, 2024 at 04:15 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -20,6 +20,23 @@ SET time_zone = "+00:00";
 --
 -- Database: `presensigps`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cashbon`
+--
+
+CREATE TABLE `cashbon` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tanggal_pengajuan` date NOT NULL,
+  `jumlah` decimal(10,2) NOT NULL,
+  `keterangan` text COLLATE utf8mb4_unicode_ci,
+  `status` enum('pending','diterima','ditolak') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -556,7 +573,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (67, '2024_10_18_124338_add_change_notes_and_changed_by_to_penggajian_table', 35),
 (68, '2024_10_21_134512_create_lokasi_penugasan_table', 36),
 (69, '2024_10_21_150922_update_karyawan_table_remove_jabatan_add_lokasi_penugasan', 37),
-(70, '2024_10_22_121028_add_kode_lokasi_and_cabang_to_gaji_table', 38);
+(70, '2024_10_22_121028_add_kode_lokasi_and_cabang_to_gaji_table', 38),
+(71, '2024_10_23_152443_create_cashbon_table', 39),
+(72, '2024_10_23_160445_add_keterangan_to_cashbon_table', 40);
 
 -- --------------------------------------------------------
 
@@ -967,6 +986,13 @@ INSERT INTO `users` (`id`, `username`, `name`, `email`, `email_verified_at`, `pa
 --
 
 --
+-- Indexes for table `cashbon`
+--
+ALTER TABLE `cashbon`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cashbon_nik_index` (`nik`);
+
+--
 -- Indexes for table `departemen`
 --
 ALTER TABLE `departemen`
@@ -1131,6 +1157,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `cashbon`
+--
+ALTER TABLE `cashbon`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -1146,7 +1178,7 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT for table `penggajian`

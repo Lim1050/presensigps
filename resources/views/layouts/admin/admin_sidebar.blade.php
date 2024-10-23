@@ -60,16 +60,21 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/penggajian*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapsePenggajian"
-            aria-expanded="{{ request()->is(['admin/penggajian*']) ? 'true' : 'false' }}" aria-controls="collapsePenggajian">
+        <a class="nav-link collapsed {{ request()->is(['admin/penggajian*', 'admin/cashbon*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapsePenggajian"
+            aria-expanded="{{ request()->is(['admin/penggajian*', 'admin/cashbon*']) ? 'true' : 'false' }}" aria-controls="collapsePenggajian">
             <i class="bi bi-file-earmark fa-fw"></i>
             <span>Penggajian</span>
         </a>
-        <div id="collapsePenggajian" class="collapse {{ request()->is(['admin/penggajian*']) ? 'show' : '' }} bg-red" aria-labelledby="headingPenggajian" data-parent="#accordionSidebar">
+        <div id="collapsePenggajian" class="collapse {{ request()->is(['admin/penggajian*', 'admin/cashbon*']) ? 'show' : '' }} bg-red" aria-labelledby="headingPenggajian" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
                 <a class="collapse-item {{ request()->is('admin/penggajian*') ? 'active' : '' }}" href="{{ route('admin.penggajian') }}">
-                <i class="bi bi-file-earmark-text fa-fw"></i>
-                <span>Penggajian Karyawan</span></a>
+                    <i class="bi bi-file-earmark-text fa-fw"></i>
+                    <span>Penggajian Karyawan</span>
+                </a>
+                <a class="collapse-item {{ request()->is('admin/cashbon*') ? 'active' : '' }}" href="{{ route('admin.cashbon') }}">
+                    <i class="bi bi-file-earmark-text fa-fw"></i>
+                    <span>Cashbon Karyawan</span>
+                </a>
             </div>
         </div>
     </li>
