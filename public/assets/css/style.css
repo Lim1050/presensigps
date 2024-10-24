@@ -8119,3 +8119,19 @@ body.dark-mode-active .cart-item .cart-item-footer {
     background-color: #0056b3; /* Warna latar belakang untuk link aktif */
     color: white; /* Warna teks untuk link aktif */
 }
+
+.full-width-card {
+    width: 100%; /* Memastikan card mengambil lebar penuh */
+    margin: 0; /* Menghapus margin untuk memenuhi lebar */
+    padding: 0; /* Menghapus padding jika diperlukan */
+}
+
+.full-width-card .card-body {
+    padding: 1rem; /* Menambahkan padding pada body card */
+}
+
+@media (max-width: 768px) {
+    .full-width-card {
+        margin: 0 10px; /* Menambahkan margin pada layar kecil */
+    }
+}

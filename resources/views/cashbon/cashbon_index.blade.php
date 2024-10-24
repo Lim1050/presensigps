@@ -114,36 +114,53 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th>No.</th>
+                                        <th>Kode Cashbon</th>
                                         <th>NIK</th>
                                         <th>Nama Karyawan</th>
-                                        <th>Kode Jabatan</th>
+                                        <th>Jabatan</th>
                                         <th>Tanggal Cashbon</th>
                                         <th>Jumlah Cashbon</th>
-                                        <th>Status Approval</th>
+                                        <th>Keterangan</th>
+                                        <th>Status Pengajuan</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody >
-                                    {{-- @foreach ($sakit_izin as $item)
+                                    @foreach ($cashbon as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->kode_cashbon }}</td>
                                         <td>{{ $item->nik }}</td>
-                                        <td>{{ $item->nama_lengkap }}</td>
-                                        <td>{{ $item->kode_jabatan }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($item->tanggal_izin_dari)) }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($item->tanggal_izin_sampai)) }}</td>
-                                        <td>{{ $item->status == "sakit" ? "Sakit" : ($item->status == "izin" ? "Izin" : "Cuti") }}</td>
+                                        <td>{{ $item->karyawan->nama_lengkap }}</td>
+                                        <td>{{ $item->karyawan->jabatan->nama_jabatan }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d F Y') }}</td>
+                                        <td>Rp {{ number_format($item->jumlah, 2) }}</td>
                                         <td>{{ $item->keterangan }}</td>
-                                        <td><span class="badge {{ $item->status_pengajuan == "1" ? "badge-success" : ($item->status_pengajuan == "2" ? "badge-danger" : "badge-warning")}}">{{ $item->status_pengajuan == "1" ? "Disetujui" : ($item->status_pengajuan == "2" ? "Ditolak" : "Pending") }}</span></td>
                                         <td>
-                                            @if ($item->status_pengajuan == 0)
-                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalPengajuan" data-kode_izin="{{ $item->kode_izin }}"><i class="bi bi-box-arrow-right"></i> Aksi</a>
+                                            @if ($item->status == 'pending')
+                                                <span class="badge badge-warning">Pending</span>
+                                            @elseif ($item->status == 'diterima')
+                                                <span class="badge badge-success">Diterima</span>
+                                            @elseif ($item->status == 'ditolak')
+                                                <span class="badge badge-danger">Ditolak</span>
                                             @else
-                                                <a href="{{ route('admin.batalkan.sakit.izin', $item->kode_izin) }}" class="btn btn-sm btn-danger"><i class="bi bi-x-square"></i> Batalkan</a>
+                                                <span class="badge badge-secondary">Tidak Diketahui</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('admin.cashbon.show', $item->id) }}" class="btn btn-sm btn-info">
+                                                <i class="bi bi-eye"></i> Lihat Detail
+                                            </a>
+                                            @if ($item->status == 'pending')
+                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalPengajuan" data-id="{{ $item->id }}"><i class="bi bi-box-arrow-right"></i> Aksi</a>
+                                            @else
+                                                <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modalPembatalan" data-id="{{ $item->id }}">
+                                                    <i class="bi bi-x-square"></i> Batalkan
+                                                </a>
                                             @endif
                                         </td>
                                     </tr>
-                                    @endforeach --}}
+                                    @endforeach
                                 </tbody>
                             </table>
                         {{-- {{ $sakit_izin->links('vendor.pagination.bootstrap-5') }} --}}
@@ -161,21 +178,21 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalPengajuanLabel">Pengajuan Cashbon</h5>
+                <h5 class="modal-title" id="modalPengajuanLabel">Pengajuan Cashbon {{ $item->karyawan->nama_lengkap }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.cashbon') }}" method="POST">
+                <form action="{{ route('admin.cashbon.persetujuan') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="kode_cashbon" id="kode_cashbon">
+                    <input type="hidden" name="id" id="id">
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <select name="status_pengajuan" id="status_pengajuan" class="form-control">
-                                    <option value="1">Disetujui</option>
-                                    <option value="2">Ditolak</option>
+                                <select name="status" id="status" class="form-control">
+                                    <option value="diterima">Diterima</option>
+                                    <option value="ditolak">Ditolak</option>
                                 </select>
                             </div>
                         </div>
@@ -193,7 +210,30 @@
     </div>
 </div>
 
-
+<!-- Modal untuk konfirmasi pembatalan -->
+<div class="modal fade" id="modalPembatalan" tabindex="-1" aria-labelledby="modalPembatalanLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalPembatalanLabel">Konfirmasi Pembatalan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin ingin membatalkan pengajuan cashbon ini?
+            </div>
+            <div class="modal-footer">
+                <form action="{{ route('admin.cashbon.pembatalan') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id" id="cancelId">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                    <button type="submit" class="btn btn-danger">Ya, Batalkan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -202,11 +242,20 @@
 <script>
     $('#modalPengajuan').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Tombol yang memicu modal
-        var izinSakitkode_izin = button.data('kode_izin'); // Ambil nilai dari atribut data-id
+        var cashbon_id = button.data('id'); // Ambil nilai dari atribut data-id
 
-        // Masukkan nilai izinSakitId ke dalam input hidden
+        // Masukkan nilai cashbon_Id ke dalam input hidden
         var modal = $(this);
-        modal.find('.modal-body #kode_izin').val(izinSakitkode_izin);
+        modal.find('.modal-body #id').val(cashbon_id);
+    });
+</script>
+<script>
+    // Script untuk mengisi ID cashbon ke dalam modal
+    $('#modalPembatalan').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Tombol yang memicu modal
+        var id = button.data('id'); // Ambil ID dari data-id
+        var modal = $(this);
+        modal.find('#cancelId').val(id); // Set ID ke input hidden
     });
 </script>
 @endpush

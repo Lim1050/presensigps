@@ -13,9 +13,15 @@
 @endsection
 
 @section('content')
+
 <div class="container" style="margin-top: 70px; margin-bottom: 70px">
-    {{-- {{ route('cashbon.store') }} --}}
-    <form id="cashbonForm" action="" method="POST">
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+    <form id="cashbonForm" action="{{ route('keuangan.cashbon.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="tanggal_pengajuan" class="form-label">Tanggal Pengajuan</label>

@@ -180,6 +180,13 @@ Route::middleware(['auth:user'])->group(function () {
 
     // Cashbon Index
     Route::get('/admin/cashbon', [CashbonController::class, 'CashbonIndex'])->name('admin.cashbon');
+    // Cashbon show
+    Route::get('/admin/cashbon/show/{id}', [CashbonController::class, 'CashbonShow'])->name('admin.cashbon.show');
+    // Cashbon persetujuan
+    Route::post('/admin/cashbon/persetujuan', [CashbonController::class, 'CashbonPersetujuan'])->name('admin.cashbon.persetujuan');
+    // Cashbon pembatalan
+    Route::post('/admin/cashbon/pembatalan', [CashbonController::class, 'CashbonPembatalan'])->name('admin.cashbon.pembatalan');
+
 
     // Konfigurasi Jenis Gaji
     Route::get('/admin/konfigurasi/jenis/gaji', action: [KonfigurasiGajiController::class, 'KonfigurasiGajiIndex'])->name('admin.konfigurasi.jenis.gaji');
@@ -340,8 +347,12 @@ Route::middleware(['auth:karyawan'])->group(function () {
     Route::get('/keuangan/gaji', [KeuanganController::class, 'KeuanganGaji'])->name('keuangan.gaji');
     // keuangan cashbon
     Route::get('/keuangan/cashbon', [KeuanganController::class, 'KeuanganCashbon'])->name('keuangan.cashbon');
+    // keuangan Cashbon show
+    Route::get('/keuangan/cashbon/show/{id}', [KeuanganController::class, 'KeuanganCashbonShow'])->name('keuangan.cashbon.show');
     // keuangan cashbon create
-    Route::get('/keuangan/cashbon/create', [KeuanganController::class, 'KeuanganCashbonCreate'])->name('keuangan.cashbon.create');
+    Route::get('/keuangan/cashbon/create', action: [KeuanganController::class, 'KeuanganCashbonCreate'])->name('keuangan.cashbon.create');
+    // keuangan cashbon store
+    Route::post('/keuangan/cashbon/store', [KeuanganController::class, 'KeuanganCashbonStore'])->name('keuangan.cashbon.store');
 
     // profile
     Route::get('/profile', [ProfileController::class, 'Profile'])->name('profile');

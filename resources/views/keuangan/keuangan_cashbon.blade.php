@@ -33,33 +33,60 @@
                     <p>Belum ada pengajuan cashbon yang diajukan.</p>
                 </div>
             @else
-                <div class="row">
-                    @foreach ($cashbon as $item)
-                        <div class="col-md-4 mb-1">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6 class="card-title">Tanggal Pengajuan: {{ $item->tanggal_pengajuan }}</h6>
-                                    <p class="card-text">Jumlah: Rp {{ number_format($item->jumlah, 2) }}</p>
-                                    <p class="card-text">
-                                        Status:
+
+                    <style>
+                        .historycontent{
+                            display: flex;
+                        }
+                        .datapresensi{
+                            margin-left: 10px;
+                        }
+                        .status {
+                            position: absolute;
+                            right: 20px;
+                            bottom: 20px;
+                        }
+                        .fixed-top {
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            z-index: 1030; /* z-index tinggi untuk memastikan di atas elemen lainnya */
+                            background-color: white; /* Pastikan background-color diatur agar tidak transparan */
+                            padding: 10px; /* Tambahkan padding untuk memberikan sedikit ruang */
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Tambahkan shadow untuk efek visual */
+                        }
+                    </style>
+                    <div class="col">
+                        @foreach ($cashbon as $item)
+                        <a href="{{ route('keuangan.cashbon.show', $item->id) }}">
+                        {{-- onclick="window.location='{{ route('keuangan.cashbon.show', $item->id) }}'" --}}
+                        <div class="card mb-1 card_izin" >
+                            <div class="card-body">
+                                <div class="historycontent">
+                                    <div class="datapresensi">
+                                        <h3 style="line-height: 3px">{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d F Y') }}</h3>
+                                        <small>{{ $item->keterangan }}</small>
+
+                                        <h4>Rp {{ number_format($item->jumlah, 2) }}</h4>
+                                    </div>
+                                    <div class="status">
                                         @if ($item->status == 'pending')
                                             <span class="badge bg-warning">Pending</span>
-                                        @elseif ($item->status == 'approved')
+                                        @elseif ($item->status == 'diterima')
                                             <span class="badge bg-success">Diterima</span>
-                                        @elseif ($item->status == 'rejected')
+                                        @elseif ($item->status == 'ditolak')
                                             <span class="badge bg-danger">Ditolak</span>
                                         @else
                                             <span class="badge bg-secondary">Tidak Diketahui</span>
                                         @endif
-                                    </p>
-                                    <a href="" class="btn btn-secondary btn-sm">
-                                        <ion-icon name="eye"></ion-icon> Lihat Detail
-                                    </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-                </div>
+                        </a>
+                        @endforeach
+                    </div>
             @endif
         </div>
     </div>

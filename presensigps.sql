@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 23, 2024 at 04:15 PM
+-- Generation Time: Oct 24, 2024 at 04:18 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `cashbon` (
   `id` bigint UNSIGNED NOT NULL,
+  `kode_cashbon` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tanggal_pengajuan` date NOT NULL,
   `jumlah` decimal(10,2) NOT NULL,
@@ -37,6 +38,15 @@ CREATE TABLE `cashbon` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cashbon`
+--
+
+INSERT INTO `cashbon` (`id`, `kode_cashbon`, `nik`, `tanggal_pengajuan`, `jumlah`, `keterangan`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'CB1A2B3C', '123123123', '2024-10-24', 50000.00, 'Test Cashbon', 'ditolak', '2024-10-24 03:53:33', '2024-10-24 07:19:39'),
+(2, 'CB2B3C4D', '123123123', '2024-10-31', 100000.00, 'Test lagi Cashbon', 'diterima', '2024-10-24 05:01:03', '2024-10-24 07:19:44'),
+(3, 'CBXWL175', '123123123', '2024-10-25', 10000.00, 'test code cashbon', 'pending', '2024-10-24 08:39:00', '2024-10-24 08:39:00');
 
 -- --------------------------------------------------------
 
@@ -1160,7 +1170,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cashbon`
 --
 ALTER TABLE `cashbon`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
