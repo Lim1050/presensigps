@@ -21,6 +21,12 @@
     @if (session('error'))
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
+    <div class="alert alert-secondary mb-3">
+        <p>Total Limit Cashbon: Rp {{ number_format($totalLimit, 0, ',', '.') }}</p>
+        <p>Cashbon Terpakai: Rp {{ number_format($usedLimit, 0, ',', '.') }}</p>
+        <p>Sisa Limit yang Bisa Diajukan: Rp {{ number_format($availableLimit, 0, ',', '.') }}</p>
+    </div>
+
     <form id="cashbonForm" action="{{ route('keuangan.cashbon.store') }}" method="POST">
         @csrf
         <div class="mb-3">

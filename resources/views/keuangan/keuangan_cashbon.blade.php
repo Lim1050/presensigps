@@ -56,34 +56,47 @@
                             padding: 10px; /* Tambahkan padding untuk memberikan sedikit ruang */
                             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Tambahkan shadow untuk efek visual */
                         }
+                        .card-hover {
+                            transition: transform 0.2s, box-shadow 0.2s;
+                        }
+
+                        .card-hover:hover {
+                            transform: scale(1.05);
+                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                        }
+
+                        .card-hover:active {
+                            transform: scale(0.98);
+                            box-shadow: none;
+                        }
                     </style>
                     <div class="col">
                         @foreach ($cashbon as $item)
-                        <a href="{{ route('keuangan.cashbon.show', $item->id) }}">
+                        <a href="{{ route('keuangan.cashbon.show', $item->id) }}" class="text-decoration-none text-dark">
                         {{-- onclick="window.location='{{ route('keuangan.cashbon.show', $item->id) }}'" --}}
-                        <div class="card mb-1 card_izin" >
-                            <div class="card-body">
-                                <div class="historycontent">
-                                    <div class="datapresensi">
-                                        <h3 style="line-height: 3px">{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d F Y') }}</h3>
-                                        <small>{{ $item->keterangan }}</small>
+                            <div class="card mb-1 card_izin card-hover" >
+                                <div class="card-body">
+                                    <div class="historycontent">
+                                        <div class="datapresensi">
+                                            <h3 style="line-height: 3px">{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d F Y') }}</h3>
+                                            <small>{{ $item->keterangan }}</small>
 
-                                        <h4>Rp {{ number_format($item->jumlah, 2) }}</h4>
-                                    </div>
-                                    <div class="status">
-                                        @if ($item->status == 'pending')
-                                            <span class="badge bg-warning">Pending</span>
-                                        @elseif ($item->status == 'diterima')
-                                            <span class="badge bg-success">Diterima</span>
-                                        @elseif ($item->status == 'ditolak')
-                                            <span class="badge bg-danger">Ditolak</span>
-                                        @else
-                                            <span class="badge bg-secondary">Tidak Diketahui</span>
-                                        @endif
+                                            <h4>Rp {{ number_format($item->jumlah, 2) }}</h4>
+                                        </div>
+                                        <div class="status">
+                                            @if ($item->status == 'pending')
+                                                <span class="badge bg-warning">Pending</span>
+                                            @elseif ($item->status == 'diterima')
+                                                <span class="badge bg-success">Diterima</span>
+                                            @elseif ($item->status == 'ditolak')
+                                                <span class="badge bg-danger">Ditolak</span>
+                                            @else
+                                                <span class="badge bg-secondary">Tidak Diketahui</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         </a>
                         @endforeach
                     </div>

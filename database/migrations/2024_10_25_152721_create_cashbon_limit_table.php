@@ -13,8 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('cashbon', function (Blueprint $table) {
-            $table->string('kode_cashbon')->unique()->after('id'); // Menambahkan kolom kode_cashbon
+        Schema::create('cashbon_limit', function (Blueprint $table) {
+            $table->id();
+            $table->decimal('global_limit', 10, 2)->default(0);
+            $table->timestamps();
         });
     }
 
@@ -25,8 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('cashbon', function (Blueprint $table) {
-            $table->dropColumn('kode_cashbon'); // Menghapus kolom saat rollback
-        });
+        Schema::dropIfExists('cashbon_limit');
     }
 };

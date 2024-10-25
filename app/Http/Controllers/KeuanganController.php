@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cashbon;
+use App\Models\CashbonLimit;
 use App\Models\Penggajian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class KeuanganController extends Controller
@@ -26,26 +28,38 @@ class KeuanganController extends Controller
     {
         $nik = Auth::guard('karyawan')->user()->nik;
         $cashbon = Cashbon::where('nik', $nik)->get();
+        // dd($cashbon);
+        // Log::info('NIK Karyawan: ' . $nik);
+        // Log::info('Data Cashbon: ', $cashbon->toArray());
+        // Log::info('Session Error: ', session()->all());
         return view('keuangan.keuangan_cashbon', compact('cashbon'));
     }
 
     public function KeuanganCashbonShow($id)
     {
-        try {
-            // Temukan cashbon berdasarkan ID
-            $cashbon = Cashbon::with('karyawan')->findOrFail($id); // Menggunakan findOrFail untuk menangkap kesalahan jika tidak ditemukan
-
-            // Kembalikan tampilan dengan data cashbon
-            return view('keuangan.keuangan_cashbon_detail', compact('cashbon'));
-        } catch (\Exception $e) {
-            // Tangkap kesalahan dan redirect dengan pesan kesalahan
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil detail cashbon: ' . $e->getMessage());
-        }
+        $nik = Auth::guard('karyawan')->user()->nik;
+        $cashbon = Cashbon::where('nik', $nik)->find($id);
+        return view('keuangan.keuangan_cashbon_detail', compact('cashbon'));
     }
 
     public function KeuanganCashbonCreate()
     {
-        return view('keuangan.keuangan_cashbon_create');
+        $karyawan = Auth::guard('karyawan')->user();
+        $globalLimit = CashbonLimit::first()->global_limit ?? 0;
+
+        $personalLimit = $karyawan->cashbonKaryawanLimit->limit ?? $globalLimit;
+        $usedCashbon = $karyawan->cashbon()
+                                ->where('status', 'diterima')
+                                ->sum('jumlah');
+        $availableLimit = max(0, $personalLimit - $usedCashbon);
+
+        $data = [
+            'totalLimit' => $personalLimit,
+            'usedLimit' => $usedCashbon,
+            'availableLimit' => $availableLimit
+        ];
+
+        return view('keuangan.keuangan_cashbon_create', $data);
     }
 
     public function KeuanganCashbonStore(Request $request)
@@ -58,7 +72,8 @@ class KeuanganController extends Controller
                 'keterangan' => 'nullable|string',
             ]);
 
-            $nik = Auth::guard('karyawan')->user()->nik;
+            $karyawan = Auth::guard('karyawan')->user();
+            $nik = $karyawan->nik;
 
             // Cek apakah sudah ada pengajuan cashbon pada tanggal yang sama untuk NIK yang sama
             $existingCashbon = Cashbon::where('nik', $nik)
@@ -67,6 +82,16 @@ class KeuanganController extends Controller
 
             if ($existingCashbon) {
                 return redirect()->back()->with('error', 'Anda sudah mengajukan cashbon pada tanggal yang sama.')->withInput();
+            }
+
+            // Ambil global limit
+            $globalLimit = CashbonLimit::first()->global_limit ?? 0;
+
+            // Cek limit cashbon
+            $availableLimit = $karyawan->getAvailableCashbonLimit($globalLimit);
+
+            if ($request->jumlah > $availableLimit) {
+                return redirect()->back()->with('error', "Pengajuan melebihi limit yang tersedia. Limit tersedia: Rp " . number_format($availableLimit, 0, ',', '.'))->withInput();
             }
 
             // Generate kode cashbon

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CabangController;
 use App\Http\Controllers\CashbonController;
+use App\Http\Controllers\CashbonLimitController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartemenController;
 use App\Http\Controllers\GajiController;
@@ -196,6 +197,11 @@ Route::middleware(['auth:user'])->group(function () {
     Route::put('/admin/konfigurasi/jenis/gaji/update/{kode_jenis_gaji}', [KonfigurasiGajiController::class, 'KonfigurasiGajiUpdate'])->name('admin.konfigurasi.jenis.gaji.update');
     // Kantor Jenis Gaji delete
     Route::get('/admin/konfigurasi/jenis/gaji/delete/{kode_jenis_gaji}', [KonfigurasiGajiController::class, 'KonfigurasiGajiDelete'])->name('admin.konfigurasi.jenis.gaji.delete');
+
+    // Konfigurasi Cashbon Limit
+    Route::get('/admin/konfigurasi/cashbon/limit', action: [CashbonLimitController::class, 'CashbonLimitIndex'])->name('admin.konfigurasi.cashbon.limit');
+    Route::post('/admin/konfigurasi/cashbon/global-limit', action: [CashbonLimitController::class, 'CashbonSetGlobalLimit'])->name('admin.konfigurasi.cashbon.global.limit');
+    Route::post('/admin/konfigurasi/cashbon/karyawan-limit/{nik}', action: [CashbonLimitController::class, 'CashbonSetKaryawanLimit'])->name('admin.konfigurasi.cashbon.karyawan.limit');
 
     // Konfigurasi Lokasi Kantor
     Route::get('/admin/konfigurasi/lokasi/kantor', [KonfigurasiController::class, 'LokasiKantor'])->name('admin.konfigurasi.lokasi.kantor');

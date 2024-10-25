@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 24, 2024 at 04:18 PM
+-- Generation Time: Oct 25, 2024 at 05:25 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -46,7 +46,53 @@ CREATE TABLE `cashbon` (
 INSERT INTO `cashbon` (`id`, `kode_cashbon`, `nik`, `tanggal_pengajuan`, `jumlah`, `keterangan`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'CB1A2B3C', '123123123', '2024-10-24', 50000.00, 'Test Cashbon', 'ditolak', '2024-10-24 03:53:33', '2024-10-24 07:19:39'),
 (2, 'CB2B3C4D', '123123123', '2024-10-31', 100000.00, 'Test lagi Cashbon', 'diterima', '2024-10-24 05:01:03', '2024-10-24 07:19:44'),
-(3, 'CBXWL175', '123123123', '2024-10-25', 10000.00, 'test code cashbon', 'pending', '2024-10-24 08:39:00', '2024-10-24 08:39:00');
+(3, 'CBXWL175', '123123123', '2024-10-25', 10000.00, 'test code cashbon', 'diterima', '2024-10-24 08:39:00', '2024-10-25 10:02:24'),
+(4, 'CBI0E781', '123456789', '2024-10-25', 20000.00, 'naefdoncalksj', 'diterima', '2024-10-25 06:11:26', '2024-10-25 09:32:33'),
+(5, 'CB2CD594', '123123123', '2024-11-09', 10000.00, 'test limit', 'diterima', '2024-10-25 10:01:17', '2024-10-25 10:02:27');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cashbon_karyawan_limit`
+--
+
+CREATE TABLE `cashbon_karyawan_limit` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nik` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `limit` decimal(10,2) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cashbon_karyawan_limit`
+--
+
+INSERT INTO `cashbon_karyawan_limit` (`id`, `nik`, `limit`, `created_at`, `updated_at`) VALUES
+(1, '123123123', 1500000.00, '2024-10-25 09:39:06', '2024-10-25 10:24:08'),
+(2, '123456789', 1500000.00, '2024-10-25 09:47:59', '2024-10-25 10:24:08'),
+(3, '111222333', 1500000.00, '2024-10-25 10:23:30', '2024-10-25 10:24:08'),
+(4, '112233445', 1500000.00, '2024-10-25 10:23:34', '2024-10-25 10:24:08');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cashbon_limit`
+--
+
+CREATE TABLE `cashbon_limit` (
+  `id` bigint UNSIGNED NOT NULL,
+  `global_limit` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cashbon_limit`
+--
+
+INSERT INTO `cashbon_limit` (`id`, `global_limit`, `created_at`, `updated_at`) VALUES
+(1, 1500000.00, '2024-10-25 09:29:38', '2024-10-25 09:29:38');
 
 -- --------------------------------------------------------
 
@@ -585,7 +631,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (69, '2024_10_21_150922_update_karyawan_table_remove_jabatan_add_lokasi_penugasan', 37),
 (70, '2024_10_22_121028_add_kode_lokasi_and_cabang_to_gaji_table', 38),
 (71, '2024_10_23_152443_create_cashbon_table', 39),
-(72, '2024_10_23_160445_add_keterangan_to_cashbon_table', 40);
+(72, '2024_10_23_160445_add_keterangan_to_cashbon_table', 40),
+(74, '2024_10_25_152721_create_cashbon_limit_table', 41),
+(75, '2024_10_25_152826_create_cashbon_karyawan_limit_table', 41);
 
 -- --------------------------------------------------------
 
@@ -1003,6 +1051,19 @@ ALTER TABLE `cashbon`
   ADD KEY `cashbon_nik_index` (`nik`);
 
 --
+-- Indexes for table `cashbon_karyawan_limit`
+--
+ALTER TABLE `cashbon_karyawan_limit`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cashbon_karyawan_limit_nik_foreign` (`nik`);
+
+--
+-- Indexes for table `cashbon_limit`
+--
+ALTER TABLE `cashbon_limit`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `departemen`
 --
 ALTER TABLE `departemen`
@@ -1170,7 +1231,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cashbon`
 --
 ALTER TABLE `cashbon`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `cashbon_karyawan_limit`
+--
+ALTER TABLE `cashbon_karyawan_limit`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `cashbon_limit`
+--
+ALTER TABLE `cashbon_limit`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1188,7 +1261,7 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `penggajian`
@@ -1229,6 +1302,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `cashbon_karyawan_limit`
+--
+ALTER TABLE `cashbon_karyawan_limit`
+  ADD CONSTRAINT `cashbon_karyawan_limit_nik_foreign` FOREIGN KEY (`nik`) REFERENCES `karyawan` (`nik`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `gaji`

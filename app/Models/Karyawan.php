@@ -55,6 +55,30 @@ class Karyawan extends Authenticatable
     {
         return $this->hasMany(Cashbon::class, 'nik', 'nik');
     }
+    public function cashbonKaryawanLimit()
+    {
+        return $this->hasOne(CashbonKaryawanLimit::class, 'nik', 'nik');
+    }
+
+        public function getAvailableCashbonLimit($globalLimit)
+    {
+        // Ambil limit personal karyawan, jika tidak ada gunakan global limit
+        $personalLimit = $this->cashbonKaryawanLimit->limit ?? $globalLimit;
+
+        // Hitung total cashbon yang sudah diterima
+        $usedCashbon = $this->cashbon()
+                            ->where('status', 'diterima')
+                            ->sum('jumlah');
+
+        // Hitung sisa limit yang tersedia
+        return max(0, $personalLimit - $usedCashbon);
+    }
+
+    public function getFormattedAvailableCashbonLimit($globalLimit)
+    {
+        $availableLimit = $this->getAvailableCashbonLimit($globalLimit);
+        return 'Rp ' . number_format($availableLimit, 0, ',', '.');
+    }
 
     // Relasi dengan model PengajuanIzin
     public function pengajuanIzin()
