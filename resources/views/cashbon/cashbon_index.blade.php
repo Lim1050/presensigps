@@ -54,7 +54,7 @@
                         {{ Session::get('error') }}
                     </div>
                 @endif
-                <form action="{{ route('admin.cashbon') }}" method="GET">
+                {{-- <form action="{{ route('admin.cashbon') }}" method="GET">
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
@@ -106,37 +106,37 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                </form> --}}
                 <div class="row">
                     <div class="col-12">
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover text-center">
+                            <table class="table table-striped table-hover text-center" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
-                                    <tr class="text-center">
-                                        <th>No.</th>
-                                        <th>Kode Cashbon</th>
-                                        <th>NIK</th>
-                                        <th>Nama Karyawan</th>
-                                        <th>Jabatan</th>
-                                        <th>Tanggal Cashbon</th>
-                                        <th>Jumlah Cashbon</th>
-                                        <th>Keterangan</th>
-                                        <th>Status Pengajuan</th>
-                                        <th>Aksi</th>
+                                    <tr >
+                                        <th class="text-center">No.</th>
+                                        <th class="text-center">Kode Cashbon</th>
+                                        <th class="text-center">NIK</th>
+                                        <th class="text-center">Nama Karyawan</th>
+                                        <th class="text-center">Jabatan</th>
+                                        <th class="text-center">Tanggal Cashbon</th>
+                                        <th class="text-center">Jumlah Cashbon</th>
+                                        <th class="text-center">Keterangan</th>
+                                        <th class="text-center">Status Pengajuan</th>
+                                        <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody >
                                     @foreach ($cashbon as $item)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item->kode_cashbon }}</td>
-                                        <td>{{ $item->nik }}</td>
-                                        <td>{{ $item->karyawan->nama_lengkap }}</td>
-                                        <td>{{ $item->karyawan->jabatan->nama_jabatan }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d F Y') }}</td>
-                                        <td>Rp {{ number_format($item->jumlah, 2) }}</td>
-                                        <td>{{ $item->keterangan }}</td>
-                                        <td>
+                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ $item->kode_cashbon }}</td>
+                                        <td class="text-center">{{ $item->nik }}</td>
+                                        <td class="text-center">{{ $item->karyawan->nama_lengkap }}</td>
+                                        <td class="text-center">{{ $item->karyawan->jabatan->nama_jabatan }}</td>
+                                        <td class="text-center">{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d F Y') }}</td>
+                                        <td class="text-center">Rp {{ number_format($item->jumlah, 2) }}</td>
+                                        <td class="text-center">{{ $item->keterangan }}</td>
+                                        <td class="text-center">
                                             @if ($item->status == 'pending')
                                                 <span class="badge badge-warning">Pending</span>
                                             @elseif ($item->status == 'diterima')
@@ -147,15 +147,15 @@
                                                 <span class="badge badge-secondary">Tidak Diketahui</span>
                                             @endif
                                         </td>
-                                        <td>
-                                            <a href="{{ route('admin.cashbon.show', $item->id) }}" class="btn btn-sm btn-info">
-                                                <i class="bi bi-eye"></i> Lihat Detail
+                                        <td class="text-center">
+                                            <a href="{{ route('admin.cashbon.show', $item->id) }}" class="btn btn-sm btn-info my-1" title="Detail">
+                                                <i class="bi bi-eye"></i>
                                             </a>
                                             @if ($item->status == 'pending')
-                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalPengajuan" data-id="{{ $item->id }}"><i class="bi bi-box-arrow-right"></i> Aksi</a>
+                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalPengajuan" data-id="{{ $item->id }}" title="Aksi"><i class="bi bi-box-arrow-right"></i></a>
                                             @else
-                                                <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modalPembatalan" data-id="{{ $item->id }}">
-                                                    <i class="bi bi-x-square"></i> Batalkan
+                                                <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modalPembatalan" data-id="{{ $item->id }}" title="Batalkan">
+                                                    <i class="bi bi-x-square"></i>
                                                 </a>
                                             @endif
                                         </td>
@@ -240,6 +240,8 @@
 @endsection
 @push('myscript')
 <script>
+    let table = new DataTable('#dataTable');
+
     $('#modalPengajuan').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Tombol yang memicu modal
         var cashbon_id = button.data('id'); // Ambil nilai dari atribut data-id

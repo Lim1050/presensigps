@@ -13,7 +13,7 @@
 @endsection
 
 @section('content')
-<div class="container" style="margin-top: 70px; margin-bottom: 70px">
+<div style="margin-top: 70px; margin-bottom: 70px">
     {{-- <h1>Daftar Pengajuan Cashbon</h1> --}}
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -22,7 +22,7 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-</div>
+
 @if ($cashbon)
     <div class="row">
         <div class="col">
@@ -54,8 +54,8 @@
                                 <td>{{ $cashbon->karyawan->Cabang->nama_cabang }}</td>
                             </tr>
                             <tr>
-                                <th>ID</th>
-                                <td>{{ $cashbon->id }}</td>
+                                <th>Kode Cashbon</th>
+                                <td>{{ $cashbon->kode_cashbon }}</td>
                             </tr>
                             <tr>
                                 <th>Status</th>
@@ -87,6 +87,25 @@
                 </div>
                 <div class="card-footer">
                     <a href="{{ route('keuangan.cashbon') }}" class="btn btn-secondary">Kembali</a>
+                    @if ($cashbon->status == 'pending')
+                    <a href="{{ route('keuangan.cashbon.edit', $cashbon->id) }}" class="btn btn-warning">Edit</a>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete('{{ route('keuangan.cashbon.delete', $cashbon->id) }}')">Delete</button>
+                    @else
+                    <button type="button"
+                            class="btn btn-warning"
+                            disabled
+                            onclick="alert('Editing hanya dapat dilakukan saat status masih pending')"
+                            style="opacity: 0.6; cursor: not-allowed;">
+                        Edit
+                    </button>
+                    <button type="button"
+                            class="btn btn-danger"
+                            disabled
+                            onclick="alert('Hapus hanya dapat dilakukan saat status masih pending')"
+                            style="opacity: 0.6; cursor: not-allowed;">
+                        Hapus
+                    </button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -94,8 +113,48 @@
 @else
     <p>Cashbon tidak ditemukan.</p>
 @endif
+</div>
 @endsection
 
 @push('myscript')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmDelete(url) {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data ini akan dihapus dan tidak dapat dikembalikan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika dikonfirmasi, buat permintaan DELETE
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = url;
 
+                // Tambahkan CSRF token
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                form.appendChild(csrfToken);
+
+                // Tambahkan metode DELETE
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE';
+                form.appendChild(methodInput);
+
+                // Tambahkan form ke body dan submit
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }
+</script>
 @endpush

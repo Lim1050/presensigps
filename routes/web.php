@@ -358,7 +358,13 @@ Route::middleware(['auth:karyawan'])->group(function () {
     // keuangan cashbon create
     Route::get('/keuangan/cashbon/create', action: [KeuanganController::class, 'KeuanganCashbonCreate'])->name('keuangan.cashbon.create');
     // keuangan cashbon store
-    Route::post('/keuangan/cashbon/store', [KeuanganController::class, 'KeuanganCashbonStore'])->name('keuangan.cashbon.store');
+    Route::post('/keuangan/cashbon/store', action: [KeuanganController::class, 'KeuanganCashbonStore'])->name('keuangan.cashbon.store');
+    // Rute untuk menampilkan halaman edit
+    Route::get('/keuangan/cashbon/edit/{id}', action: [KeuanganController::class, 'KeuanganCashbonEdit'])->name('keuangan.cashbon.edit');
+    // Rute untuk memperbarui data cashbon
+    Route::put('/keuangan/cashbon/update/{id}', [KeuanganController::class, 'KeuanganCashbonUpdate'])->name('keuangan.cashbon.update');
+    // Rute untuk delete data cashbon
+    Route::delete('/keuangan/cashbon/delete/{id}', [KeuanganController::class, 'KeuanganCashbonDelete'])->name('keuangan.cashbon.delete');
 
     // profile
     Route::get('/profile', [ProfileController::class, 'Profile'])->name('profile');

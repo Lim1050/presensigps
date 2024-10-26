@@ -24,14 +24,27 @@ class KeuanganController extends Controller
         $gaji = Penggajian::where('nik', $nik)->get();
         return view('keuangan.keuangan_gaji', compact('gaji'));
     }
-    public function KeuanganCashbon()
+    public function KeuanganCashbon(Request $request)
     {
         $nik = Auth::guard('karyawan')->user()->nik;
-        $cashbon = Cashbon::where('nik', $nik)->get();
-        // dd($cashbon);
-        // Log::info('NIK Karyawan: ' . $nik);
-        // Log::info('Data Cashbon: ', $cashbon->toArray());
-        // Log::info('Session Error: ', session()->all());
+        $query = Cashbon::where('nik', $nik);
+
+        // Filter berdasarkan bulan dan tahun jika ada
+        if ($request->filled('bulan') && $request->filled('tahun')) {
+            $query->whereYear('tanggal_pengajuan', $request->tahun)
+                ->whereMonth('tanggal_pengajuan', $request->bulan);
+        }
+        // Filter hanya berdasarkan tahun
+        elseif ($request->filled('tahun')) {
+            $query->whereYear('tanggal_pengajuan', $request->tahun);
+        }
+        // Filter hanya berdasarkan bulan
+        elseif ($request->filled('bulan')) {
+            $query->whereMonth('tanggal_pengajuan', $request->bulan);
+        }
+
+        $cashbon = $query->orderBy('tanggal_pengajuan', 'desc')->get();
+
         return view('keuangan.keuangan_cashbon', compact('cashbon'));
     }
 
@@ -121,5 +134,78 @@ class KeuanganController extends Controller
     {
         $randomString = strtoupper(string: Str::random(3)) . rand(100, 999); // 3 huruf kapital dan 3 angka
         return 'CB' . $randomString; // Menggabungkan dengan 'CB'
+    }
+
+    public function KeuanganCashbonEdit($id)
+    {
+        $cashbon = Cashbon::findOrFail($id);
+        return view('keuangan.keuangan_cashbon_edit', compact('cashbon'));
+    }
+
+    public function KeuanganCashbonUpdate(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'tanggal_pengajuan' => 'required|date',
+            'jumlah' => 'required|numeric|min:0',
+            'keterangan' => 'required|string',
+        ]);
+
+        try {
+            $cashbon = Cashbon::findOrFail($id);
+
+            // Cek apakah status masih pending
+            if ($cashbon->status !== 'pending') {
+                return redirect()->back()->with('error', 'Hanya cashbon dengan status pending yang dapat diubah.');
+            }
+
+            // Cek dan update data hanya jika ada perubahan
+            $updated = false; // Flag untuk mengecek apakah ada perubahan
+
+            if ($cashbon->tanggal_pengajuan != $request->tanggal_pengajuan) {
+                $cashbon->tanggal_pengajuan = $request->tanggal_pengajuan;
+                $updated = true;
+            }
+
+            if ($cashbon->jumlah != $request->jumlah) {
+                $cashbon->jumlah = $request->jumlah;
+                $updated = true;
+            }
+
+            if ($cashbon->keterangan != $request->keterangan) {
+                $cashbon->keterangan = $request->keterangan;
+                $updated = true;
+            }
+
+            // Simpan hanya jika ada perubahan
+            if ($updated) {
+                $cashbon->save();
+                return redirect()->route('keuangan.cashbon')->with('success', 'Cashbon berhasil diperbarui.');
+            } else {
+                // Jika tidak ada perubahan, kembalikan pesan informasi
+                return redirect()->back()->with('info', 'Tidak ada data yang berubah.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function KeuanganCashbonDelete($id)
+    {
+        try {
+            $cashbon = Cashbon::findOrFail($id);
+
+            // Cek apakah status masih pending
+            if ($cashbon->status !== 'pending') {
+                return redirect()->back()->with('error', 'Hanya cashbon dengan status pending yang dapat dihapus.');
+            }
+
+            // Hapus cashbon
+            $cashbon->delete();
+
+            return redirect()->route('keuangan.cashbon')->with('success', 'Cashbon berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }
