@@ -83,12 +83,12 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/lokasi/penugasan*', 'admin/cabang*', 'admin/cuti*', 'admin/jabatan*', 'admin/gaji*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseThree"
-            aria-expanded="{{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/lokasi/penugasan*', 'admin/cabang*', 'admin/cuti*', 'admin/jabatan*', 'admin/gaji*']) ? 'true' : 'false' }}" aria-controls="collapseThree">
+        <a class="nav-link collapsed {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/lokasi/penugasan*', 'admin/cabang*', 'admin/cuti*', 'admin/jabatan*', 'admin/gaji*', 'admin/potongan*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseThree"
+            aria-expanded="{{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/lokasi/penugasan*', 'admin/cabang*', 'admin/cuti*', 'admin/jabatan*', 'admin/gaji*', 'admin/potongan*']) ? 'true' : 'false' }}" aria-controls="collapseThree">
             <i class="bi bi-archive fa-fw"></i>
             <span>Master</span>
         </a>
-        <div id="collapseThree" class="collapse bg-red {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/lokasi/penugasan*', 'admin/cabang*', 'admin/cuti*', 'admin/jabatan*', 'admin/gaji*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseThree" class="collapse bg-red {{ request()->is(['admin/karyawan*', 'admin/departemen*', 'admin/lokasi/penugasan*', 'admin/cabang*', 'admin/cuti*', 'admin/jabatan*', 'admin/gaji*', 'admin/potongan*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
                 <a class="collapse-item {{ request()->is('admin/karyawan*') ? 'active' : '' }}" href="{{ route('admin.karyawan') }}">
                 <i class="bi bi-person fa-fw"></i>
@@ -117,6 +117,10 @@
                 <a class="collapse-item {{ request()->is('admin/gaji*') ? 'active' : '' }}" href="{{ route('admin.gaji') }}">
                 <i class="bi bi-cash fa-fw"></i>
                 <span>Gaji</span></a>
+
+                <a class="collapse-item {{ request()->is('admin/potongan*') ? 'active' : '' }}" href="{{ route('admin.potongan') }}">
+                <i class="bi bi-cash fa-fw"></i>
+                <span>Potongan</span></a>
             </div>
         </div>
     </li>
@@ -125,17 +129,21 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/konfigurasi/jenis/gaji*', 'admin/konfigurasi/cashbon/limit*', 'admin/konfigurasi/jam/kerja*', 'admin/konfigurasi/jam-kerja-dept*', 'admin/konfigurasi/user*', 'admin/konfigurasi/role*', 'admin/konfigurasi/permission*', 'admin/konfigurasi/add-role-in-permission*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseFour"
-            aria-expanded="{{ request()->is(['admin/konfigurasi/jenis/gaji*', 'admin/konfigurasi/cashbon/limit*', 'admin/konfigurasi/jam/kerja*', 'admin/konfigurasi/jam-kerja-dept*', 'admin/konfigurasi/user*', 'admin/konfigurasi/role*', 'admin/konfigurasi/permission*', 'admin/konfigurasi/add-role-in-permission*']) ? 'true' : 'false' }}" aria-controls="collapseFour">
+        <a class="nav-link collapsed {{ request()->is(['admin/konfigurasi/jenis/gaji*', 'admin/konfigurasi/jenis/potongan*', 'admin/konfigurasi/cashbon/limit*', 'admin/konfigurasi/jam/kerja*', 'admin/konfigurasi/jam-kerja-dept*', 'admin/konfigurasi/user*', 'admin/konfigurasi/role*', 'admin/konfigurasi/permission*', 'admin/konfigurasi/add-role-in-permission*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseFour"
+            aria-expanded="{{ request()->is(['admin/konfigurasi/jenis/gaji*', 'admin/konfigurasi/jenis/potongan*', 'admin/konfigurasi/cashbon/limit*', 'admin/konfigurasi/jam/kerja*', 'admin/konfigurasi/jam-kerja-dept*', 'admin/konfigurasi/user*', 'admin/konfigurasi/role*', 'admin/konfigurasi/permission*', 'admin/konfigurasi/add-role-in-permission*']) ? 'true' : 'false' }}" aria-controls="collapseFour">
             <i class="bi bi-gear fa-fw"></i>
             <span>Konfigurasi</span>
         </a>
-        <div id="collapseFour" class="collapse bg-red {{ request()->is(['admin/konfigurasi/jenis/gaji*', 'admin/konfigurasi/cashbon/limit*', 'admin/konfigurasi/jam/kerja*', 'admin/konfigurasi/jam-kerja-dept*', 'admin/konfigurasi/user*', 'admin/konfigurasi/role*', 'admin/konfigurasi/permission*', 'admin/konfigurasi/add-role-in-permission*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseFour" class="collapse bg-red {{ request()->is(['admin/konfigurasi/jenis/gaji*', 'admin/konfigurasi/jenis/potongan*', 'admin/konfigurasi/cashbon/limit*', 'admin/konfigurasi/jam/kerja*', 'admin/konfigurasi/jam-kerja-dept*', 'admin/konfigurasi/user*', 'admin/konfigurasi/role*', 'admin/konfigurasi/permission*', 'admin/konfigurasi/add-role-in-permission*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
 
                 <a class="collapse-item {{ request()->is('admin/konfigurasi/jenis/gaji*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.jenis.gaji') }}">
                 <i class="bi bi-cash fa-fw"></i>
                 <span>Jenis Gaji</span></a>
+
+                <a class="collapse-item {{ request()->is('admin/konfigurasi/jenis/potongan*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.jenis.potongan') }}">
+                <i class="bi bi-cash fa-fw"></i>
+                <span>Jenis Potongan</span></a>
 
                 <a class="collapse-item {{ request()->is('/admin/konfigurasi/cashbon/limit*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.cashbon.limit') }}">
                 <i class="bi bi-cash fa-fw"></i>

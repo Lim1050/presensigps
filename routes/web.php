@@ -13,8 +13,10 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\KonfigurasiGajiController;
+use App\Http\Controllers\KonfigurasiPotonganController;
 use App\Http\Controllers\LokasiPenugasanController;
 use App\Http\Controllers\PenggajianController;
+use App\Http\Controllers\PotonganController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -139,7 +141,16 @@ Route::middleware(['auth:user'])->group(function () {
     // Master Gaji Update
     Route::put('/admin/gaji/update/{kode_gaji}', [GajiController::class, 'GajiUpdate'])->name('admin.gaji.update');
     // Master Gaji
-    Route::get('/admin/gaji/delete/{kode_gaji}', [gajiController::class, 'GajiDelete'])->name('admin.gaji.delete');
+    Route::get('/admin/gaji/delete/{kode_gaji}', [GajiController::class, 'GajiDelete'])->name('admin.gaji.delete');
+
+    // Master Potongan
+    Route::get('/admin/potongan', action: [PotonganController::class, 'PotonganIndex'])->name('admin.potongan');
+    // Master Potongan Store
+    Route::post('/admin/potongan/store', [PotonganController::class, 'PotonganStore'])->name('admin.potongan.store');
+    // Master Potongan Update
+    Route::put('/admin/potongan/update/{kode_potongan}', [PotonganController::class, 'PotonganUpdate'])->name('admin.potongan.update');
+    // Master Potongan
+    Route::get('/admin/potongan/delete/{kode_potongan}', [PotonganController::class, 'PotonganDelete'])->name('admin.potongan.delete');
 
     // persetujuan sakit izin
     Route::get('/admin/persetujuan/sakit/izin', [IzinController::class, 'PersetujuanSakitIzin'])->name('admin.persetujuan.sakit.izin');
@@ -197,6 +208,15 @@ Route::middleware(['auth:user'])->group(function () {
     Route::put('/admin/konfigurasi/jenis/gaji/update/{kode_jenis_gaji}', [KonfigurasiGajiController::class, 'KonfigurasiGajiUpdate'])->name('admin.konfigurasi.jenis.gaji.update');
     // Kantor Jenis Gaji delete
     Route::get('/admin/konfigurasi/jenis/gaji/delete/{kode_jenis_gaji}', [KonfigurasiGajiController::class, 'KonfigurasiGajiDelete'])->name('admin.konfigurasi.jenis.gaji.delete');
+
+    // Konfigurasi Jenis Potongan
+    Route::get('/admin/konfigurasi/jenis/potongan', action: [KonfigurasiPotonganController::class, 'KonfigurasiPotonganIndex'])->name('admin.konfigurasi.jenis.potongan');
+    // Konfigurasi Jenis Potongan Store
+    Route::post('/admin/konfigurasi/jenis/potongan/store', [KonfigurasiPotonganController::class, 'KonfigurasiPotonganStore'])->name('admin.konfigurasi.jenis.potongan.store');
+    // Konfigurasi Jenis Potongan Update
+    Route::put('/admin/konfigurasi/jenis/potongan/update/{kode_jenis_potongan}', [KonfigurasiPotonganController::class, 'KonfigurasiPotonganUpdate'])->name('admin.konfigurasi.jenis.potongan.update');
+    // Kantor Jenis Potongan delete
+    Route::get('/admin/konfigurasi/jenis/potongan/delete/{kode_jenis_potongan}', [KonfigurasiPotonganController::class, 'KonfigurasiPotonganDelete'])->name('admin.konfigurasi.jenis.potongan.delete');
 
     // Konfigurasi Cashbon Limit
     Route::get('/admin/konfigurasi/cashbon/limit', action: [CashbonLimitController::class, 'CashbonLimitIndex'])->name('admin.konfigurasi.cashbon.limit');

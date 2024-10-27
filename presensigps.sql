@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 26 Okt 2024 pada 09.25
+-- Waktu pembuatan: 27 Okt 2024 pada 10.27
 -- Versi server: 8.0.35
 -- Versi PHP: 8.2.12
 
@@ -494,8 +494,36 @@ INSERT INTO `konfigurasi_gaji` (`kode_jenis_gaji`, `jenis_gaji`, `keterangan`, `
 ('GT', 'Gaji Tetap', 'Gaji Tetap', 1, '2024-10-16 07:16:12', '2024-10-16 07:16:12'),
 ('L', 'Lembur', 'Lembur', 1, '2024-10-22 06:05:31', '2024-10-22 06:05:31'),
 ('MKN', 'Uang Makan', 'Uang Makan', 1, '2024-10-16 07:17:15', '2024-10-16 07:17:15'),
+('TGJ', 'Test gaji asd', 'tesssss asdqw', 0, '2024-10-27 08:17:53', '2024-10-27 08:18:03'),
 ('TJ', 'Tunjangan Jabatan', 'Tunjangan Jabatan', 1, '2024-10-16 07:16:27', '2024-10-16 07:16:27'),
-('TR', 'Transportasi', 'Transportasi', 1, '2024-10-16 07:16:52', '2024-10-16 07:16:52');
+('TR', 'Transportasi', 'Transportasi', 1, '2024-10-16 07:16:52', '2024-10-27 08:17:32');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `konfigurasi_potongan`
+--
+
+CREATE TABLE `konfigurasi_potongan` (
+  `kode_jenis_potongan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_potongan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `keterangan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `konfigurasi_potongan`
+--
+
+INSERT INTO `konfigurasi_potongan` (`kode_jenis_potongan`, `jenis_potongan`, `keterangan`, `is_active`, `created_at`, `updated_at`) VALUES
+('BPJSK', 'BPJS Kesehatan', 'BPJS Kesehatan', 1, '2024-10-27 08:44:41', '2024-10-27 08:44:41'),
+('BPJSTK', 'BPJS Tenaga Kerja', 'Potongan BPJS Tenaga Kerja', 1, '2024-10-27 08:44:11', '2024-10-27 08:44:11'),
+('DD', 'Dana Darurat', 'Potongan Dana Darurat', 1, '2024-10-27 08:45:50', '2024-10-27 08:45:50'),
+('JHT', 'Jaminan Hari Tua', 'Potongan Jaminan Hari Tua', 1, '2024-10-27 08:43:21', '2024-10-27 08:43:21'),
+('PS', 'Potongan Seragam', 'Potongan Seragam', 1, '2024-10-27 08:45:25', '2024-10-27 08:45:25'),
+('THR', 'Tunjangan Hari Raya', 'Potongan Tunjangan Hari Raya', 1, '2024-10-27 08:45:04', '2024-10-27 08:45:04');
 
 -- --------------------------------------------------------
 
@@ -635,7 +663,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (71, '2024_10_23_152443_create_cashbon_table', 39),
 (72, '2024_10_23_160445_add_keterangan_to_cashbon_table', 40),
 (74, '2024_10_25_152721_create_cashbon_limit_table', 41),
-(75, '2024_10_25_152826_create_cashbon_karyawan_limit_table', 41);
+(75, '2024_10_25_152826_create_cashbon_karyawan_limit_table', 41),
+(76, '2024_10_27_145336_create_konfigurasi_potongan', 42),
+(77, '2024_10_27_145533_create_potongan', 43);
 
 -- --------------------------------------------------------
 
@@ -818,6 +848,24 @@ CREATE TABLE `personal_access_tokens` (
   `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `potongan`
+--
+
+CREATE TABLE `potongan` (
+  `kode_potongan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_jabatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_lokasi_penugasan` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_cabang` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_jenis_potongan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_potongan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jumlah_potongan` decimal(10,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1125,6 +1173,12 @@ ALTER TABLE `konfigurasi_gaji`
   ADD PRIMARY KEY (`kode_jenis_gaji`);
 
 --
+-- Indeks untuk tabel `konfigurasi_potongan`
+--
+ALTER TABLE `konfigurasi_potongan`
+  ADD PRIMARY KEY (`kode_jenis_potongan`);
+
+--
 -- Indeks untuk tabel `lokasi_kantor`
 --
 ALTER TABLE `lokasi_kantor`
@@ -1198,6 +1252,16 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
+-- Indeks untuk tabel `potongan`
+--
+ALTER TABLE `potongan`
+  ADD PRIMARY KEY (`kode_potongan`),
+  ADD KEY `potongan_kode_jabatan_foreign` (`kode_jabatan`),
+  ADD KEY `potongan_kode_lokasi_penugasan_foreign` (`kode_lokasi_penugasan`),
+  ADD KEY `potongan_kode_cabang_foreign` (`kode_cabang`),
+  ADD KEY `potongan_kode_jenis_potongan_foreign` (`kode_jenis_potongan`);
+
+--
 -- Indeks untuk tabel `presensi`
 --
 ALTER TABLE `presensi`
@@ -1263,7 +1327,7 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT untuk tabel `penggajian`
@@ -1342,6 +1406,15 @@ ALTER TABLE `model_has_permissions`
 --
 ALTER TABLE `model_has_roles`
   ADD CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `potongan`
+--
+ALTER TABLE `potongan`
+  ADD CONSTRAINT `potongan_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE SET NULL,
+  ADD CONSTRAINT `potongan_kode_jabatan_foreign` FOREIGN KEY (`kode_jabatan`) REFERENCES `jabatan` (`kode_jabatan`) ON DELETE SET NULL,
+  ADD CONSTRAINT `potongan_kode_jenis_potongan_foreign` FOREIGN KEY (`kode_jenis_potongan`) REFERENCES `konfigurasi_potongan` (`kode_jenis_potongan`) ON DELETE SET NULL,
+  ADD CONSTRAINT `potongan_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE SET NULL;
 
 --
 -- Ketidakleluasaan untuk tabel `role_has_permissions`
