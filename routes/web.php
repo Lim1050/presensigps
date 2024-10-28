@@ -20,6 +20,7 @@ use App\Http\Controllers\PotonganController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ThrController;
 use App\Http\Controllers\UserController;
 use App\Models\Penggajian;
 use App\Models\User;
@@ -198,6 +199,19 @@ Route::middleware(['auth:user'])->group(function () {
     Route::post('/admin/cashbon/persetujuan', [CashbonController::class, 'CashbonPersetujuan'])->name('admin.cashbon.persetujuan');
     // Cashbon pembatalan
     Route::post('/admin/cashbon/pembatalan', [CashbonController::class, 'CashbonPembatalan'])->name('admin.cashbon.pembatalan');
+
+    // thr Index
+    Route::get('/admin/thr', [ThrController::class, 'ThrIndex'])->name('admin.thr');
+    Route ::post('/admin/thr/hitung', action: [ThrController::class, 'ThrHitung'])->name('admin.thr.hitung');
+    // thr show
+    Route::get('/admin/thr/show/{kode_thr}', [ThrController::class, 'ThrShow'])->name('admin.thr.show');
+    // thr persetujuan
+    Route::post('/admin/thr/persetujuan', [ThrController::class, 'ThrPersetujuan'])->name('admin.thr.persetujuan');
+    // thr pembatalan
+    Route::post('/admin/thr/pembatalan', [ThrController::class, 'ThrPembatalan'])->name('admin.thr.pembatalan');
+    Route::get('/admin/thr/edit/{kode_thr}', action: [ThrController::class, 'ThrEdit'])->name('admin.thr.edit');
+    Route::put('/admin/thr/update/{kode_thr}', action: [ThrController::class, 'ThrUpdate'])->name('admin.thr.update');
+    Route::get('/admin/thr/delete/{kode_thr}', action: [ThrController::class, 'ThrDelete'])->name('admin.thr.delete');
 
 
     // Konfigurasi Jenis Gaji

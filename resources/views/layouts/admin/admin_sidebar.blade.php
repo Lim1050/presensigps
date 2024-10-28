@@ -60,12 +60,12 @@
     <hr class="sidebar-divider">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/penggajian*', 'admin/cashbon*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapsePenggajian"
-            aria-expanded="{{ request()->is(['admin/penggajian*', 'admin/cashbon*']) ? 'true' : 'false' }}" aria-controls="collapsePenggajian">
+        <a class="nav-link collapsed {{ request()->is(['admin/penggajian*', 'admin/cashbon*', 'admin/thr*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapsePenggajian"
+            aria-expanded="{{ request()->is(['admin/penggajian*', 'admin/cashbon*', 'admin/thr*']) ? 'true' : 'false' }}" aria-controls="collapsePenggajian">
             <i class="bi bi-file-earmark fa-fw"></i>
-            <span>Penggajian</span>
+            <span>Keuangan</span>
         </a>
-        <div id="collapsePenggajian" class="collapse {{ request()->is(['admin/penggajian*', 'admin/cashbon*']) ? 'show' : '' }} bg-red" aria-labelledby="headingPenggajian" data-parent="#accordionSidebar">
+        <div id="collapsePenggajian" class="collapse {{ request()->is(['admin/penggajian*', 'admin/cashbon*', 'admin/thr*']) ? 'show' : '' }} bg-red" aria-labelledby="headingPenggajian" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
                 <a class="collapse-item {{ request()->is('admin/penggajian*') ? 'active' : '' }}" href="{{ route('admin.penggajian') }}">
                     <i class="bi bi-file-earmark-text fa-fw"></i>
@@ -74,6 +74,10 @@
                 <a class="collapse-item {{ request()->is('admin/cashbon*') ? 'active' : '' }}" href="{{ route('admin.cashbon') }}">
                     <i class="bi bi-file-earmark-text fa-fw"></i>
                     <span>Cashbon Karyawan</span>
+                </a>
+                <a class="collapse-item {{ request()->is('admin/thr*') ? 'active' : '' }}" href="{{ route('admin.thr') }}">
+                    <i class="bi bi-file-earmark-text fa-fw"></i>
+                    <span>THR Karyawan</span>
                 </a>
             </div>
         </div>
