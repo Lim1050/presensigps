@@ -202,16 +202,30 @@ Route::middleware(['auth:user'])->group(function () {
 
     // thr Index
     Route::get('/admin/thr', [ThrController::class, 'ThrIndex'])->name('admin.thr');
-    Route ::post('/admin/thr/hitung', action: [ThrController::class, 'ThrHitung'])->name('admin.thr.hitung');
+    Route::get('/admin/thr/create', [ThrController::class, 'ThrCreate'])->name('admin.thr.create');
+    Route ::post('/admin/thr/store', action: [ThrController::class, 'ThrStore'])->name('admin.thr.store');
     // thr show
     Route::get('/admin/thr/show/{kode_thr}', [ThrController::class, 'ThrShow'])->name('admin.thr.show');
     // thr persetujuan
-    Route::post('/admin/thr/persetujuan', [ThrController::class, 'ThrPersetujuan'])->name('admin.thr.persetujuan');
+    // Route::post('/admin/thr/persetujuan', [ThrController::class, 'ThrPersetujuan'])->name('admin.thr.persetujuan');
     // thr pembatalan
-    Route::post('/admin/thr/pembatalan', [ThrController::class, 'ThrPembatalan'])->name('admin.thr.pembatalan');
+    // Route::post('/admin/thr/pembatalan', [ThrController::class, 'ThrPembatalan'])->name('admin.thr.pembatalan');
+    // thr edit
     Route::get('/admin/thr/edit/{kode_thr}', action: [ThrController::class, 'ThrEdit'])->name('admin.thr.edit');
+    // thr update
     Route::put('/admin/thr/update/{kode_thr}', action: [ThrController::class, 'ThrUpdate'])->name('admin.thr.update');
-    Route::get('/admin/thr/delete/{kode_thr}', action: [ThrController::class, 'ThrDelete'])->name('admin.thr.delete');
+    // thr delete
+    Route::delete('/admin/thr/delete/{kode_thr}', action: [ThrController::class, 'ThrDelete'])->name('admin.thr.delete');
+    // thr cetak
+    Route::get('/admin/thr/export/{kdoe_thr}', action: [ThrController::class, 'ExportPDF'])->name('admin.thr.export');
+
+    // untuk form create dengan pencarian
+    Route::get('/admin/karyawan/search', [KaryawanController::class, 'search'])->name('admin.karyawan.search');
+    Route::get('/admin/jabatan/search', [JabatanController::class, 'search'])->name('admin.jabatan.search');
+    Route::get('/admin/lokasi-penugasan/search', [LokasiPenugasanController::class, 'search'])->name('admin.lokasi-penugasan.search');
+    Route::get('/admin/cabang/search', [CabangController::class, 'search'])->name('admin.cabang.search');
+    Route::get('/admin/karyawan/get-data/{nik}', [KaryawanController::class, 'getKaryawanData'])->name('admin.karyawan.getData');
+    Route::get('/admin/thr/get-thr/{nik}', [ThrController::class, 'getTHR'])->name(name: 'admin.thr.get-thr');
 
 
     // Konfigurasi Jenis Gaji

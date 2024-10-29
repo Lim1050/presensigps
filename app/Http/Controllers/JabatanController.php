@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class JabatanController extends Controller
 {
+    public function search(Request $request)
+    {
+        $search = $request->get('q');
+        $jabatan = Jabatan::where('kode_jabatan', 'LIKE', "%$search%")
+                        ->orWhere('nama_jabatan', 'LIKE', "%$search%")
+                        ->get();
+
+        return response()->json($jabatan);
+    }
     public function JabatanIndex()
     {
         $jabatan = Jabatan::all();

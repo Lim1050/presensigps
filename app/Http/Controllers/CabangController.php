@@ -3,12 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cabang;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CabangController extends Controller
 {
+    public function search(Request $request)
+    {
+        $search = $request->get('q');
+        $cabang = Cabang::where('kode_cabang', 'LIKE', "%$search%")
+                        ->orWhere('nama_cabang', 'LIKE', "%$search%")
+                        ->get();
+
+        return response()->json($cabang);
+    }
+
     public function CabangIndex()
     {
         $cabang = DB::table('kantor_cabang')

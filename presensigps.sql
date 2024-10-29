@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 28, 2024 at 04:17 PM
+-- Generation Time: Oct 29, 2024 at 03:16 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -666,7 +666,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (75, '2024_10_25_152826_create_cashbon_karyawan_limit_table', 41),
 (76, '2024_10_27_145336_create_konfigurasi_potongan', 42),
 (77, '2024_10_27_145533_create_potongan', 43),
-(79, '2024_10_28_141613_create_thr_table', 44);
+(79, '2024_10_28_141613_create_thr_table', 44),
+(80, '2024_10_29_142048_add_catatan_perubahan_dan_diubah_oleh_pada_table_thr', 45);
 
 -- --------------------------------------------------------
 
@@ -1073,9 +1074,20 @@ CREATE TABLE `thr` (
   `tanggal_penyerahan` date NOT NULL,
   `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
   `notes` text COLLATE utf8mb4_unicode_ci,
+  `catatan_perubahan` text COLLATE utf8mb4_unicode_ci,
+  `diubah_oleh` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `thr`
+--
+
+INSERT INTO `thr` (`kode_thr`, `nik`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_cabang`, `nama_thr`, `tahun`, `jumlah_thr`, `tanggal_penyerahan`, `status`, `notes`, `catatan_perubahan`, `diubah_oleh`, `created_at`, `updated_at`) VALUES
+('THR4GQ438', '123123123', 'KEPKAM', 'MN', 'JKTP', 'Test Edit THR', 2024, 6000000.00, '2024-10-31', 'Disetujui', 'Test Edit THR', 'Test Edit THR', 'Super Admin Presensi', '2024-10-29 06:41:31', '2024-10-29 07:39:44'),
+('THRIVZ471', '112233445', 'KEPKAM', 'MN', 'JKTP', 'Test THR Karyawan', 2024, 5000000.00, '2024-10-31', 'Disetujui', 'Test THR Karyawan', 'Perubahan Status THR', 'Super Admin Presensi', '2024-10-29 07:57:13', '2024-10-29 08:14:51'),
+('THRS6U346', '111222333', 'SO', 'SMB', 'BKS', 'Test THR Lagi', 2024, 3750000.00, '2024-10-31', 'Ditolak', 'Test Edit THR Lagi', 'Test Edit THR Lagi', 'Super Admin Presensi', '2024-10-29 06:43:05', '2024-10-29 07:40:05');
 
 -- --------------------------------------------------------
 
@@ -1360,7 +1372,7 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `penggajian`

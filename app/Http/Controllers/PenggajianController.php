@@ -139,17 +139,18 @@ class PenggajianController extends Controller
     public function PenggajianShow($id)
     {
         $penggajian = Penggajian::with('karyawan')->findOrFail($id);
+        // dd($penggajian->updated_at);
         return view('penggajian.penggajian_show', compact('penggajian'));
     }
 
     public function ExportPDF($id)
-{
-    $penggajian = Penggajian::with('karyawan')->findOrFail($id);
+    {
+        $penggajian = Penggajian::with('karyawan')->findOrFail($id);
 
-    $pdf = Pdf::loadView('penggajian.penggajian_export', compact('penggajian'));
+        $pdf = Pdf::loadView('penggajian.penggajian_export', compact('penggajian'));
 
-    return $pdf->download('penggajian_' . $penggajian->karyawan->nama_lengkap . '_' . $penggajian->bulan . '.pdf');
-}
+        return $pdf->download('penggajian_' . $penggajian->karyawan->nama_lengkap . '_' . $penggajian->bulan . '.pdf');
+    }
 
     public function PenggajianEdit($id)
     {

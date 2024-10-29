@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cabang;
 use App\Models\Gaji;
 use App\Models\Jabatan;
+use App\Models\Karyawan;
 use App\Models\KonfigurasiGaji;
 use App\Models\LokasiPenugasan;
 use App\Models\presensi;
@@ -13,6 +14,8 @@ use Illuminate\Http\Request;
 
 class GajiController extends Controller
 {
+
+
     public function GajiIndex()
     {
         $gaji = Gaji::with('jabatan', 'jenisGaji')->orderBy('kode_jabatan')->get();

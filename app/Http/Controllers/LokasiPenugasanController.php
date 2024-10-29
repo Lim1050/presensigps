@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Validator;
 
 class LokasiPenugasanController extends Controller
 {
+    public function search(Request $request)
+    {
+        $search = $request->get('q');
+        $lokasi_penugasan = LokasiPenugasan::where('kode_lokasi_penugasan', 'LIKE', "%$search%")
+                        ->orWhere('nama_lokasi_penugasan', 'LIKE', "%$search%")
+                        ->get();
+
+        return response()->json($lokasi_penugasan);
+    }
+
     public function LokasiPenugasanIndex()
     {
         $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();

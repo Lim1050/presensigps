@@ -58,6 +58,32 @@ class KaryawanController extends Controller
     //     return view('karyawan.karyawan_index', compact('karyawan', 'jabatan', 'departemen', 'cabang', 'lokasi_penugasan'));
     // }
 
+    public function search(Request $request)
+    {
+        $search = $request->get('q');
+        $karyawan = Karyawan::where('nik', 'LIKE', "%$search%")
+                            ->orWhere('nama_lengkap', 'LIKE', "%$search%")
+                            ->get();
+
+        return response()->json($karyawan);
+    }
+
+    public function getKaryawanData($nik)
+    {
+        $karyawan = Karyawan::with(['jabatan', 'lokasiPenugasan', 'Cabang'])
+                            ->where('nik', $nik)
+                            ->first();
+
+        return response()->json([
+            'kode_jabatan' => $karyawan->kode_jabatan,
+            'nama_jabatan' => $karyawan->jabatan->nama_jabatan,
+            'kode_lokasi_penugasan' => $karyawan->kode_lokasi_penugasan,
+            'nama_lokasi_penugasan' => $karyawan->lokasiPenugasan->nama_lokasi_penugasan,
+            'kode_cabang' => $karyawan->kode_cabang,
+            'nama_cabang' => $karyawan->Cabang->nama_cabang
+        ]);
+    }
+
     public function KaryawanIndex(Request $request)
     {
         $query = Karyawan::with(['departemen', 'jabatan', 'cabang', 'lokasiPenugasan'])
