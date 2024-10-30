@@ -67,17 +67,47 @@
             <div class="col-12">
                 <form action="{{ route('admin.karyawan') }}" method="GET">
                     <div class="row mt-2">
-                        <div class="col-6">
+                        <div class="col-2">
                             <div class="form-group">
                                 <input type="text" name="nama_karyawan" id="nama_karyawan" class="form-control" placeholder="Cari Nama Karyawan" value="{{ Request('nama_karyawan') }}">
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-2">
                             <div class="form-group">
-                                <select name="kode_departemen" id="kode_departemen" class="form-control">
+                                <select name="kode_jabatan" id="kode_jabatan" class="form-control">
+                                    <option value="">Pilih Jabatan</option>
+                                    @foreach ($jabatan as $item)
+                                    <option {{ Request('kode_jabatan') == $item->kode_jabatan ? 'selected' : '' }} value="{{ $item->kode_jabatan }}">{{ $item->nama_jabatan }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan" class="form-control">
+                                    <option value="">Pilih Lokasi Penugasan</option>
+                                    @foreach ($lokasi_penugasan as $item)
+                                    <option {{ Request('kode_lokasi_penugasan') == $item->kode_lokasi_penugasan ? 'selected' : '' }} value="{{ $item->kode_lokasi_penugasan }}">{{ $item->nama_lokasi_penugasan }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <select name="kode_cabang" id="kode_cabang" class="form-control">
                                     <option value="">Pilih Departemen</option>
                                     @foreach ($departemen as $item)
                                     <option {{ Request('kode_departemen') == $item->kode_departemen ? 'selected' : '' }} value="{{ $item->kode_departemen }}">{{ $item->nama_departemen }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <select name="kode_cabang" id="kode_cabang" class="form-control">
+                                    <option value="">Pilih Kantor Cabang</option>
+                                    @foreach ($cabang as $item)
+                                    <option {{ Request('kode_cabang') == $item->kode_cabang ? 'selected' : '' }} value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
                                     @endforeach
                                 </select>
                             </div>

@@ -14,6 +14,7 @@ use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\KonfigurasiGajiController;
 use App\Http\Controllers\KonfigurasiPotonganController;
+use App\Http\Controllers\LemburController;
 use App\Http\Controllers\LokasiPenugasanController;
 use App\Http\Controllers\PenggajianController;
 use App\Http\Controllers\PotonganController;
@@ -177,6 +178,21 @@ Route::middleware(['auth:user'])->group(function () {
     Route::post('/admin/monitoring/getpresensi', [PresensiController::class, 'MonitoringGetPresensi'])->name('admin.monitoring.getpresensi');
     // tampilkan peta
     Route::post('/admin/presensi/tampilkanpeta', [PresensiController::class, 'TampilkanPeta'])->name('admin.presensi.tampilkanpeta');
+
+    // lembur route
+    Route::get('admin/lembur', [LemburController::class, 'LemburIndex'])->name('admin.lembur');
+    Route::get('admin/lembur/create', [LemburController::class, 'LemburCreate'])->name('admin.lembur.create');
+    Route::post('admin/lembur/store', [LemburController::class, 'LemburStore'])->name('admin.lembur.store');
+    Route::put('admin/lembur/{id}/setuju', action: [LemburController::class, 'LemburSetuju'])->name('admin.lembur.setuju');
+    Route::put('admin/lembur/{id}/batal', action: [LemburController::class, 'LemburBatal'])->name('admin.lembur.batal');
+    Route::get('/admin/lembur/show/{id}', action: [LemburController::class, 'LemburShow'])->name('admin.lembur.show');
+    Route::get('/admin/lembur/edit/{id}', action: [LemburController::class, 'LemburEdit'])->name('admin.lembur.edit');
+    Route::put('/admin/lembur/update/{id}', action: [LemburController::class, 'LemburUpdate'])->name('admin.lembur.update');
+    Route::get('/admin/lembur/delete/{id}', action: [LemburController::class, 'LemburDelete'])->name('admin.lembur.delete');
+
+    Route::get('admin/lokasi-penugasan/get-by-cabang/{kode_cabang}', [LokasiPenugasanController::class, 'getByKodeCabang'])->name('lokasi-penugasan.get-by-cabang');
+    Route::get('admin/karyawan/get-by-lokasi/{kode_lokasi_penugasan}', [KaryawanController::class, 'getByLokasiPenugasan'])->name('karyawan.get-by-lokasi');
+    Route::get('admin/karyawan/get-jabatan/{nik}', [KaryawanController::class, 'getJabatan'])->name('karyawan.get-jabatan');
 
     // Penggajian Index
     Route::get('/admin/penggajian', [PenggajianController::class, 'PenggajianIndex'])->name('admin.penggajian');

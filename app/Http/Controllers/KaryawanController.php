@@ -84,9 +84,29 @@ class KaryawanController extends Controller
         ]);
     }
 
+    public function getByLokasiPenugasan($kode_lokasi_penugasan)
+    {
+        $karyawan = Karyawan::where('kode_lokasi_penugasan', $kode_lokasi_penugasan)
+            ->select('nik', 'nama_lengkap')
+            ->get();
+
+        return response()->json($karyawan);
+    }
+
+    public function getJabatan($nik)
+    {
+        $karyawan = Karyawan::with('jabatan')
+            ->where('nik', $nik)
+            ->firstOrFail();
+
+        return response()->json([
+            'nama_jabatan' => $karyawan->jabatan->nama_jabatan
+        ]);
+    }
+
     public function KaryawanIndex(Request $request)
     {
-        $query = Karyawan::with(['departemen', 'jabatan', 'cabang', 'lokasiPenugasan'])
+        $query = Karyawan::with(['departemen', 'jabatan', 'Cabang', 'lokasiPenugasan'])
             ->when($request->nama_karyawan, function ($q) use ($request) {
                 return $q->where('nama_lengkap', 'like', '%' . $request->nama_karyawan . '%');
             })
@@ -95,6 +115,12 @@ class KaryawanController extends Controller
             })
             ->when($request->kode_jabatan, function ($q) use ($request) {
                 return $q->where('kode_jabatan', $request->kode_jabatan);
+            })
+            ->when($request->kode_lokasi_penugasan, function ($q) use ($request) {
+                return $q->where('kode_lokasi_penugasan', $request->kode_lokasi_penugasan);
+            })
+            ->when($request->kode_cabang, function ($q) use ($request) {
+                return $q->where('kode_cabang', $request->kode_cabang);
             })
             ->orderBy('nama_lengkap');
 

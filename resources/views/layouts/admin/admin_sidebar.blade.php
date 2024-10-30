@@ -12,12 +12,12 @@
     <hr class="sidebar-divider my-0">
 
     <li class="nav-item">
-        <a class="nav-link collapsed {{ request()->is(['admin/dashboard*', 'admin/monitoring/presensi*', 'admin/persetujuan/sakit/izin*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseOne"
-            aria-expanded="{{ request()->is(['admin/dashboard*', 'admin/monitoring/presensi*', 'admin/persetujuan/sakit/izin*']) ? 'true' : 'false' }}" aria-controls="collapseOne">
+        <a class="nav-link collapsed {{ request()->is(['admin/dashboard*', 'admin/monitoring/presensi*', 'admin/lembur*', 'admin/persetujuan/sakit/izin*']) ? 'active' : '' }}" href="#" data-toggle="collapse" data-target="#collapseOne"
+            aria-expanded="{{ request()->is(['admin/dashboard*', 'admin/monitoring/presensi*', 'admin/lembur*', 'admin/persetujuan/sakit/izin*']) ? 'true' : 'false' }}" aria-controls="collapseOne">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>
-        <div id="collapseOne" class="collapse {{ request()->is(['admin/dashboard*', 'admin/monitoring/presensi*', 'admin/persetujuan/sakit/izin*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseOne" class="collapse {{ request()->is(['admin/dashboard*', 'admin/monitoring/presensi*', 'admin/lembur*', 'admin/persetujuan/sakit/izin*']) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-danger py-2 collapse-inner rounded">
                 <a class="collapse-item {{ request()->is('admin/dashboard*') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
@@ -26,6 +26,10 @@
                 <a class="collapse-item {{ request()->is('admin/monitoring/presensi*') ? 'active' : '' }}" href="{{ route('admin.monitoring.presensi') }}">
                 <i class="bi bi-display fa-fw "></i>
                 <span>Monitoring Presensi</span></a>
+
+                <a class="collapse-item {{ request()->is('admin/lembur*') ? 'active' : '' }}" href="{{ route('admin.lembur') }}">
+                <i class="bi bi-display fa-fw "></i>
+                <span>Lembur Karyawan</span></a>
 
                 <a class="collapse-item {{ request()->is('admin/persetujuan/sakit/izin*') ? 'active' : '' }}" href="{{ route('admin.persetujuan.sakit.izin') }}">
                 <i class="bi bi-file-text-fill fa-fw "></i>

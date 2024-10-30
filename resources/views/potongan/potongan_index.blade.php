@@ -105,7 +105,7 @@
                                 <td class="text-center">{{ $item->kantorCabang->nama_cabang ?? ''}}</td>
                                 <td class="text-center">{{ $item->jenisPotongan->jenis_potongan }}</td>
                                 <td class="text-center">{{ $item->nama_potongan }}</td>
-                                <td class="text-right">Rp {{ $item->jumlah_potongan }}</td>
+                                <td class="text-right">Rp {{ number_format($item->jumlah_potongan, 2) }}</td>
                                 <td class="text-center">
                                     <div class="btn-group ">
                                         {{-- <a href="{{ route('admin.jabatan.edit', $item->kode_jabatan) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a> --}}

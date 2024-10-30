@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class presensi extends Model
+class Lembur extends Model
 {
     use HasFactory;
-
-    protected $table = "presensi";
+    protected $table = "lembur";
     protected $primaryKey = "id";
     protected $guarded = [];
 
@@ -18,9 +17,9 @@ class presensi extends Model
         return $this->belongsTo(Karyawan::class, 'nik', 'nik');
     }
 
-    public function lembur()
+    public function presensi()
     {
-        return $this->hasOne(Lembur::class, 'nik', 'nik')
+        return $this->belongsTo(Presensi::class, 'nik', 'nik')
             ->where('tanggal_presensi', $this->tanggal_presensi);
     }
 }

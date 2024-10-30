@@ -44,7 +44,11 @@ class Karyawan extends Authenticatable
 
     public function presensi()
     {
-        return $this->hasMany(presensi::class, 'nik', 'nik');
+        return $this->hasMany(Presensi::class, 'nik', 'nik');
+    }
+    public function lembur()
+    {
+        return $this->hasMany(Lembur::class, 'nik', 'nik');
     }
 
     public function penggajian()

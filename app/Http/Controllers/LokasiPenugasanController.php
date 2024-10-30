@@ -21,6 +21,15 @@ class LokasiPenugasanController extends Controller
         return response()->json($lokasi_penugasan);
     }
 
+    public function getByKodeCabang($kode_cabang)
+    {
+        $lokasiPenugasan = LokasiPenugasan::where('kode_cabang', $kode_cabang)
+            ->select('kode_lokasi_penugasan', 'nama_lokasi_penugasan')
+            ->get();
+
+        return response()->json($lokasiPenugasan);
+    }
+
     public function LokasiPenugasanIndex()
     {
         $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();

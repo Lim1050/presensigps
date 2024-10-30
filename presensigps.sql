@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 29, 2024 at 03:16 PM
+-- Generation Time: Oct 30, 2024 at 04:17 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -528,6 +528,35 @@ INSERT INTO `konfigurasi_potongan` (`kode_jenis_potongan`, `jenis_potongan`, `ke
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `lembur`
+--
+
+CREATE TABLE `lembur` (
+  `id` bigint UNSIGNED NOT NULL,
+  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tanggal_presensi` date DEFAULT NULL,
+  `waktu_mulai` time DEFAULT NULL,
+  `waktu_selesai` time DEFAULT NULL,
+  `durasi_menit` int DEFAULT NULL,
+  `lintas_hari` tinyint(1) DEFAULT NULL,
+  `lembur_libur` tinyint(1) DEFAULT '0',
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `alasan_penolakan` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `lembur`
+--
+
+INSERT INTO `lembur` (`id`, `nik`, `tanggal_presensi`, `waktu_mulai`, `waktu_selesai`, `durasi_menit`, `lintas_hari`, `lembur_libur`, `status`, `alasan_penolakan`, `created_at`, `updated_at`) VALUES
+(2, '123123123', '2024-10-30', '17:07:00', '20:07:00', 180, 0, 1, 'pending', NULL, '2024-10-30 08:07:28', '2024-10-30 08:07:28'),
+(3, '333333333', '2024-10-30', '23:08:00', '04:08:00', 300, 1, 0, 'pending', NULL, '2024-10-30 08:08:40', '2024-10-30 08:08:40');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `lokasi_kantor`
 --
 
@@ -667,7 +696,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (76, '2024_10_27_145336_create_konfigurasi_potongan', 42),
 (77, '2024_10_27_145533_create_potongan', 43),
 (79, '2024_10_28_141613_create_thr_table', 44),
-(80, '2024_10_29_142048_add_catatan_perubahan_dan_diubah_oleh_pada_table_thr', 45);
+(80, '2024_10_29_142048_add_catatan_perubahan_dan_diubah_oleh_pada_table_thr', 45),
+(81, '2024_10_30_130909_create_lembur_table', 46),
+(82, '2024_10_30_131532_add_lembur_to_presensi_table', 47),
+(83, '2024_10_30_150231_add_coloumn_durasi_lembur_to_lembur_table', 48),
+(84, '2024_10_30_160245_add_coloumn_alasan_penolakan_to_lembur_table', 49);
 
 -- --------------------------------------------------------
 
@@ -872,6 +905,18 @@ CREATE TABLE `potongan` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `potongan`
+--
+
+INSERT INTO `potongan` (`kode_potongan`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_cabang`, `kode_jenis_potongan`, `nama_potongan`, `jumlah_potongan`, `created_at`, `updated_at`) VALUES
+('BPJSKKK', 'KEPKAM', 'MN', 'JKTP', 'BPJSK', 'BPJS Kesehatan Kepala Keamanan', 50000.00, '2024-10-30 04:18:46', '2024-10-30 04:18:46'),
+('BPJSTKKK', 'KEPKAM', 'MN', 'JKTP', 'BPJSTK', 'BPJS Tenaga Kerja Kepala Keamanan', 50000.00, '2024-10-30 04:20:18', '2024-10-30 04:20:18'),
+('DDKK', 'KEPKAM', 'MN', 'JKTP', 'DD', 'Dana Darurat Kepala Keamanan', 50000.00, '2024-10-30 04:20:48', '2024-10-30 04:20:48'),
+('JHTKK', 'KEPKAM', 'MN', 'JKTP', 'JHT', 'Jaminan Hari Tua Kepala Keamanan', 50000.00, '2024-10-30 04:18:14', '2024-10-30 04:18:14'),
+('PSKK', 'KEPKAM', 'MN', 'JKTP', 'PS', 'Potongan Seragam Kepala Keamanan', 50000.00, '2024-10-30 04:21:29', '2024-10-30 04:21:29'),
+('THRKK', 'KEPKAM', 'MN', 'JKTP', 'THR', 'Tunjangan Hari Raya Kepala Keamanan', 416000.00, '2024-10-30 04:22:43', '2024-10-30 04:22:43');
+
 -- --------------------------------------------------------
 
 --
@@ -891,6 +936,9 @@ CREATE TABLE `presensi` (
   `kode_jam_kerja` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `kode_izin` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lembur` tinyint(1) DEFAULT NULL,
+  `mulai_lembur` time DEFAULT NULL,
+  `selesai_lembur` time DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -899,63 +947,63 @@ CREATE TABLE `presensi` (
 -- Dumping data for table `presensi`
 --
 
-INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_keluar`, `foto_masuk`, `foto_keluar`, `lokasi_masuk`, `lokasi_keluar`, `kode_jam_kerja`, `status`, `kode_izin`, `created_at`, `updated_at`) VALUES
-(107, '123123123', '2024-07-28', '10:53:37', '15:00:53', 'public/uploads/absensi/123123123-2024-07-28-105337-masuk.png', 'public/uploads/absensi/123123123-2024-07-28-150053-keluar.png', '-6.22592,106.8302336', '-6.22592,106.8302336', 'JK02', 'hadir', NULL, '2024-07-28 03:53:37', '2024-07-28 08:00:53'),
-(233, '123123123', '2024-08-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-29 09:10:43', NULL),
-(234, '123123123', '2024-08-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-29 09:10:43', NULL),
-(235, '123123123', '2024-08-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-29 09:10:43', NULL),
-(236, '123123123', '2024-08-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-29 09:10:43', NULL),
-(237, '123123123', '2024-08-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-29 09:10:43', NULL),
-(238, '123123123', '2024-08-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-29 09:10:43', NULL),
-(239, '123123123', '2024-08-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', '2024-07-29 09:10:43', NULL),
-(240, '123123123', '2024-07-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724006', '2024-07-29 09:10:51', NULL),
-(247, '123123123', '2024-06-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(248, '123123123', '2024-06-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(249, '123123123', '2024-06-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(250, '123123123', '2024-06-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(251, '123123123', '2024-06-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(252, '123123123', '2024-06-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(253, '123123123', '2024-06-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(254, '123123123', '2024-06-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(255, '123123123', '2024-06-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(256, '123123123', '2024-06-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(257, '123123123', '2024-06-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(258, '123123123', '2024-06-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(259, '123123123', '2024-06-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(260, '123123123', '2024-06-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(261, '123123123', '2024-06-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(262, '123123123', '2024-06-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(263, '123123123', '2024-06-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(264, '123123123', '2024-06-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(265, '123123123', '2024-06-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(266, '123123123', '2024-06-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(267, '123123123', '2024-06-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(268, '123123123', '2024-06-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(269, '123123123', '2024-06-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(270, '123123123', '2024-06-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(271, '123123123', '2024-06-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(272, '123123123', '2024-06-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(273, '123123123', '2024-06-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(274, '123123123', '2024-06-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(275, '123123123', '2024-06-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(276, '123123123', '2024-06-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', '2024-07-29 09:11:15', NULL),
-(277, '123123123', '2024-07-30', '11:13:14', '15:13:14', 'public/uploads/absensi/123123123-2024-07-30-111314-masuk.png', 'public/uploads/absensi/123123123-2024-07-30-111314-masuk.png', '-6.201695,106.8421801', '-6.201695,106.8421801', 'JK02', 'hadir', NULL, '2024-07-30 04:13:14', NULL),
-(278, '123123123', '2024-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', '2024-07-30 05:44:59', NULL),
-(279, '123123123', '2024-07-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', '2024-07-30 05:45:06', NULL),
-(280, '123123123', '2024-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', '2024-07-30 05:45:06', NULL),
-(281, '555555555', '2024-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724007', '2024-07-30 07:40:09', NULL),
-(282, '333333333', '2024-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724008', '2024-07-30 07:40:11', NULL),
-(283, '444444444', '2024-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724007', '2024-07-30 07:40:13', NULL),
-(284, '123123123', '2024-08-01', '14:19:54', '16:20:56', 'public/uploads/absensi/123123123-2024-08-01-141954-masuk.png', 'public/uploads/absensi/123123123-2024-08-01-162056-keluar.png', '-6.2017052,106.8421785', '-6.2017082,106.8421777', 'JK03', 'hadir', NULL, '2024-08-01 07:19:54', '2024-08-01 09:20:56'),
-(285, '123123123', '2024-08-02', '11:03:15', '16:14:17', 'public/uploads/absensi/123123123-2024-08-02-110315-masuk.png', 'public/uploads/absensi/123123123-2024-08-02-161417-keluar.png', '-6.1964288,106.8433408', '-6.2017027,106.842168', 'JK02', 'hadir', NULL, '2024-08-02 04:03:15', '2024-08-02 09:14:17'),
-(286, '444444444', '2024-08-05', '15:58:13', '16:00:43', 'public/uploads/absensi/444444444-2024-08-05-155813-masuk.png', 'public/uploads/absensi/444444444-2024-08-05-160043-keluar.png', '-6.2016715,106.8421765', '-6.2016715,106.8421765', 'JK03', 'hadir', NULL, '2024-08-05 08:58:13', '2024-08-05 09:00:43'),
-(290, '555555555', '2024-08-06', '15:01:01', '13:31:25', 'public/uploads/absensi/555555555-2024-08-06-150101-masuk.png', 'public/uploads/absensi/555555555-2024-08-06-133125-keluar.png', '-6.2062592,106.8302336', '-6.2016831,106.8421874', 'JKT', 'hadir', NULL, '2024-08-06 08:01:01', '2024-08-07 06:31:25'),
-(291, '222222222', '2024-08-06', '15:01:43', '14:57:36', 'public/uploads/absensi/222222222-2024-08-06-150143-masuk.png', 'public/uploads/absensi/222222222-2024-08-06-145736-keluar.png', '-6.2062592,106.8302336', '-6.1341696,106.82368', 'JKT', 'hadir', NULL, '2024-08-06 08:01:43', '2024-08-07 07:57:36'),
-(292, '333333333', '2024-08-06', '15:02:38', '15:04:32', 'public/uploads/absensi/333333333-2024-08-06-150238-masuk.png', 'public/uploads/absensi/333333333-2024-08-06-150432-keluar.png', '-6.2062592,106.8302336', '-6.2062592,106.8302336', 'JKT01', 'hadir', NULL, '2024-08-06 08:02:38', '2024-08-06 08:04:32'),
-(293, '222222222', '2024-08-07', '15:03:09', '16:14:55', 'public/uploads/absensi/222222222-2024-08-07-150309-masuk.png', 'public/uploads/absensi/222222222-2024-08-07-161455-keluar.png', '-6.1341696,106.82368', '-6.2016825,106.8421861', 'JKT01', 'hadir', NULL, '2024-08-07 08:03:09', '2024-08-07 09:14:55'),
-(294, '555555555', '2024-08-07', '15:03:56', '16:14:31', 'public/uploads/absensi/555555555-2024-08-07-150356-masuk.png', 'public/uploads/absensi/555555555-2024-08-07-161431-keluar.png', '-6.1341696,106.82368', '-6.2016842,106.842187', 'JKT01', 'hadir', NULL, '2024-08-07 08:03:56', '2024-08-07 09:14:31'),
-(295, '333333333', '2024-08-07', '15:05:19', '16:14:05', 'public/uploads/absensi/333333333-2024-08-07-150519-masuk.png', 'public/uploads/absensi/333333333-2024-08-07-161405-keluar.png', '-6.1341696,106.82368', '-6.2016842,106.842187', 'JKT01', 'hadir', NULL, '2024-08-07 08:05:19', '2024-08-07 09:14:05'),
-(297, '123123123', '2024-10-18', '13:09:24', '13:54:44', 'public/uploads/absensi/123123123-2024-10-18-130924-masuk.png', 'public/uploads/absensi/123123123-2024-10-18-135444-keluar.png', '-6.2017428,106.8420686', NULL, 'JK02', 'hadir', NULL, '2024-10-18 06:09:24', '2024-10-18 06:54:44');
+INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_keluar`, `foto_masuk`, `foto_keluar`, `lokasi_masuk`, `lokasi_keluar`, `kode_jam_kerja`, `status`, `kode_izin`, `lembur`, `mulai_lembur`, `selesai_lembur`, `created_at`, `updated_at`) VALUES
+(107, '123123123', '2024-07-28', '10:53:37', '15:00:53', 'public/uploads/absensi/123123123-2024-07-28-105337-masuk.png', 'public/uploads/absensi/123123123-2024-07-28-150053-keluar.png', '-6.22592,106.8302336', '-6.22592,106.8302336', 'JK02', 'hadir', NULL, NULL, NULL, NULL, '2024-07-28 03:53:37', '2024-07-28 08:00:53'),
+(233, '123123123', '2024-08-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', NULL, NULL, NULL, '2024-07-29 09:10:43', NULL),
+(234, '123123123', '2024-08-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', NULL, NULL, NULL, '2024-07-29 09:10:43', NULL),
+(235, '123123123', '2024-08-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', NULL, NULL, NULL, '2024-07-29 09:10:43', NULL),
+(236, '123123123', '2024-08-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', NULL, NULL, NULL, '2024-07-29 09:10:43', NULL),
+(237, '123123123', '2024-08-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', NULL, NULL, NULL, '2024-07-29 09:10:43', NULL),
+(238, '123123123', '2024-08-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', NULL, NULL, NULL, '2024-07-29 09:10:43', NULL),
+(239, '123123123', '2024-08-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', NULL, NULL, NULL, '2024-07-29 09:10:43', NULL),
+(240, '123123123', '2024-07-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724006', NULL, NULL, NULL, '2024-07-29 09:10:51', NULL),
+(247, '123123123', '2024-06-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(248, '123123123', '2024-06-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(249, '123123123', '2024-06-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(250, '123123123', '2024-06-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(251, '123123123', '2024-06-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(252, '123123123', '2024-06-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(253, '123123123', '2024-06-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(254, '123123123', '2024-06-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(255, '123123123', '2024-06-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(256, '123123123', '2024-06-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(257, '123123123', '2024-06-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(258, '123123123', '2024-06-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(259, '123123123', '2024-06-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(260, '123123123', '2024-06-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(261, '123123123', '2024-06-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(262, '123123123', '2024-06-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(263, '123123123', '2024-06-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(264, '123123123', '2024-06-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(265, '123123123', '2024-06-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(266, '123123123', '2024-06-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(267, '123123123', '2024-06-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(268, '123123123', '2024-06-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(269, '123123123', '2024-06-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(270, '123123123', '2024-06-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(271, '123123123', '2024-06-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(272, '123123123', '2024-06-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(273, '123123123', '2024-06-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(274, '123123123', '2024-06-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(275, '123123123', '2024-06-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(276, '123123123', '2024-06-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0624001', NULL, NULL, NULL, '2024-07-29 09:11:15', NULL),
+(277, '123123123', '2024-07-30', '11:13:14', '15:13:14', 'public/uploads/absensi/123123123-2024-07-30-111314-masuk.png', 'public/uploads/absensi/123123123-2024-07-30-111314-masuk.png', '-6.201695,106.8421801', '-6.201695,106.8421801', 'JK02', 'hadir', NULL, NULL, NULL, NULL, '2024-07-30 04:13:14', NULL),
+(278, '123123123', '2024-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724005', NULL, NULL, NULL, '2024-07-30 05:44:59', NULL),
+(279, '123123123', '2024-07-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', NULL, NULL, NULL, '2024-07-30 05:45:06', NULL),
+(280, '123123123', '2024-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724004', NULL, NULL, NULL, '2024-07-30 05:45:06', NULL),
+(281, '555555555', '2024-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724007', NULL, NULL, NULL, '2024-07-30 07:40:09', NULL),
+(282, '333333333', '2024-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0724008', NULL, NULL, NULL, '2024-07-30 07:40:11', NULL),
+(283, '444444444', '2024-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS0724007', NULL, NULL, NULL, '2024-07-30 07:40:13', NULL),
+(284, '123123123', '2024-08-01', '14:19:54', '16:20:56', 'public/uploads/absensi/123123123-2024-08-01-141954-masuk.png', 'public/uploads/absensi/123123123-2024-08-01-162056-keluar.png', '-6.2017052,106.8421785', '-6.2017082,106.8421777', 'JK03', 'hadir', NULL, NULL, NULL, NULL, '2024-08-01 07:19:54', '2024-08-01 09:20:56'),
+(285, '123123123', '2024-08-02', '11:03:15', '16:14:17', 'public/uploads/absensi/123123123-2024-08-02-110315-masuk.png', 'public/uploads/absensi/123123123-2024-08-02-161417-keluar.png', '-6.1964288,106.8433408', '-6.2017027,106.842168', 'JK02', 'hadir', NULL, NULL, NULL, NULL, '2024-08-02 04:03:15', '2024-08-02 09:14:17'),
+(286, '444444444', '2024-08-05', '15:58:13', '16:00:43', 'public/uploads/absensi/444444444-2024-08-05-155813-masuk.png', 'public/uploads/absensi/444444444-2024-08-05-160043-keluar.png', '-6.2016715,106.8421765', '-6.2016715,106.8421765', 'JK03', 'hadir', NULL, NULL, NULL, NULL, '2024-08-05 08:58:13', '2024-08-05 09:00:43'),
+(290, '555555555', '2024-08-06', '15:01:01', '13:31:25', 'public/uploads/absensi/555555555-2024-08-06-150101-masuk.png', 'public/uploads/absensi/555555555-2024-08-06-133125-keluar.png', '-6.2062592,106.8302336', '-6.2016831,106.8421874', 'JKT', 'hadir', NULL, NULL, NULL, NULL, '2024-08-06 08:01:01', '2024-08-07 06:31:25'),
+(291, '222222222', '2024-08-06', '15:01:43', '14:57:36', 'public/uploads/absensi/222222222-2024-08-06-150143-masuk.png', 'public/uploads/absensi/222222222-2024-08-06-145736-keluar.png', '-6.2062592,106.8302336', '-6.1341696,106.82368', 'JKT', 'hadir', NULL, NULL, NULL, NULL, '2024-08-06 08:01:43', '2024-08-07 07:57:36'),
+(292, '333333333', '2024-08-06', '15:02:38', '15:04:32', 'public/uploads/absensi/333333333-2024-08-06-150238-masuk.png', 'public/uploads/absensi/333333333-2024-08-06-150432-keluar.png', '-6.2062592,106.8302336', '-6.2062592,106.8302336', 'JKT01', 'hadir', NULL, NULL, NULL, NULL, '2024-08-06 08:02:38', '2024-08-06 08:04:32'),
+(293, '222222222', '2024-08-07', '15:03:09', '16:14:55', 'public/uploads/absensi/222222222-2024-08-07-150309-masuk.png', 'public/uploads/absensi/222222222-2024-08-07-161455-keluar.png', '-6.1341696,106.82368', '-6.2016825,106.8421861', 'JKT01', 'hadir', NULL, NULL, NULL, NULL, '2024-08-07 08:03:09', '2024-08-07 09:14:55'),
+(294, '555555555', '2024-08-07', '15:03:56', '16:14:31', 'public/uploads/absensi/555555555-2024-08-07-150356-masuk.png', 'public/uploads/absensi/555555555-2024-08-07-161431-keluar.png', '-6.1341696,106.82368', '-6.2016842,106.842187', 'JKT01', 'hadir', NULL, NULL, NULL, NULL, '2024-08-07 08:03:56', '2024-08-07 09:14:31'),
+(295, '333333333', '2024-08-07', '15:05:19', '16:14:05', 'public/uploads/absensi/333333333-2024-08-07-150519-masuk.png', 'public/uploads/absensi/333333333-2024-08-07-161405-keluar.png', '-6.1341696,106.82368', '-6.2016842,106.842187', 'JKT01', 'hadir', NULL, NULL, NULL, NULL, '2024-08-07 08:05:19', '2024-08-07 09:14:05'),
+(297, '123123123', '2024-10-18', '13:09:24', '13:54:44', 'public/uploads/absensi/123123123-2024-10-18-130924-masuk.png', 'public/uploads/absensi/123123123-2024-10-18-135444-keluar.png', '-6.2017428,106.8420686', NULL, 'JK02', 'hadir', NULL, NULL, NULL, NULL, '2024-10-18 06:09:24', '2024-10-18 06:54:44');
 
 -- --------------------------------------------------------
 
@@ -1214,6 +1262,12 @@ ALTER TABLE `konfigurasi_potongan`
   ADD PRIMARY KEY (`kode_jenis_potongan`);
 
 --
+-- Indexes for table `lembur`
+--
+ALTER TABLE `lembur`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `lokasi_kantor`
 --
 ALTER TABLE `lokasi_kantor`
@@ -1363,6 +1417,12 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `lembur`
+--
+ALTER TABLE `lembur`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `lokasi_kantor`
 --
 ALTER TABLE `lokasi_kantor`
@@ -1372,7 +1432,7 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `penggajian`

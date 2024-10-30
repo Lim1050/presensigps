@@ -68,6 +68,14 @@ class PenggajianController extends Controller
                                         Carbon::parse($request->tanggal_gaji)->startOfMonth(),
                                         Carbon::parse($request->tanggal_gaji)->endOfMonth()
                                     ])
+
+                                    ->count();
+        $totalLembur = Presensi::where('nik', $request->nik)
+                                    ->whereBetween('tanggal_presensi', [
+                                        Carbon::parse($request->tanggal_gaji)->startOfMonth(),
+                                        Carbon::parse($request->tanggal_gaji)->endOfMonth()
+                                    ])
+                                    ->where('is_lembur', true)
                                     ->count();
 
         // Menghitung jumlah izin, sakit, dan cuti yang sudah disetujui
