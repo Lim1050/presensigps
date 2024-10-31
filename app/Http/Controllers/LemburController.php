@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cabang;
 use App\Models\Jabatan;
+use App\Models\JamKerja;
+use App\Models\JamKerjaKaryawan;
 use App\Models\Lembur;
 use App\Models\Karyawan;
 use App\Models\LokasiPenugasan;
@@ -73,57 +75,75 @@ class LemburController extends Controller
                 'tanggal_presensi' => 'required|date',
                 'waktu_mulai' => 'required',
                 'waktu_selesai' => 'required',
-                'lembur_libur' => 'sometimes',
+                'catatan_lembur' => 'required',
             ]);
 
             DB::beginTransaction();
 
-            // Mengatur nilai lembur_libur
-            $lembur_libur = $request->has('lembur_libur') ? 1 : 0;
-
-            // Konversi waktu mulai dan selesai ke format Carbon
+            $nik = $validatedData['nik'];
             $tanggal_presensi = Carbon::parse($validatedData['tanggal_presensi']);
             $waktu_mulai = Carbon::parse($validatedData['waktu_mulai']);
             $waktu_selesai = Carbon::parse($validatedData['waktu_selesai']);
+            $catatan_lembur = $validatedData['catatan_lembur'];
 
             // Set waktu mulai dan selesai lengkap dengan tanggal
-            $datetime_mulai = Carbon::create(
-                $tanggal_presensi->year,
-                $tanggal_presensi->month,
-                $tanggal_presensi->day,
-                $waktu_mulai->hour,
-                $waktu_mulai->minute,
-                0
-            );
-
-            $datetime_selesai = Carbon::create(
-                $tanggal_presensi->year,
-                $tanggal_presensi->month,
-                $tanggal_presensi->day,
-                $waktu_selesai->hour,
-                $waktu_selesai->minute,
-                0
-            );
+            $datetime_mulai = $tanggal_presensi->copy()->setTimeFromTimeString($waktu_mulai->format('H:i:s'));
+            $datetime_selesai = $tanggal_presensi->copy()->setTimeFromTimeString($waktu_selesai->format('H:i:s'));
 
             // Cek apakah lintas hari
             $is_lintas_hari = 0;
             if ($waktu_selesai < $waktu_mulai) {
                 $is_lintas_hari = 1;
-                $datetime_selesai->addDay(); // Tambah 1 hari jika lintas hari
+                $datetime_selesai->addDay();
             }
 
             // Hitung durasi lembur dalam menit
             $durasi_menit = $datetime_mulai->diffInMinutes($datetime_selesai);
 
+            // Default: lembur libur (di luar jam kerja)
+            $lembur_libur = 1;
+
+            // Mendapatkan hari dari tanggal presensi
+            $hari = strtolower($tanggal_presensi->format('l'));
+
+            // Cek jam kerja karyawan
+            $jamKerjaKaryawan = JamKerjaKaryawan::where('nik', $nik)
+                ->where('hari', $hari)
+                ->first();
+
+            // Jika jam kerja ditemukan, periksa apakah lembur berada dalam jam kerja
+            if ($jamKerjaKaryawan) {
+                $jamKerja = JamKerja::where('kode_jam_kerja', $jamKerjaKaryawan->kode_jam_kerja)->first();
+
+                if ($jamKerja) {
+                    $jam_masuk = Carbon::parse($jamKerja->jam_masuk);
+                    $jam_pulang = Carbon::parse($jamKerja->jam_pulang);
+
+                    // Jika jam kerja lintas hari, sesuaikan jam pulang
+                    if ($jamKerja->lintas_hari == '1') {
+                        $jam_pulang->addDay();
+                    }
+
+                    // Cek apakah lembur beririsan dengan jam kerja
+                    if ($waktu_mulai->between($jam_masuk, $jam_pulang) ||
+                        $waktu_selesai->between($jam_masuk, $jam_pulang) ||
+                        ($waktu_mulai <= $jam_pulang && $waktu_selesai >= $jam_masuk)) {
+                        $lembur_libur = 0; // Bukan lembur libur karena beririsan dengan jam kerja
+                    }
+                }
+            }
+            // Jika jam kerja tidak ditemukan, tetap dianggap sebagai lembur libur (nilai default)
+
             // Membuat instance Lembur baru
             $lembur = new Lembur();
-            $lembur->nik = $validatedData['nik'];
-            $lembur->tanggal_presensi = $validatedData['tanggal_presensi'];
-            $lembur->waktu_mulai = $validatedData['waktu_mulai'];
-            $lembur->waktu_selesai = $validatedData['waktu_selesai'];
+            $lembur->nik = $nik;
+            $lembur->tanggal_presensi = $tanggal_presensi->toDateString();
+            $lembur->waktu_mulai = $waktu_mulai->format('H:i:s');
+            $lembur->waktu_selesai = $waktu_selesai->format('H:i:s');
             $lembur->lembur_libur = $lembur_libur;
             $lembur->lintas_hari = $is_lintas_hari;
             $lembur->durasi_menit = $durasi_menit;
+            $lembur->catatan_lembur = $catatan_lembur;
             $lembur->status = 'pending';
 
             // Menyimpan data lembur
@@ -156,132 +176,151 @@ class LemburController extends Controller
             return view('lembur.lembur_show', compact('lembur'));
     }
 
-    /**
-     * Show the form for editing the specified Lembur record.
-     */
-    public function edit(Lembur $Lembur)
+    public function LemburEdit($id)
     {
-        if ($Lembur->status !== 'pending') {
-            return back()->with('error', 'Hanya pengajuan dengan status pending yang dapat diubah.');
-        }
+            $lembur = Lembur::with('karyawan')->findOrFail($id);
+            // dd($lembur);
 
-        $karyawan = Karyawan::where('status', 'aktif')->get();
-        return view('Lembur.edit', compact('Lembur', 'karyawan'));
+            return view('lembur.lembur_edit', compact('lembur'));
     }
 
-    /**
-     * Update the specified Lembur record.
-     */
-    public function update(Request $request, Lembur $Lembur)
+    public function LemburUpdate(Request $request, $id)
     {
-        if ($Lembur->status !== 'pending') {
-            return back()->with('error', 'Hanya pengajuan dengan status pending yang dapat diubah.');
-        }
+        try {
+            // Validasi input
+            $validatedData = $request->validate([
+                'tanggal_presensi' => 'required|date',
+                'waktu_mulai' => 'required',
+                'waktu_selesai' => 'required',
+                'catatan_lembur' => 'required',
+            ]);
 
+            DB::beginTransaction();
+
+            $lembur = Lembur::findOrFail($id);
+
+            // Pastikan status masih 'pending' sebelum mengizinkan update
+            if ($lembur->status !== 'pending') {
+                throw new \Exception('Hanya lembur dengan status pending yang dapat diubah.');
+            }
+
+            $tanggal_presensi = Carbon::parse($validatedData['tanggal_presensi']);
+            $waktu_mulai = Carbon::parse($validatedData['waktu_mulai']);
+            $waktu_selesai = Carbon::parse($validatedData['waktu_selesai']);
+            $catatan_lembur = $validatedData['catatan_lembur'];
+
+            // Set waktu mulai dan selesai lengkap dengan tanggal
+            $datetime_mulai = $tanggal_presensi->copy()->setTimeFromTimeString($waktu_mulai->format('H:i:s'));
+            $datetime_selesai = $tanggal_presensi->copy()->setTimeFromTimeString($waktu_selesai->format('H:i:s'));
+
+            // Cek apakah lintas hari
+            $is_lintas_hari = 0;
+            if ($waktu_selesai < $waktu_mulai) {
+                $is_lintas_hari = 1;
+                $datetime_selesai->addDay();
+            }
+
+            // Hitung durasi lembur dalam menit
+            $durasi_menit = $datetime_mulai->diffInMinutes($datetime_selesai);
+
+            // Default: lembur libur (di luar jam kerja)
+            $lembur_libur = 1;
+
+            // Mendapatkan hari dari tanggal presensi
+            $hari = strtolower($tanggal_presensi->format('l'));
+
+            // Cek jam kerja karyawan
+            $jamKerjaKaryawan = JamKerjaKaryawan::where('nik', $lembur->nik)
+                ->where('hari', $hari)
+                ->first();
+
+            // Jika jam kerja ditemukan, periksa apakah lembur berada dalam jam kerja
+            if ($jamKerjaKaryawan) {
+                $jamKerja = JamKerja::where('kode_jam_kerja', $jamKerjaKaryawan->kode_jam_kerja)->first();
+
+                if ($jamKerja) {
+                    $jam_masuk = Carbon::parse($jamKerja->jam_masuk);
+                    $jam_pulang = Carbon::parse($jamKerja->jam_pulang);
+
+                    // Jika jam kerja lintas hari, sesuaikan jam pulang
+                    if ($jamKerja->lintas_hari == '1') {
+                        $jam_pulang->addDay();
+                    }
+
+                    // Cek apakah lembur beririsan dengan jam kerja
+                    if ($waktu_mulai->between($jam_masuk, $jam_pulang) ||
+                        $waktu_selesai->between($jam_masuk, $jam_pulang) ||
+                        ($waktu_mulai <= $jam_pulang && $waktu_selesai >= $jam_masuk)) {
+                        $lembur_libur = 0; // Bukan lembur libur karena beririsan dengan jam kerja
+                    }
+                }
+            }
+            // Jika jam kerja tidak ditemukan, tetap dianggap sebagai lembur libur (nilai default)
+
+            // Update data lembur
+            $lembur->tanggal_presensi = $tanggal_presensi->toDateString();
+            $lembur->waktu_mulai = $waktu_mulai->format('H:i:s');
+            $lembur->waktu_selesai = $waktu_selesai->format('H:i:s');
+            $lembur->lintas_hari = $is_lintas_hari;
+            $lembur->durasi_menit = $durasi_menit;
+            $lembur->lembur_libur = $lembur_libur;
+            $lembur->catatan_lembur = $catatan_lembur;
+
+            $lembur->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.lembur')
+                ->with('success', 'Data lembur berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui data lembur: ' . $e->getMessage());
+        }
+    }
+
+    public function LemburDelete($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $lembur = Lembur::where('id', $id)->firstOrFail();
+
+            // Hapus lembur
+            $lembur->delete();
+
+            DB::commit();
+
+            return redirect()->route('admin.lembur')->with('success', 'Data Lembur berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->route('admin.lembur')->with('error', 'Terjadi kesalahan saat menghapus data Lembur: ' . $e->getMessage());
+        }
+    }
+
+    public function LemburUpdateStatus(Request $request, $id)
+    {
         $request->validate([
-            'start_time' => 'required',
-            'end_time' => 'required|after:start_time',
-            'alasan' => 'required|string|max:255',
+            'status' => 'required|in:disetujui,ditolak',
+            'alasan_penolakan' => 'required_if:status,ditolak'
         ]);
 
-        try {
-            DB::beginTransaction();
+        $lembur = Lembur::findOrFail($id);
+        $lembur->status = $request->status;
 
-            // Hitung durasi lembur
-            $start = Carbon::parse($request->start_time);
-            $end = Carbon::parse($request->end_time);
-            $duration = $end->diffInHours($start);
-
-            $Lembur->update([
-                'start_time' => $request->start_time,
-                'end_time' => $request->end_time,
-                'duration' => $duration,
-                'is_holiday_Lembur' => $request->has('is_holiday_Lembur'),
-                'alasan' => $request->alasan,
-                'updated_by' => Auth::id()
-            ]);
-
-            DB::commit();
-            return redirect()->route('Lembur.index')->with('success', 'Pengajuan lembur berhasil diperbarui.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Approve Lembur request
-     */
-    public function approve(Lembur $Lembur)
-    {
-        if ($Lembur->status !== 'pending') {
-            return back()->with('error', 'Hanya pengajuan dengan status pending yang dapat disetujui.');
+        if ($request->status === 'ditolak') {
+            $lembur->alasan_penolakan = $request->alasan_penolakan;
         }
 
-        try {
-            DB::beginTransaction();
-
-            $Lembur->update([
-                'status' => 'approved',
-                'approved_by' => Auth::id(),
-                'approved_at' => now()
-            ]);
-
-            // Update presensi record
-            $presensi = Presensi::firstOrCreate(
-                [
-                    'nik' => $Lembur->nik,
-                    'tanggal_presensi' => $Lembur->tanggal_presensi
-                ],
-                [
-                    'status' => 'hadir',
-                    'is_Lembur' => true
-                ]
-            );
-
-            $presensi->update([
-                'is_Lembur' => true,
-                'Lembur_start' => $Lembur->start_time,
-                'Lembur_end' => $Lembur->end_time
-            ]);
-
-            DB::commit();
-            return redirect()->route('Lembur.index')->with('success', 'Pengajuan lembur berhasil disetujui.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Reject Lembur request
-     */
-    public function reject(Request $request, Lembur $Lembur)
-    {
-        if ($Lembur->status !== 'pending') {
-            return back()->with('error', 'Hanya pengajuan dengan status pending yang dapat ditolak.');
-        }
-
-        $request->validate([ 'alasan_reject' => 'required|string|max:255' ]);
-
-        try {
-            DB::beginTransaction();
-
-            $Lembur->update([
-                'status' => 'rejected',
-                'rejected_by' => Auth::id(),
-                'rejected_at' => now(),
-                'alasan_reject' => $request->alasan_reject
-            ]);
-
-            DB::commit();
-            return redirect()->route('Lembur.index')->with('success', 'Pengajuan lembur berhasil ditolak.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        if ($lembur->save()) {
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false], 500);
         }
     }
 }

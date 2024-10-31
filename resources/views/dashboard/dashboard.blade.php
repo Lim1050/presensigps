@@ -240,6 +240,85 @@
         </div>
     </div>
 
+    <div class="row mb-2">
+        <div class="col">
+            <h3>Daftar Lembur Bulan {{ $monthName }} {{ $tahun_ini }}</h3>
+            <div class="card">
+                {{-- <div class="card-body"> --}}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Mulai</th>
+                                <th>Selesai</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($daftar_lembur as $lembur)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($lembur->tanggal_presensi)->translatedFormat('d-m-Y') }}</td>
+                                    <td>{{ date("H:i",strtotime($lembur->waktu_mulai)) }}</td>
+                                    <td>{{ date("H:i",strtotime($lembur->waktu_selesai)) }}</td>
+                                    <td>
+                                        @if ($lembur->status == 'pending')
+                                            <a href="#" class="badge badge-warning approval-link" data-id="{{ $lembur->id }}">Pending</a>
+                                        @elseif ($lembur->status == 'disetujui')
+                                            <span class="badge badge-success">Disetujui</span>
+                                        @elseif ($lembur->status == 'ditolak')
+                                            <span class="badge badge-danger" data-toggle="tooltip" title="Alasan: {{ $lembur->alasan_penolakan }}">Ditolak</span>
+                                        @else
+                                            <span class="badge badge-secondary">Tidak Diketahui</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center">Tidak ada data lembur</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                </table>
+                {{-- </div> --}}
+            </div>
+        </div>
+    </div>
+
+<!-- Modal -->
+{{-- <div class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="approvalModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="approvalModalLabel">Persetujuan Lembur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda ingin menyetujui lembur ini?</p>
+
+                <!-- Form Alasan Penolakan (awalnya tersembunyi) -->
+                <div id="rejectReasonForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="alasan_penolakan">Alasan Penolakan <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="alasan_penolakan" rows="3" required></textarea>
+                        <div class="invalid-feedback">
+                            Alasan penolakan wajib diisi
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-success approve-btn">Setujui</button>
+                <button type="button" class="btn btn-danger reject-btn">Tolak</button>
+                <!-- Tombol Konfirmasi Penolakan (awalnya tersembunyi) -->
+                <button type="button" class="btn btn-danger confirm-reject-btn" style="display: none;">Konfirmasi Penolakan</button>
+            </div>
+        </div>
+    </div>
+</div> --}}
+
     <div id="rekappresensi">
         <h3>Rekap Presensi Bulan {{ $monthName }} {{ $tahun_ini }}</h3>
         <div class="row">
@@ -475,6 +554,109 @@
             });
         });
     });
+</script>
+
+<script>
+$(document).ready(function() {
+    $('.approval-link').on('click', function(e) {
+        e.preventDefault();
+        const lemburId = $(this).data('id');
+
+        Swal.fire({
+            title: 'Persetujuan Lembur',
+            text: "Pilih tindakan untuk lembur ini",
+            icon: 'question',
+            showCancelButton: true,
+            showDenyButton: true,
+            confirmButtonColor: '#28a745',
+            denyButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Setujui',
+            denyButtonText: 'Tolak',
+            cancelButtonText: 'Tutup'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika disetujui
+                updateLemburStatus(lemburId, 'disetujui');
+            } else if (result.isDenied) {
+                // Jika ditolak, tampilkan input alasan
+                Swal.fire({
+                    title: 'Alasan Penolakan',
+                    input: 'textarea',
+                    inputLabel: 'Masukkan alasan penolakan',
+                    inputPlaceholder: 'Ketik alasan penolakan di sini...',
+                    inputAttributes: {
+                        'aria-label': 'Ketik alasan penolakan di sini'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Konfirmasi Penolakan',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'Alasan penolakan wajib diisi!'
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        updateLemburStatus(lemburId, 'ditolak', result.value);
+                    }
+                });
+            }
+        });
+    });
+
+    function updateLemburStatus(id, status, alasanPenolakan = null) {
+        var data = {
+            _token: '{{ csrf_token() }}',
+            status: status
+        };
+
+        if (alasanPenolakan) {
+            data.alasan_penolakan = alasanPenolakan;
+        }
+
+        $.ajax({
+            url: '/lembur/' + id + '/update-status',
+            method: 'POST',
+            data: data,
+            success: function(response) {
+                if (response.success) {
+                    var badgeClass = status === 'disetujui' ? 'badge-success' : 'badge-danger';
+                    var badgeText = status === 'disetujui' ? 'Disetujui' : 'Ditolak';
+
+                    $('a[data-id="' + id + '"]')
+                        .removeClass('approval-link badge-warning')
+                        .addClass(badgeClass)
+                        .text(badgeText)
+                        .removeAttr('data-toggle data-target');
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: status === 'disetujui' ?
+                            'Lembur telah disetujui' :
+                            'Lembur telah ditolak'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan. Silakan coba lagi.'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan. Silakan coba lagi.'
+                });
+            }
+        });
+    }
+});
 </script>
 @endpush
 @endsection

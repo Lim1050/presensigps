@@ -69,7 +69,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="table-responsive">
-                        <table class="table table-striped table-hover text-center">
+                        <table class="table table-striped table-hover text-center" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr class="text-center">
                                     <th class="text-center">No.</th>
@@ -99,9 +99,31 @@
                                     <td class="text-center">{{ $item->tanggal_presensi }}</td>
                                     <td class="text-center">{{ $item->waktu_mulai }}</td>
                                     <td class="text-center">{{ $item->waktu_selesai }}</td>
-                                    <td class="text-center">{{ $item->lintas_hari ? 'Ya' : 'Tidak' }}</td>
-                                    <td class="text-center">{{ $item->lembur_libur ? 'Ya' : 'Tidak' }}</td>
-                                    <td class="text-center">{{ $item->status }}</td>
+                                    <td class="text-center">
+                                        @if ($item->lintas_hari == 1)
+                                            <span class="badge badge-success">Ya</span>
+                                        @else
+                                            <span class="badge badge-secondary">Tidak</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($item->lembur_libur == 1)
+                                            <span class="badge badge-success">Ya</span>
+                                        @else
+                                            <span class="badge badge-secondary">Tidak</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($item->status == 'pending')
+                                            <span class="badge badge-warning">Pending</span>
+                                        @elseif ($item->status == 'disetujui')
+                                            <span class="badge badge-success">Disetujui</span>
+                                        @elseif ($item->status == 'ditolak')
+                                            <span class="badge badge-danger">Ditolak</span>
+                                        @else
+                                            <span class="badge badge-secondary">Tidak Diketahui</span>
+                                        @endif
+                                    </td>
                                     <td class="text-center">
                                         <div class="col mb-2">
                                             <a href="{{ route('admin.lembur.show', $item->id) }}" class="btn-sm btn-info mx-1" title="Lihat"><i class="bi bi-list"></i></a>
@@ -110,7 +132,13 @@
                                         <a href="{{ route('admin.lembur.edit', $item->id) }}" class="btn-sm btn-warning mx-1" title="Edit"><i class="bi bi-pencil-square"></i></a>
                                         </div>
                                         <div class="col mb-2">
-                                        <a href="{{ route('admin.lembur.delete', $item->id) }}" title="Delete" class="btn-sm btn-danger delete-confirm mx-1"><i class="bi bi-trash"></i></a>
+                                        <form action="{{ route('admin.lembur.delete', $item->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger delete-confirm" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -128,9 +156,31 @@
 
 
 @push('myscript')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    let table = new DataTable('#dataTable');
 
+    $(document).ready(function() {
+        $('.delete-confirm').on('click', function(e) {
+            e.preventDefault();
+            var form = $(this).closest('form');
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data Lembur ini akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
 </script>
 @endpush
 

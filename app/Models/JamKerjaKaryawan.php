@@ -10,4 +10,14 @@ class JamKerjaKaryawan extends Model
     use HasFactory;
     protected $table = "jam_kerja_karyawan";
     protected $guarded = [];
+
+    public function karyawan()
+    {
+        return $this->belongsTo(Karyawan::class, 'nik', 'nik');
+    }
+
+    public function jamKerja()
+    {
+        return $this->belongsTo(JamKerja::class, 'kode_jam_kerja', 'kode_jam_kerja');
+    }
 }

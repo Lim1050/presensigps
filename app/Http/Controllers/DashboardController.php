@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lembur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +77,9 @@ class DashboardController extends Controller
         // Ambil nama bulan dari array
         $monthName = $months[$bulan_ini];
 
+        $daftar_lembur = Lembur::where('nik', operator: $nik)->get();
+        // dd($daftar_lembur);
+
         // rekap izin sakit
         // $rekap_sakit_izin = DB::table('pengajuan_izin')
         //     ->selectRaw('SUM(IF(status="izin",1,0)) as jumlah_izin, SUM(IF(status="sakit",1,0)) as jumlah_sakit, SUM(IF(status="cuti",1,0)) as jumlah_cuti')
@@ -85,7 +89,7 @@ class DashboardController extends Controller
         //     ->where('status_approved', 1)
         //     ->first();
 
-        return view('dashboard.dashboard', compact('rekap_presensi', 'monthName', 'tahun_ini', 'nama','jabatan','presensi_hari_ini', 'history_bulan_ini', 'leaderboards'));
+        return view('dashboard.dashboard', compact('rekap_presensi', 'monthName', 'tahun_ini', 'nama','jabatan','presensi_hari_ini', 'history_bulan_ini', 'leaderboards', 'daftar_lembur'));
     }
 
     public function AdminDashboard()

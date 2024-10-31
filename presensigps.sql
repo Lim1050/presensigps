@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 30, 2024 at 04:17 PM
+-- Generation Time: Oct 31, 2024 at 05:18 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -540,6 +540,7 @@ CREATE TABLE `lembur` (
   `durasi_menit` int DEFAULT NULL,
   `lintas_hari` tinyint(1) DEFAULT NULL,
   `lembur_libur` tinyint(1) DEFAULT '0',
+  `catatan_lembur` text COLLATE utf8mb4_unicode_ci,
   `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `alasan_penolakan` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -550,9 +551,11 @@ CREATE TABLE `lembur` (
 -- Dumping data for table `lembur`
 --
 
-INSERT INTO `lembur` (`id`, `nik`, `tanggal_presensi`, `waktu_mulai`, `waktu_selesai`, `durasi_menit`, `lintas_hari`, `lembur_libur`, `status`, `alasan_penolakan`, `created_at`, `updated_at`) VALUES
-(2, '123123123', '2024-10-30', '17:07:00', '20:07:00', 180, 0, 1, 'pending', NULL, '2024-10-30 08:07:28', '2024-10-30 08:07:28'),
-(3, '333333333', '2024-10-30', '23:08:00', '04:08:00', 300, 1, 0, 'pending', NULL, '2024-10-30 08:08:40', '2024-10-30 08:08:40');
+INSERT INTO `lembur` (`id`, `nik`, `tanggal_presensi`, `waktu_mulai`, `waktu_selesai`, `durasi_menit`, `lintas_hari`, `lembur_libur`, `catatan_lembur`, `status`, `alasan_penolakan`, `created_at`, `updated_at`) VALUES
+(2, '123123123', '2024-10-30', '17:00:00', '00:00:00', 420, 1, 1, 'Test Catatan Lembur', 'disetujui', NULL, '2024-10-30 08:07:28', '2024-10-31 10:14:15'),
+(5, '444444444', '2024-10-31', '14:44:00', '23:44:00', 540, 0, 1, 'Test Catatan Lembur', 'pending', NULL, '2024-10-31 06:44:53', '2024-10-31 07:09:58'),
+(6, '123456789', '2024-11-01', '00:00:00', '14:00:00', 840, 0, 1, 'Test Catatan Lembur', 'pending', NULL, '2024-10-31 07:07:24', '2024-10-31 07:07:24'),
+(7, '123123123', '2024-11-02', '16:20:00', '21:20:00', 300, 0, 1, 'asdwqeasff', 'ditolak', 'gamau lembur', '2024-10-31 09:20:27', '2024-10-31 10:14:27');
 
 -- --------------------------------------------------------
 
@@ -700,7 +703,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (81, '2024_10_30_130909_create_lembur_table', 46),
 (82, '2024_10_30_131532_add_lembur_to_presensi_table', 47),
 (83, '2024_10_30_150231_add_coloumn_durasi_lembur_to_lembur_table', 48),
-(84, '2024_10_30_160245_add_coloumn_alasan_penolakan_to_lembur_table', 49);
+(84, '2024_10_30_160245_add_coloumn_alasan_penolakan_to_lembur_table', 49),
+(85, '2024_10_31_135924_add_catatan_lembur_to_lembur_table', 50);
 
 -- --------------------------------------------------------
 
@@ -1420,7 +1424,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `lembur`
 --
 ALTER TABLE `lembur`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `lokasi_kantor`
@@ -1432,7 +1436,7 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `penggajian`

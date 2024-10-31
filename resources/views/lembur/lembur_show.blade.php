@@ -105,14 +105,18 @@
                                 <td>
                                     @if ($lembur->status == 'pending')
                                         <span class="badge badge-warning">Pending</span>
-                                    @elseif ($lembur->status == 'Disetujui')
+                                    @elseif ($lembur->status == 'disetujui')
                                         <span class="badge badge-success">Disetujui</span>
-                                    @elseif ($lembur->status == 'Ditolak')
+                                    @elseif ($lembur->status == 'ditolak')
                                         <span class="badge badge-danger">Ditolak</span>
                                     @else
                                         <span class="badge badge-secondary">Tidak Diketahui</span>
                                     @endif
                                 </td>
+                            </tr>
+                            <tr>
+                                <th>Catatan</th>
+                                <td>{{$lembur->catatan_lembur }}</td>
                             </tr>
                             @if($lembur->alasan_penolakan != null)
                             <tr>

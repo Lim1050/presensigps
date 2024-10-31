@@ -3,7 +3,7 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Lembur Karyawan</h1>
+    <h1 class="h3 mb-0 text-gray-800">Berikan Lembur Karyawan</h1>
 </div>
 
 <!-- Content Row -->
@@ -72,28 +72,50 @@
                         <div class="col-md-4 sm-3">
                             <div class="form-group">
                                 <label for="tanggal_presensi">Tanggal Presensi</label>
-                                <input type="date" name="tanggal_presensi" id="tanggal_presensi" class="form-control" value="{{ old('tanggal_presensi') }}">
+                                <input type="date"
+                                    name="tanggal_presensi"
+                                    id="tanggal_presensi"
+                                    class="form-control"
+                                    value="{{ old('tanggal_presensi') }}"
+                                    min="{{ date('Y-m-d') }}">
                             </div>
                         </div>
                         <div class="col-md-4 sm-3">
                             <div class="form-group">
                                 <label for="waktu_mulai">Waktu Mulai</label>
-                                <input type="time" name="waktu_mulai" id="waktu_mulai" class="form-control" value="{{ old('waktu_mulai') }}">
+                                <input type="time"
+                                    name="waktu_mulai"
+                                    id="waktu_mulai"
+                                    class="form-control"
+                                    value="{{ old('waktu_mulai') }}"
+                                    step="60">
                             </div>
                         </div>
                         <div class="col-md-4 sm-3">
                             <div class="form-group">
                                 <label for="waktu_selesai">Waktu Selesai</label>
-                                <input type="time" name="waktu_selesai" id="waktu_selesai" class="form-control" value="{{ old('waktu_selesai') }}">
+                                <input type="time"
+                                    name="waktu_selesai"
+                                    id="waktu_selesai"
+                                    class="form-control"
+                                    value="{{ old('waktu_selesai') }}"
+                                    step="60">
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="lembur_libur" id="lembur_libur" {{ old('lembur_libur') ? 'checked' : '' }}>
+                    </div>
 
-                                <label class="form-check-label" for="lembur_libur">
-                                    Lembur Saat Tidak Ada Jadwal
-                                </label>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="catatan_lembur">Catatan Lembur</label>
+                                <textarea
+                                    name="catatan_lembur"
+                                    id="catatan_lembur"
+                                    class="form-control @error('catatan_lembur') is-invalid @enderror"
+                                    rows="3">{{ old('catatan_lembur') }}</textarea>
+                                @error('catatan_lembur')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -103,6 +125,7 @@
                             <button type="submit" class="btn btn-danger">
                                 Berikan Lembur
                             </button>
+                            <a href="{{ route('admin.lembur') }}" class="btn btn-secondary">Kembali</a>
                         </div>
                     </div>
                 </form>
@@ -116,6 +139,55 @@
 @endsection
 @push('myscript')
 {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tanggalInput = document.getElementById('tanggal_presensi');
+        const waktuMulaiInput = document.getElementById('waktu_mulai');
+        const waktuSelesaiInput = document.getElementById('waktu_selesai');
+
+        // Set tanggal dan waktu saat ini
+        const now = new Date();
+        const today = now.toISOString().split('T')[0];
+
+        // Set minimum date untuk tanggal presensi
+        tanggalInput.setAttribute('min', today);
+
+        // Format waktu saat ini untuk input time
+        const currentHour = String(now.getHours()).padStart(2, '0');
+        const currentMinute = String(now.getMinutes()).padStart(2, '0');
+        const currentTime = `${currentHour}:${currentMinute}`;
+
+        function updateMinTime() {
+            const selectedDate = tanggalInput.value;
+
+            if (selectedDate === today) {
+                // Jika tanggal yang dipilih adalah hari ini
+                waktuMulaiInput.setAttribute('min', currentTime);
+
+                // Jika waktu yang dipilih lebih awal dari waktu saat ini, reset input
+                if (waktuMulaiInput.value && waktuMulaiInput.value < currentTime) {
+                    waktuMulaiInput.value = '';
+                }
+            } else {
+                // Jika tanggal yang dipilih adalah hari lain
+                waktuMulaiInput.removeAttribute('min');
+            }
+        }
+
+        // Set nilai awal tanggal ke hari ini
+        if (!tanggalInput.value) {
+            tanggalInput.value = today;
+        }
+
+        // Event listeners
+        tanggalInput.addEventListener('change', updateMinTime);
+        waktuMulaiInput.addEventListener('change', updateMinTime);
+
+        // Inisialisasi validasi
+        updateMinTime();
+    });
+</script>
+
 <script>
 $(document).ready(function() {
     // Inisialisasi Select2

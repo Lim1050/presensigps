@@ -183,12 +183,12 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('admin/lembur', [LemburController::class, 'LemburIndex'])->name('admin.lembur');
     Route::get('admin/lembur/create', [LemburController::class, 'LemburCreate'])->name('admin.lembur.create');
     Route::post('admin/lembur/store', [LemburController::class, 'LemburStore'])->name('admin.lembur.store');
-    Route::put('admin/lembur/{id}/setuju', action: [LemburController::class, 'LemburSetuju'])->name('admin.lembur.setuju');
-    Route::put('admin/lembur/{id}/batal', action: [LemburController::class, 'LemburBatal'])->name('admin.lembur.batal');
+    // Route::put('admin/lembur/{id}/setuju', action: [LemburController::class, 'LemburSetuju'])->name('admin.lembur.setuju');
+    // Route::put('admin/lembur/{id}/batal', action: [LemburController::class, 'LemburBatal'])->name('admin.lembur.batal');
     Route::get('/admin/lembur/show/{id}', action: [LemburController::class, 'LemburShow'])->name('admin.lembur.show');
     Route::get('/admin/lembur/edit/{id}', action: [LemburController::class, 'LemburEdit'])->name('admin.lembur.edit');
     Route::put('/admin/lembur/update/{id}', action: [LemburController::class, 'LemburUpdate'])->name('admin.lembur.update');
-    Route::get('/admin/lembur/delete/{id}', action: [LemburController::class, 'LemburDelete'])->name('admin.lembur.delete');
+    Route::delete('/admin/lembur/delete/{id}', action: [LemburController::class, 'LemburDelete'])->name('admin.lembur.delete');
 
     Route::get('admin/lokasi-penugasan/get-by-cabang/{kode_cabang}', [LokasiPenugasanController::class, 'getByKodeCabang'])->name('lokasi-penugasan.get-by-cabang');
     Route::get('admin/karyawan/get-by-lokasi/{kode_lokasi_penugasan}', [KaryawanController::class, 'getByLokasiPenugasan'])->name('karyawan.get-by-lokasi');
@@ -358,6 +358,9 @@ Route::middleware(['auth:user'])->group(function () {
 Route::middleware(['auth:karyawan'])->group(function () {
     // dashboard page
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // update status lembur
+    Route::post('/lembur/{id}/update-status', [LemburController::class, 'LemburUpdateStatus'])->name('lembur.update.status');
 
     // create presensi
     Route::get('/presensi/create', [PresensiController::class, 'PresensiCreate'])->name('presensi.create');
