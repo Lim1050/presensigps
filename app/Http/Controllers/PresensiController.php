@@ -57,93 +57,103 @@ class PresensiController extends Controller
 
     public function PresensiCreate()
     {
-        // cek apakah sudah absen
-        $hari_ini = date("Y-m-d");
-        $nama_hari = $this->gethari(date('D', strtotime($hari_ini)));
-        $jam_sekarang = date("H:i:s");
-
-
         $nik = Auth::guard('karyawan')->user()->nik;
         $kode_departemen = Auth::guard('karyawan')->user()->kode_departemen;
+        $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
 
-        // jika terdapat lintas hari
+        $hari_ini = date("Y-m-d");
+        $nama_hari = $this->gethari(date('D', strtotime($hari_ini)));
+
+        // Cek presensi hari sebelumnya untuk lintas hari
         $tgl_sebelumnya = date('Y-m-d', strtotime("-1 days", strtotime($hari_ini)));
-        $cek_presensi_sebelumnya = DB::table('presensi')
-                                    ->join('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-                                    ->where('tanggal_presensi', $tgl_sebelumnya)
-                                    ->where('nik', $nik)
-                                    ->first();
-        // dd($cek_presensi_sebelumnya);
-        $cek_lintas_hari = $cek_presensi_sebelumnya != null ? $cek_presensi_sebelumnya->lintas_hari : 0;
-        // dd($cek_lintas_hari);
+        $presensi_sebelumnya = DB::table('presensi')
+            ->join('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+            ->where('tanggal_presensi', $tgl_sebelumnya)
+            ->where('nik', $nik)
+            ->first();
 
-        if($cek_lintas_hari == 1 && $cek_presensi_sebelumnya->foto_keluar == null){
+        $cek_lintas_hari = $presensi_sebelumnya != null ? $presensi_sebelumnya->lintas_hari : 0;
+
+        if ($cek_lintas_hari == 1 && $presensi_sebelumnya->foto_keluar == null) {
             $hari_ini = $tgl_sebelumnya;
         }
 
-        $cek_masuk = DB::table('presensi')
-                        ->where('tanggal_presensi', $hari_ini)
-                        ->where('nik', $nik)
-                        ->count();
-
-        $cek_keluar = DB::table('presensi')
-                        ->where('tanggal_presensi', $hari_ini)
-                        ->where('nik', $nik)
-                        ->whereNotNull('foto_keluar')
-                        ->count();
-        $cek_izin = DB::table('presensi')
-                    ->where('tanggal_presensi', $hari_ini)
-                    ->where('nik', $nik)
-                    ->first();
-        // dd($cek_izin->status);
-
-        $foto_keluar = DB::table('presensi')
-                        ->where('nik', $nik)
-                        ->where('tanggal_presensi', $hari_ini)
-                        ->whereNotNull('foto_keluar')
-                        ->first();
-
-        $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
-
-        $lokasi_kantor = DB::table('kantor_cabang')
-                            ->where('kode_cabang', $kode_cabang)
-                            ->first();
-
-        $jam_kerja_karyawan = DB::table('jam_kerja_karyawan')
-                                ->join('jam_kerja', 'jam_kerja_karyawan.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-                                ->where('nik', $nik)
-                                ->where('hari', $nama_hari)
-                                ->first();
-
-        if ($jam_kerja_karyawan == null) {
-            $jam_kerja_karyawan = DB::table('jam_kerja_dept_detail')
-                                ->join('jam_kerja_dept', 'jam_kerja_dept_detail.kode_jk_dept', '=', 'jam_kerja_dept.kode_jk_dept')
-                                ->join('jam_kerja', 'jam_kerja_dept_detail.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-                                ->where('kode_departemen', $kode_departemen)
-                                ->where('kode_cabang', $kode_cabang)
-                                ->where('hari', $nama_hari)
-                                ->first();
-            // dd($jam_kerja_karyawan);
-        }
-
+        // Get presensi hari ini
         $presensi_hari_ini = DB::table('presensi')
-                                ->select('presensi.*', 'pengajuan_izin.keterangan')
-                                ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
-                                ->where('presensi.nik', $nik)
-                                ->where('tanggal_presensi', $hari_ini)
-                                ->first();
+            ->select('presensi.*', 'pengajuan_izin.keterangan')
+            ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
+            ->where('presensi.nik', $nik)
+            ->where('tanggal_presensi', $hari_ini)
+            ->first();
 
+        // Cek lembur yang disetujui
+        $lembur_hari_ini = DB::table('lembur')
+            ->where('nik', $nik)
+            ->where('tanggal_presensi', $hari_ini)
+            ->where('status', 'disetujui')
+            ->first();
 
+        // Data yang dibutuhkan view
+        $data = [
+            'nama_hari' => $nama_hari,
+            'cek_masuk' => $presensi_hari_ini ? 1 : 0,
+            'cek_keluar' => $presensi_hari_ini && $presensi_hari_ini->foto_keluar ? 1 : 0,
+            'foto_keluar' => $presensi_hari_ini ? $presensi_hari_ini->foto_keluar : null,
+            'lokasi_kantor' => DB::table('kantor_cabang')->where('kode_cabang', $kode_cabang)->first(),
+            'cek_izin' => $presensi_hari_ini,
+            'hari_ini' => $hari_ini,
+            'cek_lintas_hari' => $cek_lintas_hari,
+            'cek_presensi_sebelumnya' => $presensi_sebelumnya,
+            'lembur_hari_ini' => $lembur_hari_ini
+        ];
 
-        if($jam_kerja_karyawan == null){
-            return view('presensi.jadwal_kosong', compact('nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan', 'cek_izin'));
-        }else if ($cek_izin !== null && ($cek_izin->status !== 'hadir')) {
-            return view('presensi.jadwal_izin', compact('presensi_hari_ini','nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan', 'cek_izin'));
-        }else{
-            return view('presensi.create_presensi', compact('cek_lintas_hari', 'cek_presensi_sebelumnya','nama_hari','cek_masuk', 'cek_keluar', 'foto_keluar', 'lokasi_kantor', 'jam_kerja_karyawan', 'cek_izin', 'hari_ini'));
+        // Get jam kerja
+        $data['jam_kerja_karyawan'] = DB::table('jam_kerja_karyawan')
+            ->join('jam_kerja', 'jam_kerja_karyawan.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+            ->where('nik', $nik)
+            ->where('hari', $nama_hari)
+            ->first();
+
+        // dd($data['jam_kerja_karyawan']);
+
+        if (!$data['jam_kerja_karyawan']) {
+            $data['jam_kerja_karyawan'] = DB::table('jam_kerja_dept_detail')
+                ->join('jam_kerja_dept', 'jam_kerja_dept_detail.kode_jk_dept', '=', 'jam_kerja_dept.kode_jk_dept')
+                ->join('jam_kerja', 'jam_kerja_dept_detail.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+                ->where('kode_departemen', $kode_departemen)
+                ->where('kode_cabang', $kode_cabang)
+                ->where('hari', $nama_hari)
+                ->first();
         }
-        // dd($jam_kerja_karyawan);
+
+        // Jika tidak ada jadwal kerja tetapi ada lembur, atur jam masuk dan pulang sesuai lembur
+        if (!$data['jam_kerja_karyawan'] && $lembur_hari_ini) {
+            $awal_jam_masuk = Carbon::parse($lembur_hari_ini->waktu_mulai)->subMinutes(30);
+            $akhir_jam_masuk = Carbon::parse($lembur_hari_ini->waktu_mulai)->addMinutes(30);
+
+            $data['jam_kerja_karyawan'] = (object)[
+                'nama_jam_kerja' => 'Lembur',
+                'awal_jam_masuk' => $awal_jam_masuk->format('H:i:s'),
+                'jam_masuk' => $lembur_hari_ini->waktu_mulai,
+                'akhir_jam_masuk' => $akhir_jam_masuk->format('H:i:s'),
+                'jam_pulang' => $lembur_hari_ini->waktu_selesai,
+            ];
+        } elseif ($lembur_hari_ini && $data['jam_kerja_karyawan']) {
+            // Jika ada lembur dan jadwal kerja, update jam pulang sesuai lembur
+            $data['jam_kerja_karyawan']->jam_pulang = $lembur_hari_ini->waktu_selesai;
+        }
+
+        // Return view yang sesuai
+        if ($data['jam_kerja_karyawan'] == null) {
+            return view('presensi.jadwal_kosong', $data);
+        } elseif ($presensi_hari_ini && $presensi_hari_ini->status !== 'hadir') {
+            $data['presensi_hari_ini'] = $presensi_hari_ini;
+            return view('presensi.jadwal_izin', $data);
+        } else {
+            return view('presensi.create_presensi', $data);
+        }
     }
+
 
     public function PresensiStore(Request $request)
     {

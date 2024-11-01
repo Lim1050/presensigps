@@ -203,36 +203,36 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="editForm" method="POST" action="{{ route('admin.konfigurasi.jam.kerja.update', ['kode_jam_kerja' => 0]) }}">
+            <form id="editForm" method="POST" action="{{ route('admin.konfigurasi.jam.kerja.update', ['kode_jam_kerja']) }}">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="kode_jam_kerja">Kode Jam Kerja</label>
-                        <input type="text" class="form-control" id="kode_jam_kerja" name="kode_jam_kerja" readonly>
+                        <input type="text" class="form-control" id="edit_kode_jam_kerja" name="kode_jam_kerja" readonly>
                     </div>
                     <div class="form-group">
                         <label for="nama_jam_kerja">Nama Jam Kerja</label>
-                        <input type="text" class="form-control" id="nama_jam_kerja" name="nama_jam_kerja">
+                        <input type="text" class="form-control" id="edit_nama_jam_kerja" name="nama_jam_kerja">
                     </div>
                     <div class="form-group">
                         <label for="awal_jam_masuk">Awal Jam Masuk</label>
-                        <input type="time" class="form-control" id="awal_jam_masuk" name="awal_jam_masuk">
+                        <input type="time" class="form-control" id="edit_awal_jam_masuk" name="awal_jam_masuk">
                     </div>
                     <div class="form-group">
                         <label for="jam_masuk">Jam Masuk</label>
-                        <input type="time" class="form-control" id="jam_masuk" name="jam_masuk">
+                        <input type="time" class="form-control" id="edit_jam_masuk" name="jam_masuk">
                     </div>
                     <div class="form-group">
                         <label for="akhir_jam_masuk">Akhir Jam Masuk</label>
-                        <input type="time" class="form-control" id="akhir_jam_masuk" name="akhir_jam_masuk">
+                        <input type="time" class="form-control" id="edit_akhir_jam_masuk" name="akhir_jam_masuk">
                     </div>
                     <div class="form-group">
                         <label for="jam_pulang">Jam Pulang</label>
-                        <input type="time" class="form-control" id="jam_pulang" name="jam_pulang">
+                        <input type="time" class="form-control" id="edit_jam_pulang" name="jam_pulang">
                     </div>
                     <div class="form-group">
-                        <select name="lintas_hari" id="lintas_hari" class="form-control">
+                        <select name="lintas_hari" id="edit_lintas_hari" class="form-control">
                             <option value="">Lintas Hari</option>
                             <option value="1">Aktif</option>
                             <option value="0">Tidak Aktif</option>
@@ -371,13 +371,13 @@
         var lintas_hari = button.data('lintas_hari');
 
         var modal = $(this);
-        modal.find('.modal-body #kode_jam_kerja').val(kode_jam_kerja);
-        modal.find('.modal-body #nama_jam_kerja').val(nama);
-        modal.find('.modal-body #awal_jam_masuk').val(awal);
-        modal.find('.modal-body #jam_masuk').val(masuk);
-        modal.find('.modal-body #akhir_jam_masuk').val(akhir);
-        modal.find('.modal-body #jam_pulang').val(pulang);
-        modal.find('.modal-body #lintas_hari').val(lintas_hari);
+        modal.find('.modal-body #edit_kode_jam_kerja').val(kode_jam_kerja);
+        modal.find('.modal-body #edit_nama_jam_kerja').val(nama);
+        modal.find('.modal-body #edit_awal_jam_masuk').val(awal);
+        modal.find('.modal-body #edit_jam_masuk').val(masuk);
+        modal.find('.modal-body #edit_akhir_jam_masuk').val(akhir);
+        modal.find('.modal-body #edit_jam_pulang').val(pulang);
+        modal.find('.modal-body #edit_lintas_hari').val(lintas_hari);
 
         // Update form action URL with the id
         var formAction = "{{ route('admin.konfigurasi.jam.kerja.update', ['kode_jam_kerja' => ':kode_jam_kerja']) }}";

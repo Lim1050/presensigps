@@ -36,6 +36,7 @@ class KonfigurasiController extends Controller
     public function JamKerja()
     {
         $jam_kerja = DB::table('jam_kerja')->orderBy('kode_jam_kerja')->get();
+        // dd($jam_kerja);
         return view('konfigurasi.jam_kerja', compact('jam_kerja'));
     }
 

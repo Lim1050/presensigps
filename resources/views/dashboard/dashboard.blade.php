@@ -257,7 +257,11 @@
                         <tbody>
                             @forelse($daftar_lembur as $lembur)
                                 <tr>
-                                    <td>{{ \Carbon\Carbon::parse($lembur->tanggal_presensi)->translatedFormat('d-m-Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($lembur->tanggal_presensi)->translatedFormat('d-m-Y') }}
+                                        <br>
+                                        <a href="#" class="badge badge-primary keterangan-link" data-id="{{ $lembur->id }}">Keterangan</a>
+                                        <span id="keterangan-{{ $lembur->id }}" style="display: none;">{{ $lembur->catatan_lembur }}</span>
+                                    </td>
                                     <td>{{ date("H:i",strtotime($lembur->waktu_mulai)) }}</td>
                                     <td>{{ date("H:i",strtotime($lembur->waktu_selesai)) }}</td>
                                     <td>
@@ -314,6 +318,26 @@
                 <button type="button" class="btn btn-danger reject-btn">Tolak</button>
                 <!-- Tombol Konfirmasi Penolakan (awalnya tersembunyi) -->
                 <button type="button" class="btn btn-danger confirm-reject-btn" style="display: none;">Konfirmasi Penolakan</button>
+            </div>
+        </div>
+    </div>
+</div> --}}
+
+<!-- Modal -->
+{{-- <div class="modal fade" id="keteranganModal" tabindex="-1" aria-labelledby="keteranganModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="keteranganModalLabel">Keterangan Lembur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="keteranganContent">
+                <!-- Keterangan lembur akan ditampilkan di sini -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
@@ -555,7 +579,27 @@
         });
     });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.keterangan-link').forEach(function (element) {
+            element.addEventListener('click', function (event) {
+                event.preventDefault();
 
+                // Ambil data keterangan dari elemen tersembunyi berdasarkan ID lembur
+                let lemburId = this.getAttribute('data-id');
+                let keterangan = document.querySelector(`#keterangan-${lemburId}`).textContent;
+
+                // Tampilkan SweetAlert dengan keterangan lembur
+                Swal.fire({
+                    title: 'Keterangan Lembur',
+                    text: keterangan,
+                    icon: 'info',
+                    confirmButtonText: 'Tutup'
+                });
+            });
+        });
+    });
+</script>
 <script>
 $(document).ready(function() {
     $('.approval-link').on('click', function(e) {

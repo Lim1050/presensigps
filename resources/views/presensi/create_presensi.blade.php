@@ -33,8 +33,8 @@
         top: 63px;
         left: 10px;
         z-index: 9999;
-        width: 150px;
-        height: 150px;
+        width: auto;
+        height: auto;
         border-radius: 10px;
         padding: 5px;
     }
@@ -59,11 +59,7 @@
 <div class="tab-content" style="margin-bottom:100px;">
     <div class="row" style="margin-top: 60px">
         <div class="col">
-
-            {{-- menampilkan lokasi --}}
             <input type="hidden" id="lokasi">
-
-            {{-- menampilkan webcam --}}
             <div class="webcam-capture"></div>
         </div>
     </div>
@@ -75,17 +71,72 @@
         <p>Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_masuk)) }}</p>
         <p>Akhir Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->akhir_jam_masuk)) }}</p>
         <p>Jam Pulang : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_pulang)) }}</p>
+        @if($lembur_hari_ini)
+            <p class="text-success">Lembur Disetujui</p>
+            <p>Jam Selesai Lembur: {{ date("H:i",strtotime($lembur_hari_ini->waktu_selesai)) }}</p>
+        @endif
     </div>
     <div class="row">
         <div class="col">
-            @if ($cek_masuk > 0 && empty($foto_keluar) && ($cek_izin->status == 'izin' || $cek_izin->status == 'sakit' || $cek_izin->status == 'cuti'))
-                <button id="sudahabsen" class="btn btn-secondary btn-block"><ion-icon name="camera-outline" @disabled(true)></ion-icon>{{ $cek_izin->status }}</button>
-            @elseif ($cek_masuk == 0)
-                    <button id="takeabsen" class="btn btn-primary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Masuk</button>
-            @elseif (($cek_masuk > 0 && empty($foto_keluar))|| ($cek_lintas_hari == 1 && $cek_presensi_sebelumnya->foto_keluar == null) )
-                <button id="takeabsen" class="btn btn-danger btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Pulang</button>
-            @elseif ($cek_keluar == 1 && $cek_masuk == 1)
-                <button id="sudahabsen" class="btn btn-secondary btn-block"><ion-icon name="camera-outline" @disabled(true)></ion-icon>Sudah Absen</button>
+            @if ($cek_izin && $cek_masuk && !$foto_keluar && in_array($cek_izin->status, ['izin', 'sakit', 'cuti']))
+                <button id="sudahabsen" class="btn btn-secondary btn-block" disabled>
+                    <ion-icon name="camera-outline"></ion-icon>{{ $cek_izin->status }}
+                </button>
+            @elseif (!$cek_masuk)
+                @php
+                    $jam_sekarang = date('H:i:s');
+                    $awal_jam_masuk = $jam_kerja_karyawan->awal_jam_masuk;
+                    $akhir_jam_masuk = $jam_kerja_karyawan->akhir_jam_masuk;
+
+                    $boleh_masuk = strtotime($jam_sekarang) >= strtotime($awal_jam_masuk) &&
+                                strtotime($jam_sekarang) <= strtotime($akhir_jam_masuk);
+
+                    // Hitung sisa waktu
+                    if (strtotime($jam_sekarang) < strtotime($awal_jam_masuk)) {
+                        // Jika belum waktunya masuk
+                        $sisa_waktu = strtotime($awal_jam_masuk) - strtotime($jam_sekarang);
+                        $sisa_menit = ceil($sisa_waktu / 60);
+                        $pesan = "Belum Waktunya Masuk<br><small>($sisa_menit menit lagi)</small>";
+                    } elseif (strtotime($jam_sekarang) > strtotime($akhir_jam_masuk)) {
+                        // Jika sudah lewat waktu masuk
+                        $pesan = "Waktu Absen Masuk Telah Berakhir";
+                    } else {
+                        $pesan = "Absen Masuk";
+                    }
+                @endphp
+                <button id="takeabsen" class="btn btn-primary btn-block" {{ !$boleh_masuk ? 'disabled' : '' }}>
+                    <ion-icon name="camera-outline"></ion-icon>
+                    {!! $pesan !!}
+                </button>
+            @elseif (($cek_masuk && !$foto_keluar) || ($cek_lintas_hari == 1 && !$cek_presensi_sebelumnya->foto_keluar))
+                @php
+                    $jam_sekarang = date('H:i:s');
+                    $jam_pulang = $lembur_hari_ini ? $lembur_hari_ini->waktu_selesai : $jam_kerja_karyawan->jam_pulang;
+
+                    // Toleransi pulang lebih awal (misalnya 30 menit)
+                    $toleransi_pulang = 30; // dalam menit
+                    $jam_pulang_minimal = date('H:i:s', strtotime("-{$toleransi_pulang} minutes", strtotime($jam_pulang)));
+
+                    $boleh_pulang = strtotime($jam_sekarang) >= strtotime($jam_pulang_minimal);
+
+                    // Hitung sisa waktu
+                    $sisa_waktu = strtotime($jam_pulang_minimal) - strtotime($jam_sekarang);
+                    $sisa_menit = ceil($sisa_waktu / 60);
+                @endphp
+                <button id="takeabsen" class="btn btn-danger btn-block" {{ !$boleh_pulang ? 'disabled' : '' }}>
+                    <ion-icon name="camera-outline"></ion-icon>
+                    @if($boleh_pulang)
+                        Absen Pulang
+                    @else
+                        Belum Waktunya Pulang
+                        <br>
+                        <small>({{ $sisa_menit }} menit lagi)</small>
+                    @endif
+                </button>
+            @elseif ($cek_keluar && $cek_masuk)
+                <button id="sudahabsen" class="btn btn-secondary btn-block" disabled>
+                    <ion-icon name="camera-outline"></ion-icon>Sudah Absen
+                </button>
             @endif
         </div>
     </div>
@@ -133,11 +184,11 @@
     }
 </script>
 
-<script>
+{{-- <script>
     // JavaScript to disable the button
     var button = document.getElementById('sudahabsen');
     button.disabled = true;
-</script>
+</script> --}}
 
 <script>
     // inisiasi audio
