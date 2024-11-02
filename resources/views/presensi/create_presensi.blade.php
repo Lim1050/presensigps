@@ -67,13 +67,27 @@
         <p>{{ $hari_ini }}</p>
         <p id="jam"></p>
         <p>{{ $jam_kerja_karyawan->nama_jam_kerja }}</p>
-        <p>Awal Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->awal_jam_masuk)) }}</p>
-        <p>Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_masuk)) }}</p>
-        <p>Akhir Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->akhir_jam_masuk)) }}</p>
-        <p>Jam Pulang : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_pulang)) }}</p>
+
         @if($lembur_hari_ini)
+            @php
+                $jam_masuk = date("H:i", strtotime($jam_kerja_karyawan->jam_masuk));
+                $jam_pulang = date("H:i", strtotime($jam_kerja_karyawan->jam_pulang));
+                $jam_mulai_lembur = date("H:i", strtotime($lembur_hari_ini->waktu_mulai));
+                $jam_selesai_lembur = date("H:i", strtotime($lembur_hari_ini->waktu_selesai));
+            @endphp
+
+            <p>Awal Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->awal_jam_masuk)) }}</p>
+            <p>Jam Masuk : {{ $jam_masuk }}</p>
+            <p>Akhir Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->akhir_jam_masuk)) }}</p>
+            <p>Jam Pulang : {{ $jam_pulang }}</p>
             <p class="text-success">Lembur Disetujui</p>
-            <p>Jam Selesai Lembur: {{ date("H:i",strtotime($lembur_hari_ini->waktu_selesai)) }}</p>
+            <p>Jam Mulai Lembur: {{ $jam_mulai_lembur }}</p>
+            <p>Jam Selesai Lembur: {{ $jam_selesai_lembur }}</p>
+        @else
+            <p>Awal Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->awal_jam_masuk)) }}</p>
+            <p>Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_masuk)) }}</p>
+            <p>Akhir Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->akhir_jam_masuk)) }}</p>
+            <p>Jam Pulang : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_pulang)) }}</p>
         @endif
     </div>
     <div class="row">
@@ -87,6 +101,19 @@
                     $jam_sekarang = date('H:i:s');
                     $awal_jam_masuk = $jam_kerja_karyawan->awal_jam_masuk;
                     $akhir_jam_masuk = $jam_kerja_karyawan->akhir_jam_masuk;
+
+                    // Sesuaikan jam masuk jika ada lembur
+                    if ($lembur_hari_ini) {
+                        $waktu_mulai_lembur = \Carbon\Carbon::parse($lembur_hari_ini->waktu_mulai);
+                        $waktu_selesai_lembur = \Carbon\Carbon::parse($lembur_hari_ini->waktu_selesai);
+                        $jam_masuk_normal = \Carbon\Carbon::parse($jam_kerja_karyawan->jam_masuk);
+
+                        // Jika lembur sebelum jam kerja normal
+                        if ($waktu_selesai_lembur <= $jam_masuk_normal) {
+                            $awal_jam_masuk = $lembur_hari_ini->waktu_mulai;
+                            $akhir_jam_masuk = $lembur_hari_ini->waktu_selesai;
+                        }
+                    }
 
                     $boleh_masuk = strtotime($jam_sekarang) >= strtotime($awal_jam_masuk) &&
                                 strtotime($jam_sekarang) <= strtotime($akhir_jam_masuk);
@@ -111,10 +138,26 @@
             @elseif (($cek_masuk && !$foto_keluar) || ($cek_lintas_hari == 1 && !$cek_presensi_sebelumnya->foto_keluar))
                 @php
                     $jam_sekarang = date('H:i:s');
-                    $jam_pulang = $lembur_hari_ini ? $lembur_hari_ini->waktu_selesai : $jam_kerja_karyawan->jam_pulang;
+                    $jam_pulang = $jam_kerja_karyawan->jam_pulang;
 
-                    // Toleransi pulang lebih awal (misalnya 30 menit)
-                    $toleransi_pulang = 30; // dalam menit
+                    if ($lembur_hari_ini) {
+                        $waktu_mulai_lembur = \Carbon\Carbon::parse($lembur_hari_ini->waktu_mulai);
+                        $waktu_selesai_lembur = \Carbon\Carbon::parse($lembur_hari_ini->waktu_selesai);
+                        $jam_masuk_normal = \Carbon\Carbon::parse($jam_kerja_karyawan->jam_masuk);
+                        $jam_pulang_normal = \Carbon\Carbon::parse($jam_kerja_karyawan->jam_pulang);
+
+                        // Jika lembur sebelum jam kerja normal
+                        if ($waktu_selesai_lembur <= $jam_masuk_normal) {
+                            $jam_pulang = $jam_kerja_karyawan->jam_pulang;
+                        }
+                        // Jika lembur setelah jam pulang normal
+                        elseif ($waktu_mulai_lembur >= $jam_pulang_normal) {
+                            $jam_pulang = $lembur_hari_ini->waktu_selesai;
+                        }
+                    }
+
+                    // Toleransi pulang lebih awal (30 menit)
+                    $toleransi_pulang = 30;
                     $jam_pulang_minimal = date('H:i:s', strtotime("-{$toleransi_pulang} minutes", strtotime($jam_pulang)));
 
                     $boleh_pulang = strtotime($jam_sekarang) >= strtotime($jam_pulang_minimal);

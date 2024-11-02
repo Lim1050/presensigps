@@ -56,11 +56,11 @@
     <table style="width: 100%">
         <tr>
             <td style="width: 30px">
-                <img src="{{ asset('assets/img/person-check-fill-black.svg') }}" width="70" height="70" alt="">
+                <img src="{{ asset('assets/img/MASTER-LOGO-PT-GUARD.png') }}" width="70" height="70" alt="">
             </td>
             <td>
                 <span id="title">
-                    LAPORAN PRESENSI SATPAM<br>
+                    LAPORAN PRESENSI PT. GUARD WARRIOR SECURITY<br>
                     PERIODE {{ strtoupper($months[$bulan]) }} {{ $tahun }}<br>
                 </span>
                 {{-- <span>Jl. baru no 3, kelurahan Agak Baru, Kota Baru Banget, Provinsi Sangat Baru, 12345</span> --}}
@@ -115,86 +115,99 @@
             <th>Status</th>
             <th>Keterangan</th>
             <th>Jumlah Jam</th>
-            {{-- <th>Gaji</th> --}}
+            <th>Lembur</th>
         </tr>
         @foreach ($presensi as $item)
             @if ($item->status == 'hadir')
                 <tr style="text-align: center">
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ date("d-m-Y", strtotime($item->tanggal_presensi)) }}</td>
-                <td>{{ $item->jam_masuk }}</td>
-                <td>
-                    @php
-                        $pathin = Storage::url($item->foto_masuk);
-                    @endphp
-                    <img src="{{ url($pathin) }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
-                </td>
-                <td>{{ $item->jam_keluar != null ? $item->jam_keluar : 'Belum Absen Pulang' }}</td>
-                <td>
-                    @php
-                        $pathout = Storage::url($item->foto_keluar );
-                    @endphp
-                    @if ($item->foto_keluar != null)
-                    <img src="{{ url($pathout) }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
-                    @else
-                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="75" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
-                    <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708"/>
-                    </svg>
-                    @endif
-                </td>
-                <td>{{ $item->status }}</td>
-                <td>
-
-                    @php
-                        $terlambat = hitungjamkerja($item->jam_masuk_kerja, $item->jam_masuk);
-                        // dd($terlambat);
-                    @endphp
-                    @if ($item->jam_masuk >= $item->jam_masuk_kerja)
-                        Terlambat {{ $terlambat }}
-                    @else
-                        Tepat Waktu
-                    @endif
-                </td>
-                <td>
-                    @if ($item->jam_keluar != null)
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ date("d-m-Y", strtotime($item->tanggal_presensi)) }}</td>
+                    <td>{{ $item->jam_masuk }}</td>
+                    <td>
                         @php
-                            $tgl_masuk = $item->tanggal_presensi;
-                            $tgl_pulang = $item->lintas_hari == 1 ? date('Y-m-d', strtotime('+1 days', strtotime($tgl_masuk))) : $tgl_masuk;
-                            $jam_masuk = $tgl_masuk . ' ' . $item->jam_masuk;
-                            $jam_pulang = $tgl_pulang . ' ' . $item->jam_keluar;
-
-                            $jumlah_jam_kerja = hitungjamkerja($jam_masuk, $jam_pulang);
+                            $pathin = Storage::url($item->foto_masuk);
                         @endphp
-
-                        {{ $jumlah_jam_kerja }}
-                    @else
-                        0
-                    @endif
-                </td>
-            </tr>
+                        <img src="{{ url($pathin) }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
+                    </td>
+                    <td>{{ $item->jam_keluar != null ? $item->jam_keluar : 'Belum Absen Pulang' }}</td>
+                    <td>
+                        @php
+                            $pathout = Storage::url($item->foto_keluar );
+                        @endphp
+                        @if ($item->foto_keluar != null)
+                            <img src="{{ url($pathout) }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
+                        @else
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="75" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
+                                <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708"/>
+                            </svg>
+                        @endif
+                    </td>
+                    <td>{{ $item->status }}</td>
+                    <td>
+                        @if ($item->kode_jam_kerja == 'LEMBUR')
+                            Lembur
+                        @else
+                            @php
+                                $terlambat = hitungjamkerja($item->jam_masuk_kerja, $item->jam_masuk);
+                            @endphp
+                            @if ($item->jam_masuk >= $item->jam_masuk_kerja)
+                                Terlambat {{ $terlambat }}
+                            @else
+                                Tepat Waktu
+                            @endif
+                        @endif
+                    </td>
+                    <td>
+                        @if ($item->jam_keluar != null)
+                            @php
+                                $tgl_masuk = $item->tanggal_presensi;
+                                $tgl_pulang = $item->lintas_hari == 1 ? date('Y-m-d', strtotime('+1 days', strtotime($tgl_masuk))) : $tgl_masuk;
+                                $jam_masuk = $tgl_masuk . ' ' . $item->jam_masuk;
+                                $jam_pulang = $tgl_pulang . ' ' . $item->jam_keluar;
+                                $jumlah_jam_kerja = hitungjamkerja($jam_masuk, $jam_pulang);
+                            @endphp
+                            {{ $jumlah_jam_kerja }}
+                        @else
+                            0
+                        @endif
+                    </td>
+                    <td>
+                        @if ($item->mulai_lembur && $item->selesai_lembur)
+                            @php
+                                $mulai = \Carbon\Carbon::parse($item->mulai_lembur);
+                                $selesai = \Carbon\Carbon::parse($item->selesai_lembur);
+                                $durasi = $selesai->diff($mulai);
+                                $jam_lembur = $durasi->h;
+                                $menit_lembur = $durasi->i;
+                            @endphp
+                            {{ $jam_lembur }} jam {{ $menit_lembur }} menit
+                        @else
+                            -
+                        @endif
+                    </td>
+                </tr>
             @else
-            <tr style="text-align: center">
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ date("d-m-Y", strtotime($item->tanggal_presensi)) }}</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>{{ $item->status }}</td>
-                <td>{{ $item->keterangan }}</td>
-                <td>-</td>
-            </tr>
+                <tr style="text-align: center">
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ date("d-m-Y", strtotime($item->tanggal_presensi)) }}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>{{ $item->status }}</td>
+                    <td>{{ $item->keterangan }}</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
             @endif
-
         @endforeach
-            {{-- <tr>
-                <td colspan="9">
-                    Total Masuk : {{ $total_hari }} hari, <br>
-                    Gaji per Hari : Rp {{ $gaji_harian }}, <br>
-                    Total Gaji : Rp {{ $total_gaji }}
-                </td>
-            </tr> --}}
+        <tr>
+            <td colspan="10">
+                Total Hari Kerja: {{ $total_hari }} hari<br>
+                Total Jam Lembur: {{ $total_jam_lembur }} jam {{ $total_menit_lembur }} menit
+            </td>
+        </tr>
     </table>
 
     <table width="100%" style="margin-top: 50px">
@@ -202,13 +215,13 @@
             <td colspan="2" style="text-align: right">Jakarta, {{ date('d-m-Y') }}</td>
         </tr>
         <tr>
-            <td style="text-align: center; vertical-align:bottom" height="100px" >
+            {{-- <td style="text-align: center; vertical-align:bottom" height="100px" >
                 <u>Nama HRD</u><br>
                 <i><b>Head HRD</b></i>
-            </td>
-            <td style="text-align: center; vertical-align:bottom" height="100px" >
-                <u>Nama Direktur</u><br>
-                <i><b>Direktur</b></i>
+            </td> --}}
+            <td style="text-align: right; vertical-align:bottom" height="100px" >
+                {{-- <u>Nama Direktur</u><br> --}}
+                <i><b>PT. GUARD WARRIOR SECURITY</b></i>
             </td>
         </tr>
     </table>

@@ -18,47 +18,76 @@ class DashboardController extends Controller
         $nik = Auth::guard('karyawan')->user()->nik;
         $nama = Auth::guard('karyawan')->user()->nama_lengkap;
         $jabatan = Auth::guard('karyawan')->user()->kode_jabatan;
+
+        // Tambahkan join dengan tabel lembur
         $presensi_hari_ini = DB::table('presensi')
-                                ->select('presensi.*', 'pengajuan_izin.keterangan')
-                                ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
-                                ->where('presensi.nik', $nik)
-                                ->where('tanggal_presensi', $hari_ini)
-                                ->first();
+            ->select('presensi.*', 'pengajuan_izin.keterangan', 'lembur.waktu_mulai as mulai_lembur', 'lembur.waktu_selesai as selesai_lembur')
+            ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
+            ->leftJoin('lembur', function($join) use ($hari_ini) {
+                $join->on('presensi.nik', '=', 'lembur.nik')
+                    ->where('lembur.tanggal_presensi', '=', DB::raw('presensi.tanggal_presensi'))
+                    ->where('lembur.status', '=', 'disetujui');
+            })
+            ->where('presensi.nik', $nik)
+            ->where('presensi.tanggal_presensi', $hari_ini)
+            ->first();
 
+        // Modifikasi history_bulan_ini untuk mencakup data lembur
         $history_bulan_ini = DB::table('presensi')
-                                ->select('presensi.*', 'jam_kerja.nama_jam_kerja', 'jam_kerja.jam_masuk as jam_kerja_masuk', 'jam_kerja.jam_pulang', 'pengajuan_izin.keterangan')
-                                ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-                                ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
-                                ->where('presensi.nik', $nik)
-                                ->whereRaw('MONTH(presensi.tanggal_presensi) = ?', [$bulan_ini])
-                                ->whereRaw('YEAR(presensi.tanggal_presensi) = ?', [$tahun_ini])
-                                ->orderBy('presensi.tanggal_presensi', 'desc')
-                                ->get();
+            ->select('presensi.*',
+                    DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN "Lembur" ELSE jam_kerja.nama_jam_kerja END as nama_jam_kerja'),
+                    DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_mulai ELSE jam_kerja.jam_masuk END as jam_kerja_masuk'),
+                    DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_selesai ELSE jam_kerja.jam_pulang END as jam_pulang'),
+                    'pengajuan_izin.keterangan',
+                    'lembur.waktu_mulai as mulai_lembur', 'lembur.waktu_selesai as selesai_lembur')
+            ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+            ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
+            ->leftJoin('lembur', function($join) {
+                $join->on('presensi.nik', '=', 'lembur.nik')
+                    ->on('presensi.tanggal_presensi', '=', 'lembur.tanggal_presensi')
+                    ->where('lembur.status', '=', 'disetujui');
+            })
+            ->where('presensi.nik', $nik)
+            ->whereRaw('MONTH(presensi.tanggal_presensi) = ?', [$bulan_ini])
+            ->whereRaw('YEAR(presensi.tanggal_presensi) = ?', [$tahun_ini])
+            ->orderBy('presensi.tanggal_presensi', 'desc')
+            ->get();
 
+        // Modifikasi rekap_presensi untuk menghitung keterlambatan dengan mempertimbangkan lembur
         $rekap_presensi = DB::table('presensi')
-                            ->selectRaw('
-                            SUM(IF(status="hadir",1,0))as jml_hadir,
-                            SUM(IF(status="izin",1,0))as jml_izin,
-                            SUM(IF(status="sakit",1,0))as jml_sakit,
-                            SUM(IF(status="cuti",1,0))as jml_cuti,
-                            SUM(IF(presensi.jam_masuk > jam_kerja.jam_masuk,1,0)) as jml_terlambat')
-                            ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-                            ->where('nik', $nik)
-                            ->whereRaw('MONTH(tanggal_presensi)="' . $bulan_ini . '"')
-                            ->whereRaw('YEAR(tanggal_presensi)="' . $tahun_ini . '"')
-                            ->first();
-        // dd($rekap_presensi);
+            ->selectRaw('
+                SUM(IF(status="hadir",1,0)) as jml_hadir,
+                SUM(IF(status="izin",1,0)) as jml_izin,
+                SUM(IF(status="sakit",1,0)) as jml_sakit,
+                SUM(IF(status="cuti",1,0)) as jml_cuti,
+                SUM(IF(
+                    CASE
+                        WHEN presensi.lembur = 1 THEN presensi.jam_masuk > DATE_ADD(presensi.mulai_lembur, INTERVAL 30 MINUTE)
+                        ELSE presensi.jam_masuk > jam_kerja.jam_masuk
+                    END,
+                    1,0)) as jml_terlambat')
+            ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+            ->where('presensi.nik', $nik)
+            ->whereRaw('MONTH(tanggal_presensi)="' . $bulan_ini . '"')
+            ->whereRaw('YEAR(tanggal_presensi)="' . $tahun_ini . '"')
+            ->first();
+
+        // Modifikasi leaderboards untuk mempertimbangkan lembur
         $leaderboards = DB::table('presensi')
-                            ->select('presensi.*', 'karyawan.*', 'jam_kerja.jam_masuk as jam_kerja_masuk')
-                            ->join('karyawan', 'presensi.nik', '=', 'karyawan.nik')
-                            ->join('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-                            ->where('tanggal_presensi', $hari_ini)
-                            ->orderBy('jam_masuk', 'ASC')
-                            ->get();
-
-        // dd($leaderboards);
-
-        // dd($rekap_presensi);
+            ->select('presensi.*', 'karyawan.*',
+                DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_mulai ELSE jam_kerja.jam_masuk END as jam_kerja_masuk'),
+                'lembur.waktu_mulai as mulai_lembur', 'lembur.waktu_selesai as selesai_lembur')
+            ->join('karyawan', 'presensi.nik', '=', 'karyawan.nik')
+            ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+            ->leftJoin('lembur', function($join) use ($hari_ini) {
+                $join->on('presensi.nik', '=', 'lembur.nik')
+                    ->where('lembur.tanggal_presensi', '=', DB::raw('presensi.tanggal_presensi'))
+                    ->where('lembur.status', '=', 'disetujui');
+            })
+            ->where('presensi.tanggal_presensi', $hari_ini)
+            ->orderBy('presensi.jam_masuk', 'ASC')
+            ->get();
+        // dd($history_bulan_ini);
         $months = [
             '01' => 'Januari',
             '02' => 'Februari',
@@ -74,22 +103,27 @@ class DashboardController extends Controller
             '12' => 'Desember',
         ];
 
-        // Ambil nama bulan dari array
         $monthName = $months[$bulan_ini];
 
-        $daftar_lembur = Lembur::where('nik', operator: $nik)->get();
-        // dd($daftar_lembur);
+        // Ambil daftar lembur yang disetujui
+        $daftar_lembur = Lembur::where('nik', $nik)
+            // ->where('status', 'disetujui')
+            ->whereYear('tanggal_presensi', operator: $tahun_ini)
+            ->whereMonth('tanggal_presensi', $bulan_ini)
+            ->orderBy('tanggal_presensi', 'desc')
+            ->get();
 
-        // rekap izin sakit
-        // $rekap_sakit_izin = DB::table('pengajuan_izin')
-        //     ->selectRaw('SUM(IF(status="izin",1,0)) as jumlah_izin, SUM(IF(status="sakit",1,0)) as jumlah_sakit, SUM(IF(status="cuti",1,0)) as jumlah_cuti')
-        //     ->where('nik', $nik)
-        //     ->whereRaw('MONTH(tanggal_izin_dari)="' . $bulan_ini . '"')
-        //     ->whereRaw('YEAR(tanggal_izin_dari)="' . $tahun_ini . '"')
-        //     ->where('status_approved', 1)
-        //     ->first();
-
-        return view('dashboard.dashboard', compact('rekap_presensi', 'monthName', 'tahun_ini', 'nama','jabatan','presensi_hari_ini', 'history_bulan_ini', 'leaderboards', 'daftar_lembur'));
+        return view('dashboard.dashboard', compact(
+            'rekap_presensi',
+            'monthName',
+            'tahun_ini',
+            'nama',
+            'jabatan',
+            'presensi_hari_ini',
+            'history_bulan_ini',
+            'leaderboards',
+            'daftar_lembur'
+        ));
     }
 
     public function AdminDashboard()

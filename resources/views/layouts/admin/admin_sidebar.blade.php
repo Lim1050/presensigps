@@ -28,7 +28,7 @@
                 <span>Monitoring Presensi</span></a>
 
                 <a class="collapse-item {{ request()->is('admin/lembur*') ? 'active' : '' }}" href="{{ route('admin.lembur') }}">
-                <i class="bi bi-display fa-fw "></i>
+                <i class="bi bi-clock-history fa-fw"></i>
                 <span>Lembur Karyawan</span></a>
 
                 <a class="collapse-item {{ request()->is('admin/persetujuan/sakit/izin*') ? 'active' : '' }}" href="{{ route('admin.persetujuan.sakit.izin') }}">

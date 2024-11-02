@@ -57,11 +57,11 @@
     <table style="width: 100%">
         <tr>
             <td style="width: 30px">
-                <img src="{{ asset('assets/img/person-check-fill-black.svg') }}" width="70" height="70" alt="">
+                <img src="{{ asset('assets/img/MASTER-LOGO-PT-GUARD.png') }}" width="70" height="70" alt="">
             </td>
             <td>
                 <span id="title">
-                    REKAP PRESENSI SATPAM<br>
+                    REKAP PRESENSI PT. GUARD WARRIOR SECURITY<br>
                     PERIODE {{ strtoupper($months[$bulan]) }} {{ $tahun }}<br>
                 </span>
                 {{-- <span>Jl. baru no 3, kelurahan Agak Baru, Kota Baru Banget, Provinsi Sangat Baru, 12345</span> --}}
@@ -145,17 +145,17 @@
 
     <table width="100%" style="margin-top: 50px">
         <tr>
-            <td></td>
-            <td style="text-align: center">Jakarta, {{ date('d-m-Y') }}</td>
+            {{-- <td></td> --}}
+            <td style="text-align: right">Jakarta, {{ date('d-m-Y') }}</td>
         </tr>
         <tr>
-            <td style="text-align: center; vertical-align:bottom" height="100px" >
+            {{-- <td style="text-align: center; vertical-align:bottom" height="100px" >
                 <u>Nama HRD</u><br>
                 <i><b>Head HRD</b></i>
-            </td>
-            <td style="text-align: center; vertical-align:bottom" height="100px" >
-                <u>Nama Direktur</u><br>
-                <i><b>Direktur</b></i>
+            </td> --}}
+            <td style="text-align: right; vertical-align:bottom" height="100px" >
+                {{-- <u>Nama Direktur</u><br> --}}
+                <i><b>PT. GUARD WARRIOR SECURITY</b></i>
             </td>
         </tr>
 

@@ -42,10 +42,10 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <select name="kode_departemen" id="kode_departemen" class="form-control">
-                                    <option value="">Semua Departemen</option>
-                                    @foreach ($departemen as $item)
-                                        <option value="{{ $item->kode_departemen }}">{{ $item->nama_departemen }}</option>
+                                <select name="kode_cabang" id="kode_cabang" class="form-control">
+                                    <option value="">Semua Kantor Cabang</option>
+                                    @foreach ($kantor_cabang as $item)
+                                        <option value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
                                     @endforeach
                                 </select>
                             </div>
