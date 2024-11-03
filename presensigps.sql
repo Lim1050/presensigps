@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 02 Nov 2024 pada 11.39
+-- Waktu pembuatan: 03 Nov 2024 pada 10.47
 -- Versi server: 8.0.35
 -- Versi PHP: 8.2.12
 
@@ -411,6 +411,22 @@ INSERT INTO `jam_kerja_karyawan` (`nik`, `hari`, `kode_jam_kerja`, `created_at`,
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `jam_kerja_lokasi_penugasan`
+--
+
+CREATE TABLE `jam_kerja_lokasi_penugasan` (
+  `kode_jk_lp_c` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_lokasi_penugasan` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_cabang` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_jam_kerja` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hari` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `kantor_cabang`
 --
 
@@ -706,7 +722,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (82, '2024_10_30_131532_add_lembur_to_presensi_table', 47),
 (83, '2024_10_30_150231_add_coloumn_durasi_lembur_to_lembur_table', 48),
 (84, '2024_10_30_160245_add_coloumn_alasan_penolakan_to_lembur_table', 49),
-(85, '2024_10_31_135924_add_catatan_lembur_to_lembur_table', 50);
+(85, '2024_10_31_135924_add_catatan_lembur_to_lembur_table', 50),
+(86, '2024_11_03_143741_create_jam_kerja_lokasi_penugasan_cabang_table', 51),
+(87, '2024_11_03_150450_add_awal_akhir_nama_to_jam_kerja_lokasi_penugasan_cabang_table', 52),
+(88, '2024_11_03_152039_create_jam_kerja_lokasi_penugasan', 53);
 
 -- --------------------------------------------------------
 
@@ -1245,6 +1264,15 @@ ALTER TABLE `jam_kerja_dept`
   ADD PRIMARY KEY (`kode_jk_dept`);
 
 --
+-- Indeks untuk tabel `jam_kerja_lokasi_penugasan`
+--
+ALTER TABLE `jam_kerja_lokasi_penugasan`
+  ADD PRIMARY KEY (`kode_jk_lp_c`),
+  ADD KEY `jam_kerja_lokasi_penugasan_kode_jam_kerja_foreign` (`kode_jam_kerja`),
+  ADD KEY `jam_kerja_lokasi_penugasan_kode_lokasi_penugasan_foreign` (`kode_lokasi_penugasan`),
+  ADD KEY `jam_kerja_lokasi_penugasan_kode_cabang_foreign` (`kode_cabang`);
+
+--
 -- Indeks untuk tabel `kantor_cabang`
 --
 ALTER TABLE `kantor_cabang`
@@ -1440,7 +1468,7 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT untuk tabel `penggajian`
@@ -1495,6 +1523,14 @@ ALTER TABLE `gaji`
   ADD CONSTRAINT `gaji_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE SET NULL,
   ADD CONSTRAINT `gaji_kode_jenis_gaji_foreign` FOREIGN KEY (`kode_jenis_gaji`) REFERENCES `konfigurasi_gaji` (`kode_jenis_gaji`) ON DELETE SET NULL,
   ADD CONSTRAINT `gaji_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE SET NULL;
+
+--
+-- Ketidakleluasaan untuk tabel `jam_kerja_lokasi_penugasan`
+--
+ALTER TABLE `jam_kerja_lokasi_penugasan`
+  ADD CONSTRAINT `jam_kerja_lokasi_penugasan_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE CASCADE,
+  ADD CONSTRAINT `jam_kerja_lokasi_penugasan_kode_jam_kerja_foreign` FOREIGN KEY (`kode_jam_kerja`) REFERENCES `jam_kerja` (`kode_jam_kerja`) ON DELETE CASCADE,
+  ADD CONSTRAINT `jam_kerja_lokasi_penugasan_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `karyawan`

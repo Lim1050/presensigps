@@ -673,6 +673,7 @@ class ComposerStaticInit28d475a14bbcc97a87a1d90e6d3f1e18
         'App\\Models\\Departemen' => __DIR__ . '/../..' . '/app/Models/Departemen.php',
         'App\\Models\\Gaji' => __DIR__ . '/../..' . '/app/Models/Gaji.php',
         'App\\Models\\Jabatan' => __DIR__ . '/../..' . '/app/Models/Jabatan.php',
+        'App\\Models\\JamKerja' => __DIR__ . '/../..' . '/app/Models/JamKerja.php',
         'App\\Models\\JamKerjaDeptDetail' => __DIR__ . '/../..' . '/app/Models/JamKerjaDeptDetail.php',
         'App\\Models\\JamKerjaKaryawan' => __DIR__ . '/../..' . '/app/Models/JamKerjaKaryawan.php',
         'App\\Models\\Karyawan' => __DIR__ . '/../..' . '/app/Models/Karyawan.php',
