@@ -24,8 +24,9 @@ class Cabang extends Model
         return $this->hasMany(Karyawan::class, foreignKey: 'kode_cabang', localKey: 'kode_cabang');
     }
 
-    public function jamKerjaLokasiPenugasan()
+    // Relasi dengan model JamKerja
+        public function jamKerja()
     {
-        return $this->hasMany(JamKerjaLokasiPenugasan::class, 'kode_cabang', localKey: 'kode_cabang');
+        return $this->hasMany(JamKerja::class, 'kode_cabang', 'kode_cabang');
     }
 }

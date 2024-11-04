@@ -18,8 +18,15 @@ class JamKerja extends Model
         return $this->hasMany(JamKerjaKaryawan::class, 'kode_jam_kerja', 'kode_jam_kerja');
     }
 
-    public function jamKerjaLokasiPenugasan()
+    // Relasi dengan model LokasiPenugasan
+    public function lokasiPenugasan()
     {
-        return $this->hasMany(JamKerjaLokasiPenugasan::class, 'kode_jam_kerja', 'kode_jam_kerja');
+        return $this->belongsTo(LokasiPenugasan::class, 'kode_lokasi_penugasan', 'kode_lokasi_penugasan');
+    }
+
+    // Relasi dengan model Cabang
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class, 'kode_cabang', 'kode_cabang');
     }
 }

@@ -297,21 +297,6 @@ Route::middleware(['auth:user'])->group(function () {
     // Konfigurasi Jam Kerja Departement delete
     Route::get('/admin/konfigurasi/jam-kerja-dept/delete/{kode_jk_dept}', [KonfigurasiController::class, 'JamKerjaDeptDelete'])->name('admin.konfigurasi.jam-kerja-dept.delete');
 
-    // Konfigurasi Jam Kerja lokasi penugasan
-    Route::get('/admin/konfigurasi/jam-kerja/lokasi-penugasan', [JamKerjaLokasiPenugasanController::class, 'JamKerjaLokasiPenugasanIndex'])->name('admin.konfigurasi.jam-kerja.lokasi-penugasan');
-    // Konfigurasi Jam Kerja lokasi penugasan Create
-    Route::get('/admin/konfigurasi/jam-kerja/lokasi-penugasan/create', [JamKerjaLokasiPenugasanController::class, 'JamKerjaLokasiPenugasanCreate'])->name('admin.konfigurasi.jam-kerja.lokasi-penugasan.create');
-    // Konfigurasi Jam Kerja lokasi penugasan Store
-    Route::post('/admin/konfigurasi/jam-kerja/lokasi-penugasan/store', [JamKerjaLokasiPenugasanController::class, 'JamKerjaLokasiPenugasanStore'])->name('admin.konfigurasi.jam-kerja.lokasi-penugasan.store');
-    // Konfigurasi Jam Kerja lokasi penugasan view
-    Route::get('/admin/konfigurasi/jam-kerja/lokasi-penugasan/view/{kode_jk_lp_c}', [JamKerjaLokasiPenugasanController::class, 'JamKerjaLokasiPenugasanView'])->name('admin.konfigurasi.jam-kerja.lokasi-penugasan.view');
-    // Konfigurasi Jam Kerja lokasi penugasan edit
-    Route::get('/admin/konfigurasi/jam-kerja/lokasi-penugasan/edit/{kode_jk_lp_c}', [JamKerjaLokasiPenugasanController::class, 'JamKerjaLokasiPenugasanEdit'])->name('admin.konfigurasi.jam-kerja.lokasi-penugasan.edit');
-    // Konfigurasi Jam Kerja lokasi penugasan update
-    Route::post('/admin/konfigurasi/jam-kerja/lokasi-penugasan/update/{kode_jk_lp_c}', [JamKerjaLokasiPenugasanController::class, 'JamKerjaLokasiPenugasanUpdate'])->name('admin.konfigurasi.jam-kerja.lokasi-penugasan.update');
-    // Konfigurasi Jam Kerja lokasi penugasan delete
-    Route::get('/admin/konfigurasi/jam-kerja/lokasi-penugasan/delete/{kode_jk_lp_c}', [JamKerjaLokasiPenugasanController::class, 'JamKerjaLokasiPenugasanDelete'])->name('admin.konfigurasi.jam-kerja.lokasi-penugasan.delete');
-
     // Konfigurasi User
     Route::get('/admin/konfigurasi/user', [UserController::class, 'UserIndex'])->name('admin.konfigurasi.user');
     // Konfigurasi User Store

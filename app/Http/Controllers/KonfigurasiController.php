@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cabang;
+use App\Models\JamKerja;
 use App\Models\JamKerjaDeptDetail;
+use App\Models\LokasiPenugasan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class KonfigurasiController extends Controller
 {
@@ -35,77 +40,158 @@ class KonfigurasiController extends Controller
 
     public function JamKerja()
     {
-        $jam_kerja = DB::table('jam_kerja')->orderBy('kode_jam_kerja')->get();
-        // dd($jam_kerja);
-        return view('konfigurasi.jam_kerja', compact('jam_kerja'));
+        // Mengambil semua jam kerja dan mengurutkannya berdasarkan kode_jam_kerja
+        $jam_kerja = JamKerja::orderBy('kode_jam_kerja')->get();
+        $lokasiPenugasan = LokasiPenugasan::all();
+        $cabang = Cabang::all();
+
+        // Mengembalikan view dengan data jam kerja
+        return view('konfigurasi.jam_kerja', compact('jam_kerja', 'lokasiPenugasan', 'cabang'));
     }
 
     public function JamKerjaStore(Request $request)
     {
-        $kode_jam_kerja = $request->kode_jam_kerja;
-        $nama_jam_kerja = $request->nama_jam_kerja;
-        $awal_jam_masuk = $request->awal_jam_masuk;
-        $jam_masuk = $request->jam_masuk;
-        $akhir_jam_masuk = $request->akhir_jam_masuk;
-        $jam_pulang = $request->jam_pulang;
-        $lintas_hari = $request->lintas_hari;
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            // 'kode_jam_kerja' => 'required|unique:jam_kerja,kode_jam_kerja',
+            'kode_lokasi_penugasan' => 'required|exists:lokasi_penugasan,kode_lokasi_penugasan',
+            'kode_cabang' => 'required|exists:kantor_cabang,kode_cabang',
+            'nama_jam_kerja' => 'required',
+            'awal_jam_masuk' => 'required|date_format:H:i',
+            'jam_masuk' => 'required|date_format:H:i',
+            'akhir_jam_masuk' => 'required|date_format:H:i',
+            'jam_pulang' => 'required|date_format:H:i',
+            'lintas_hari' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+        }
 
         try {
-            $data = [
-                'kode_jam_kerja' => $kode_jam_kerja,
-                'nama_jam_kerja' => $nama_jam_kerja,
-                'awal_jam_masuk' => $awal_jam_masuk,
-                'jam_masuk' => $jam_masuk,
-                'akhir_jam_masuk' => $akhir_jam_masuk,
-                'jam_pulang' => $jam_pulang,
-                'lintas_hari' => $lintas_hari,
-                'created_at' => Carbon::now()
-            ];
+            DB::beginTransaction();
 
-            $save = DB::table('jam_kerja')->insert($data);
-            if($save){
-                return redirect()->route('admin.konfigurasi.jam.kerja')->with(['success' => 'Data Berhasil Disimpan!']);
+            $kode_lokasi_penugasan = $request->kode_lokasi_penugasan; // Misalkan ada field 'kode' di tabel lokasi_penugasan
+            $kode_cabang = $request->kode_cabang; // Misalkan ada field 'kode' di tabel cabang
+
+            // Ambil huruf pertama dari setiap kata di nama_jam_kerja
+            $nama_jam_kerja = $request->nama_jam_kerja;
+            $inisial_nama_jam_kerja = strtoupper(implode('', array_map(function($word) {
+                return substr($word, 0, 1);
+            }, explode(' ', $nama_jam_kerja))));
+
+            // Generate kode_jam_kerja
+            $kode_jam_kerja = 'JK' . $kode_lokasi_penugasan . $kode_cabang . $inisial_nama_jam_kerja;
+
+            // Cek apakah kode_jam_kerja sudah ada
+            if (JamKerja::where('kode_jam_kerja', $kode_jam_kerja)->exists()) {
+                return redirect()->back()->with(['error' => 'Kode Jam Kerja sudah ada!'])->withInput();
             }
+
+            // Simpan data
+            JamKerja::create([
+                'kode_jam_kerja' => $kode_jam_kerja,
+                'kode_lokasi_penugasan' => $request->kode_lokasi_penugasan,
+                'kode_cabang' => $request->kode_cabang,
+                'nama_jam_kerja' => $request->nama_jam_kerja,
+                'awal_jam_masuk' => $request->awal_jam_masuk,
+                'jam_masuk' => $request->jam_masuk,
+                'akhir_jam_masuk' => $request->akhir_jam_masuk,
+                'jam_pulang' => $request->jam_pulang,
+                'lintas_hari' => $request->lintas_hari,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('admin.konfigurasi.jam.kerja')
+                            ->with('success', 'Data Jam Kerja berhasil disimpan!');
+
         } catch (\Exception $e) {
-            if($e->getCode()==23000){
-                $message = " Data dengan Kode Jam Kerja " . $kode_jam_kerja . " Sudah ada!";
-            }
-            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!' . $message]);
+            DB::rollBack();
+            Log::error('Error saat menyimpan Jam Kerja: ' . $e->getMessage());
+            return redirect()->back()
+                            ->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.')
+                            ->withInput();
         }
     }
 
     public function JamKerjaUpdate(Request $request, $kode_jam_kerja)
     {
-        $kode_jam_kerja = $request->kode_jam_kerja;
-        $nama_jam_kerja = $request->nama_jam_kerja;
-        $awal_jam_masuk = $request->awal_jam_masuk;
-        $jam_masuk = $request->jam_masuk;
-        $akhir_jam_masuk = $request->akhir_jam_masuk;
-        $jam_pulang = $request->jam_pulang;
-        $lintas_hari = $request->lintas_hari;
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'kode_lokasi_penugasan' => 'required|exists:lokasi_penugasan,kode_lokasi_penugasan',
+            'kode_cabang' => 'required|exists:kantor_cabang,kode_cabang',
+            'nama_jam_kerja' => 'required',
+            'awal_jam_masuk' => 'required',
+            'jam_masuk' => 'required',
+            'akhir_jam_masuk' => 'required',
+            'jam_pulang' => 'required',
+            'lintas_hari' => 'required|in:0,1',
+        ]);
 
-        try {
-            $data = [
-                'nama_jam_kerja' => $nama_jam_kerja,
-                'awal_jam_masuk' => $awal_jam_masuk,
-                'jam_masuk' => $jam_masuk,
-                'akhir_jam_masuk' => $akhir_jam_masuk,
-                'jam_pulang' => $jam_pulang,
-                'lintas_hari' => $lintas_hari,
-                'updated_at' => Carbon::now()
-            ];
-
-            $update = DB::table('jam_kerja')->where('kode_jam_kerja', $kode_jam_kerja)->update($data);
-            if($update){
-                return redirect()->route('admin.konfigurasi.jam.kerja')->with(['success' => 'Data Berhasil Diupdate!']);
-            }
-        } catch (\Exception $e) {
-            if($e->getCode()==23000){
-                $message = " Data dengan Kode Jam Kerja " . $kode_jam_kerja . " Sudah ada!";
-            }
-            return redirect()->back()->with(['error' => 'Data Gagal Disimpan!' . $message]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
         }
 
+        try {
+            DB::beginTransaction();
+
+            // Cari data jam kerja berdasarkan kode
+            $jamKerja = JamKerja::where('kode_jam_kerja', $kode_jam_kerja)->first();
+
+            if (!$jamKerja) {
+                return redirect()->back()
+                                ->with('error', 'Data Jam Kerja tidak ditemukan.')
+                                ->withInput();
+            }
+
+            // Menyiapkan data untuk update
+            $dataUpdate = [
+                'kode_lokasi_penugasan' => $request->kode_lokasi_penugasan,
+                'kode_cabang' => $request->kode_cabang,
+                'nama_jam_kerja' => $request->nama_jam_kerja,
+                'awal_jam_masuk' => $request->awal_jam_masuk,
+                'jam_masuk' => $request->jam_masuk,
+                'akhir_jam_masuk' => $request->akhir_jam_masuk,
+                'jam_pulang' => $request->jam_pulang,
+                'lintas_hari' => $request->lintas_hari,
+            ];
+
+            // Cek apakah ada perubahan data
+            $hasChanges = false;
+            foreach ($dataUpdate as $key => $value) {
+                if ($jamKerja->$key != $value) {
+                    $hasChanges = true;
+                    break;
+                }
+            }
+
+            if ($hasChanges) {
+                // Update data jika ada perubahan
+                $jamKerja->update($dataUpdate);
+                DB::commit();
+
+                return redirect()->route('admin.konfigurasi.jam.kerja')
+                                ->with('success', 'Data Jam Kerja berhasil diperbarui!');
+            } else {
+                DB::rollBack();
+                return redirect()->back()
+                                ->with('info', 'Tidak ada perubahan pada data Jam Kerja.')
+                                ->withInput();
+            }
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error saat memperbarui Jam Kerja: ' . $e->getMessage());
+
+            return redirect()->back()
+                            ->with('error', 'Terjadi kesalahan saat memperbarui data. Silakan coba lagi.')
+                            ->withInput();
+        }
     }
 
     public function JamKerjaDelete($kode_jam_kerja)

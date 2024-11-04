@@ -28,8 +28,9 @@ class LokasiPenugasan extends Model
         return $this->hasMany(Gaji::class, foreignKey: 'kode_lokasi_penugasan',  localKey: 'kode_lokasi_penugasan');
     }
 
-    public function jamKerjaLokasiPenugasan()
+    // Relasi dengan model JamKerja
+        public function jamKerja()
     {
-        return $this->hasMany(JamKerjaLokasiPenugasan::class, 'kode_lokasi_penugasan', localKey: 'kode_lokasi_penugasan');
+        return $this->hasMany(JamKerja::class, 'kode_lokasi_penugasan', 'kode_lokasi_penugasan');
     }
 }

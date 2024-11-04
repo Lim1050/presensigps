@@ -161,10 +161,6 @@
                 <i class="bi bi-clock fa-fw"></i>
                 <span>Jam Kerja</span></a>
 
-                <a class="collapse-item {{ request()->is('/admin/konfigurasi/jam-kerja/lokasi-penugasan*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.jam-kerja.lokasi-penugasan') }}">
-                <i class="bi bi-clock fa-fw"></i>
-                <span>Jam Kerja Lokasi Penugasan jewqhjabfuqioewf</span></a>
-
                 <a class="collapse-item {{ request()->is('admin/konfigurasi/jam-kerja-dept*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.jam-kerja-dept') }}">
                 <i class="bi bi-clock fa-fw"></i>
                 <span>Jam Kerja Departemen</span></a>
