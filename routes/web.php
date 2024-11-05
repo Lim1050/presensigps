@@ -199,6 +199,7 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/admin/penggajian', [PenggajianController::class, 'PenggajianIndex'])->name('admin.penggajian');
     // Penggajian Create
     Route::get('/admin/penggajian/create', [PenggajianController::class, 'PenggajianCreate'])->name('admin.penggajian.create');
+    Route::post('/admin/penggajian/preview', [PenggajianController::class, 'previewGaji'])->name('admin.penggajian.preview');
     // Penggajian Store
     Route::post('/admin/penggajian/store', [PenggajianController::class, 'PenggajianStore'])->name('admin.penggajian.store');
     Route::get('/penggajian/hitung', [PenggajianController::class, 'hitungGaji'])->name('penggajian.hitung');

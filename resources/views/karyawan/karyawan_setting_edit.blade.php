@@ -49,7 +49,7 @@
                                         <select name="kode_jam_kerja[]" id="kode_jam_kerja" class="form-control">
                                             <option value="">Pilih Jam Kerja</option>
                                             @foreach ($jam_kerja as $jk)
-                                            <option {{ $jkk->kode_jam_kerja == $jk->kode_jam_kerja ? 'selected' : ''}} value="{{ $jk->kode_jam_kerja }}">{{ $jk->nama_jam_kerja }}</option>
+                                            <option {{ $jkk->kode_jam_kerja == $jk->kode_jam_kerja ? 'selected' : ''}} value="{{ $jk->kode_jam_kerja }}">{{ $jk->nama_jam_kerja }} - {{ $jk->lokasiPenugasan->nama_lokasi_penugasan }} - {{ $jk->cabang->nama_cabang }}</option>
                                             @endforeach
                                         </select>
                                     </td>
@@ -69,8 +69,10 @@
                                 <th colspan="6">Master Jam Kerja</th>
                             </tr>
                             <tr>
-                                <th>Kode Jam Kerja</th>
+                                {{-- <th>Kode Jam Kerja</th> --}}
                                 <th>Nama Jam Kerja</th>
+                                <th>Lokasi Penugasan</th>
+                                <th>Kantor Cabang</th>
                                 <th>Awal Jam Masuk</th>
                                 <th>Jam Masuk</th>
                                 <th>Akhir Jam Masuk</th>
@@ -80,8 +82,10 @@
                         <tbody>
                             @foreach ($jam_kerja as $item)
                             <tr>
-                                <td class="text-center">{{ $item->kode_jam_kerja }}</td>
+                                {{-- <td class="text-center">{{ $item->kode_jam_kerja }}</td> --}}
                                 <td class="text-center">{{ $item->nama_jam_kerja }}</td>
+                                <td class="text-center">{{ $item->lokasiPenugasan->nama_lokasi_penugasan }}</td>
+                                <td class="text-center">{{ $item->cabang->nama_cabang }}</td>
                                 <td class="text-center">{{ $item->awal_jam_masuk }}</td>
                                 <td class="text-center">{{ $item->jam_masuk }}</td>
                                 <td class="text-center">{{ $item->akhir_jam_masuk }}</td>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cabang;
 use App\Models\Departemen;
 use App\Models\Jabatan;
+use App\Models\JamKerja;
 use App\Models\JamKerjaKaryawan;
 use App\Models\Karyawan;
 use App\Models\LokasiPenugasan;
@@ -319,17 +320,21 @@ class KaryawanController extends Controller
     public function KaryawanSetting(Request $request, $nik)
     {
         $nik = Crypt::decrypt($request->nik);
-        $karyawan = DB::table('karyawan')->where('nik', $nik)->first();
-        $jam_kerja = DB::table('jam_kerja')->orderBy('kode_jam_kerja')->get();
-        $cek_jam_kerja_karyawan = DB::table('jam_kerja_karyawan')->where('nik', $nik)->count();
+        $karyawan = Karyawan::with(['lokasiPenugasan', 'Cabang'])
+                        ->where('nik', $nik)
+                        ->first();
+        $jam_kerja = JamKerja::where('kode_lokasi_penugasan', $karyawan->kode_lokasi_penugasan)
+                            ->where('kode_cabang', $karyawan->kode_cabang)
+                            ->orderBy('kode_jam_kerja')
+                            ->get();
+        $cek_jam_kerja_karyawan = JamKerjaKaryawan::where('nik', $nik)->count();
 
         if($cek_jam_kerja_karyawan > 0 ) {
-            $jam_kerja_karyawan = DB::table('jam_kerja_karyawan')->where('nik', $nik)->get();
+            $jam_kerja_karyawan = JamKerjaKaryawan::where('nik', $nik)->get();
             return view('karyawan.karyawan_setting_edit', compact('nik', 'karyawan', 'jam_kerja', 'jam_kerja_karyawan'));
         } else {
             return view('karyawan.karyawan_setting', compact('nik', 'karyawan', 'jam_kerja'));
         }
-
     }
 
     public function KaryawanSettingStore(Request $request)

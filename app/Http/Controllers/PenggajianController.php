@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cabang;
 use App\Models\Gaji;
 use App\Models\Karyawan;
+use App\Models\Lembur;
+use App\Models\LokasiPenugasan;
 use App\Models\PengajuanIzin;
 use App\Models\Penggajian;
+use App\Models\Potongan;
 use App\Models\presensi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PenggajianController extends Controller
 {
@@ -24,7 +29,100 @@ class PenggajianController extends Controller
     public function PenggajianCreate()
     {
         $karyawan = Karyawan::all();
-        return view('penggajian.penggajian_create', compact('karyawan'));
+        $cabang = Cabang::all();
+        $lokasi_penugasan = LokasiPenugasan::all();
+        return view('penggajian.penggajian_create', compact('karyawan', 'cabang', 'lokasi_penugasan'));
+    }
+
+    public function previewGaji(Request $request)
+    {
+        try {
+            // Log data yang diterima
+            Log::info('Data yang diterima untuk preview gaji:', $request->all());
+            // Validasi input
+            $request->validate([
+                'nik' => 'required',
+                'tanggal_gaji' => 'required|date',
+                'kode_cabang' => 'required',
+                'kode_lokasi_penugasan' => 'required',
+            ]);
+
+            $tanggalGaji = Carbon::parse($request->tanggal_gaji);
+            $bulan = $tanggalGaji->month;
+            $tahun = $tanggalGaji->year;
+
+            // Ambil data karyawan
+            $karyawan = Karyawan::with(['jabatan', 'Cabang', 'lokasiPenugasan'])
+                ->where('nik', $request->nik)
+                ->firstOrFail();
+
+            // Ambil komponen gaji
+            $komponenGaji = Gaji::where('kode_jabatan', $karyawan->kode_jabatan)
+                ->where('kode_lokasi_penugasan', $karyawan->kode_lokasi_penugasan)
+                ->where('kode_cabang', $karyawan->kode_cabang)
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    return [$item->nama_gaji => $item->jumlah_gaji];
+                })
+                ->toArray();
+
+            // dd($komponenGaji);
+
+            // Ambil komponen potongan
+            $komponenPotongan = Potongan::where('kode_jabatan', $karyawan->kode_jabatan)
+                ->where('kode_lokasi_penugasan', $karyawan->kode_lokasi_penugasan)
+                ->where('kode_cabang', $karyawan->kode_cabang)
+                ->get()
+                ->mapWithKeys(function ($item) {
+                    return [$item->nama_potongan => $item->jumlah_potongan];
+                })
+                ->toArray();
+
+            // Hitung kehadiran
+            $presensi = Presensi::where('nik', $karyawan->nik)
+                ->whereYear('tanggal_presensi', $tahun)
+                ->whereMonth('tanggal_presensi', $bulan)
+                ->get();
+
+            $totalHariKerja = Carbon::create($tahun, $bulan)->daysInMonth;
+            $totalKehadiran = $presensi->whereIn('status', ['hadir', 'izin', 'sakit', 'cuti'])->count();
+            $totalKetidakhadiran = $totalHariKerja - $totalKehadiran;
+
+            // Hitung lembur
+            $lembur = Lembur::where('nik', $karyawan->nik)
+                ->whereYear('tanggal_presensi', $tahun)
+                ->whereMonth('tanggal_presensi', $bulan)
+                ->where('status', 'disetujui')
+                ->sum('durasi_menit');
+
+            $jumlahLembur = ($lembur / 60) * ($komponenGaji['Gaji tetap'] ?? 0) / 173; // Asumsi 173 jam kerja per bulan
+
+            // Tambahkan lembur ke komponen gaji
+            $komponenGaji['Lembur'] = $jumlahLembur;
+
+            // Hitung total
+            $totalGaji = array_sum($komponenGaji);
+            $totalPotongan = array_sum($komponenPotongan);
+            $gajiBersih = $totalGaji - $totalPotongan;
+
+            return view('penggajian.preview_gaji', compact(
+                'karyawan',
+                'komponenGaji',
+                'komponenPotongan',
+                'totalGaji',
+                'totalPotongan',
+                'gajiBersih',
+                'totalKehadiran',
+                'totalKetidakhadiran',
+                'lembur'
+            ))->render();
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function PenggajianStore(Request $request)
@@ -70,13 +168,13 @@ class PenggajianController extends Controller
                                     ])
 
                                     ->count();
-        $totalLembur = Presensi::where('nik', $request->nik)
-                                    ->whereBetween('tanggal_presensi', [
-                                        Carbon::parse($request->tanggal_gaji)->startOfMonth(),
-                                        Carbon::parse($request->tanggal_gaji)->endOfMonth()
-                                    ])
-                                    ->where('is_lembur', true)
-                                    ->count();
+        // $totalLembur = Presensi::where('nik', $request->nik)
+        //                             ->whereBetween('tanggal_presensi', [
+        //                                 Carbon::parse($request->tanggal_gaji)->startOfMonth(),
+        //                                 Carbon::parse($request->tanggal_gaji)->endOfMonth()
+        //                             ])
+        //                             ->where('lembur', 1)
+        //                             ->count();
 
         // Menghitung jumlah izin, sakit, dan cuti yang sudah disetujui
         // $totalIzin = PengajuanIzin::where('nik', $request->nik)
