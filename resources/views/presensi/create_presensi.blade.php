@@ -259,10 +259,10 @@
         lokasi.value = position.coords.latitude+","+position.coords.longitude;
         var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 17);
 
-        var lokasi_kantor = "{{ $lokasi_kantor->lokasi_kantor }}";
-        var kantor = lokasi_kantor.split(",");
-        var lat_kantor = kantor[0];
-        var long_kantor = kantor[1];
+        var lokasi_penugasan = "{{ $lokasi_penugasan->lokasi_penugasan }}";
+        var lokasi_penugasan = lokasi_penugasan.split(",");
+        var lat_lokasi_penugasan = lokasi_penugasan[0];
+        var long_lokasi_penugasan = lokasi_penugasan[1];
 
         // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         //     maxZoom: 19,
@@ -274,9 +274,9 @@
         }).addTo(map);
         var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
 
-        // nanti disesuaikan dengan lokasi kantor
-        var radius = "{{ $lokasi_kantor->radius }}";
-        var circle = L.circle([lat_kantor, long_kantor], {
+        // nanti disesuaikan dengan lokasi lokasi_penugasan
+        var radius = "{{ $lokasi_penugasan->radius }}";
+        var circle = L.circle([lat_lokasi_penugasan, long_lokasi_penugasan], {
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.5,

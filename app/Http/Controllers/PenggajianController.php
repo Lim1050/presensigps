@@ -62,7 +62,7 @@ class PenggajianController extends Controller
                 ->where('kode_cabang', $karyawan->kode_cabang)
                 ->get()
                 ->mapWithKeys(function ($item) {
-                    return [$item->nama_gaji => $item->jumlah_gaji];
+                    return [$item->kode_jenis_gaji => $item->jumlah_gaji];
                 })
                 ->toArray();
 
@@ -95,7 +95,7 @@ class PenggajianController extends Controller
                 ->where('status', 'disetujui')
                 ->sum('durasi_menit');
 
-            $jumlahLembur = ($lembur / 60) * ($komponenGaji['Gaji tetap'] ?? 0) / 173; // Asumsi 173 jam kerja per bulan
+            $jumlahLembur = ($lembur / 60) * ($komponenGaji['GT'] ?? 0) / 173; // Asumsi 173 jam kerja per bulan
 
             // Tambahkan lembur ke komponen gaji
             $komponenGaji['Lembur'] = $jumlahLembur;

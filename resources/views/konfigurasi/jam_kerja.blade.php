@@ -156,7 +156,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('admin.konfigurasi.jam.kerja.store') }}" method="POST" id="formJamKerja" enctype="multipart/form-data">
+                <form action="{{ route('admin.konfigurasi.jam.kerja.store') }}" method="POST" id="formJamKerja" enctype="multipart/form-data" onsubmit="return validateForm()">
                     @csrf
                     {{-- <div class="form-group">
                         <label for="kode_jam_kerja">Kode Jam Kerja</label>
@@ -168,10 +168,10 @@
 
                     <div class="form-group">
                         <label for="kode_lokasi_penugasan">Lokasi Penugasan</label>
-                        <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan" class="form-control" required>
+                        <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan" class="form-control" required onchange="updateMinJamKerja()">
                             <option value="">Pilih Lokasi Penugasan</option>
                             @foreach($lokasiPenugasan as $lokasi)
-                                <option value="{{ $lokasi->kode_lokasi_penugasan }}">{{ $lokasi->nama_lokasi_penugasan }}</option>
+                                <option value="{{ $lokasi->kode_lokasi_penugasan }}" data-jam-kerja="{{ $lokasi->jumlah_jam_kerja }}">{{ $lokasi->nama_lokasi_penugasan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -193,6 +193,8 @@
                             <input type="text" class="form-control" id="nama_jam_kerja" name="nama_jam_kerja" placeholder="Nama Jam Kerja" required>
                         </div>
                     </div>
+
+                    <input type="hidden" id="min_jam_kerja" name="min_jam_kerja">
 
                     <div class="form-group">
                         <label for="awal_jam_masuk">Awal Jam Masuk</label>
@@ -257,10 +259,10 @@
 
                     <div class="form-group">
                         <label for="kode_lokasi_penugasan">Lokasi Penugasan</label>
-                        <select name="kode_lokasi_penugasan" id="edit_kode_lokasi_penugasan" class="form-control">
+                        <select name="kode_lokasi_penugasan" id="edit_kode_lokasi_penugasan" class="form-control" required onchange="updateMinJamKerja()">
                             <option value="">Pilih Lokasi Penugasan</option>
                             @foreach($lokasiPenugasan as $lokasi)
-                                <option value="{{ $lokasi->kode_lokasi_penugasan }}">{{ $lokasi->nama_lokasi_penugasan }}</option>
+                                <option value="{{ $lokasi->kode_lokasi_penugasan }}" data-edit-jam-kerja="{{ $lokasi->jumlah_jam_kerja }}">{{ $lokasi->nama_lokasi_penugasan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -279,6 +281,9 @@
                         <label for="nama_jam_kerja">Nama Jam Kerja</label>
                         <input type="text" class="form-control" id="edit_nama_jam_kerja" name="nama_jam_kerja">
                     </div>
+
+                    <input type="hidden" id="min_jam_kerja" name="min_jam_kerja">
+
                     <div class="form-group">
                         <label for="awal_jam_masuk">Awal Jam Masuk</label>
                         <input type="time" class="form-control" id="edit_awal_jam_masuk" name="awal_jam_masuk">
@@ -314,6 +319,115 @@
 </div>
 
 @push('myscript')
+<script>
+
+    function updateMinJamKerja() {
+        var select = document.getElementById('kode_lokasi_penugasan');
+        var minJamKerja = select.options[select.selectedIndex].getAttribute('data-jam-kerja');
+        document.getElementById('min_jam_kerja').value = minJamKerja;
+
+        validateJamKerja();
+    }
+
+    function validateJamKerja() {
+        var jamMasuk = document.getElementById('jam_masuk').value;
+        var jamPulang = document.getElementById('jam_pulang').value;
+        var minJamKerja = parseInt(document.getElementById('min_jam_kerja').value);
+        var lintasHari = document.getElementById('lintas_hari').value === '1';
+
+        if (jamMasuk && jamPulang && minJamKerja) {
+            var masuk = new Date("2000-01-01T" + jamMasuk);
+            var pulang = new Date("2000-01-01T" + jamPulang);
+
+            // Jika lintas hari atau jam pulang lebih awal dari jam masuk
+            if (lintasHari || pulang < masuk) {
+                pulang.setDate(pulang.getDate() + 1);
+            }
+
+            var diff = (pulang - masuk) / (1000 * 60 * 60); // Perbedaan dalam jam
+
+            if (diff < minJamKerja) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Jumlah Jam Kerja Kurang',
+                    text: "Jumlah jam kerja kurang dari minimum yang dibutuhkan (" + minJamKerja + " jam)",
+                    confirmButtonText: 'OK'
+                });
+                document.getElementById('jam_pulang').setCustomValidity("Jumlah jam kerja tidak mencukupi");
+                return false;
+            } else {
+                document.getElementById('jam_pulang').setCustomValidity("");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function validateForm() {
+        return validateJamKerja();
+    }
+
+    // Event listeners
+    document.getElementById('jam_masuk').addEventListener('change', validateJamKerja);
+    document.getElementById('jam_pulang').addEventListener('change', validateJamKerja);
+    document.getElementById('lintas_hari').addEventListener('change', validateJamKerja);
+    document.getElementById('kode_lokasi_penugasan').addEventListener('change', updateMinJamKerja);
+
+    // Tambahkan event listener untuk form submission
+    $(document).ready(function() {
+        $('#formJamKerja').on('submit', function(e) {
+            e.preventDefault(); // Mencegah form submit default
+
+            if (validateForm()) {
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Data jam kerja berhasil disimpan, Silakan refresh halaman untuk melihat perubahan.',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Reset form
+                                $('#formJamKerja')[0].reset();
+                                // Tutup modal
+                                $('#modalInputJamKerja').modal('hide');
+                                // Refresh tabel atau lakukan aksi lain yang diperlukan
+                                // Misalnya reload DataTable jika ada
+                                if (typeof table !== 'undefined') {
+                                    table.ajax.reload();
+                                }
+                            }
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: 'Terjadi kesalahan saat menyimpan data',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    // Setup CSRF token untuk Ajax request
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+</script>
+
 <script>
     let table = new DataTable('#dataTable');
 
@@ -437,33 +551,93 @@
         });
 
     // Send Data to modal edit jam kerja
-    $('#modalEditJamKerja').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var kode_jam_kerja = button.data('kode_jam_kerja');
-        var kode_lokasi_penugasan = button.data('kode_lokasi_penugasan');
-        var kode_cabang = button.data('kode_cabang');
-        var nama = button.data('nama');
-        var awal = button.data('awal');
-        var masuk = button.data('masuk');
-        var akhir = button.data('akhir');
-        var pulang = button.data('pulang');
-        var lintas_hari = button.data('lintas_hari');
+    $(document).ready(function() {
+        // Event listener untuk membuka modal edit
+        $('#modalEditJamKerja').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var kode_jam_kerja = button.data('kode_jam_kerja');
+            var kode_lokasi_penugasan = button.data('kode_lokasi_penugasan');
+            var kode_cabang = button.data('kode_cabang');
+            var nama = button.data('nama');
+            var awal = button.data('awal');
+            var masuk = button.data('masuk');
+            var akhir = button.data('akhir');
+            var pulang = button.data('pulang');
+            var lintas_hari = button.data('lintas_hari');
 
-        var modal = $(this);
-        modal.find('.modal-body #edit_kode_jam_kerja').val(kode_jam_kerja);
-        modal.find('.modal-body #edit_kode_lokasi_penugasan').val(kode_lokasi_penugasan);
-        modal.find('.modal-body #edit_kode_cabang').val(kode_cabang);
-        modal.find('.modal-body #edit_nama_jam_kerja').val(nama);
-        modal.find('.modal-body #edit_awal_jam_masuk').val(awal);
-        modal.find('.modal-body #edit_jam_masuk').val(masuk);
-        modal.find('.modal-body #edit_akhir_jam_masuk').val(akhir);
-        modal.find('.modal-body #edit_jam_pulang').val(pulang);
-        modal.find('.modal-body #edit_lintas_hari').val(lintas_hari);
+            var modal = $(this);
+            modal.find('.modal-body #edit_kode_jam_kerja').val(kode_jam_kerja);
+            modal.find('.modal-body #edit_kode_lokasi_penugasan').val(kode_lokasi_penugasan);
+            modal.find('.modal-body #edit_kode_cabang').val(kode_cabang);
+            modal.find('.modal-body #edit_nama_jam_kerja').val(nama);
+            modal.find('.modal-body #edit_awal_jam_masuk').val(awal);
+            modal.find('.modal-body #edit_jam_masuk').val(masuk);
+            modal.find('.modal-body #edit_akhir_jam_masuk').val(akhir);
+            modal.find('.modal-body #edit_jam_pulang').val(pulang);
+            modal.find('.modal-body #edit_lintas_hari').val(lintas_hari);
 
-        // Update form action URL with the id
-        var formAction = "{{ route('admin.konfigurasi.jam.kerja.update', ['kode_jam_kerja' => ':kode_jam_kerja']) }}";
-        formAction = formAction.replace(':kode_jam_kerja', kode_jam_kerja);
-        $('#editForm').attr('action', formAction);
+            var formAction = "{{ route('admin.konfigurasi.jam.kerja.update', ['kode_jam_kerja' => ':kode_jam_kerja']) }}";
+            formAction = formAction.replace(':kode_jam_kerja', kode_jam_kerja);
+            $('#editForm').attr('action', formAction);
+
+            // Set minimal jam setelah modal dibuka
+            updateMinJamKerja();
+        });
+
+        // Fungsi untuk mengatur minimal jam kerja
+        function updateMinJamKerja() {
+            var select = document.getElementById('edit_kode_lokasi_penugasan');
+            var minJamKerja = select.options[select.selectedIndex].getAttribute('data-edit-jam-kerja');
+            document.getElementById('min_jam_kerja').value = minJamKerja;
+
+            validateJamKerja();
+        }
+
+        // Fungsi untuk memvalidasi jam kerja
+        function validateJamKerja() {
+            var jamMasuk = document.getElementById('edit_jam_masuk').value;
+            var jamPulang = document.getElementById('edit_jam_pulang').value;
+            var minJamKerja = parseInt(document.getElementById('min_jam_kerja').value);
+            var lintasHari = document.getElementById('edit_lintas_hari').value === '1';
+
+            if (jamMasuk && jamPulang && minJamKerja) {
+                var masuk = new Date("2000-01-01T" + jamMasuk);
+                var pulang = new Date("2000-01-01T" + jamPulang);
+
+                // Jika lintas hari atau jam pulang lebih awal dari jam masuk
+                if (lintasHari || pulang < masuk) {
+                    pulang.setDate(pulang.getDate() + 1);
+                }
+
+                var diff = (pulang - masuk) / (1000 * 60 * 60); // Perbedaan dalam jam
+
+                if (diff < minJamKerja) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Jumlah Jam Kerja Kurang',
+                        text: "Jumlah jam kerja kurang dari minimum yang dibutuhkan (" + minJamKerja + " jam)",
+                        confirmButtonText: 'OK'
+                    });
+                    document.getElementById('edit_jam_pulang').setCustomValidity("Jumlah jam kerja tidak mencukupi");
+                    return false;
+                } else {
+                    document.getElementById('edit_jam_pulang').setCustomValidity("");
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Fungsi untuk memvalidasi form
+        function validateForm() {
+            return validateJamKerja();
+        }
+
+        // Event listeners
+        document.getElementById('edit_jam_masuk').addEventListener('change', validateJamKerja);
+        document.getElementById('edit_jam_pulang').addEventListener('change', validateJamKerja );
+        document.getElementById('edit_lintas_hari').addEventListener('change', validateJamKerja);
+        document.getElementById('edit_kode_lokasi_penugasan').addEventListener('change', updateMinJamKerja);
     });
 </script>
 

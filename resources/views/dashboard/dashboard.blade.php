@@ -270,7 +270,9 @@
                                         @elseif ($lembur->status == 'disetujui')
                                             <span class="badge badge-success">Disetujui</span>
                                         @elseif ($lembur->status == 'ditolak')
-                                            <span class="badge badge-danger" data-toggle="tooltip" title="Alasan: {{ $lembur->alasan_penolakan }}">Ditolak</span>
+                                            <span class="badge badge-danger" data-toggle="tooltip" title="Alasan: {{ $lembur->alasan_penolakan }}">Ditolak</span> <br>
+                                            <a href="#" class="badge badge-danger alasan-penolakan-link" data-id="{{ $lembur->id }}">Alasan</a>
+                                            <span id="alasan-penolakan-{{ $lembur->id }}" style="display: none;">{{ $lembur->alasan_penolakan }}</span>
                                         @else
                                             <span class="badge badge-secondary">Tidak Diketahui</span>
                                         @endif
@@ -558,6 +560,23 @@
                     title: 'Keterangan Lembur',
                     text: keterangan,
                     icon: 'info',
+                    confirmButtonText: 'Tutup'
+                });
+            });
+        });
+        document.querySelectorAll('.alasan-penolakan-link').forEach(function (element) {
+            element.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                // Ambil data alasan-penolakan dari elemen tersembunyi berdasarkan ID lembur
+                let lemburId = this.getAttribute('data-id');
+                let alasan = document.querySelector(`#alasan-penolakan-${lemburId}`).textContent;
+
+                // Tampilkan SweetAlert dengan alasan-penolakan lembur
+                Swal.fire({
+                    title: 'Alasan Penolakan Lembur',
+                    text: alasan,
+                    icon: 'warning',
                     confirmButtonText: 'Tutup'
                 });
             });

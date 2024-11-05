@@ -86,8 +86,10 @@
                                 <th class="text-center">No</th>
                                 <th class="text-center">Kode Lokasi Penugasan</th>
                                 <th class="text-center">Nama Lokasi Penugasan</th>
-                                <th class="text-center">Lokasi Penugasan</th>
+                                <th class="text-center">Koordinat</th>
                                 <th class="text-center">Radius</th>
+                                <th class="text-center">Jumlah Jam Kerja</th>
+                                <th class="text-center">Jumlah Hari Kerja</th>
                                 <th class="text-center">Nama Cabang</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
@@ -101,6 +103,8 @@
                                 <td class="text-center">{{ $item->nama_lokasi_penugasan }}</td>
                                 <td class="text-center">{{ $item->lokasi_penugasan }}</td>
                                 <td class="text-center">{{ $item->radius }} meter</td>
+                                <td class="text-center">{{ $item->jumlah_jam_kerja }} jam</td>
+                                <td class="text-center">{{ $item->jumlah_hari_kerja }} hari</td>
                                 <td class="text-center">{{ $item->cabang->nama_cabang }}</td>
                                 <td class="text-center" class="text-center">
                                     <div class="btn-group ">
@@ -149,13 +153,25 @@
                     <div class="form-group">
                         <div class="icon-placeholder">
                             <i class="bi bi-geo"></i>
-                            <input type="text" class="form-control" id="lokasi_penugasan" name="lokasi_penugasan" placeholder=" Lokasi Penugasan">
+                            <input type="text" class="form-control" id="lokasi_penugasan" name="lokasi_penugasan" placeholder=" Koordinat pada Google Maps">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="icon-placeholder">
                             <i class="bi bi-broadcast"></i>
                             <input type="text" class="form-control" id="radius" name="radius" placeholder=" Radius">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="icon-placeholder">
+                            <i class="bi bi-clock"></i>
+                            <input type="number" class="form-control" id="jumlah_jam_kerja" name="jumlah_jam_kerja" placeholder=" Jumlah Jam Kerja">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="icon-placeholder">
+                            <i class="bi bi-calendar"></i>
+                            <input type="number" class="form-control" id="jumlah_hari_kerja" name="jumlah_hari_kerja" placeholder=" Jumlah Hari Kerja">
                         </div>
                     </div>
                     <div class="form-group">

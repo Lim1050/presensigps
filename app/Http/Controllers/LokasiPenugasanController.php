@@ -45,6 +45,8 @@ class LokasiPenugasanController extends Controller
             'nama_lokasi_penugasan' => 'required|string|max:255',
             'lokasi_penugasan' => 'required|string',
             'radius' => 'required|numeric',
+            'jumlah_jam_kerja' => 'required|numeric',
+            'jumlah_hari_kerja' => 'required|numeric',
             'kode_cabang' => 'required|exists:kantor_cabang,kode_cabang',
         ]);
 
@@ -62,6 +64,8 @@ class LokasiPenugasanController extends Controller
             $lokasiPenugasan->nama_lokasi_penugasan = $request->nama_lokasi_penugasan;
             $lokasiPenugasan->lokasi_penugasan = $request->lokasi_penugasan;
             $lokasiPenugasan->radius = $request->radius;
+            $lokasiPenugasan->jumlah_jam_kerja = $request->jumlah_jam_kerja;
+            $lokasiPenugasan->jumlah_hari_kerja = $request->jumlah_hari_kerja;
             $lokasiPenugasan->kode_cabang = $request->kode_cabang;
 
             // Simpan ke database
@@ -95,6 +99,8 @@ class LokasiPenugasanController extends Controller
             'nama_lokasi_penugasan' => 'required|string|max:255',
             'lokasi_penugasan' => 'required|string',
             'radius' => 'required|numeric',
+            'jumlah_jam_kerja' => 'required|numeric',
+            'jumlah_hari_kerja' => 'required|numeric',
             'kode_cabang' => 'required|exists:kantor_cabang,kode_cabang',
         ]);
 
@@ -113,6 +119,8 @@ class LokasiPenugasanController extends Controller
             $lokasi_penugasan->nama_lokasi_penugasan = $request->nama_lokasi_penugasan ?? $lokasi_penugasan->nama_lokasi_penugasan;
             $lokasi_penugasan->lokasi_penugasan = $request->lokasi_penugasan ?? $lokasi_penugasan->lokasi_penugasan;
             $lokasi_penugasan->radius = $request->radius ?? $lokasi_penugasan->radius;
+            $lokasi_penugasan->jumlah_jam_kerja = $request->jumlah_jam_kerja ?? $lokasi_penugasan->jumlah_jam_kerja;
+            $lokasi_penugasan->jumlah_hari_kerja = $request->jumlah_hari_kerja ?? $lokasi_penugasan->jumlah_hari_kerja;
             $lokasi_penugasan->kode_cabang = $request->kode_cabang ?? $lokasi_penugasan->kode_cabang;
 
             // Cek apakah ada perubahan sebelum menyimpan

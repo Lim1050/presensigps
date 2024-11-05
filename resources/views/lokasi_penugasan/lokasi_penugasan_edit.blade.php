@@ -52,13 +52,25 @@
     <div class="form-group">
         <div class="icon-placeholder">
             <i class="bi bi-geo"></i>
-            <input type="text" class="form-control" id="lokasi_penugasan" name="lokasi_penugasan" value="{{ old('lokasi_penugasan', $lokasi_penugasan->lokasi_penugasan) }}" placeholder="Lokasi Penugasan">
+            <input type="text" class="form-control" id="lokasi_penugasan" name="lokasi_penugasan" value="{{ old('lokasi_penugasan', $lokasi_penugasan->lokasi_penugasan) }}" placeholder="Koordinat pada Google Maps">
         </div>
     </div>
     <div class="form-group">
         <div class="icon-placeholder">
             <i class="bi bi-broadcast"></i>
             <input type="text" class="form-control" id="radius" name="radius" value="{{ old('radius', $lokasi_penugasan->radius) }}" placeholder="Radius">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="icon-placeholder">
+            <i class="bi bi-clock"></i>
+            <input type="number" class="form-control" id="jumlah_jam_kerja" name="jumlah_jam_kerja" value="{{ old('jumlah_jam_kerja', $lokasi_penugasan->jumlah_jam_kerja) }}" placeholder=" Jumlah Jam Kerja">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="icon-placeholder">
+            <i class="bi bi-calendar"></i>
+            <input type="number" class="form-control" id="jumlah_hari_kerja" name="jumlah_hari_kerja" value="{{ old('jumlah_hari_kerja', $lokasi_penugasan->jumlah_hari_kerja) }}" placeholder=" Jumlah Hari Kerja">
         </div>
     </div>
     <div class="form-group">

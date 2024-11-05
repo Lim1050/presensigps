@@ -58,7 +58,7 @@ class PresensiController extends Controller
     public function PresensiCreate()
     {
         $nik = Auth::guard('karyawan')->user()->nik;
-        $kode_departemen = Auth::guard('karyawan')->user()->kode_departemen;
+        $kode_lokasi_penugasan = Auth::guard('karyawan')->user()->kode_lokasi_penugasan;
         $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
 
         $hari_ini = date("Y-m-d");
@@ -99,7 +99,7 @@ class PresensiController extends Controller
             'cek_masuk' => $presensi_hari_ini ? 1 : 0,
             'cek_keluar' => $presensi_hari_ini && $presensi_hari_ini->foto_keluar ? 1 : 0,
             'foto_keluar' => $presensi_hari_ini ? $presensi_hari_ini->foto_keluar : null,
-            'lokasi_kantor' => DB::table('kantor_cabang')->where('kode_cabang', $kode_cabang)->first(),
+            'lokasi_penugasan' => DB::table('lokasi_penugasan')->where('kode_lokasi_penugasan', $kode_lokasi_penugasan)->first(),
             'cek_izin' => $presensi_hari_ini,
             'hari_ini' => $hari_ini,
             'cek_lintas_hari' => $cek_lintas_hari,
@@ -114,15 +114,15 @@ class PresensiController extends Controller
             ->where('hari', $nama_hari)
             ->first();
 
-        if (!$jam_kerja_normal) {
-            $jam_kerja_normal = DB::table('jam_kerja_dept_detail')
-                ->join('jam_kerja_dept', 'jam_kerja_dept_detail.kode_jk_dept', '=', 'jam_kerja_dept.kode_jk_dept')
-                ->join('jam_kerja', 'jam_kerja_dept_detail.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-                ->where('kode_departemen', $kode_departemen)
-                ->where('kode_cabang', $kode_cabang)
-                ->where('hari', $nama_hari)
-                ->first();
-        }
+        // if (!$jam_kerja_normal) {
+        //     $jam_kerja_normal = DB::table('jam_kerja_dept_detail')
+        //         ->join('jam_kerja_dept', 'jam_kerja_dept_detail.kode_jk_dept', '=', 'jam_kerja_dept.kode_jk_dept')
+        //         ->join('jam_kerja', 'jam_kerja_dept_detail.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+        //         ->where('kode_lokasi_penugasan', $kode_lokasi_penugasan)
+        //         ->where('kode_cabang', $kode_cabang)
+        //         ->where('hari', $nama_hari)
+        //         ->first();
+        // }
 
         // Jika ada lembur, gunakan waktu lembur sebagai jam kerja
         if ($lembur_hari_ini) {
@@ -198,12 +198,12 @@ class PresensiController extends Controller
         }
 
         // Validasi lokasi
-        $lokasi_kantor = DB::table('kantor_cabang')
-            ->where('kode_cabang', Auth::guard('karyawan')->user()->kode_cabang)
+        $lokasi_penugasan = DB::table('lokasi_penugasan')
+            ->where('kode_lokasi_penugasan', Auth::guard('karyawan')->user()->kode_lokasi_penugasan)
             ->first();
 
-        $radius = $this->validateLocation($request->lokasi, $lokasi_kantor);
-        if ($radius > $lokasi_kantor->radius) {
+        $radius = $this->validateLocation($request->lokasi, $lokasi_penugasan);
+        if ($radius > $lokasi_penugasan->radius) {
             return "error|Maaf, anda diluar radius, jarak anda " . $radius . " meter dari kantor!|rad";
         }
 
@@ -274,6 +274,7 @@ class PresensiController extends Controller
             return "error|Maaf Sudah Melewati Waktu Melakukan Presensi!|in";
         }
 
+        // Data dasar untuk presensi masuk
         $data_masuk = [
             'nik' => Auth::guard('karyawan')->user()->nik,
             'tanggal_presensi' => $tgl_presensi,
@@ -282,11 +283,19 @@ class PresensiController extends Controller
             'lokasi_masuk' => $lokasi,
             'kode_jam_kerja' => $jam_kerja->kode_jam_kerja,
             'status' => 'hadir',
-            'lembur' => $jam_kerja->lembur ? 1 : 0,
-            'mulai_lembur' => $jam_kerja->lembur ? $jam_kerja->jam_masuk : null,
-            'selesai_lembur' => $jam_kerja->lembur ? $jam_kerja->jam_pulang : null,
             'created_at' => Carbon::now()
         ];
+
+        // Tambahkan data lembur jika ada
+        if ($lembur && isset($jam_kerja->lembur) && $jam_kerja->lembur) {
+            $data_masuk['lembur'] = 1;
+            $data_masuk['mulai_lembur'] = $jam_kerja->jam_masuk;
+            $data_masuk['selesai_lembur'] = $jam_kerja->jam_pulang;
+        } else {
+            $data_masuk['lembur'] = 0;
+            $data_masuk['mulai_lembur'] = null;
+            $data_masuk['selesai_lembur'] = null;
+        }
 
         if (DB::table('presensi')->insert($data_masuk)) {
             return "success|Terima kasih, Selamat bekerja!|in";
@@ -358,17 +367,17 @@ class PresensiController extends Controller
     }
 
      //Menghitung Jarak
-    private function validateLocation($lokasi_user, $lokasi_kantor)
+    private function validateLocation($lokasi_user, $lokasi_penugasan)
     {
         $lokasi = explode(",", $lokasi_user);
         $latitude_user = $lokasi[0];
         $longitude_user = $lokasi[1];
 
-        $kantor = explode(",", $lokasi_kantor->lokasi_kantor);
-        $latitude_kantor = $kantor[0];
-        $longitude_kantor = $kantor[1];
+        $lokasi_penugasan = explode(",", $lokasi_penugasan->lokasi_penugasan);
+        $latitude_lokasi_penugasan = $lokasi_penugasan[0];
+        $longitude_lokasi_penugasan = $lokasi_penugasan[1];
 
-        return $this->distance($latitude_kantor, $longitude_kantor, $latitude_user, $longitude_user)["meters"];
+        return $this->distance($latitude_lokasi_penugasan, $longitude_lokasi_penugasan, $latitude_user, $longitude_user)["meters"];
     }
 
     private function distance($latitude1, $longitude1, $latitude2, $longitude2)
