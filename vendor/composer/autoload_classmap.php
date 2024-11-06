@@ -27,7 +27,6 @@ return array(
     'App\\Http\\Controllers\\KonfigurasiPotonganController' => $baseDir . '/app/Http/Controllers/KonfigurasiPotonganController.php',
     'App\\Http\\Controllers\\LemburController' => $baseDir . '/app/Http/Controllers/LemburController.php',
     'App\\Http\\Controllers\\LokasiPenugasanController' => $baseDir . '/app/Http/Controllers/LokasiPenugasanController.php',
-    'App\\Http\\Controllers\\PenggajianController' => $baseDir . '/app/Http/Controllers/PenggajianController.php',
     'App\\Http\\Controllers\\PotonganController' => $baseDir . '/app/Http/Controllers/PotonganController.php',
     'App\\Http\\Controllers\\PresensiController' => $baseDir . '/app/Http/Controllers/PresensiController.php',
     'App\\Http\\Controllers\\ProfileController' => $baseDir . '/app/Http/Controllers/ProfileController.php',

@@ -59,7 +59,7 @@
             </div>
 
             <div id="previewGaji" style="display: none;">
-                <h3>Preview Gaji</h3>
+                {{-- <h3>Preview Gaji</h3> --}}
                 <div id="previewContent"></div>
             </div>
 

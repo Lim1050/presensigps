@@ -648,7 +648,6 @@ class ComposerStaticInit28d475a14bbcc97a87a1d90e6d3f1e18
         'App\\Http\\Controllers\\KonfigurasiPotonganController' => __DIR__ . '/../..' . '/app/Http/Controllers/KonfigurasiPotonganController.php',
         'App\\Http\\Controllers\\LemburController' => __DIR__ . '/../..' . '/app/Http/Controllers/LemburController.php',
         'App\\Http\\Controllers\\LokasiPenugasanController' => __DIR__ . '/../..' . '/app/Http/Controllers/LokasiPenugasanController.php',
-        'App\\Http\\Controllers\\PenggajianController' => __DIR__ . '/../..' . '/app/Http/Controllers/PenggajianController.php',
         'App\\Http\\Controllers\\PotonganController' => __DIR__ . '/../..' . '/app/Http/Controllers/PotonganController.php',
         'App\\Http\\Controllers\\PresensiController' => __DIR__ . '/../..' . '/app/Http/Controllers/PresensiController.php',
         'App\\Http\\Controllers\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProfileController.php',
