@@ -9,7 +9,7 @@ class Penggajian extends Model
 {
     use HasFactory;
     protected $table = "penggajian";
-    protected $primaryKey = "id";
+    protected $primaryKey = "kode_penggajian";
     public $incrementing = false;
     protected $guarded = [];
 

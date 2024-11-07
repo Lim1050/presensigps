@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2024 at 04:38 PM
+-- Generation Time: Nov 07, 2024 at 04:46 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -739,7 +739,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (89, '2024_11_04_134832_add_lokasi_penugasan_and_cabang_to_jam_kerja_table', 54),
 (90, '2024_11_05_204604_add_jumlah_jam_kerja_to_lokasi_penugasan_table', 55),
 (91, '2024_11_05_213211_add_jumlah_hari_kerja_to_lokasi_penugasan_table', 56),
-(92, '2024_11_06_152034_create_penggajian_table', 57);
+(92, '2024_11_06_152034_create_penggajian_table', 57),
+(93, '2024_11_07_150924_add_komponen_gaji_kotor_to_penggajian_table', 58);
 
 -- --------------------------------------------------------
 
@@ -844,6 +845,7 @@ CREATE TABLE `penggajian` (
   `jumlah_hari_masuk` int DEFAULT NULL,
   `jumlah_hari_tidak_masuk` int DEFAULT NULL,
   `total_jam_lembur` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `komponen_gaji_kotor` json DEFAULT NULL,
   `komponen_gaji` json DEFAULT NULL,
   `total_gaji_kotor` decimal(10,2) NOT NULL DEFAULT '0.00',
   `komponen_potongan` json DEFAULT NULL,
@@ -863,8 +865,13 @@ CREATE TABLE `penggajian` (
 -- Dumping data for table `penggajian`
 --
 
-INSERT INTO `penggajian` (`kode_penggajian`, `nik`, `kode_cabang`, `kode_lokasi_penugasan`, `tanggal_gaji`, `bulan`, `jumlah_hari_kerja`, `jumlah_hari_masuk`, `jumlah_hari_tidak_masuk`, `total_jam_lembur`, `komponen_gaji`, `total_gaji_kotor`, `komponen_potongan`, `total_potongan`, `gaji_bersih`, `status`, `catatan`, `diproses_oleh`, `alasan_perubahan`, `diubah_oleh`, `waktu_perubahan`, `created_at`, `updated_at`) VALUES
-('PG2024110001', '123123123', 'JKTP', 'MN', '2024-11-06', '2024-11', 26, 3, 23, 3.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 60000}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 576923.076923077}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\", \"Potongan Ketidakhadiran\": 4423076.923076923}', 5089076.92, 2490923.08, 'draft', NULL, NULL, NULL, NULL, NULL, '2024-11-06 09:30:33', '2024-11-06 09:30:33');
+INSERT INTO `penggajian` (`kode_penggajian`, `nik`, `kode_cabang`, `kode_lokasi_penugasan`, `tanggal_gaji`, `bulan`, `jumlah_hari_kerja`, `jumlah_hari_masuk`, `jumlah_hari_tidak_masuk`, `total_jam_lembur`, `komponen_gaji_kotor`, `komponen_gaji`, `total_gaji_kotor`, `komponen_potongan`, `total_potongan`, `gaji_bersih`, `status`, `catatan`, `diproses_oleh`, `alasan_perubahan`, `diubah_oleh`, `waktu_perubahan`, `created_at`, `updated_at`) VALUES
+('PG2024110001', '123123123', 'JKTP', 'MN', '2024-11-07', '2024-11', 26, 3, 23, 3.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 60000}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 576923.076923077}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\", \"Potongan Ketidakhadiran\": 4423076.923076923}', 5089076.92, 2490923.08, 'draft', NULL, NULL, NULL, NULL, NULL, '2024-11-07 08:23:01', '2024-11-07 08:23:01'),
+('PG2024110002', '123123123', 'JKTP', 'MN', '2024-10-07', '2024-10', 26, 1, 25, 7.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 140000}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 192307.692307692}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\", \"Potongan Ketidakhadiran\": 4807692.307692308}', 5473692.31, 2186307.69, 'draft', NULL, NULL, NULL, NULL, NULL, '2024-11-07 09:06:52', '2024-11-07 09:06:52'),
+('PG2024110003', '123123123', 'JKTP', 'MN', '2024-09-07', '2024-09', 26, 0, 26, 0.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 0}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 0}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\", \"Potongan Ketidakhadiran\": 5000000}', 5666000.00, 1854000.00, 'draft', NULL, NULL, NULL, NULL, NULL, '2024-11-07 09:07:51', '2024-11-07 09:07:51'),
+('PG2024110004', '123123123', 'JKTP', 'MN', '2024-08-07', '2024-08', 26, 9, 17, 0.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 0}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 1730769.2307692303}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\", \"Potongan Ketidakhadiran\": 3269230.7692307695}', 3935230.77, 3584769.23, 'draft', NULL, NULL, NULL, NULL, NULL, '2024-11-07 09:08:46', '2024-11-07 09:08:46'),
+('PG2024110005', '123123123', 'JKTP', 'MN', '2024-07-07', '2024-07', 26, 6, 20, 0.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 0}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 1153846.153846154}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\", \"Potongan Ketidakhadiran\": 3846153.846153846}', 4512153.85, 3007846.15, 'draft', NULL, NULL, NULL, NULL, NULL, '2024-11-07 09:09:40', '2024-11-07 09:09:40'),
+('PG2024110006', '123123123', 'JKTP', 'MN', '2024-06-07', '2024-06', 26, 30, -4, 0.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 0}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\"}', 666000.00, 6854000.00, 'draft', NULL, NULL, NULL, NULL, NULL, '2024-11-07 09:10:10', '2024-11-07 09:10:10');
 
 -- --------------------------------------------------------
 
@@ -1482,7 +1489,7 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT for table `permissions`

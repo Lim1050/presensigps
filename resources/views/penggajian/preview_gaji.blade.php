@@ -102,7 +102,7 @@
                 <tr class="font-weight-bold">
                     <td>Total Penghasilan</td>
                     <td class="text-right">Rp {{ number_format($totalGajiAsli, 0, ',', '.') }}</td>
-                    <td class="text-right">Rp {{ number_format($totalPotongan, 0, ',', '.') }}</td>
+                    <td class="text-right">Rp {{ number_format($komponenPotongan['Potongan Ketidakhadiran'], 0, ',', '.') }}</td>
                     <td class="text-right">Rp {{ number_format($totalGaji, 0, ',', '.') }}</td>
                 </tr>
             </tbody>

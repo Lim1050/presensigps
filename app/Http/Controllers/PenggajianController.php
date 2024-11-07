@@ -30,7 +30,7 @@ class PenggajianController extends Controller
 
             // Filter berdasarkan periode (bulan)
             if ($request->filled('bulan')) {
-                $query->where('kode_penggajian', 'like', 'PG-' . $request->bulan . '%');
+                $query->where('bulan', 'like', 'PG-' . $request->bulan . '%');
             }
 
             // Filter berdasarkan cabang
@@ -140,23 +140,20 @@ class PenggajianController extends Controller
                 ->where('kode_lokasi_penugasan', $karyawan->kode_lokasi_penugasan)
                 ->where('kode_cabang', $karyawan->kode_cabang)
                 ->get();
-                // dd($komponenGaji);
 
             $komponenGajiArray = $komponenGaji->mapWithKeys(function ($item) {
                 return [
                     $item->kode_jenis_gaji => [
                         'jumlah_gaji' => $item->jumlah_gaji,
                         'jenis_gaji' => $item->jenisGaji->jenis_gaji ?? $item->kode_jenis_gaji
-                        ]
-                    ];
-
+                    ]
+                ];
             })->toArray();
-
 
             $komponenGajiAsli = $komponenGaji->pluck('jumlah_gaji', 'kode_jenis_gaji')->toArray();
 
             // Ambil komponen potongan
-            $komponenPotongan = Potongan::with(relations: 'jenisPotongan')
+            $komponenPotongan = Potongan::with('jenisPotongan')
                 ->where('kode_jabatan', $karyawan->kode_jabatan)
                 ->where('kode_lokasi_penugasan', $karyawan->kode_lokasi_penugasan)
                 ->where('kode_cabang', $karyawan->kode_cabang)
@@ -177,38 +174,42 @@ class PenggajianController extends Controller
             $totalKehadiran = $presensi->whereIn('status', ['hadir', 'izin', 'sakit', 'cuti'])->count();
             $totalKetidakhadiran = $hariKerjaLokasi - $totalKehadiran;
 
-            // Hitung potongan gaji untuk ketidakhadiran
+            // Hitung potongan gaji untuk ketidakhadiran hanya sekali
             if ($totalKetidakhadiran > 0 && isset($komponenGajiArray['GT'])) {
-                $potonganPerHari = $komponenGajiArray['GT']['jumlah_gaji'] / $hariKerjaLokasi;
-                $totalPotonganKetidakhadiran = $potonganPerHari * $totalKetidakhadiran;
-                $komponenGajiArray['GT']['jumlah_gaji'] -= $totalPotonganKetidakhadiran;
-                $komponenPotongan['Potongan Ketidakhadiran'] = $totalPotonganKetidakhadiran;
+                // Pastikan potongan ketidakhadiran hanya dihitung sekali
+                if (!isset($komponenPotongan['Potongan Ketidakhadiran'])) {
+                    $potonganPerHari = $komponenGajiArray['GT']['jumlah_gaji'] / $hariKerjaLokasi;
+                    $totalPotonganKetidakhadiran = $potonganPerHari * $totalKetidakhadiran;
+                    $komponenGajiArray['GT']['jumlah_gaji'] -= $totalPotonganKetidakhadiran;
+                    $komponenPotongan['Potongan Ketidakhadiran'] = $totalPotonganKetidakhadiran;
+                }
             }
 
             // Hitung lembur
             $lembur = Lembur::where('nik', $karyawan->nik)
-                ->whereYear('tanggal_presensi', $tahun)
-                ->whereMonth('tanggal_presensi', $bulan)
+                ->whereYear('tanggal_presensi', $tanggalGaji->year)
+                ->whereMonth('tanggal_presensi', $tanggalGaji->month)
                 ->where('status', 'disetujui')
                 ->sum('durasi_menit');
 
             // Konversi menit ke jam
             $jamLembur = $lembur / 60;
 
-            // Hitung jumlah lembur berdasarkan tarif per jam (kode_jenis_gaji 'L')
+            // Hitung jumlah lembur sebagai komponen terpisah
             $tarifLemburPerJam = $komponenGajiAsli['L'] ?? 0;
             $jumlahLembur = $jamLembur * $tarifLemburPerJam;
 
-            // Tambahkan lembur ke komponen gaji
-            if (isset($komponenGajiArray['L'])) {
-                $komponenGajiArray['L']['jumlah_gaji'] = $jumlahLembur;
-            }
+            // Tambahkan komponen lembur ke array komponen gaji
+            $komponenGajiArray['L'] = [
+                'jumlah_gaji' => $jumlahLembur,
+                'jenis_gaji' => 'Lembur'
+            ];
 
             // Hitung total
             $totalGajiAsli = array_sum($komponenGajiAsli);
             $totalGaji = array_sum(array_column($komponenGajiArray, 'jumlah_gaji'));
             $totalPotongan = array_sum($komponenPotongan);
-            $gajiBersih = $totalGaji - $totalPotongan;
+            $gajiBersih = $totalGajiAsli - $totalPotongan + $jumlahLembur;
 
             return view('penggajian.preview_gaji', compact(
                 'karyawan',
@@ -231,7 +232,7 @@ class PenggajianController extends Controller
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
         }
-    }
+}
 
     public function PenggajianStore(Request $request)
     {
@@ -282,7 +283,15 @@ class PenggajianController extends Controller
                 ];
             })->toArray();
 
-            $komponenGajiAsli = $komponenGaji->pluck('jumlah_gaji', 'kode_jenis_gaji')->toArray();
+            // Ubah $komponenGajiAsli agar memiliki format yang sama
+            $komponenGajiAsli = $komponenGaji->mapWithKeys(function ($item) {
+                return [
+                    $item->kode_jenis_gaji => [
+                        'jumlah_gaji' => $item->jumlah_gaji,
+                        'jenis_gaji' => $item->jenisGaji->jenis_gaji ?? $item->kode_jenis_gaji
+                    ]
+                ];
+            })->toArray();
 
             // Ambil komponen potongan
             $komponenPotongan = Potongan::with('jenisPotongan')
@@ -306,9 +315,8 @@ class PenggajianController extends Controller
             $totalKehadiran = $presensi->whereIn('status', ['hadir', 'izin', 'sakit', 'cuti'])->count();
             $totalKetidakhadiran = $hariKerjaLokasi - $totalKehadiran;
 
-            // Hitung total gaji kotor dari komponen asli (sebelum potongan)
-            $totalGajiKotor = array_sum($komponenGajiAsli);
-
+            // Hitung total gaji kotor dari komponen asli ( sebelum potongan)
+            $totalGajiKotor = array_sum(array_column($komponenGajiAsli, 'jumlah_gaji'));
 
             // Hitung lembur
             $lembur = Lembur::where('nik', $karyawan->nik)
@@ -321,7 +329,7 @@ class PenggajianController extends Controller
             $jamLembur = $lembur / 60;
 
             // Hitung jumlah lembur sebagai komponen terpisah
-            $tarifLemburPerJam = $komponenGajiAsli['L'] ?? 0;
+            $tarifLemburPerJam = $komponenGajiAsli['L']['jumlah_gaji'] ?? 0;
             $jumlahLembur = $jamLembur * $tarifLemburPerJam;
 
             // Tambahkan komponen lembur ke array komponen gaji
@@ -343,12 +351,14 @@ class PenggajianController extends Controller
 
             // Hitung gaji bersih (termasuk lembur)
             $gajiBersih = $totalGajiKotor - $totalPotongan + $jumlahLembur;
-            // dd(vars: $gajiBersih);
+
             // Generate kode penggajian
             $lastPenggajian = Penggajian::orderBy('kode_penggajian', 'desc')->first();
             $lastNumber = $lastPenggajian ? intval(substr($lastPenggajian->kode_penggajian, -4)) : 0;
             $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
             $kodePenggajian = 'PG' . date('Ym') . $newNumber;
+
+            // dd($komponenGajiAsli);
 
             // Buat record penggajian baru
             $penggajian = new Penggajian();
@@ -362,6 +372,7 @@ class PenggajianController extends Controller
             $penggajian->jumlah_hari_masuk = $totalKehadiran;
             $penggajian->jumlah_hari_tidak_masuk = $totalKetidakhadiran;
             $penggajian->total_jam_lembur = $jamLembur;
+            $penggajian->komponen_gaji_kotor = json_encode($komponenGajiAsli);
             $penggajian->komponen_gaji = json_encode($komponenGajiArray);
             $penggajian->komponen_potongan = json_encode($komponenPotongan);
             $penggajian->total_gaji_kotor = $totalGajiKotor;
@@ -381,31 +392,39 @@ class PenggajianController extends Controller
         }
     }
 
-    public function PenggajianShow($id)
+    public function PenggajianShow($kode_penggajian)
     {
-        $penggajian = Penggajian::with('karyawan')->findOrFail($id);
-        // dd($penggajian->updated_at);
-        return view('penggajian.penggajian_show', compact('penggajian'));
+        // Mengambil data penggajian beserta relasi karyawan, cabang, dan lokasi penugasan
+        $penggajian = Penggajian::with('karyawan', 'cabang', 'lokasiPenugasan')->findOrFail($kode_penggajian);
+
+        // Decode komponen gaji dan potongan dari JSON
+        $komponenGajiKotor = json_decode($penggajian->komponen_gaji_kotor, true);
+        $komponenGaji = json_decode($penggajian->komponen_gaji, true);
+        // dd($komponenGaji);
+        $komponenPotongan = json_decode($penggajian->komponen_potongan, true);
+
+        // Mengoper data ke view
+        return view('penggajian.penggajian_show', compact('penggajian', 'komponenGajiKotor', 'komponenGaji', 'komponenPotongan'));
     }
 
-    public function ExportPDF($id)
+    public function ExportPDF($kode_penggajian)
     {
-        $penggajian = Penggajian::with('karyawan')->findOrFail($id);
+        $penggajian = Penggajian::with('karyawan')->findOrFail($kode_penggajian);
 
         $pdf = Pdf::loadView('penggajian.penggajian_export', compact('penggajian'));
 
         return $pdf->download('penggajian_' . $penggajian->karyawan->nama_lengkap . '_' . $penggajian->bulan . '.pdf');
     }
 
-    public function PenggajianEdit($id)
+    public function PenggajianEdit($kode_penggajian)
     {
-        $penggajian = Penggajian::with('karyawan')->findOrFail($id);
+        $penggajian = Penggajian::with('karyawan')->findOrFail($kode_penggajian);
         return view('penggajian.penggajian_edit', compact('penggajian'));
     }
 
-    public function PenggajianUpdate(Request $request, $id)
+    public function PenggajianUpdate(Request $request, $kode_penggajian)
     {
-        $penggajian = Penggajian::findOrFail($id);
+        $penggajian = Penggajian::findOrFail($kode_penggajian);
         // dd($request->all());
         $validatedData = $request->validate([
             // 'bulan' => 'required|date_format:Y-m',
@@ -451,9 +470,9 @@ class PenggajianController extends Controller
         return redirect()->route('admin.penggajian')->with('success', 'Data penggajian berhasil diperbarui.');
     }
 
-    public function PenggajianDelete($id)
+    public function PenggajianDelete($kode_penggajian)
     {
-        $penggajian = Penggajian::findOrFail($id);
+        $penggajian = Penggajian::findOrFail($kode_penggajian);
 
         try {
             $penggajian->delete();

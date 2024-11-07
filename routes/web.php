@@ -203,11 +203,11 @@ Route::middleware(['auth:user'])->group(function () {
     // Penggajian Store
     Route::post('/admin/penggajian/store', [PenggajianController::class, 'PenggajianStore'])->name('admin.penggajian.store');
     Route::get('/penggajian/hitung', [PenggajianController::class, 'hitungGaji'])->name('penggajian.hitung');
-    Route::get('/admin/penggajian/show/{id}', action: [PenggajianController::class, 'PenggajianShow'])->name('admin.penggajian.show');
-    Route::get('/admin/penggajian/export/{id}', [PenggajianController::class, 'ExportPDF'])->name('admin.penggajian.export');
-    Route::get('/admin/penggajian/edit/{id}', action: [PenggajianController::class, 'PenggajianEdit'])->name('admin.penggajian.edit');
-    Route::put('/admin/penggajian/update/{id}', action: [PenggajianController::class, 'PenggajianUpdate'])->name('admin.penggajian.update');
-    Route::get('/admin/penggajian/delete/{id}', action: [PenggajianController::class, 'PenggajianDelete'])->name('admin.penggajian.delete');
+    Route::get('/admin/penggajian/show/{kode_penggajian}', action: [PenggajianController::class, 'PenggajianShow'])->name('admin.penggajian.show');
+    Route::get('/admin/penggajian/export/{kode_penggajian}', [PenggajianController::class, 'ExportPDF'])->name('admin.penggajian.export');
+    Route::get('/admin/penggajian/edit/{kode_penggajian}', action: [PenggajianController::class, 'PenggajianEdit'])->name('admin.penggajian.edit');
+    Route::put('/admin/penggajian/update/{kode_penggajian}', action: [PenggajianController::class, 'PenggajianUpdate'])->name('admin.penggajian.update');
+    Route::get('/admin/penggajian/delete/{kode_penggajian}', action: [PenggajianController::class, 'PenggajianDelete'])->name('admin.penggajian.delete');
 
     // Cashbon Index
     Route::get('/admin/cashbon', [CashbonController::class, 'CashbonIndex'])->name('admin.cashbon');
