@@ -178,6 +178,19 @@
                 {{-- </div> --}}
             </div>
         </div>
+        <div class="row">
+            <div class="col text-right">
+                {{-- <div class="card-body"> --}}
+                    <p>Tanggal Gaji : {{ \Carbon\Carbon::parse($penggajian->tanggal_gaji)->translatedFormat('d F Y') }}</p>
+                    {{-- <table class="table table-bordered">
+                        <tr class="font-weight-bold">
+                            <td>Total Gaji Bersih</td>
+                            <td class="text-right">Rp {{ number_format($penggajian->gaji_bersih, 0, ',', '.') }}</td>
+                        </tr>
+                    </table> --}}
+                {{-- </div> --}}
+            </div>
+        </div>
 
         <div class="row">
             <div class="col">

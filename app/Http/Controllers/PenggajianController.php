@@ -403,6 +403,8 @@ class PenggajianController extends Controller
         // dd($komponenGaji);
         $komponenPotongan = json_decode($penggajian->komponen_potongan, true);
 
+        // dd($komponenPotongan);
+
         // Mengoper data ke view
         return view('penggajian.penggajian_show', compact('penggajian', 'komponenGajiKotor', 'komponenGaji', 'komponenPotongan'));
     }
@@ -418,8 +420,16 @@ class PenggajianController extends Controller
 
     public function PenggajianEdit($kode_penggajian)
     {
-        $penggajian = Penggajian::with('karyawan')->findOrFail($kode_penggajian);
-        return view('penggajian.penggajian_edit', compact('penggajian'));
+        // Mengambil data penggajian beserta relasi karyawan, cabang, dan lokasi penugasan
+        $penggajian = Penggajian::with('karyawan', 'cabang', 'lokasiPenugasan')->findOrFail($kode_penggajian);
+
+        // Decode komponen gaji dan potongan dari JSON
+        $komponenGajiKotor = json_decode($penggajian->komponen_gaji_kotor, true);
+        $komponenGaji = json_decode($penggajian->komponen_gaji, true);
+        // dd($komponenGaji);
+        $komponenPotongan = json_decode($penggajian->komponen_potongan, true);
+        // dd($komponenPotongan);
+        return view('penggajian.penggajian_edit', compact('penggajian', 'komponenGajiKotor', 'komponenGaji', 'komponenPotongan'));
     }
 
     public function PenggajianUpdate(Request $request, $kode_penggajian)
