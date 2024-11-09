@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cashbon;
 use App\Models\CashbonLimit;
 use App\Models\Penggajian;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,12 +19,55 @@ class KeuanganController extends Controller
     {
         return view('keuangan.keuangan_index');
     }
-    public function KeuanganGaji()
+    public function KeuanganGaji(Request $request)
     {
         $nik = Auth::guard('karyawan')->user()->nik;
-        $gaji = Penggajian::where('nik', $nik)->get();
+        $query = Penggajian::with(['karyawan', 'cabang', 'lokasiPenugasan'])
+                ->where('nik', $nik)
+                ->where('status', 'dibayar');
+
+        // Filter berdasarkan bulan dan tahun jika ada
+        if ($request->filled('bulan') && $request->filled('tahun')) {
+            $query->whereYear('tanggal_gaji', $request->tahun)
+                ->whereMonth('tanggal_gaji', $request->bulan);
+        }
+        // Filter hanya berdasarkan tahun
+        elseif ($request->filled('tahun')) {
+            $query->whereYear('tanggal_gaji', $request->tahun);
+        }
+        // Filter hanya berdasarkan bulan
+        elseif ($request->filled('bulan')) {
+            $query->whereMonth('tanggal_gaji', $request->bulan);
+        }
+
+        $gaji = $query->orderBy('tanggal_gaji', 'desc')->get();
+
         return view('keuangan.keuangan_gaji', compact('gaji'));
     }
+
+    public function KeuanganGajiExport($kode_penggajian)
+    {
+        $nik = Auth::guard('karyawan')->user()->nik;
+        $penggajian = Penggajian::with(['karyawan', 'cabang', 'lokasiPenugasan'])
+                ->where('nik', $nik)->find($kode_penggajian);
+        // Decode komponen gaji dan potongan dari JSON
+        $komponenGajiKotor = json_decode($penggajian->komponen_gaji_kotor, true);
+        $komponenGaji = json_decode($penggajian->komponen_gaji, true);
+        $komponenPotongan = json_decode($penggajian->komponen_potongan, true);
+
+
+        $imagePath = public_path('assets/img/MASTER-LOGO-PT-GUARD-500-500.png');
+        $imageData = base64_encode(file_get_contents($imagePath));
+        $src = 'data:image/png;base64,' . $imageData;
+
+        // Mengoper data ke pdf
+        $pdf = Pdf::loadView('keuangan.keuangan_gaji_export', compact('penggajian', 'komponenGajiKotor', 'komponenGaji', 'komponenPotongan', 'src'))
+                    ->setPaper('A4', 'portrait')
+                    ->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+        return $pdf->download(filename: 'Gaji_' . $penggajian->kode_penggajian . '_' . $penggajian->karyawan->nama_lengkap . '_' . $penggajian->bulan . '.pdf');
+    }
+
     public function KeuanganCashbon(Request $request)
     {
         $nik = Auth::guard('karyawan')->user()->nik;

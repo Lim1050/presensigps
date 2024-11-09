@@ -52,6 +52,11 @@ class Penggajian extends Model
         return $this->belongsTo(LokasiPenugasan::class, 'kode_lokasi_penugasan', 'kode_lokasi_penugasan');
     }
 
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'kode_jabatan', 'kode_jabatan'); // Sesuaikan dengan nama kolom yang benar
+    }
+
     // Scope queries
     public function scopeDraft($query)
     {

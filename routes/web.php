@@ -206,6 +206,7 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/admin/penggajian/show/{kode_penggajian}', action: [PenggajianController::class, 'PenggajianShow'])->name('admin.penggajian.show');
     Route::get('/admin/penggajian/export/{kode_penggajian}', [PenggajianController::class, 'ExportPDF'])->name('admin.penggajian.export');
     Route::get('/admin/penggajian/edit/{kode_penggajian}', action: [PenggajianController::class, 'PenggajianEdit'])->name('admin.penggajian.edit');
+    Route::put('/admin/penggajian/edit-preview', [PenggajianController::class, 'previewEditGaji'])->name('admin.penggajian.edit-preview');
     Route::put('/admin/penggajian/update/{kode_penggajian}', action: [PenggajianController::class, 'PenggajianUpdate'])->name('admin.penggajian.update');
     Route::get('/admin/penggajian/delete/{kode_penggajian}', action: [PenggajianController::class, 'PenggajianDelete'])->name('admin.penggajian.delete');
 
@@ -420,6 +421,8 @@ Route::middleware(['auth:karyawan'])->group(function () {
     Route::get('/keuangan', [KeuanganController::class, 'KeuanganIndex'])->name('keuangan');
     // keuangan gaji
     Route::get('/keuangan/gaji', [KeuanganController::class, 'KeuanganGaji'])->name('keuangan.gaji');
+    // keuangan gaji show
+    Route::get('/keuangan/gaji/export/{kode_penggajian}', [KeuanganController::class, 'KeuanganGajiExport'])->name('keuangan.gaji.export');
     // keuangan cashbon
     Route::get('/keuangan/cashbon', [KeuanganController::class, 'KeuanganCashbon'])->name('keuangan.cashbon');
     // keuangan Cashbon show

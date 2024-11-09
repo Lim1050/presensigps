@@ -1,5 +1,5 @@
 <div class="preview-gaji">
-    <h3>Preview Slip Gaji</h3>
+    <h3>Preview Edit Slip Gaji</h3>
 
     <!-- Data Karyawan -->
     <div class="data-karyawan mb-4">
@@ -14,12 +14,12 @@
                 <tr>
                     <td>Nama</td>
                     <td>:</td>
-                    <td>{{ $karyawan->nama_lengkap }}</td>
+                    <td>{{ $karyawan->karyawan->nama_lengkap }}</td>
                 </tr>
                 <tr>
                     <td>Jabatan</td>
                     <td>:</td>
-                    <td>{{ $karyawan->jabatan->nama_jabatan }}</td>
+                    <td>{{ $karyawan->karyawan->jabatan->nama_jabatan }}</td>
                 </tr>
                 <tr>
                     <td>Kantor Cabang</td>
@@ -58,7 +58,7 @@
                 <tr>
                     <td>Total Jam Lembur</td>
                     <td>:</td>
-                    <td>{{ number_format($lembur / 60, 2) }} jam</td>
+                    <td>{{ number_format($jamLembur, 2) }} jam</td> <!-- Ganti $lembur dengan $jamLembur -->
                 </tr>
             </table>
         </div>
@@ -94,10 +94,9 @@
                             </tr>
                         @endif
                     @endforeach
-
-                    @if(isset($komponenGajiArray['L']) && $lembur > 0)
+                    @if(isset($komponenGajiArray['L']) && $jamLembur > 0)
                         <tr>
-                            <td>{{ $komponenGajiArray['L']['jenis_gaji'] }} × {{ number_format($lembur / 60, 2) }} jam</td>
+                            <td>{{ $komponenGajiArray['L']['jenis_gaji'] }} × {{ number_format($jamLembur, 2) }} jam</td>
                             <td class="text-right">Rp {{ number_format($komponenGajiAsli['L'], 0, ',', '.') }} (Per jam)</td>
                             <td class="text-right">-</td>
                             <td class="text-right">Rp {{ number_format($komponenGajiArray['L']['jumlah_gaji'], 0, ',', '.') }}</td>
@@ -107,7 +106,7 @@
                     <tr class="font-weight-bold">
                         <td>Total Penghasilan</td>
                         <td class="text-right">Rp {{ number_format($totalGajiAsli, 0, ',', '.') }}</td>
-                        <td class="text-right">Rp {{ number_format($komponenPotongan['Potongan Ketidakhadiran'], 0, ',', '.') }}</td>
+                        <td class="text-right">Rp {{ number_format($komponenPotongan['Potongan Ketidakhadiran'] ?? 0, 0, ',', '.') }}</td>
                         <td class="text-right">Rp {{ number_format($totalGaji, 0, ',', '.') }}</td>
                     </tr>
                 </tbody>
@@ -133,7 +132,7 @@
                             <tr>
                                 <td>{{ $nama }}</td>
                                 <td class="text-right">
-                                    Rp {{ number_format($komponenGajiAsli['GT']/$hariKerjaLokasi, 0, ',', '.') }} × {{ $totalKetidakhadiran }} hari
+                                    Rp {{ number_format($komponenGajiAsli['GT'] / $hariKerjaLokasi, 0, ',', '.') }} × {{ $totalKetidakhadiran }} hari
                                 </td>
                                 <td class="text-right">Rp {{ number_format($nominal, 0, ',', '.') }}</td>
                             </tr>

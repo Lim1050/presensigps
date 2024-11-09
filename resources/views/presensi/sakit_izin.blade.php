@@ -91,10 +91,10 @@
             <div class="row">
                 <div class="col">
                 @foreach ($dataIzin as $izin)
-                <div class="card mb-1 card_izin" kode_izin="{{ $izin->kode_izin }}" status_approved="{{ $izin->status_approved }}" data-toggle="modal" data-target="#actionSheetIconed">
+                <div class="card mb-1" >
                     <div class="card-body">
                         <div class="historycontent">
-                            <div class="iconpresensi">
+                            <div class="iconpresensi card_izin" kode_izin="{{ $izin->kode_izin }}" status_approved="{{ $izin->status_approved }}" data-toggle="modal" data-target="#actionSheetIconed">
                                 @if ($izin->status == "izin")
                                 <ion-icon style="font-size: 40px;" name="reader-outline" role="img" class="md hydrated text-primary" aria-label="checkmark"></ion-icon>
                                 @elseif ($izin->status == "sakit")
@@ -102,8 +102,8 @@
                                 @elseif ($izin->status == "cuti")
                                 <ion-icon style="font-size: 40px;" name="calendar-outline" role="img" class="md hydrated text-secondary" aria-label="checkmark"></ion-icon>
                                 @endif
-
                             </div>
+
                             <div class="datapresensi">
                                 <h3 style="line-height: 3px">{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} ({{ $izin->status == "izin" ? "Izin" : ($izin->status == "sakit" ? "Sakit" : "Cuti")}} {{ hitunghari($izin->tanggal_izin_dari, $izin->tanggal_izin_sampai) }} Hari)</h3>
                                 <small>{{ date("d-m-Y",strtotime($izin->tanggal_izin_dari)) }} s/d {{ date("d-m-Y",strtotime($izin->tanggal_izin_sampai)) }}</small>
@@ -114,17 +114,46 @@
                                     <p class="text-secondary"><ion-icon name="calendar-outline"></ion-icon> {{ $izin->nama_cuti }}</p>
                                     @endif
 
-                                    @if (!empty($izin->surat_sakit))
-                                        <a href="#" class="text-danger"><ion-icon name="document-attach-outline"></ion-icon> Lihat Surat Sakit</a>
-                                    @endif
 
+                                    @if (!empty($izin->surat_sakit))
+                                        <a href="#" data-toggle="modal" data-target="#imageDisplayContainer{{ $izin->kode_izin }}" class="text-danger">
+                                            <ion-icon name="document-attach-outline"></ion-icon> Lihat Surat Sakit
+                                        </a>
+                                    @endif
                             </div>
+
                             <div class="status">
                                 <span class="status {{ $izin->status_approved == "1" ? "text-success" : ($izin->status_approved == "2" ? "text-danger" : "text-warning")}}">{{ $izin->status_approved == "1" ? "Diterima" : ($izin->status_approved == "2" ? "Ditolak" : "Menunggu") }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal for displaying the image -->
+                <div class="modal fade" id="imageDisplayContainer{{ $izin->kode_izin }}" data-backdrop="static" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ $izin->kode_izin }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                @php
+                                    $path = Storage::url("uploads/surat_sakit/" . $izin->surat_sakit);
+                                @endphp
+                                <img id="imageDisplay" src="{{ $path }}" alt="Image will be displayed here" width="100%" height="auto" />
+                            </div>
+                            <div class="modal-footer">
+                                <div class="btn-inline">
+                                    <a href="#" class="btn btn-secondary" data-dismiss="modal">Tutup</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 @endforeach
                 </div>
             </div>
@@ -154,6 +183,7 @@
         </a>
     </div>
 </div>
+
 
 {{-- Modal Pop UP Action --}}
 <div class="modal fade action-sheet" id="actionSheetIconed" tabindex="-1" role="dialog">
@@ -192,6 +222,13 @@
 
 @push('myscript')
     <script>
+        // function displayImage(imageUrl) {
+        //     console.log(imageUrl); // Debugging line
+        //     var imgElement = document.getElementById('imageDisplay');
+        //     imgElement.src = imageUrl;
+        //     imgElement.style.display = 'block';
+        // }
+
         $(function(){
             $(".card_izin").click(function(e){
                 var kode_izin = $(this).attr("kode_izin");

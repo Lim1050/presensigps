@@ -1,7 +1,17 @@
 @extends('layouts.admin.admin_master')
 @section('content')
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Detail Gaji {{ $penggajian->kode_penggajian }}</h1>
+    <h1 class="h3 mb-0 text-gray-800">Detail Gaji {{ $penggajian->kode_penggajian }}
+                                    @if ($penggajian->status == 'draft')
+                                        <span class="badge badge-secondary">Draft</span>
+                                    @elseif ($penggajian->status == 'disetujui')
+                                        <span class="badge badge-primary">Disetujui</span>
+                                    @elseif ($penggajian->status == 'ditolak')
+                                        <span class="badge badge-danger">Ditolak</span>
+                                    @elseif ($penggajian->status == 'dibayar')
+                                        <span class="badge badge-success">Dibayar</span>
+                                    @endif
+                                </h1>
 </div>
 <div class="card shadow mb-4">
 
@@ -9,8 +19,8 @@
         <!-- Data Karyawan -->
         <div class="row">
             <div class="col">
-                {{-- <div class="card-body"> --}}
-                    <h4>Data Karyawan</h4>
+                <h4>Data Karyawan</h4>
+                <div class="table-responsive">
                     <table class="table table-borderless">
                         <tr>
                             <td width="200">NIK</td>
@@ -43,15 +53,15 @@
                             <td>{{ $penggajian->jumlah_hari_kerja }} hari</td> <!-- Pastikan $hariKerjaLokasi didefinisikan di controller -->
                         </tr>
                     </table>
-                {{-- </div> --}}
+                </div>
             </div>
         </div>
 
         <!-- Data Kehadiran -->
         <div class="row">
             <div class="col">
-                {{-- <div class="card-body"> --}}
-                    <h4>Data Kehadiran</h4>
+                <h4>Data Kehadiran</h4>
+                <div class="table-responsive">
                     <table class="table table-borderless">
                         <tr>
                             <td width="200">Jumlah Hari Masuk</td>
@@ -69,15 +79,15 @@
                             <td>{{ number_format($penggajian->total_jam_lembur) }} jam</td> <!-- Pastikan $lembur didefinisikan di controller -->
                         </tr>
                     </table>
-                {{-- </div> --}}
+                </div>
             </div>
         </div>
 
         <!-- Komponen Penghasilan -->
         <div class="row">
             <div class="col">
-                {{-- <div class="card-body"> --}}
-                    <h4>Komponen Penghasilan</h4>
+                <h4>Komponen Penghasilan</h4>
+                <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="thead-light">
                             <tr>
@@ -122,7 +132,7 @@
                             </tr>
                         </tbody>
                     </table>
-                {{-- </div> --}}
+                </div>
             </div>
         </div>
 
@@ -130,8 +140,8 @@
         <!-- Komponen Potongan -->
         <div class="row">
             <div class="col">
-                {{-- <div class="card-body"> --}}
-                    <h4>Rincian Potongan</h4>
+                <h4>Rincian Potongan</h4>
+                <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="thead-light">
                             <tr>
@@ -160,42 +170,61 @@
                             </tr>
                         </tbody>
                     </table>
-                {{-- </div> --}}
+                </div>
             </div>
         </div>
 
         <!-- Gaji Bersih -->
         <div class="row">
             <div class="col">
-                {{-- <div class="card-body"> --}}
-                    <h4>Gaji Bersih</h4>
+                <h4>Gaji Bersih</h4>
+                <div class="table-responsive">
                     <table class="table table-bordered">
                         <tr class="font-weight-bold">
                             <td>Total Gaji Bersih</td>
                             <td class="text-right">Rp {{ number_format($penggajian->gaji_bersih, 0, ',', '.') }}</td>
                         </tr>
                     </table>
-                {{-- </div> --}}
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col text-right">
-                {{-- <div class="card-body"> --}}
-                    <p>Tanggal Gaji : {{ \Carbon\Carbon::parse($penggajian->tanggal_gaji)->translatedFormat('d F Y') }}</p>
-                    {{-- <table class="table table-bordered">
-                        <tr class="font-weight-bold">
-                            <td>Total Gaji Bersih</td>
-                            <td class="text-right">Rp {{ number_format($penggajian->gaji_bersih, 0, ',', '.') }}</td>
-                        </tr>
-                    </table> --}}
-                {{-- </div> --}}
+            <div class="col alert alert-success">
+                <h5>Informasi Gaji </h5>
+                    <p>
+                        Status : @if ($penggajian->status == 'draft')
+                                    <span class="badge badge-secondary">Draft</span>
+                                @elseif ($penggajian->status == 'disetujui')
+                                    <span class="badge badge-primary">Disetujui</span>
+                                @elseif ($penggajian->status == 'ditolak')
+                                    <span class="badge badge-danger">Ditolak</span>
+                                @elseif ($penggajian->status == 'dibayar')
+                                    <span class="badge badge-success">Dibayar</span>
+                                @endif <br>
+                        Tanggal Gaji : {{ \Carbon\Carbon::parse($penggajian->tanggal_gaji)->translatedFormat('d F Y') }} <br>
+                        Catatan : {{ $penggajian->catatan }} <br>
+                        Diproses Oleh : {{ $penggajian->diproses_oleh }}
+                    </p>
             </div>
         </div>
+
+        @if($penggajian->diubah_oleh)
+        <div class="row">
+            <div class="col alert alert-warning">
+                <h5>Informasi Perubahan :</h5>
+                <p>
+                    Dirubah pada : {{ \Carbon\Carbon::parse($penggajian->waktu_perubahan)->translatedFormat('d F Y H:i:s') }}<br>
+                    Diubah Oleh : {{ $penggajian->diubah_oleh }}<br>
+                    Catatan Perubahan : {{ $penggajian->alasan_perubahan }}
+                </p>
+            </div>
+        </div>
+        @endif
 
         <div class="row">
             <div class="col">
                 <a href="{{ route('admin.penggajian') }}" class="btn btn-danger">Kembali</a>
-                <a href="{{ route('admin.penggajian') }}" class="btn btn-danger">Cetak Slip Gaji</a>
+                <a href="{{ route('admin.penggajian.export', $penggajian->kode_penggajian) }}" class="btn btn-danger">Cetak Slip Gaji</a>
             </div>
         </div>
     </div>

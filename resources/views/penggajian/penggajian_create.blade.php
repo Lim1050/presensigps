@@ -63,6 +63,29 @@
                 <div id="previewContent"></div>
             </div>
 
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select name="status" id="status" class="form-control">
+                            <option value="">Pilih Status</option>
+                            <option value="draft">Draft</option>
+                            <option value="disetujui">Disetujui</option>
+                            <option value="ditolak">Ditolak</option>
+                            <option value="dibayar">Dibayar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="catatan">Catatan</label>
+                        <textarea class="form-control" id="catatan" name="catatan" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+
             <button type="button" id="previewButton" class="btn btn-info mt-3">Preview Gaji</button>
             <button type="submit" class="btn btn-primary mt-3">Simpan</button>
             {{-- {{ route('penggajian.index') }} --}}

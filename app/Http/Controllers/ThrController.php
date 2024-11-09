@@ -241,7 +241,11 @@ class ThrController extends Controller
     {
         $thr = Thr::with(['jabatan', 'lokasiPenugasan', 'kantorCabang', 'karyawan'])->findOrFail($kode_thr);
 
-        $pdf = Pdf::loadView('thr.thr_export', compact('thr'));
+        $imagePath = public_path('assets/img/MASTER-LOGO-PT-GUARD-500-500.png');
+        $imageData = base64_encode(file_get_contents($imagePath));
+        $src = 'data:image/png;base64,' . $imageData;
+
+        $pdf = Pdf::loadView('thr.thr_export', compact('thr', 'src'));
 
         return $pdf->download($thr->kode_thr . '_' . $thr->karyawan->nama_lengkap . '_' . $thr->nama_thr . '_' . $thr->tahun . '.pdf');
     }

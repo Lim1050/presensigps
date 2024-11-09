@@ -67,8 +67,8 @@
             </div>
 
             <div class="custom-file-upload" id="fileUpload1" style="height: 100px !important">
-                <input type="file" name="surat_sakit" id="fileuploadInput" accept=".png, .jpg, .jpeg">
-                <label for="fileuploadInput">
+                <input type="file" name="surat_sakit" id="surat_sakit" accept=".png, .jpg, .jpeg">
+                <label for="surat_sakit">
                     <span>
                         <strong>
                             <ion-icon name="cloud-upload-outline" role="img" class="md hydrated" aria-label="cloud upload outline"></ion-icon>
@@ -155,6 +155,7 @@
                 var tanggal_izin_sampai = $("#tanggal_izin_sampai").val();
                 var jumlah_hari = $("#jumlah_hari").val();
                 var keterangan = $("#keterangan").val();
+                var surat_sakit = $("#surat_sakit").val();
                 if(tanggal_izin_dari==""){
                     Swal.fire({
                     title: 'Oops!',
@@ -180,6 +181,13 @@
                     Swal.fire({
                     title: 'Oops!',
                     text: 'Keterangan Harus Diisi!',
+                    icon: 'warning',
+                    });
+                    return false;
+                } else if (surat_sakit==""){
+                    Swal.fire({
+                    title: 'Oops!',
+                    text: 'Surat Sakit Harus Diserahkan!',
                     icon: 'warning',
                     });
                     return false;

@@ -1,18 +1,21 @@
 @extends('layouts.admin.admin_master')
+
 @section('content')
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Edit Gaji {{ $penggajian->kode_penggajian }}</h1>
 </div>
-<div class="card shadow mb-4">
 
+<div class="card shadow mb-4">
     <div class="card-body">
-        <form action="{{ route('admin.penggajian.update', $penggajian->kode_penggajian) }}" method="POST">
+        <form id="penggajianForm" action="{{ route('admin.penggajian.update', $penggajian->kode_penggajian) }}" method="POST">
             @csrf
             @method('PUT')
 
             <!-- Data Karyawan -->
             <div class="row mt-4">
                 <div class="col">
+                    <input type="hidden" name="kode_penggajian" value="{{ $penggajian->kode_penggajian }}">
+                    <input type="hidden" name="nik" value="{{ $penggajian->karyawan->nik }}">
                     <h4>Data Karyawan</h4>
                     <table class="table table-borderless">
                         <tr>
@@ -87,14 +90,33 @@
             </div>
 
             <div id="previewEditGaji" style="display: none;">
-                {{-- <h3>Preview Gaji</h3> --}}
                 <div id="previewContent"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select name="status" id="status" class="form-control @error('status') is-invalid @enderror" required>
+                    <option value="draft" {{ old('status', $penggajian->status) == 'draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="disetujui" {{ old('status', $penggajian->status) == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                    <option value="ditolak" {{ old('status', $penggajian->status) == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                    <option value="dibayar" {{ old('status', $penggajian->status) == 'dibayar' ? 'selected' : '' }}>Dibayar</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="catatan">Catatan</label>
+                <textarea class="form-control" id="catatan" name="catatan" rows="3">{{ $penggajian->catatan }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="catatan_perubahan">Catatan Perubahan</label>
+                <textarea class="form-control" id="catatan_perubahan" name="catatan_perubahan" rows="3" required>{{ $penggajian->alasan_perubahan }}</textarea>
             </div>
 
             <div class="row mt-4">
                 <div class="col">
                     <a href="{{ route('admin.penggajian') }}" class="btn btn-danger">Kembali</a>
-                    <button type="button" id="previewEditButton" class="btn btn-info mt-3">Preview Edit Gaji</button>
+                    <button type="button" id="previewEditButton" class="btn btn-info">Preview Edit Gaji</button>
                     <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                 </div>
             </div>
@@ -106,111 +128,53 @@
     .preview-gaji {
         padding: 20px;
     }
-    .preview-gaji h3 {
-        margin-bottom: 20px;
-    }
-    .preview-gaji h4 {
-        margin-bottom: 15px;
-        color: #333;
-    }
     .table {
         margin-bottom: 0;
     }
-    .thead-light th {
-        background-color: #f8f9fa;
-    }
-    .text-right {
-        text-align: right;
-    }
-    .font-weight-bold {
-        font-weight: bold;
-    }
-    .mb-4 {
-        margin-bottom: 1.5rem;
-    }
 </style>
 
-
 <script>
-    // Ambil jumlah hari kerja dari server
-    const jumlahHariKerja = {{ $penggajian->jumlah_hari_kerja }};
+    document.addEventListener('DOMContentLoaded', function() {
+        const jumlahHariKerja = {{ $penggajian->jumlah_hari_kerja }};
+        const jumlahHariMasukInput = document.getElementById('jumlah_hari_masuk');
+        const jumlahHariTidakMasukInput = document.getElementById('jumlah_hari_tidak_masuk');
 
-    // Ambil elemen input dan elemen display
-    const jumlahHariMasukInput = document.getElementById('jumlah_hari_masuk');
-    const jumlahHariTidakMasukInput = document.getElementById('jumlah_hari_tidak_masuk');
-
-    // Fungsi untuk memperbarui jumlah hari tidak masuk
-    function updateJumlahHariTidakMasuk() {
-        const jumlahHariMasuk = parseInt(jumlahHariMasukInput.value) || 0;
-        const jumlahHariTidakMasuk = jumlahHariKerja - jumlahHariMasuk;
-
-        // Update jumlah hari tidak masuk
-        jumlahHariTidakMasukInput.value = jumlahHariTidakMasuk >= 0 ? jumlahHariTidakMasuk : 0;
-    }
-
-    // Tambahkan event listener untuk mendeteksi perubahan pada input jumlah hari masuk
-    jumlahHariMasukInput.addEventListener('input', function() {
-        // Validasi jika jumlah hari masuk melebihi jumlah hari kerja
-        if (parseInt(jumlahHariMasukInput.value) > jumlahHariKerja) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Peringatan!',
-                text: `Jumlah hari masuk tidak boleh lebih dari ${jumlahHariKerja} hari.`,
-                confirmButtonText: 'OK'
-            });
-            jumlahHariMasukInput.value = jumlahHariKerja; // Reset ke jumlah hari kerja
-        }
-        updateJumlahHariTidakMasuk(); // Update jumlah hari tidak masuk
-    });
-
-    // Inisialisasi jumlah hari tidak masuk saat halaman dimuat
-    updateJumlahHariTidakMasuk();
-</script>
-
-<script>
-    $('#previewEditButton').click(function() {
-        // Validasi form
-        var nik = $('#nik').val();
-        var tanggalGaji = $('#tanggal_gaji').val();
-        var kodeCabang = $('#kode_cabang').val();
-        var kodeLokasiPenugasan = $('#kode_lokasi_penugasan').val();
-
-        // Debugging: Log nilai field
-        console.log('NIK:', nik);
-        console.log('Tanggal Gaji:', tanggalGaji);
-        console.log('Kode Cabang:', kodeCabang);
-        console.log('Kode Lokasi Penugasan:', kodeLokasiPenugasan);
-
-        if (!nik || !tanggalGaji || !kodeCabang || !kodeLokasiPenugasan) {
-            alert('Mohon lengkapi semua field yang diperlukan.');
-            return;
+        function updateJumlahHariTidakMasuk() {
+            const jumlahHariMasuk = parseInt(jumlahHariMasukInput.value) || 0;
+            jumlahHariTidakMasukInput.value = Math.max(0, jumlahHariKerja - jumlahHariMasuk);
         }
 
-        var formData = $('#penggajianForm').serialize();
-
-        // Debugging: Cek data yang dikirim
-        console.log('Data yang akan dikirim:', formData);
-
-        $.ajax({
-            url: "{{ route('admin.penggajian.preview') }}",
-            type: "POST",
-            data: formData,
-            success: function(response) {
-                $('#previewContent').html(response);
-                $('#previewGaji').show();
-            },
-            error: function(xhr, status, error) {
-                var errorMessage = "Terjadi kesalahan: ";
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage += xhr.responseJSON.message;
-                } else {
-                    errorMessage += error;
-                }
-                alert(errorMessage);
-                console.error(xhr.responseText);
+        jumlahHariMasukInput.addEventListener('input', function() {
+            if (parseInt(jumlahHariMasukInput.value) > jumlahHariKerja) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan!',
+                    text: `Jumlah hari masuk tidak boleh lebih dari ${jumlahHariKerja} hari.`,
+                    confirmButtonText: 'OK'
+                });
+                jumlahHariMasukInput.value = jumlahHariKerja;
             }
+            updateJumlahHariTidakMasuk();
+        });
+
+        updateJumlahHariTidakMasuk();
+
+        $('#previewEditButton').click(function() {
+            const formData = $('#penggajianForm').serialize();
+            $.ajax({
+                url: "{{ route('admin.penggajian.edit-preview') }}",
+                type: "POST",
+                data: formData,
+                success: function(response) {
+                    $('#previewContent').html(response);
+                    $('#previewEditGaji').show();
+                },
+                error: function(xhr) {
+                    const errorMessage = xhr.responseJSON?.message || "Terjadi kesalahan.";
+                    alert(errorMessage);
+                }
+            });
         });
     });
 </script>
-
 @endsection

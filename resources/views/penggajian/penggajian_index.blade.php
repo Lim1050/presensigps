@@ -121,11 +121,21 @@
                                 <td class="text-center">{{ $item->kode_penggajian }}</td>
                                 <td class="text-center">{{ $item->karyawan->nik }}</td>
                                 <td class="text-center">{{ $item->karyawan->nama_lengkap }}</td>
-                                <td class="text-center">{{ \Carbon\Carbon::parse($item->bulan)->format('F Y') }}</td>
+                                <td class="text-center">{{ \Carbon\Carbon::parse($item->bulan)->translatedFormat('F Y') }}</td>
                                 <td class="text-center">Rp {{ number_format($item->total_gaji_kotor, 0, ',', '.') }}</td>
                                 <td class="text-center">Rp {{ number_format($item->total_potongan, 0, ',', '.') }}</td>
                                 <td class="text-center">{{ $item->gajiBersihRupiah }}</td>
-                                <td class="text-center">{{ ucfirst($item->status) }}</td>
+                                <td class="text-center">
+                                    @if ($item->status == 'draft')
+                                        <span class="badge badge-secondary">Draft</span>
+                                    @elseif ($item->status == 'disetujui')
+                                        <span class="badge badge-primary">Disetujui</span>
+                                    @elseif ($item->status == 'ditolak')
+                                        <span class="badge badge-danger">Ditolak</span>
+                                    @elseif ($item->status == 'dibayar')
+                                        <span class="badge badge-success">Dibayar</span>
+                                    @endif
+                                </td>
                                 <td class="text-center">
                                     <a href="{{ route('admin.penggajian.show', $item->kode_penggajian) }}" class="btn btn-info" title="Lihat"><i class="bi bi-list"></i></a>
                                     <a href="{{ route('admin.penggajian.edit', $item->kode_penggajian) }}" class="btn btn-warning" title="Edit"><i class="bi bi-pencil-square"></i></a>

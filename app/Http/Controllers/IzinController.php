@@ -238,6 +238,13 @@ class IzinController extends Controller
         } else {
             $save = DB::table('pengajuan_izin')->insert($data);
 
+            //Simpan File Surat Sakit
+            if ($request->hasFile('surat_sakit')) {
+                $surat_sakit = $kode_izin . "." . $request->file('surat_sakit')->getClientOriginalExtension();
+                $folderPath = "public/uploads/surat_sakit/";
+                $request->file('surat_sakit')->storeAs($folderPath, $surat_sakit);
+            }
+
             if($save){
                 return redirect()->route('izin')->with(['success' => 'Data berhasil disimpan!']);
             } else {
@@ -521,7 +528,7 @@ class IzinController extends Controller
     {
 
         $query = PersetujuanSakitIzin::query();
-        $query->select('kode_izin', 'tanggal_izin_dari', 'tanggal_izin_sampai', 'pengajuan_izin.nik', 'nama_lengkap', 'kode_jabatan', 'status', 'status_approved', 'keterangan');
+        $query->select('kode_izin', 'tanggal_izin_dari', 'tanggal_izin_sampai', 'pengajuan_izin.nik', 'nama_lengkap', 'kode_jabatan', 'status', 'status_approved', 'keterangan', 'surat_sakit');
         $query->join('karyawan', 'pengajuan_izin.nik', '=', 'karyawan.nik');
         $query->orderBy('tanggal_izin_dari', 'desc');
 

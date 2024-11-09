@@ -140,7 +140,14 @@
                                         <td>{{ $item->kode_jabatan }}</td>
                                         <td>{{ date('d-m-Y', strtotime($item->tanggal_izin_dari)) }}</td>
                                         <td>{{ date('d-m-Y', strtotime($item->tanggal_izin_sampai)) }}</td>
-                                        <td>{{ $item->status == "sakit" ? "Sakit" : ($item->status == "izin" ? "Izin" : "Cuti") }}</td>
+                                        <td>{{ $item->status == "sakit" ? "Sakit" : ($item->status == "izin" ? "Izin" : "Cuti") }}
+                                            @if ($item->status == "sakit")
+                                            <br>
+                                            <a href="#" data-toggle="modal" data-target="#imageDisplayContainer{{ $item->kode_izin }}" data-kode_izin="{{ $item->kode_izin }}" class="text-danger">
+                                                <i class="bi bi-paperclip"></i> Lihat Surat Sakit
+                                            </a>
+                                            @endif
+                                        </td>
                                         <td>{{ $item->keterangan }}</td>
                                         <td><span class="badge {{ $item->status_approved == "1" ? "badge-success" : ($item->status_approved == "2" ? "badge-danger" : "badge-warning")}}">{{ $item->status_approved == "1" ? "Disetujui" : ($item->status_approved == "2" ? "Ditolak" : "Pending") }}</span></td>
                                         <td>
@@ -151,6 +158,25 @@
                                             @endif
                                         </td>
                                     </tr>
+                                    <!-- Modal gambar -->
+                                        <div class="modal fade" id="imageDisplayContainer{{ $item->kode_izin }}" tabindex="-1" aria-labelledby="imageDisplayContainer{{ $item->kode_izin }}Label" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="imageDisplayContainer{{ $item->kode_izin }}Label">{{ $item->kode_izin }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        @php
+                                                            $path = Storage::url("uploads/surat_sakit/" . $item->surat_sakit);
+                                                        @endphp
+                                                        <img id="imageDisplay" src="{{ $path }}" alt="Image will be displayed here" width="100%" height="auto" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -162,6 +188,7 @@
         </div>
     </div>
 </div>
+
 
 
 <!-- Modal Aproval -->
