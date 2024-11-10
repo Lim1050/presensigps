@@ -623,6 +623,7 @@ class PresensiController extends Controller
         // Hitung total hari presensi
         $total_hari = $presensi->groupBy('tanggal_presensi')->count();
 
+
         // Hitung total jam dan menit lembur
         $total_jam_lembur = 0;
         $total_menit_lembur = 0;
@@ -648,9 +649,15 @@ class PresensiController extends Controller
             $total_menit_lembur = $total_menit_lembur % 60;
         }
 
+
+
         $imagePath = public_path('assets/img/MASTER-LOGO-PT-GUARD-500-500.png');
         $imageData = base64_encode(file_get_contents($imagePath));
         $src = 'data:image/png;base64,' . $imageData;
+
+        $fotoProfilPath = public_path("storage/uploads/karyawan/" . $karyawan->foto);
+        $fotoProfilData = base64_encode(file_get_contents(filename: $fotoProfilPath));
+        $srcProfil = 'data:image/png;base64,' . $fotoProfilData;
 
         // Mengoper data ke pdf
         $pdf = Pdf::loadView('presensi.laporan_print', compact(
@@ -662,9 +669,11 @@ class PresensiController extends Controller
             'total_hari',
             'total_jam_lembur',
             'total_menit_lembur',
-            'src'))
-                ->setPaper('A4', orientation: 'portrait') // Pastikan orientasi landscape
-                ->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+            'src',
+            'srcProfil',
+            ))->setPaper('A4', orientation: 'portrait') // Pastikan orientasi landscape
+            ->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+        // dd($pdf);
 
         return $pdf->download('laporan_presensi_' . $bulan . '_' . $tahun . '_' . $karyawan->nama_lengkap . '.pdf');
 

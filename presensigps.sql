@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 10 Nov 2024 pada 07.14
+-- Waktu pembuatan: 10 Nov 2024 pada 13.07
 -- Versi server: 8.0.35
 -- Versi PHP: 8.2.12
 
@@ -44,11 +44,11 @@ CREATE TABLE `cashbon` (
 --
 
 INSERT INTO `cashbon` (`id`, `kode_cashbon`, `nik`, `tanggal_pengajuan`, `jumlah`, `keterangan`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'CB1A2B3C', '123123123', '2024-10-24', 50000.00, 'Test Cashbon', 'ditolak', '2024-10-24 03:53:33', '2024-10-24 07:19:39'),
-(2, 'CB2B3C4D', '123123123', '2024-10-31', 100000.00, 'Test lagi Cashbon', 'diterima', '2024-10-24 05:01:03', '2024-10-24 07:19:44'),
+(1, 'CB1A2B3C', '123123123', '2024-10-24', 50000.00, 'Test Cashbon', 'ditolak', '2024-10-24 03:53:33', '2024-11-10 10:40:16'),
+(2, 'CB2B3C4D', '123123123', '2024-10-31', 100000.00, 'Test lagi Cashbon', 'pending', '2024-10-24 05:01:03', '2024-11-10 10:40:31'),
 (3, 'CBXWL175', '123123123', '2024-10-25', 10000.00, 'test code cashbon', 'diterima', '2024-10-24 08:39:00', '2024-10-25 10:02:24'),
-(4, 'CBI0E781', '123456789', '2024-10-25', 20000.00, 'naefdoncalksj', 'diterima', '2024-10-25 06:11:26', '2024-10-25 09:32:33'),
-(5, 'CB2CD594', '123123123', '2024-11-09', 10000.00, 'test limit', 'diterima', '2024-10-25 10:01:17', '2024-10-25 10:02:27'),
+(4, 'CBI0E781', '123456789', '2024-10-25', 20000.00, 'naefdoncalksj', 'ditolak', '2024-10-25 06:11:26', '2024-11-10 10:40:58'),
+(5, 'CB2CD594', '123123123', '2024-11-09', 10000.00, 'test limit', 'pending', '2024-10-25 10:01:17', '2024-11-10 10:41:03'),
 (6, 'CBJWZ938', '123123123', '2024-10-26', 100000.00, 'test edit cashbon', 'diterima', '2024-10-26 05:37:44', '2024-10-26 05:58:03'),
 (9, 'CBQBL599', '123123123', '2024-10-27', 2000.00, 'test 2000', 'pending', '2024-10-26 07:03:33', '2024-10-26 07:03:33');
 
@@ -1162,7 +1162,7 @@ CREATE TABLE `thr` (
   `kode_cabang` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nama_thr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tahun` int NOT NULL,
-  `jumlah_thr` decimal(10,2) DEFAULT NULL,
+  `jumlah_thr` decimal(65,2) DEFAULT NULL,
   `tanggal_penyerahan` date NOT NULL,
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
   `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -1178,8 +1178,8 @@ CREATE TABLE `thr` (
 
 INSERT INTO `thr` (`kode_thr`, `nik`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_cabang`, `nama_thr`, `tahun`, `jumlah_thr`, `tanggal_penyerahan`, `status`, `notes`, `catatan_perubahan`, `diubah_oleh`, `created_at`, `updated_at`) VALUES
 ('THR4GQ438', '123123123', 'KEPKAM', 'MN', 'JKTP', 'Test Edit THR', 2024, 5000000.00, '2024-10-31', 'Disetujui', 'Test Edit THR', 'Ubah nominal', 'Super Admin Presensi', '2024-10-29 06:41:31', '2024-11-09 11:05:21'),
-('THRIVZ471', '112233445', 'KEPKAM', 'MN', 'JKTP', 'Test THR Karyawan', 2024, 5000000.00, '2024-10-31', 'Disetujui', 'Test THR Karyawan', 'Perubahan Status THR', 'Super Admin Presensi', '2024-10-29 07:57:13', '2024-10-29 08:14:51'),
-('THRS6U346', '111222333', 'SO', 'SMB', 'BKS', 'Test THR Lagi', 2024, 3750000.00, '2024-10-31', 'Ditolak', 'Test Edit THR Lagi', 'Test Edit THR Lagi', 'Super Admin Presensi', '2024-10-29 06:43:05', '2024-10-29 07:40:05');
+('THRBT4832', '123456789', 'WAKAM', 'MN', 'JKTP', 'Nama THR', 2024, 4500000.00, '2024-11-21', 'Pending', 'Catatan', NULL, NULL, '2024-11-10 11:49:38', '2024-11-10 11:49:38'),
+('THRIVZ471', '112233445', 'KEPKAM', 'MN', 'JKTP', 'Test THR Karyawan', 2024, 5000000.00, '2024-10-31', 'Pending', 'Test THR Karyawan', 'Perubahan Status THR', 'Super Admin Presensi', '2024-10-29 07:57:13', '2024-11-10 11:36:04');
 
 -- --------------------------------------------------------
 

@@ -194,3 +194,42 @@
         margin-bottom: 1.5rem;
     }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif

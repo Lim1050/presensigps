@@ -40,42 +40,97 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                @if (Session::get('success'))
-                    <div class="alert alert-success">
-                        {{ Session::get('success') }}
-                    </div>
-                @endif
-                @if (Session::get('error'))
-                    <div class="alert alert-danger">
-                        {{ Session::get('error') }}
-                    </div>
-                @endif
+
                 <a href="{{ route('admin.thr.create') }}" class="btn btn-primary mb-3">Tambah THR</a>
             </div>
         </div>
 
-        {{-- form cari data Gaji --}}
-        {{-- <div class="row">
+        {{-- form cari data THR --}}
+        <div class="row">
             <div class="col-12">
-                <form action="{{ route('admin.gaji') }}" method="GET">
-                    <div class="row mt-2">
-                        <div class="col-6">
+                <form action="{{ route('admin.thr') }}" method="GET">
+                    <div class="row">
+                        <div class="col">
                             <div class="form-group">
-                                <input type="text" name="nama_gaji_cari" id="nama_gaji_cari" class="form-control" placeholder="Cari Nama Gaji" value="{{ Request('nama_gaji') }}">
+                                <label for="tanggal_dari">Tanggal Dari</label>
+                                <input type="date" class="form-control" id="tanggal_dari" name="tanggal_dari" value="{{ Request('tanggal_dari') }}">
                             </div>
                         </div>
-
-                        <div class="col-2">
+                        <div class="col">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="bi bi-search"></i> Cari
-                                </button>
+                                <label for="tanggal_sampai">Tanggal Sampai</label>
+                                <input type="date" class="form-control" id="tanggal_sampai" name="tanggal_sampai" value="{{ Request('tanggal_sampai') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <div class="icon-placeholder">
+                                    <i class="bi bi-upc-scan"></i>
+                                    <input type="text" class="form-control" id="nik" name="nik" placeholder=" NIK" value="{{ Request('nik') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <div class="icon-placeholder">
+                                    <i class="bi bi-person-fill"></i>
+                                    <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" placeholder=" Nama Lengkap" value="{{ Request('nama_lengkap') }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <select name="kode_jabatan" id="kode_jabatan" class="form-control">
+                                    <option value="">Pilih Jabatan</option>
+                                    @foreach ($jabatan as $j)
+                                        <option value="{{ $j->kode_jabatan }}" {{ Request('kode_jabatan') == $j->kode_jabatan ? 'selected' : '' }}>{{ $j->nama_jabatan }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <select name="kode_cabang" id="kode_cabang" class="form-control">
+                                    <option value="">Pilih cabang</option>
+                                    @foreach ($cabang as $c)
+                                        <option value="{{ $c->kode_cabang }}">{{ $c->nama_cabang }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan" class="form-control">
+                                    <option value="">Pilih lokasi Penugasan</option>
+                                    @foreach ($lokasi_penugasan as $lp)
+                                        <option value="{{ $lp->kode_lokasi_penugasan }}" data-cabang="{{ $lp->kode_cabang }}">{{ $lp->nama_lokasi_penugasan }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <select name="status" id="status" class="form-control">
+                                    <option value="">Pilih Status Pengajuan</option>
+                                    <option value="Disetujui" {{ Request('status') == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
+                                    <option value="Ditolak" {{ Request('status') == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+                                    <option value="Pending" {{ Request('status') === 'Pending' ? 'selected' : '' }}>Pending</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <button class=" btn btn-danger w-100" type="submit"><i class="bi bi-search"></i> Cari Data</button>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
-        </div> --}}
+        </div>
         <div class="row">
             <div class="col-12">
                 {{-- table --}}
@@ -124,12 +179,17 @@
                                 </td>
                                 {{-- <td class="text-center">{{$item->notes }}</td> --}}
                                 <td class="text-center">
-                                    <a href="{{ route('admin.thr.show', $item->kode_thr) }}" class="btn-sm btn-info" title="Lihat"><i class="bi bi-list"></i></a>
-                                    <a href="{{ route('admin.thr.edit', $item->kode_thr) }}" class="btn-sm btn-warning" title="Edit"><i class="bi bi-pencil-square"></i></a>
-                                    <form action="{{ route('admin.thr.delete', $item->kode_thr) }}" method="POST" class="d-inline">
+                                    <a href="{{ route('admin.thr.show', $item->kode_thr) }}" class="btn btn-info mt-1" title="Lihat"><i class="bi bi-list"></i></a>
+                                    <a href="{{ route('admin.thr.edit', $item->kode_thr) }}" class="btn btn-warning mt-1" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                    <form action="{{ route('admin.thr.delete', $item->kode_thr) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger delete-confirm" title="Delete">
+                                        <button type="submit"
+                                            class="btn btn-danger delete-confirm mt-1"
+                                            title="Delete"
+                                            data-nama="{{ $item->karyawan->nama_lengkap }}"
+                                            data-nama-thr="{{ $item->nama_thr }}"
+                                            data-tahun="{{ $item->tahun }}">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
@@ -153,6 +213,68 @@
 @push('myscript')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cabangSelect = document.getElementById('kode_cabang');
+        const lokasiSelect = document.getElementById('kode_lokasi_penugasan');
+
+        cabangSelect.addEventListener('change', function() {
+            const selectedCabang = this.value;
+
+            // Tampilkan semua lokasi penugasan yang sesuai dengan cabang yang dipilih
+            Array.from(lokasiSelect.options).forEach(option => {
+                if (option.dataset.cabang === selectedCabang || selectedCabang === "") {
+                    option.style.display = 'block'; // Tampilkan option
+                } else {
+                    option.style.display = 'none'; // Sembunyikan option
+                }
+            });
+
+            // Reset pilihan lokasi penugasan jika tidak ada yang sesuai
+            if (!Array.from(lokasiSelect.options).some(option => option.style.display === 'block')) {
+                lokasiSelect.value = ""; // Reset
+            }
+        });
+    });
+</script>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 <script>
     let table = new DataTable('#dataTable');
 
@@ -160,9 +282,15 @@
         $('.delete-confirm').on('click', function(e) {
             e.preventDefault();
             var form = $(this).closest('form');
+
+            // Ambil data dari atribut data
+            var namaKaryawan = $(this).data('nama');
+            var namaThr = $(this).data('nama-thr');
+            var tahun = $(this).data('tahun');
+
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: "Data THR ini akan dihapus permanen!",
+                text: "Data THR untuk " + namaKaryawan + " (" + namaThr + " - " + tahun + ") akan dihapus permanen!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

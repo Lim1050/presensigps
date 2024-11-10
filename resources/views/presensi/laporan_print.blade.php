@@ -38,7 +38,7 @@
             border: 1px solid black;
             padding: 5px;
             font-size: 12px;
-            text-align: center; /* Menyelaraskan teks ke tengah */
+            /* text-align: center; Menyelaraskan teks ke tengah */
         }
 
         .tabelpresensi tr:nth-child(even) {
@@ -78,7 +78,7 @@
         <table class="tabeldatakaryawan">
             <tr>
                 <td rowspan="6">
-                    <img src="{{ url(Storage::url("uploads/karyawan/".$karyawan->foto)) }}" class="img-thumbnail" style="width: 100px; height: 150px; object-fit: cover;" alt="Foto Karyawan">
+                    <img src="{{ $srcProfil }}" class="img-thumbnail" style="width: 100px; height: auto; object-fit: cover;" alt="Foto Karyawan">
                 </td>
             </tr>
             <tr>
@@ -117,32 +117,39 @@
                 <th>Jam Pulang</th>
                 <th>Foto Pulang</th>
                 <th>Status</th>
-                <th>Keterangan</th>
                 <th>Jumlah Jam</th>
                 <th>Lembur</th>
             </tr>
             @foreach ($presensi as $item)
-                <tr style="text-align: center">
+                <tr style="text-align: center;">
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ date("d-m-Y", strtotime($item->tanggal_presensi)) }}</td>
                     <td>{{ $item->jam_masuk ?? '-' }}</td>
                     <td>
-                        @if ($item->foto_masuk)
-                            <img src="{{ url(Storage::url($item->foto_masuk)) }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
+                        {{-- Mengonversi path menjadi base64 jika belum dilakukan di controller --}}
+                        @php
+                            $fotoMasukPath = storage_path('app/' . $item->foto_masuk); // Ganti dengan public_path jika diperlukan
+                            $srcMasuk = file_exists($fotoMasukPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($fotoMasukPath)) : null;
+                        @endphp
+                        @if ($srcMasuk)
+                            <img src="{{ $srcMasuk }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
                         @else
                             -
                         @endif
                     </td>
                     <td>{{ $item->jam_keluar ?? 'Belum Absen Pulang' }}</td>
                     <td>
-                        @if ($item->foto_keluar)
-                            <img src="{{ url(Storage::url($item->foto_keluar)) }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
+                        @php
+                            $fotoKeluarPath = storage_path('app/' . $item->foto_keluar); // Ganti dengan public_path jika diperlukan
+                            $srcKeluar = file_exists($fotoKeluarPath) ? 'data:image/png;base64,' . base64_encode(file_get_contents($fotoKeluarPath)) : null;
+                        @endphp
+                        @if ($srcKeluar)
+                            <img src="{{ $srcKeluar }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
                         @else
                             -
                         @endif
                     </td>
                     <td>{{ $item->status }}</td>
-                    <td>{{ $item->keterangan ?? '-' }}</td>
                     <td>
                         @if ($item->jam_keluar)
                             @php
@@ -174,7 +181,7 @@
                 </tr>
             @endforeach
             <tr>
-                <td colspan="10">
+                <td colspan="9">
                     Total Hari Kerja: {{ $total_hari }} hari<br>
                     Total Jam Lembur: {{ $total_jam_lembur }} jam {{ $total_menit_lembur }} menit
                 </td>
@@ -183,10 +190,10 @@
 
         <table width="100%" style="margin-top: 50px">
             <tr>
-                <td colspan="2" style="text-align: right">Jakarta, {{ date('d-m-Y') }}</td>
+                <td colspan="2" style="text-align: right">{{ $karyawan->nama_cabang }}, {{ date('d-m-Y') }}</td>
             </tr>
             <tr>
-                <td style="text-align: right; vertical-align:bottom" height="100px">
+                <td colspan="2" style="text-align: right; vertical-align:bottom" height="100px">
                     <i><b>PT. GUARD WARRIOR SECURITY</b></i>
                 </td>
             </tr>

@@ -4,16 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cashbon;
+use App\Models\Jabatan;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class CashbonController extends Controller
 {
-    public function CashbonIndex()
+    public function CashbonIndex(Request $request)
     {
-        $cashbon = Cashbon::with('karyawan')->get();
-        return view('cashbon.cashbon_index', compact('cashbon'));
+        // Ambil semua parameter pencarian dari request
+        $tanggalDari = $request->input('tanggal_dari');
+        $tanggalSampai = $request->input('tanggal_sampai');
+        $nik = $request->input('nik');
+        $namaLengkap = $request->input('nama_lengkap');
+        $kodeJabatan = $request->input('kode_jabatan');
+        $status = $request->input('status');
+
+        // Query untuk mengambil data cashbon
+        $cashbonQuery = Cashbon::with('karyawan');
+
+        // Tambahkan kondisi pencarian jika ada
+        if ($tanggalDari && $tanggalSampai) {
+            $cashbonQuery->whereBetween('tanggal_pengajuan', [$tanggalDari, $tanggalSampai]);
+        }
+        if ($nik) {
+            $cashbonQuery->whereHas('karyawan', function ($query) use ($nik) {
+                $query->where('nik', 'like', '%' . $nik . '%');
+            });
+        }
+        if ($namaLengkap) {
+            $cashbonQuery->whereHas('karyawan', function ($query) use ($namaLengkap) {
+                $query->where('nama_lengkap', 'like', '%' . $namaLengkap . '%');
+            });
+        }
+        if ($kodeJabatan) {
+            $cashbonQuery->whereHas('karyawan', function ($query) use ($kodeJabatan) {
+                $query->where('kode_jabatan', $kodeJabatan);
+            });
+        }
+        if ($status) {
+            $cashbonQuery->where('status', $status);
+        }
+
+        // Ambil hasil query
+        $cashbon = $cashbonQuery->get();
+
+        // Ambil data jabatan untuk dropdown
+        $jabatan = Jabatan::all();
+
+        return view('cashbon.cashbon_index', compact('cashbon', 'jabatan'));
     }
 
     public function CashbonShow($id)

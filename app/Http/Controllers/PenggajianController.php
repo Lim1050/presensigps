@@ -250,6 +250,7 @@ class PenggajianController extends Controller
             ))->render();
 
         } catch (\Exception $e) {
+            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
@@ -563,7 +564,6 @@ class PenggajianController extends Controller
                 $komponenPotongan['Cashbon'] = $cashbon;
             }
 
-
             // Hitung lembur
             $jamLembur = $request->total_jam_lembur;
 
@@ -605,10 +605,16 @@ class PenggajianController extends Controller
             ))->render();
 
         } catch (\Exception $e) {
-            // dd($e);
+            // Cek apakah pesan kesalahan berisi "Undefined array key 'L'"
+            if (strpos($e->getMessage(), 'Undefined array key "L"') !== false) {
+                $errorMessage = 'Karyawan ini tidak memiliki gaji lembur.';
+            } else {
+                $errorMessage = 'Terjadi kesalahan: ' . $e->getMessage();
+            }
+
             return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                'error' => true,
+                'message' => $errorMessage
             ], 500);
         }
     }
@@ -703,6 +709,16 @@ class PenggajianController extends Controller
             // Jika ada cashbon, kurangi dari total gaji bersih
             if ($cashbon > 0) {
                 $komponenPotongan['Cashbon'] = $cashbon;
+            }
+
+            // Cek apakah karyawan memiliki komponen gaji lembur
+            if ($request->total_jam_lembur > 0) {
+                // Cek apakah karyawan memiliki komponen gaji lembur
+                if (!array_key_exists('L', $komponenGajiAsli) || $komponenGajiAsli['L'] === null) {
+                    return redirect()
+                            ->back()
+                            ->with('error', 'Gagal menyimpan penggajian. Karyawan ini tidak memiliki gaji lembur. Silakan periksa data gaji.');
+                }
             }
 
             // Hitung lembur

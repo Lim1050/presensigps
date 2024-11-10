@@ -7,7 +7,7 @@
 </div>
 <div class="card shadow">
     <div class="card-body">
-        @if(session('success'))
+        {{-- @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
@@ -17,7 +17,7 @@
             <div class="alert alert-danger">
                 {{ session('error') }}
             </div>
-        @endif
+        @endif --}}
 
         <form id="penggajianForm" action="{{ route('admin.penggajian.store') }}" method="POST">
             @csrf
@@ -97,6 +97,45 @@
 </div>
 @endsection
 @push('myscript')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 <script>
     // Event handler saat cabang dipilih
     $('#kode_cabang').on('change', function() {

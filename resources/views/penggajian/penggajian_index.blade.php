@@ -40,7 +40,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                @if (Session::get('success'))
+                {{-- @if (Session::get('success'))
                     <div class="alert alert-success">
                         {{ Session::get('success') }}
                     </div>
@@ -49,7 +49,7 @@
                     <div class="alert alert-danger">
                         {{ Session::get('error') }}
                     </div>
-                @endif
+                @endif --}}
                 <a href="{{ route('admin.penggajian.create') }}" class="btn btn-primary mb-3">Tambah Penggajian</a>
             </div>
         </div>
@@ -139,7 +139,11 @@
                                 <td class="text-center">
                                     <a href="{{ route('admin.penggajian.show', $item->kode_penggajian) }}" class="btn btn-info" title="Lihat"><i class="bi bi-list"></i></a>
                                     <a href="{{ route('admin.penggajian.edit', $item->kode_penggajian) }}" class="btn btn-warning" title="Edit"><i class="bi bi-pencil-square"></i></a>
-                                    <a href="{{ route('admin.penggajian.delete', $item->kode_penggajian) }}" title="Delete" class="btn btn-danger delete-confirm"><i class="bi bi-trash"></i></a>
+                                    <a href="{{ route('admin.penggajian.delete', $item->kode_penggajian) }}"
+                                        title="Delete"
+                                        data-nama="{{ $item->karyawan->nama_lengkap }}"
+                                        data-bulan="{{ \Carbon\Carbon::parse($item->bulan)->translatedFormat('F Y') }}"
+                                        class="btn btn-danger delete-confirm"><i class="bi bi-trash"></i></a>
                                 </td>
                             </tr>
                             @endforeach
@@ -155,15 +159,57 @@
 @push('myscript')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 <script>
     // ... (script yang sudah ada) ...
 
     $(".delete-confirm").click(function (e){
         e.preventDefault();
         var url = $(this).attr('href');
+        // Ambil data dari atribut
+            var nama = $(this).data('nama');
+            var bulan = $(this).data('bulan');
         Swal.fire({
             title: "Apakah Anda Yakin?",
-            text: "Data Ini Akan Dihapus!",
+            html: "Data Gaji Ini Akan Dihapus!" + "<br>" +
+                        "Nama Karyawan: " + nama + "<br>" +
+                        "Bulan: " + bulan,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",

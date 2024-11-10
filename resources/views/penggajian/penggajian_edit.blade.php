@@ -132,6 +132,45 @@
         margin-bottom: 0;
     }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -170,8 +209,27 @@
                     $('#previewEditGaji').show();
                 },
                 error: function(xhr) {
-                    const errorMessage = xhr.responseJSON?.message || "Terjadi kesalahan.";
-                    alert(errorMessage);
+                    let errorMessage;
+
+                    // Memeriksa apakah pesan kesalahan berisi "Undefined array key 'L'"
+                    if (xhr.responseJSON?.message.includes('Undefined array key "L"')) {
+                        errorMessage = "Karyawan ini tidak memiliki gaji lembur.";
+                    } else {
+                        errorMessage = xhr.responseJSON?.message || "Terjadi kesalahan.";
+                    }
+                    // Menampilkan SweetAlert untuk kesalahan
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMessage,
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'custom-popup',
+                            title: 'custom-title',
+                            content: 'custom-content',
+                            confirmButton: 'custom-confirm-button'
+                        }
+                    });
                 }
             });
         });

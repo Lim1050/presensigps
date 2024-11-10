@@ -48,11 +48,55 @@ class ThrController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function ThrIndex()
+    public function ThrIndex(Request $request)
     {
-        $thr = Thr::with(['jabatan', 'lokasiPenugasan', 'kantorCabang', 'karyawan'])->get();
+        // Ambil semua parameter pencarian dari request
+        $tanggalDari = $request->input('tanggal_dari');
+        $tanggalSampai = $request->input('tanggal_sampai');
+        $nik = $request->input('nik');
+        $namaLengkap = $request->input('nama_lengkap'); // Tambahkan ini
+        $kodeJabatan = $request->input('kode_jabatan');
+        $kodeCabang = $request->input('kode_cabang');
+        $kodeLokasiPenugasan = $request->input('kode_lokasi_penugasan');
+        $status = $request->input('status');
 
-        return view('thr.thr_index', compact(var_name: 'thr'));
+        // Query untuk mengambil data thr
+        $thrQuery = Thr::with(['karyawan', 'jabatan', 'lokasiPenugasan', 'kantorCabang']);
+
+        // Tambahkan kondisi pencarian jika ada
+        if ($tanggalDari && $tanggalSampai) {
+            $thrQuery->whereBetween('tanggal_penyerahan', [$tanggalDari, $tanggalSampai]);
+        }
+        if ($nik) {
+            $thrQuery->where('nik', 'like', '%' . $nik . '%');
+        }
+        if ($namaLengkap) {
+            $thrQuery->whereHas('karyawan', function ($query) use ($namaLengkap) {
+                $query->where('nama_lengkap', 'like', '%' . $namaLengkap . '%');
+            });
+        }
+        if ($kodeJabatan) {
+            $thrQuery->where('kode_jabatan', $kodeJabatan);
+        }
+        if ($kodeCabang) {
+            $thrQuery->where('kode_cabang', $kodeCabang);
+        }
+        if ($kodeLokasiPenugasan) {
+            $thrQuery->where('kode_lokasi_penugasan', $kodeLokasiPenugasan);
+        }
+        if ($status) {
+            $thrQuery->where('status', $status);
+        }
+
+        // Ambil hasil query
+        $thr = $thrQuery->get();
+
+        // Ambil data jabatan, lokasi penugasan, dan cabang untuk dropdown
+        $jabatan = Jabatan::all();
+        $lokasi_penugasan = LokasiPenugasan::all();
+        $cabang = Cabang::all();
+
+        return view('thr.thr_index', compact('thr', 'jabatan', 'lokasi_penugasan', 'cabang'));
     }
     public function ThrCreate()
     {
@@ -126,7 +170,8 @@ class ThrController extends Controller
     public function ThrShow($kode_thr)
     {
         $thr = Thr::with(['jabatan', 'lokasiPenugasan', 'kantorCabang', 'karyawan'])->findOrFail($kode_thr);
-        return view('thr.thr_show', compact(var_name: 'thr'));
+
+        return view('thr.thr_show', compact('thr'));
     }
 
     public function ThrEdit($kode_thr)
@@ -206,7 +251,7 @@ class ThrController extends Controller
             } else {
                 DB::rollback();
                 return redirect()->back()
-                    ->with('warning', 'Tidak ada perubahan data yang dilakukan.')
+                    ->with('info', 'Tidak ada perubahan data yang dilakukan.')
                     ->withInput();
             }
 

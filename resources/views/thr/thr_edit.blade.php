@@ -3,7 +3,7 @@
     <div class="container">
         <h1>Edit THR</h1>
 
-        @if(session('warning'))
+        {{-- @if(session('warning'))
             <div class="alert alert-warning">
                 {{ session('warning') }}
             </div>
@@ -17,7 +17,7 @@
                     @endforeach
                 </ul>
             </div>
-        @endif
+        @endif --}}
 
         <div class="card-body">
             <form action="{{ route('admin.thr.update', $thr->kode_thr) }}" method="POST">
@@ -129,7 +129,7 @@
 
                 <div class="form-group mb-3">
                     <label for="catatan_perubahan">Catatan Perubahan</label>
-                    <textarea name="catatan_perubahan" id="catatan_perubahan" class="form-control @error('catatan_perubahan') is-invalid @enderror">{{ old('catatan_perubahan') }}</textarea>
+                    <textarea name="catatan_perubahan" id="catatan_perubahan" class="form-control @error('catatan_perubahan') is-invalid @enderror">{{ old('catatan_perubahan', $thr->catatan_perubahan) }}</textarea>
                     @error('catatan_perubahan')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -143,3 +143,61 @@
         </div>
     </div>
 @endsection
+@push('myscript')
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('info'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Info',
+                text: "{{ session('info') }}",
+                icon: 'info',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup',
+                    title: 'custom-title',
+                    content: 'custom-content',
+                    confirmButton: 'custom-confirm-button'
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+@endpush

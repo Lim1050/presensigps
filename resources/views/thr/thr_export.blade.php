@@ -67,6 +67,49 @@
         .font-weight-bold {
             font-weight: bold; /* Berat font bold */
         }
+        .badge {
+                display: inline-block;
+                color: white; /* Warna teks badge */
+                padding: .25em .4em;
+                padding-top: 0.25em;
+                padding-right: 0.4em;
+                padding-bottom: 0.25em;
+                padding-left: 0.4em;
+                font-size: 75%;
+                font-weight: 700;
+                line-height: 1;
+                text-align: center;
+                white-space: nowrap;
+                white-space-collapse: collapse;
+                text-wrap-mode: nowrap;
+                vertical-align: baseline;
+                border-radius: .25rem;
+                border-top-left-radius: 0.25rem;
+                border-top-right-radius: 0.25rem;
+                border-bottom-right-radius: 0.25rem;
+                border-bottom-left-radius: 0.25rem;
+                transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+                transition-behavior: normal, normal, normal, normal;
+                transition-duration: 0.15s, 0.15s, 0.15s, 0.15s;
+                transition-timing-function: ease-in-out, ease-in-out, ease-in-out, ease-in-out;
+                transition-delay: 0s, 0s, 0s, 0s;
+            }
+
+            .badge-secondary {
+                background-color: #6c757d; /* Warna latar belakang badge secondary */
+            }
+
+            .badge-primary {
+                background-color: #007bff; /* Warna latar belakang badge primary */
+            }
+
+            .badge-danger {
+                background-color: #dc3545; /* Warna latar belakang badge danger */
+            }
+
+            .badge-success {
+                background-color: #28a745; /* Warna latar belakang badge success */
+            }
 
         .info-perubahan {
             margin-top: 20px;
@@ -96,7 +139,7 @@
                 </td>
             </tr>
         </table>
-    <h1>{{ $thr->kode_thr }} {{ $thr->karyawan->nama_lengkap }}</h1>
+    {{-- <h1>{{ $thr->kode_thr }} {{ $thr->karyawan->nama_lengkap }}</h1> --}}
     <h2>{{$thr->nama_thr }} {{$thr->tahun }}</h2>
 
     <table>
@@ -144,7 +187,7 @@
             <th>Status</th>
             <td>
                 @if ($thr->status == 'Pending')
-                    <span class="badge badge-warning">Pending</span>
+                    <span class="badge badge-secondary">Pending</span>
                 @elseif ($thr->status == 'Disetujui')
                     <span class="badge badge-success">Disetujui</span>
                 @elseif ($thr->status == 'Ditolak')
@@ -169,5 +212,20 @@
     Catatan: {{ $thr->catatan_perubahan }}
 </div>
 @endif
+<div class="row">
+    <div class="col">
+            <table class="table table-borderless" width="100%" style="margin-top: 50px">
+            <tr>
+                <td colspan="2" style="text-align: right">{{ $thr->kantorCabang->nama_cabang }}, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: right; vertical-align:bottom" height="100px" >
+                    {{-- <u>Nama Direktur</u><br> --}}
+                    <i><b>PT. GUARD WARRIOR SECURITY</b></i>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
 </body>
 </html>
