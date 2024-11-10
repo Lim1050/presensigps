@@ -52,7 +52,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
-                        @if (Session::get('success'))
+                        {{-- @if (Session::get('success'))
                             <div class="alert alert-success">
                                 {{ Session::get('success') }}
                             </div>
@@ -61,7 +61,7 @@
                             <div class="alert alert-danger">
                                 {{ Session::get('error') }}
                             </div>
-                        @endif
+                        @endif --}}
                         <a href="{{ route('admin.lembur.create') }}" class="btn btn-primary mb-3">Tambah Lembur</a>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
                                     <td class="text-center">{{ $item->karyawan->jabatan->nama_jabatan }}</td>
                                     <td class="text-center">{{ $item->karyawan->lokasiPenugasan->nama_lokasi_penugasan }}</td>
                                     <td class="text-center">{{ $item->karyawan->Cabang->nama_cabang }}</td>
-                                    <td class="text-center">{{ $item->tanggal_presensi }}</td>
+                                    <td class="text-center">{{ \Carbon\Carbon::parse($item->tanggal_presensi)->translatedFormat('d F Y') }}</td>
                                     <td class="text-center">{{ $item->waktu_mulai }}</td>
                                     <td class="text-center">{{ $item->waktu_selesai }}</td>
                                     <td class="text-center">
@@ -135,7 +135,14 @@
                                         <form action="{{ route('admin.lembur.delete', $item->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger delete-confirm" title="Delete">
+                                            <button type="submit" class="btn btn-sm btn-danger delete-confirm"
+                                                title="Delete"
+                                                data-nama="{{ $item->karyawan->nama_lengkap }}"
+                                                data-lokasi="{{ $item->karyawan->lokasiPenugasan->nama_lokasi_penugasan }}"
+                                                data-tanggal="{{ \Carbon\Carbon::parse($item->tanggal_presensi)->translatedFormat('d F Y') }}"
+                                                data-mulai="{{ $item->waktu_mulai }}"
+                                                data-selesai="{{ $item->waktu_selesai }}"
+                                                >
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
@@ -158,6 +165,43 @@
 @push('myscript')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 <script>
     let table = new DataTable('#dataTable');
 
@@ -165,9 +209,22 @@
         $('.delete-confirm').on('click', function(e) {
             e.preventDefault();
             var form = $(this).closest('form');
+
+            // Ambil data dari atribut
+            var nama = $(this).data('nama');
+            var lokasi = $(this).data('lokasi');
+            var tanggal = $(this).data('tanggal');
+            var mulai = $(this).data('mulai');
+            var selesai = $(this).data('selesai');
+
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: "Data Lembur ini akan dihapus permanen!",
+                html: "Data Lembur ini akan dihapus permanen!" + "<br>" +
+                        "Nama Karyawan: " + nama + "<br>" +
+                        "Lokasi Penugasan: " + lokasi + "<br>" +
+                        "Tanggal Lembur: " + tanggal + "<br>" +
+                        "Waktu Mulai: " + mulai + "<br>" +
+                        "Waktu Selesai: " + selesai,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

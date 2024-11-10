@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cabang;
 use App\Models\PersetujuanSakitIzin;
 use App\Models\presensi;
 use Carbon\Carbon;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\LaporanPresensiExport;
 use App\Models\Karyawan;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PresensiController extends Controller
 {
@@ -501,7 +503,9 @@ class PresensiController extends Controller
             ->select('presensi.*',
                 'karyawan.nama_lengkap',
                 'karyawan.kode_jabatan',
-                'departemen.nama_departemen',
+                'karyawan.kode_lokasi_penugasan',
+                'jabatan.nama_jabatan',
+                'lokasi_penugasan.nama_lokasi_penugasan',
                 DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_mulai ELSE jam_kerja.jam_masuk END as jam_masuk_kerja'),
                 DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_selesai ELSE jam_kerja.jam_pulang END as jam_pulang_kerja'),
                 DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN "Lembur" ELSE jam_kerja.nama_jam_kerja END as nama_jam_kerja'),
@@ -511,7 +515,8 @@ class PresensiController extends Controller
             ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
             ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
             ->join('karyawan', 'presensi.nik', '=', 'karyawan.nik')
-            ->join('departemen', 'karyawan.kode_departemen', '=', 'departemen.kode_departemen')
+            ->join('jabatan', 'karyawan.kode_jabatan', '=', 'jabatan.kode_jabatan')
+            ->join('lokasi_penugasan', 'karyawan.kode_lokasi_penugasan', '=', 'lokasi_penugasan.kode_lokasi_penugasan')
             ->leftJoin('lembur', function($join) use ($tanggal_presensi) {
                 $join->on('presensi.nik', '=', 'lembur.nik')
                     ->where('lembur.tanggal_presensi', '=', DB::raw('presensi.tanggal_presensi'))
@@ -552,7 +557,8 @@ class PresensiController extends Controller
         ];
 
         $karyawan = DB::table('karyawan')->orderBy('nama_lengkap')->get();
-        return view('presensi.laporan_presensi', compact('months', 'karyawan'));
+        $cabang = Cabang::get();
+        return view('presensi.laporan_presensi', compact('months', 'karyawan', 'cabang'));
     }
 
     public function LaporanPrint(Request $request)
@@ -578,7 +584,7 @@ class PresensiController extends Controller
         ];
 
         $karyawan = DB::table('karyawan')
-                    ->join('departemen', 'karyawan.kode_departemen', '=', 'departemen.kode_departemen')
+                    ->join('kantor_cabang', 'karyawan.kode_cabang', '=', 'kantor_cabang.kode_cabang')
                     ->join('jabatan', 'karyawan.kode_jabatan', '=', 'jabatan.kode_jabatan')
                     ->where('nik', $nik)
                     ->first();
@@ -642,13 +648,12 @@ class PresensiController extends Controller
             $total_menit_lembur = $total_menit_lembur % 60;
         }
 
-        if(isset($_POST['export_excel'])) {
-            $time = date("H:i:s");
-            header("Content-type: application/vnd-ms-excel");
-            header("Content-Disposition: attachment; filename=Laporan_Presensi_$time.xls");
-        }
+        $imagePath = public_path('assets/img/MASTER-LOGO-PT-GUARD-500-500.png');
+        $imageData = base64_encode(file_get_contents($imagePath));
+        $src = 'data:image/png;base64,' . $imageData;
 
-        return view('presensi.laporan_print', compact(
+        // Mengoper data ke pdf
+        $pdf = Pdf::loadView('presensi.laporan_print', compact(
             'bulan',
             'tahun',
             'months',
@@ -656,8 +661,29 @@ class PresensiController extends Controller
             'presensi',
             'total_hari',
             'total_jam_lembur',
-            'total_menit_lembur'
-        ));
+            'total_menit_lembur',
+            'src'))
+                ->setPaper('A4', orientation: 'portrait') // Pastikan orientasi landscape
+                ->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+        return $pdf->download('laporan_presensi_' . $bulan . '_' . $tahun . '_' . $karyawan->nama_lengkap . '.pdf');
+
+        // if(isset($_POST['export_excel'])) {
+        //     $time = date("H:i:s");
+        //     header("Content-type: application/vnd-ms-excel");
+        //     header("Content-Disposition: attachment; filename=Laporan_Presensi_$time.xls");
+        // }
+
+        // return view('presensi.laporan_print', compact(
+        //     'bulan',
+        //     'tahun',
+        //     'months',
+        //     'karyawan',
+        //     'presensi',
+        //     'total_hari',
+        //     'total_jam_lembur',
+        //     'total_menit_lembur'
+        // ));
     }
 
     public function RekapPresensi()
@@ -785,16 +811,16 @@ class PresensiController extends Controller
         $rekap = $query->get();
 
         // dd($rekap);
+        $imagePath = public_path('assets/img/MASTER-LOGO-PT-GUARD-500-500.png');
+        $imageData = base64_encode(file_get_contents($imagePath));
+        $src = 'data:image/png;base64,' . $imageData;
 
-        if(isset($_POST['export_excel'])){
-            $time = date("H:i:s");
-            // fungsi header dengan mengirimkan raw data excel
-            header("Content-type: application/vnd-ms-excel");
-            // Mendefinisikan nama file export "hasil-export.xls"
-            header("Content-Disposition: attachment; filename=Laporan_Presensi_$time.xls");
-        }
+        // Mengoper data ke pdf
+        $pdf = Pdf::loadView('presensi.rekap_print', compact('bulan', 'tahun', 'months', 'rekap', 'range_tanggal', 'jml_hari', 'src'))
+                ->setPaper('Legal', orientation: 'landscape') // Pastikan orientasi landscape
+                ->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
 
-        return view('presensi.rekap_print', compact('bulan', 'tahun', 'months', 'rekap', 'range_tanggal', 'jml_hari'));
+        return $pdf->download('rekap_presensi_' . $bulan . '_' . $tahun . '_' . $kode_cabang . '.pdf');
     }
 
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Jabatan;
+use App\Models\PengajuanIzin;
 use App\Models\PersetujuanSakitIzin;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -526,32 +528,38 @@ class IzinController extends Controller
 
     public function PersetujuanSakitIzin(Request $request)
     {
+        // Membuat query dasar dengan eager loading
+        $query = PengajuanIzin::with('karyawan') // Menggunakan relasi karyawan
+            ->orderBy('tanggal_izin_dari', 'desc');
 
-        $query = PersetujuanSakitIzin::query();
-        $query->select('kode_izin', 'tanggal_izin_dari', 'tanggal_izin_sampai', 'pengajuan_izin.nik', 'nama_lengkap', 'kode_jabatan', 'status', 'status_approved', 'keterangan', 'surat_sakit');
-        $query->join('karyawan', 'pengajuan_izin.nik', '=', 'karyawan.nik');
-        $query->orderBy('tanggal_izin_dari', 'desc');
-
+        // Menggunakan kondisi where untuk filter
         if (!empty($request->dari) && !empty($request->sampai)) {
             $query->whereBetween('tanggal_izin_dari', [$request->dari, $request->sampai]);
         }
         if (!empty($request->nik)) {
-            $query->where('pengajuan_izin.nik', 'like', '%' .  $request->nik . "%");
+            $query->where('nik', 'like', '%' . $request->nik . '%'); // Menggunakan LIKE untuk pencarian
         }
         if (!empty($request->nama_lengkap)) {
-            $query->where('nama_lengkap', 'like', '%'. $request->nama_lengkap . '%');
+            $query->whereHas('karyawan', function($q) use ($request) {
+                $q->where('nama_lengkap', 'LIKE', '%' . $request->nama_lengkap . '%');
+            });
         }
         if (!empty($request->kode_jabatan)) {
-            $query->where('kode_jabatan', 'like', '%'. $request->kode_jabatan . '%');
+            $query->whereHas('karyawan', function($q) use ($request) {
+                $q->where('kode_jabatan', 'like', '%' . $request->kode_jabatan . '%'); // Mencari berdasarkan kode jabatan di tabel karyawan
+            });
         }
-        if ($request->status_approved != '') {
+        if ($request->status_approved) {
             $query->where('status_approved', $request->status_approved);
         }
 
-        $sakit_izin = $query->paginate('10');
-        $sakit_izin->appends($request->all());
-        // dd($sakit_izin);
-        return view('presensi.persetujuan_sakit_izin', compact('sakit_izin'));
+        // Menggunakan query yang sudah difilter untuk paginasi
+        $sakit_izin = $query->paginate(10);
+        $sakit_izin->appends($request->all()); // Menambahkan query string ke link paginasi
+        // dd($query->toSql(), $query->getBindings());
+        $jabatan = Jabatan::get();
+
+        return view('presensi.persetujuan_sakit_izin', compact('sakit_izin', 'jabatan'));
     }
     public function ApprovalSakitIzin(Request $request)
     {

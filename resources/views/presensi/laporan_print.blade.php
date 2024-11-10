@@ -4,20 +4,12 @@
 <head>
     <meta charset="utf-8">
     <title>Print Laporan Presensi</title>
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/person-check-fill.svg') }}" sizes="32x32" style="color: white">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/person-check-fill.svg') }}" style="color: white">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/person-check-fill.svg') }}" sizes="32x32">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/person-check-fill.svg') }}">
 
-    <!-- Normalize or reset CSS with your favorite library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
-
-    <!-- Load paper.css for happy printing -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css">
-
-    <!-- Set page size here: A5, A4 or A3 -->
-    <!-- Set also "landscape" if you need -->
     <style>
         @page {
-            size: A4
+            size: A4 portrait; /* Mengatur ukuran kertas A4 dan orientasi portrait */
         }
 
         #title {
@@ -25,141 +17,134 @@
             font-size: 18px;
             font-weight: bold;
         }
+
         .tabeldatakaryawan {
             margin-top: 40px;
         }
+
         .tabelpresensi {
             width: 100%;
             margin-top: 20px;
             border-collapse: collapse;
         }
-        .tabelpresensi > tr, th {
-        border: 1px solid black;
-        padding: 8px;
-        background: lightgrey;
+
+        .tabelpresensi th {
+            border: 1px solid black;
+            padding: 8px;
+            background: lightgrey;
         }
+
         .tabelpresensi td {
-        border: 1px solid black;
-        padding: 5px;
-        font-size: 12px;
+            border: 1px solid black;
+            padding: 5px;
+            font-size: 12px;
+            text-align: center; /* Menyelaraskan teks ke tengah */
+        }
+
+        .tabelpresensi tr:nth-child(even) {
+            background-color: #f2f2f2; /* Warna latar belakang untuk baris genap */
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .sheet {
+                margin: 0;
+                padding: 10mm; /* padding di sekitar konten */
+            }
         }
     </style>
 </head>
 
-<!-- Set "A5", "A4" or "A3" for class name -->
-<!-- Set also "landscape" if you need -->
-<body class="A4">
-    <!-- Each sheet element should have the class "sheet" -->
-    <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
+<body>
     <section class="sheet padding-10mm">
+        <table style="width: 100%">
+            <tr>
+                <td style="width: 30px">
+                    <img src="{{ $src }}" width="80px" height="80px" alt="">
+                </td>
+                <td>
+                    <span id="title">
+                        LAPORAN PRESENSI PT. GUARD WARRIOR SECURITY<br>
+                        PERIODE {{ strtoupper($months[$bulan]) }} {{ $tahun }}<br>
+                    </span>
+                </td>
+            </tr>
+        </table>
 
-    <table style="width: 100%">
-        <tr>
-            <td style="width: 30px">
-                <img src="{{ asset('assets/img/MASTER-LOGO-PT-GUARD.png') }}" width="70" height="70" alt="">
-            </td>
-            <td>
-                <span id="title">
-                    LAPORAN PRESENSI PT. GUARD WARRIOR SECURITY<br>
-                    PERIODE {{ strtoupper($months[$bulan]) }} {{ $tahun }}<br>
-                </span>
-                {{-- <span>Jl. baru no 3, kelurahan Agak Baru, Kota Baru Banget, Provinsi Sangat Baru, 12345</span> --}}
-            </td>
-        </tr>
-    </table>
+        <table class="tabeldatakaryawan">
+            <tr>
+                <td rowspan="6">
+                    <img src="{{ url(Storage::url("uploads/karyawan/".$karyawan->foto)) }}" class="img-thumbnail" style="width: 100px; height: 150px; object-fit: cover;" alt="Foto Karyawan">
+                </td>
+            </tr>
+            <tr>
+                <td>NIK</td>
+                <td >:</td>
+                <td>{{ $karyawan->nik }}</td>
+            </tr>
+            <tr>
+                <td>Nama Karyawan</td>
+                <td>:</td>
+                <td>{{ $karyawan->nama_lengkap }}</td>
+            </tr>
+            <tr>
+                <td>Jabatan</td>
+                <td>:</td>
+                <td>{{ $karyawan->nama_jabatan }}</td>
+            </tr>
+            <tr>
+                <td>Cabang</td>
+                <td>:</td>
+                <td>{{ $karyawan->nama_cabang }}</td>
+            </tr>
+            <tr>
+                <td>No. HP</td>
+                <td>:</td>
+                <td>{{ $karyawan->no_wa }}</td>
+            </tr>
+        </table>
 
-    <table class="tabeldatakaryawan">
-        <tr>
-            <td rowspan="6">
-                @php
-                    $path = Storage::url("uploads/karyawan/".$karyawan->foto)
-                @endphp
-                <img src="{{ url($path) }}" class="img-thumbnail" style="width: 100px; height: 150px; object-fit: cover;" alt="...">
-            </td>
-        </tr>
-        <tr>
-            <td>NIK</td>
-            <td>:</td>
-            <td>{{ $karyawan->nik }}</td>
-        </tr>
-        <tr>
-            <td>Nama Karyawan</td>
-            <td>:</td>
-            <td>{{ $karyawan->nama_lengkap }}</td>
-        </tr>
-        <tr>
-            <td>Jabatan</td>
-            <td>:</td>
-            <td>{{ $karyawan->nama_jabatan }}</td>
-        </tr>
-        <tr>
-            <td>Departemen</td>
-            <td>:</td>
-            <td>{{ $karyawan->nama_departemen }}</td>
-        </tr>
-        <tr>
-            <td>No. HP</td>
-            <td>:</td>
-            <td>{{ $karyawan->no_wa }}</td>
-        </tr>
-    </table>
-
-    <table class="tabelpresensi">
-        <tr>
-            <th>No.</th>
-            <th>Tanggal</th>
-            <th>Jam Masuk</th>
-            <th>Foto Masuk</th>
-            <th>Jam Pulang</th>
-            <th>Foto Pulang</th>
-            <th>Status</th>
-            <th>Keterangan</th>
-            <th>Jumlah Jam</th>
-            <th>Lembur</th>
-        </tr>
-        @foreach ($presensi as $item)
-            @if ($item->status == 'hadir')
+        <table class="tabelpresensi">
+            <tr>
+                <th>No.</th>
+                <th>Tanggal</th>
+                <th>Jam Masuk</th>
+                <th>Foto Masuk</th>
+                <th>Jam Pulang</th>
+                <th>Foto Pulang</th>
+                <th>Status</th>
+                <th>Keterangan</th>
+                <th>Jumlah Jam</th>
+                <th>Lembur</th>
+            </tr>
+            @foreach ($presensi as $item)
                 <tr style="text-align: center">
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ date("d-m-Y", strtotime($item->tanggal_presensi)) }}</td>
-                    <td>{{ $item->jam_masuk }}</td>
+                    <td>{{ $item->jam_masuk ?? '-' }}</td>
                     <td>
-                        @php
-                            $pathin = Storage::url($item->foto_masuk);
-                        @endphp
-                        <img src="{{ url($pathin) }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
-                    </td>
-                    <td>{{ $item->jam_keluar != null ? $item->jam_keluar : 'Belum Absen Pulang' }}</td>
-                    <td>
-                        @php
-                            $pathout = Storage::url($item->foto_keluar );
-                        @endphp
-                        @if ($item->foto_keluar != null)
-                            <img src="{{ url($pathout) }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
+                        @if ($item->foto_masuk)
+                            <img src="{{ url(Storage::url($item->foto_masuk)) }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
                         @else
-                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="75" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
-                                <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708"/>
-                            </svg>
+                            -
+                        @endif
+                    </td>
+                    <td>{{ $item->jam_keluar ?? 'Belum Absen Pulang' }}</td>
+                    <td>
+                        @if ($item->foto_keluar)
+                            <img src="{{ url(Storage::url($item->foto_keluar)) }}" alt="" style="width: 50px; height: 75px; object-fit: cover;">
+                        @else
+                            -
                         @endif
                     </td>
                     <td>{{ $item->status }}</td>
+                    <td>{{ $item->keterangan ?? '-' }}</td>
                     <td>
-                        @if ($item->kode_jam_kerja == 'LEMBUR')
-                            Lembur
-                        @else
-                            @php
-                                $terlambat = hitungjamkerja($item->jam_masuk_kerja, $item->jam_masuk);
-                            @endphp
-                            @if ($item->jam_masuk >= $item->jam_masuk_kerja)
-                                Terlambat {{ $terlambat }}
-                            @else
-                                Tepat Waktu
-                            @endif
-                        @endif
-                    </td>
-                    <td>
-                        @if ($item->jam_keluar != null)
+                        @if ($item->jam_keluar)
                             @php
                                 $tgl_masuk = $item->tanggal_presensi;
                                 $tgl_pulang = $item->lintas_hari == 1 ? date('Y-m-d', strtotime('+1 days', strtotime($tgl_masuk))) : $tgl_masuk;
@@ -187,47 +172,25 @@
                         @endif
                     </td>
                 </tr>
-            @else
-                <tr style="text-align: center">
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ date("d-m-Y", strtotime($item->tanggal_presensi)) }}</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>{{ $item->status }}</td>
-                    <td>{{ $item->keterangan }}</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-            @endif
-        @endforeach
-        <tr>
-            <td colspan="10">
-                Total Hari Kerja: {{ $total_hari }} hari<br>
-                Total Jam Lembur: {{ $total_jam_lembur }} jam {{ $total_menit_lembur }} menit
-            </td>
-        </tr>
-    </table>
+            @endforeach
+            <tr>
+                <td colspan="10">
+                    Total Hari Kerja: {{ $total_hari }} hari<br>
+                    Total Jam Lembur: {{ $total_jam_lembur }} jam {{ $total_menit_lembur }} menit
+                </td>
+            </tr>
+        </table>
 
-    <table width="100%" style="margin-top: 50px">
-        <tr>
-            <td colspan="2" style="text-align: right">Jakarta, {{ date('d-m-Y') }}</td>
-        </tr>
-        <tr>
-            {{-- <td style="text-align: center; vertical-align:bottom" height="100px" >
-                <u>Nama HRD</u><br>
-                <i><b>Head HRD</b></i>
-            </td> --}}
-            <td style="text-align: right; vertical-align:bottom" height="100px" >
-                {{-- <u>Nama Direktur</u><br> --}}
-                <i><b>PT. GUARD WARRIOR SECURITY</b></i>
-            </td>
-        </tr>
-    </table>
-
+        <table width="100%" style="margin-top: 50px">
+            <tr>
+                <td colspan="2" style="text-align: right">Jakarta, {{ date('d-m-Y') }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: right; vertical-align:bottom" height="100px">
+                    <i><b>PT. GUARD WARRIOR SECURITY</b></i>
+                </td>
+            </tr>
+        </table>
     </section>
-
 </body>
-
 </html>

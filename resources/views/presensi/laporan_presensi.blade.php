@@ -9,7 +9,7 @@
     <div class="col-6">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('admin.laporan.print') }}" id="form_laporan" target="_blank" method="POST">
+                <form action="{{ route('admin.laporan.print') }}" id="form_laporan" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-12">
@@ -42,10 +42,22 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
+                                <select name="kode_cabang" id="kode_cabang" class="form-control">
+                                    <option value="">Pilih Cabang</option>
+                                    @foreach ($cabang as $item)
+                                        <option value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
                                 <select name="nik" id="nik" class="form-control">
                                     <option value="">Pilih Karyawan</option>
                                     @foreach ($karyawan as $item)
-                                        <option value="{{ $item->nik }}">{{ $item->nama_lengkap }}</option>
+                                        <option value="{{ $item->nik }}" data-cabang="{{ $item->kode_cabang }}">{{ $item->nama_lengkap }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -78,6 +90,23 @@
 
 @push('myscript')
     <script>
+        document.getElementById('kode_cabang').addEventListener('change', function() {
+            var selectedCabang = this.value;
+            var karyawanSelect = document.getElementById('nik');
+
+            // Reset karyawan dropdown
+            karyawanSelect.innerHTML = '<option value="">Pilih Karyawan</option>'; // Reset options
+
+            // Loop through karyawan options and display only those that match the selected cabang
+            @foreach ($karyawan as $item)
+                if (selectedCabang === "{{ $item->kode_cabang }}") {
+                    var option = document.createElement('option');
+                    option.value = "{{ $item->nik }}";
+                    option.text = "{{ $item->nama_lengkap }}";
+                    karyawanSelect.appendChild(option);
+                }
+            @endforeach
+        });
         $(function(){
             $("#form_laporan").submit(function(e){
                 var bulan = $("#bulan").val();

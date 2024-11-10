@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 09 Nov 2024 pada 14.57
+-- Waktu pembuatan: 10 Nov 2024 pada 07.14
 -- Versi server: 8.0.35
 -- Versi PHP: 8.2.12
 
@@ -581,8 +581,7 @@ INSERT INTO `lembur` (`id`, `nik`, `tanggal_presensi`, `waktu_mulai`, `waktu_sel
 (5, '444444444', '2024-10-31', '14:44:00', '23:44:00', 540, 0, 1, 'Test Catatan Lembur', 'pending', NULL, '2024-10-31 06:44:53', '2024-10-31 07:09:58'),
 (6, '123456789', '2024-11-01', '00:00:00', '14:00:00', 840, 0, 1, 'Test Catatan Lembur', 'pending', NULL, '2024-10-31 07:07:24', '2024-10-31 07:07:24'),
 (7, '123123123', '2024-11-02', '16:00:00', '16:30:00', 120, 0, 1, 'asdwqeasff', 'disetujui', NULL, '2024-10-31 09:20:27', '2024-11-02 06:53:02'),
-(8, '123123123', '2024-11-01', '16:10:00', '16:18:00', 60, 0, 1, 'Test Lemburan', 'disetujui', NULL, '2024-11-01 07:47:12', '2024-11-01 08:06:38'),
-(9, '123123123', '2024-11-03', '16:45:00', '17:45:00', 60, 0, 1, 'Kasih lembur lagi', 'ditolak', 'dah lewat', '2024-11-02 09:46:07', '2024-11-05 14:11:49');
+(8, '123123123', '2024-11-01', '16:10:00', '16:18:00', 60, 0, 1, 'Test Lemburan', 'disetujui', NULL, '2024-11-01 07:47:12', '2024-11-01 08:06:38');
 
 -- --------------------------------------------------------
 
@@ -1475,7 +1474,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT untuk tabel `lembur`
 --
 ALTER TABLE `lembur`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT untuk tabel `lokasi_kantor`
@@ -1505,7 +1504,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT untuk tabel `presensi`
 --
 ALTER TABLE `presensi`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=313;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=327;
 
 --
 -- AUTO_INCREMENT untuk tabel `roles`

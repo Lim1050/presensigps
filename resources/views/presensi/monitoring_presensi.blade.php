@@ -87,7 +87,38 @@
         </div>
     </div>
 </div>
-
+<!-- Modal Foto Masuk -->
+<div class="modal fade" id="modalShowImageMasuk" tabindex="-1" aria-labelledby="modalShowImageMasukLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalShowImageMasukLabel">Foto Masuk Presensi Karyawan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImageMasuk" src="" class="img-fluid" alt="Foto Presensi" />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Foto Masuk -->
+<div class="modal fade" id="modalShowImageKeluar" tabindex="-1" aria-labelledby="modalShowImageKeluarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalShowImageKeluarLabel">Foto Keluar Presensi Karyawan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImageKeluar" src="" class="img-fluid" alt="Foto Presensi" />
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Modal peta lokasi -->
 <div class="modal fade" id="modalShowMap" tabindex="-1" aria-labelledby="modalShowMapLabel" aria-hidden="true">
     <div class="modal-dialog">

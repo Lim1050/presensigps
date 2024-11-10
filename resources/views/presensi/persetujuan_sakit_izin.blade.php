@@ -44,7 +44,7 @@
     <div class="col-12">
         <div class="card shadow">
             <div class="card-body">
-                @if (Session::get('success'))
+                {{-- @if (Session::get('success'))
                 <div class="alert alert-success">
                     {{ Session::get('success') }}
                 </div>
@@ -53,7 +53,7 @@
                     <div class="alert alert-danger">
                         {{ Session::get('error') }}
                     </div>
-                @endif
+                @endif --}}
                 <form action="{{ route('admin.persetujuan.sakit.izin') }}" method="GET">
                     <div class="row">
                         <div class="col-6">
@@ -88,10 +88,12 @@
                         </div>
                         <div class="col-3">
                             <div class="form-group">
-                                <div class="icon-placeholder">
-                                    <i class="bi bi-person-vcard"></i>
-                                    <input type="text" class="form-control" id="kode_jabatan" name="kode_jabatan" placeholder=" Kode Jabatan" value="{{ Request('kode_jabatan') }}">
-                                </div>
+                                <select name="kode_jabatan" id="kode_jabatan" class="form-control">
+                                    <option value="">Pilih Jabatan</option>
+                                    @foreach ($jabatan as $j)
+                                        <option value="{{ $j->kode_jabatan }}">{{ $j->nama_jabatan }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="col-3">
@@ -132,15 +134,16 @@
                                     </tr>
                                 </thead>
                                 <tbody >
-                                    @foreach ($sakit_izin as $item)
+                                @foreach ($sakit_izin as $item)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->nik }}</td>
-                                        <td>{{ $item->nama_lengkap }}</td>
-                                        <td>{{ $item->kode_jabatan }}</td>
+                                        <td>{{ $item->karyawan->nama_lengkap ?? 'Tidak Ditemukan' }}</td> <!-- Mengambil nama karyawan -->
+                                        <td>{{ $item->karyawan->jabatan->nama_jabatan ?? 'Tidak Ditemukan' }}</td> <!-- Mengambil kode jabatan -->
                                         <td>{{ date('d-m-Y', strtotime($item->tanggal_izin_dari)) }}</td>
                                         <td>{{ date('d-m-Y', strtotime($item->tanggal_izin_sampai)) }}</td>
-                                        <td>{{ $item->status == "sakit" ? "Sakit" : ($item->status == "izin" ? "Izin" : "Cuti") }}
+                                        <td>
+                                            {{ $item->status == "sakit" ? "Sakit" : ($item->status == "izin" ? "Izin" : "Cuti") }}
                                             @if ($item->status == "sakit")
                                             <br>
                                             <a href="#" data-toggle="modal" data-target="#imageDisplayContainer{{ $item->kode_izin }}" data-kode_izin="{{ $item->kode_izin }}" class="text-danger">
@@ -149,35 +152,44 @@
                                             @endif
                                         </td>
                                         <td>{{ $item->keterangan }}</td>
-                                        <td><span class="badge {{ $item->status_approved == "1" ? "badge-success" : ($item->status_approved == "2" ? "badge-danger" : "badge-warning")}}">{{ $item->status_approved == "1" ? "Disetujui" : ($item->status_approved == "2" ? "Ditolak" : "Pending") }}</span></td>
+                                        <td>
+                                            <span class="badge {{ $item->status_approved == "1" ? "badge-success" : ($item->status_approved == "2" ? "badge-danger" : "badge-warning")}}">
+                                                {{ $item->status_approved == "1" ? "Disetujui" : ($item->status_approved == "2" ? "Ditolak" : "Pending") }}
+                                            </span>
+                                        </td>
                                         <td>
                                             @if ($item->status_approved == 0)
-                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalAproval" data-kode_izin="{{ $item->kode_izin }}"><i class="bi bi-box-arrow-right"></i> Aksi</a>
+                                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalAproval" data-kode_izin="{{ $item->kode_izin }}">
+                                                    <i class="bi bi-box-arrow-right"></i> Aksi
+                                                </a>
                                             @else
-                                                <a href="{{ route('admin.batalkan.sakit.izin', $item->kode_izin) }}" class="btn btn-sm btn-danger"><i class="bi bi-x-square"></i> Batalkan</a>
+                                                <a href="{{ route('admin.batalkan.sakit.izin', $item->kode_izin) }}" class="btn btn-sm btn-danger">
+                                                    <i class="bi bi-x-square"></i> Batalkan
+                                                </a>
                                             @endif
                                         </td>
                                     </tr>
+
                                     <!-- Modal gambar -->
-                                        <div class="modal fade" id="imageDisplayContainer{{ $item->kode_izin }}" tabindex="-1" aria-labelledby="imageDisplayContainer{{ $item->kode_izin }}Label" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="imageDisplayContainer{{ $item->kode_izin }}Label">{{ $item->kode_izin }}</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        @php
-                                                            $path = Storage::url("uploads/surat_sakit/" . $item->surat_sakit);
-                                                        @endphp
-                                                        <img id="imageDisplay" src="{{ $path }}" alt="Image will be displayed here" width="100%" height="auto" />
-                                                    </div>
+                                    <div class="modal fade" id="imageDisplayContainer{{ $item->kode_izin }}" tabindex="-1" aria-labelledby="imageDisplayContainer{{ $item->kode_izin }}Label" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="imageDisplayContainer{{ $item->kode_izin }}Label">{{ $item->kode_izin }}</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @php
+                                                        $path = Storage::url("uploads/surat_sakit/" . $item->surat_sakit);
+                                                    @endphp
+                                                    <img id="imageDisplay" src="{{ $path }}" alt="Image will be displayed here" width="100%" height="auto" />
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
+                                    </div>
+                                @endforeach
                                 </tbody>
                             </table>
                         {{ $sakit_izin->links('vendor.pagination.bootstrap-5') }}
@@ -234,6 +246,43 @@
 
 @endsection
 @push('myscript')
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 <script>
     $('#modalAproval').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Tombol yang memicu modal

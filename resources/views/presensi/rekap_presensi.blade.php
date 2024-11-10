@@ -9,7 +9,7 @@
     <div class="col-6">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('admin.rekap.print') }}" id="form_rekap" target="_blank" method="POST">
+                <form action="{{ route('admin.rekap.print') }}" id="form_rekap" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-12">

@@ -1,6 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Berikan Lembur Karyawan</h1>
@@ -11,7 +11,7 @@
     {{-- <div class="col-12"> --}}
         <div class="card shadow">
             <div class="card-body">
-                @if(session('success'))
+                {{-- @if(session('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}
                     </div>
@@ -21,7 +21,7 @@
                     <div class="alert alert-danger">
                         {{ session('error') }}
                     </div>
-                @endif
+                @endif --}}
                 <form method="POST" action="{{ route('admin.lembur.store') }}">
                     @csrf
                     <div class="row mb-3">
@@ -266,5 +266,43 @@ $(document).ready(function() {
     });
 });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 @endpush
 

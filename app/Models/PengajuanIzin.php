@@ -31,21 +31,33 @@ class PengajuanIzin extends Model
         return $this->belongsTo(Karyawan::class, 'nik', 'nik');
     }
 
-    // Hitung jumlah hari izin
-    public function getJumlahHariAttribute()
+        public function getJumlahHariAttribute()
     {
         return Carbon::parse($this->tanggal_izin_dari)->diffInDays(Carbon::parse($this->tanggal_izin_sampai)) + 1;
     }
 
-    // Scope untuk filter izin yang sudah disetujui
-    public function scopeApproved($query)
-    {
-        return $query->where('status_approved', 1);
-    }
+    // public function scopeApproved($query)
+    // {
+    //     return $query->where('status_approved', 1);
+    // }
 
-    // Scope untuk filter izin berdasarkan jenis
-    public function scopeByStatus($query, $status)
-    {
-        return $query->where('status', $status);
-    }
+    // public function scopeByNik($query, $nik)
+    // {
+    //     return $query->where('pengajuan_izin.nik', 'like', '%' . $nik . '%');
+    // }
+
+    // public function scopeByNama($query, $nama)
+    // {
+    //     return $query->where('nama_lengkap', 'like', '%' . $nama . '%');
+    // }
+
+    // public function scopeByJabatan($query, $kodeJabatan)
+    // {
+    //     return $query->where('kode_jabatan', 'like', '%' . $kodeJabatan . '%');
+    // }
+
+    // public function scopeByDateRange($query, $dari, $sampai)
+    // {
+    //     return $query->whereBetween('tanggal_izin_dari', [$dari, $sampai]);
+    // }
 }

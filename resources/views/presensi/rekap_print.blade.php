@@ -8,16 +8,16 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/person-check-fill.svg') }}" style="color: white">
 
     <!-- Normalize or reset CSS with your favorite library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"> --}}
 
     <!-- Load paper.css for happy printing -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css">
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css"> --}}
 
     <!-- Set page size here: A5, A4 or A3 -->
     <!-- Set also "landscape" if you need -->
     <style>
         @page {
-            size: A4
+            size: Legal lanscape
         }
 
         #title {
@@ -44,12 +44,31 @@
         padding: 5px;
         font-size: 12px;
         }
+        .tabelpresensi th, .tabelpresensi td {
+            border: 1px solid black;
+            padding: 5px;
+            /* text-align: center; Menyelaraskan teks ke tengah */
+        }
+
+        .tabelpresensi th {
+            background: lightgrey;
+        }
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .sheet {
+                margin: 0;
+                padding: 10mm; /* padding di sekitar konten */
+            }
+        }
     </style>
 </head>
 
 <!-- Set "A5", "A4" or "A3" for class name -->
 <!-- Set also "landscape" if you need -->
-<body class="A3 landscape">
+<body>
     <!-- Each sheet element should have the class "sheet" -->
     <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
     <section class="sheet padding-10mm">
@@ -57,7 +76,7 @@
     <table style="width: 100%">
         <tr>
             <td style="width: 30px">
-                <img src="{{ asset('assets/img/MASTER-LOGO-PT-GUARD.png') }}" width="70" height="70" alt="">
+                <img src="{{ $src }}" width="80px" height="80px" alt="">
             </td>
             <td>
                 <span id="title">
