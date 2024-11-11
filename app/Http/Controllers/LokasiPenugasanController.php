@@ -30,10 +30,36 @@ class LokasiPenugasanController extends Controller
         return response()->json($lokasiPenugasan);
     }
 
-    public function LokasiPenugasanIndex()
+    public function LokasiPenugasanIndex(Request $request)
     {
-        $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();
+        $query = LokasiPenugasan::with('cabang');
+
+        // Pencarian berdasarkan nama lokasi penugasan
+        if ($request->filled('nama_lokasi_penugasan')) {
+            $query->where('nama_lokasi_penugasan', 'like', '%' . $request->nama_lokasi_penugasan . '%');
+        }
+
+        // Pencarian berdasarkan jumlah jam kerja
+        if ($request->filled('jumlah_jam_kerja')) {
+            $query->where('jumlah_jam_kerja', $request->jumlah_jam_kerja);
+        }
+
+        // Pencarian berdasarkan jumlah hari kerja
+        if ($request->filled('jumlah_hari_kerja')) {
+            $query->where('jumlah_hari_kerja', $request->jumlah_hari_kerja);
+        }
+
+        // Pencarian berdasarkan cabang
+        if ($request->filled('kode_cabang')) {
+            $query->where('kode_cabang', $request->kode_cabang);
+        }
+
+        // Ambil data lokasi penugasan dengan pagination
+        $lokasi_penugasan = $query->paginate(10); // Ganti 10 dengan jumlah item per halaman yang diinginkan
+
+        // Ambil data cabang untuk dropdown
         $cabang = Cabang::all();
+
         return view('lokasi_penugasan.lokasi_penugasan_index', compact('lokasi_penugasan', 'cabang'));
     }
 

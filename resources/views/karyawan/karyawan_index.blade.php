@@ -48,7 +48,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                @if (Session::get('success'))
+                {{-- @if (Session::get('success'))
                     <div class="alert alert-success">
                         {{ Session::get('success') }}
                     </div>
@@ -57,7 +57,7 @@
                     <div class="alert alert-danger">
                         {{ Session::get('error') }}
                     </div>
-                @endif
+                @endif --}}
                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalInputKaryawan"><i class="bi bi-plus-lg"></i> Tambah Data Karyawan</a>
             </div>
         </div>
@@ -69,12 +69,12 @@
                     <div class="row mt-2">
                         <div class="col-2">
                             <div class="form-group">
-                                <input type="text" name="nama_karyawan" id="nama_karyawan" class="form-control" placeholder="Cari Nama Karyawan" value="{{ Request('nama_karyawan') }}">
+                                <input type="text" name="nama_karyawan" id="cari_nama_karyawan" class="form-control" placeholder="Cari Nama Karyawan" value="{{ Request('nama_karyawan') }}">
                             </div>
                         </div>
                         <div class="col-2">
                             <div class="form-group">
-                                <select name="kode_jabatan" id="kode_jabatan" class="form-control">
+                                <select name="kode_jabatan" id="cari_kode_jabatan" class="form-control">
                                     <option value="">Pilih Jabatan</option>
                                     @foreach ($jabatan as $item)
                                     <option {{ Request('kode_jabatan') == $item->kode_jabatan ? 'selected' : '' }} value="{{ $item->kode_jabatan }}">{{ $item->nama_jabatan }}</option>
@@ -82,19 +82,10 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="col-2">
                             <div class="form-group">
-                                <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan" class="form-control">
-                                    <option value="">Pilih Lokasi Penugasan</option>
-                                    @foreach ($lokasi_penugasan as $item)
-                                    <option {{ Request('kode_lokasi_penugasan') == $item->kode_lokasi_penugasan ? 'selected' : '' }} value="{{ $item->kode_lokasi_penugasan }}">{{ $item->nama_lokasi_penugasan }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="form-group">
-                                <select name="kode_cabang" id="kode_cabang" class="form-control">
+                                <select name="kode_departemen" id="cari_kode_departemen" class="form-control">
                                     <option value="">Pilih Departemen</option>
                                     @foreach ($departemen as $item)
                                     <option {{ Request('kode_departemen') == $item->kode_departemen ? 'selected' : '' }} value="{{ $item->kode_departemen }}">{{ $item->nama_departemen }}</option>
@@ -104,10 +95,20 @@
                         </div>
                         <div class="col-2">
                             <div class="form-group">
-                                <select name="kode_cabang" id="kode_cabang" class="form-control">
+                                <select name="kode_cabang" id="cari_kode_cabang" class="form-control">
                                     <option value="">Pilih Kantor Cabang</option>
                                     @foreach ($cabang as $item)
                                     <option {{ Request('kode_cabang') == $item->kode_cabang ? 'selected' : '' }} value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <select name="kode_lokasi_penugasan" id="cari_kode_lokasi_penugasan" class="form-control">
+                                    <option value="">Pilih Lokasi Penugasan</option>
+                                    @foreach ($lokasi_penugasan as $item)
+                                    <option {{ Request('kode_lokasi_penugasan') == $item->kode_lokasi_penugasan ? 'selected' : '' }} value="{{ $item->kode_lokasi_penugasan }}" data-cabang="{{ $item->kode_cabang }}">{{ $item->nama_lokasi_penugasan }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -184,7 +185,11 @@
 
                                         <a href="{{ route('admin.karyawan.setting', Crypt::encrypt($item->nik)) }}" class="btn btn-secondary" title="Setting"><i class="bi bi-gear"></i></a>
                                         <a href="{{ route('admin.karyawan.reset.password', Crypt::encrypt($item->nik)) }}" class="btn btn-primary" title="Reset Password"><i class="bi bi-key"></i></a>
-                                        <a href="{{ route('admin.karyawan.delete', Crypt::encrypt($item->nik)) }}" class="btn btn-danger delete-confirm" title="Delete"><i class="bi bi-trash3"></i></a>
+                                        <a href="{{ route('admin.karyawan.delete', Crypt::encrypt($item->nik)) }}"
+                                            class="btn btn-danger delete-confirm"
+                                            title="Delete"
+                                            data-nama="{{ $item->nama_lengkap }}"
+                                            data-nik="{{ $item->nik }}"><i class="bi bi-trash3"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -252,19 +257,20 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group">
-                        <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasant" class="form-control">
-                            <option value="">Pilih Lokasi Penugasan</option>
-                            @foreach ($lokasi_penugasan as $item)
-                            <option {{ Request('kode_lokasi_penugasan') == $item->kode_lokasi_penugasan ? 'selected' : '' }} value="{{ $item->kode_lokasi_penugasan }}">{{ $item->nama_lokasi_penugasan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+
                     <div class="form-group">
                         <select name="kode_cabang" id="kode_cabang" class="form-control">
                             <option value="">Pilih Cabang</option>
                             @foreach ($cabang as $item)
                             <option {{ Request('kode_cabang') == $item->kode_cabang ? 'selected' : '' }} value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan" class="form-control">
+                            <option value="">Pilih Lokasi Penugasan</option>
+                            @foreach ($lokasi_penugasan as $item)
+                            <option {{ Request('kode_lokasi_penugasan') == $item->kode_lokasi_penugasan ? 'selected' : '' }} value="{{ $item->kode_lokasi_penugasan }}" data-cabang="{{ $item->kode_cabang }}">{{ $item->nama_lokasi_penugasan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -341,14 +347,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group">
-                        <select name="kode_lokasi_penugasan" id="edit_kode_lokasi_penugasan" class="form-control">
-                            <option value="">Pilih Lokasi Penugasan</option>
-                            @foreach ($lokasi_penugasan as $item)
-                            <option value="{{ $item->kode_lokasi_penugasan }}">{{ $item->nama_lokasi_penugasan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+
                     <div class="form-group">
                         <select name="kode_cabang" id="edit_kode_cabang" class="form-control">
                             <option value="">Pilih Cabang</option>
@@ -357,6 +356,16 @@
                             @endforeach
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <select name="kode_lokasi_penugasan" id="edit_kode_lokasi_penugasan" class="form-control">
+                            <option value="">Pilih Lokasi Penugasan</option>
+                            @foreach ($lokasi_penugasan as $item)
+                            <option value="{{ $item->kode_lokasi_penugasan }}" data-cabang="{{ $item->kode_cabang }}">{{ $item->nama_lokasi_penugasan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="input-group mb-3">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="editfoto" name="foto" accept="image/*">
@@ -381,6 +390,94 @@
 </div>
 
 @push('myscript')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cabangSelect = document.getElementById('cari_kode_cabang');
+        const lokasiSelect = document.getElementById('cari_kode_lokasi_penugasan');
+
+        cabangSelect.addEventListener('change', function() {
+            const selectedCabang = this.value;
+
+            // Tampilkan semua lokasi penugasan yang sesuai dengan cabang yang dipilih
+            Array.from(lokasiSelect.options).forEach(option => {
+                if (option.dataset.cabang === selectedCabang || selectedCabang === "") {
+                    option.style.display = 'block'; // Tampilkan option
+                } else {
+                    option.style.display = 'none'; // Sembunyikan option
+                }
+            });
+
+            // Reset pilihan lokasi penugasan jika tidak ada yang sesuai
+            if (!Array.from(lokasiSelect.options).some(option => option.style.display === 'block')) {
+                lokasiSelect.value = ""; // Reset
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cabangSelect = document.getElementById('kode_cabang');
+        const lokasiSelect = document.getElementById('kode_lokasi_penugasan');
+
+        cabangSelect.addEventListener('change', function() {
+            const selectedCabang = this.value;
+
+            // Tampilkan semua lokasi penugasan yang sesuai dengan cabang yang dipilih
+            Array.from(lokasiSelect.options).forEach(option => {
+                if (option.dataset.cabang === selectedCabang || selectedCabang === "") {
+                    option.style.display = 'block'; // Tampilkan option
+                } else {
+                    option.style.display = 'none'; // Sembunyikan option
+                }
+            });
+
+            // Reset pilihan lokasi penugasan jika tidak ada yang sesuai
+            if (!Array.from(lokasiSelect.options).some(option => option.style.display === 'block')) {
+                lokasiSelect.value = ""; // Reset
+            }
+        });
+    });
+</script>
+
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 <script>
     let table = new DataTable('#dataTable');
 
@@ -408,9 +505,11 @@
     $(".delete-confirm").click(function (e){
         e.preventDefault();
         var url = $(this).attr('href');
+        var namaKaryawan = $(this).data('nama');
+        var nik = $(this).data('nik');
         Swal.fire({
         title: "Apakah Anda Yakin?",
-        text: "Data Ini Akan Dihapus!",
+        text: "Data karyawan " + namaKaryawan + " dengan NIK " + nik + " Ini Akan Dihapus!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -419,11 +518,6 @@
         }).then((result) => {
         if (result.isConfirmed) {
             window.location.href = url;
-            Swal.fire({
-            title: "Terhapus!",
-            text: "Data Sudah dihapus.",
-            icon: "success"
-            });
         }
         });
     });
@@ -555,6 +649,35 @@
             var formAction = "{{ route('admin.karyawan.update', ['nik' => ':nik']) }}";
             formAction = formAction.replace(':nik', nik);
             $('#formEditKaryawan').attr('action', formAction);
+
+            // Tambahkan filter lokasi penugasan
+            filterLokasiPenugasan(kode_cabang);
+        });
+
+        // Fungsi filter lokasi penugasan
+        function filterLokasiPenugasan(selectedCabang) {
+            const lokasiSelect = $('#edit_kode_lokasi_penugasan');
+
+            // Tampilkan semua lokasi penugasan yang sesuai dengan cabang yang dipilih
+            lokasiSelect.find('option').each(function() {
+                const option = $(this);
+                if (option.data('cabang') == selectedCabang || selectedCabang === "") {
+                    option.show();
+                } else {
+                    option.hide();
+                }
+            });
+
+            // Reset pilihan lokasi penugasan jika tidak ada yang sesuai
+            if (lokasiSelect.find('option:visible').length === 1) { // 1 karena option default
+                lokasiSelect.val("");
+            }
+        }
+
+        // Event listener untuk perubahan cabang
+        $('#edit_kode_cabang').on('change', function() {
+            const selectedCabang = $(this).val();
+            filterLokasiPenugasan(selectedCabang);
         });
 
         // Pratinjau gambar saat mengupload file baru

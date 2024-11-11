@@ -40,7 +40,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                @if (Session::get('success'))
+                {{-- @if (Session::get('success'))
                     <div class="alert alert-success">
                         {{ Session::get('success') }}
                     </div>
@@ -49,33 +49,51 @@
                     <div class="alert alert-danger">
                         {{ Session::get('error') }}
                     </div>
-                @endif
+                @endif --}}
                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalInputLokasiPenugasan"><i class="bi bi-plus-lg"></i> Tambah Lokasi Penugasan</a>
             </div>
         </div>
 
         {{-- form cari Lokasi Penugasan --}}
-        <div class="row">
-            <div class="col-12">
-                <form action="{{ route('admin.lokasi.penugasan') }}" method="GET">
-                    <div class="row mt-2">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <input type="text" name="nama_lokasi_penugasan_cari" id="nama_lokasi_penugasan_cari" class="form-control" placeholder="Cari Nama Lokasi Penugasan" value="{{ Request('nama_lokasi_penugasan') }}">
-                            </div>
-                        </div>
-
-                        <div class="col-2">
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="bi bi-search"></i> Cari
-                                </button>
-                            </div>
-                        </div>
+        <form action="{{ route('admin.lokasi.penugasan') }}" method="GET">
+            <div class="row mt-2">
+                <div class="col-3">
+                    <div class="form-group">
+                        <input type="text" name="nama_lokasi_penugasan" id="nama_lokasi_penugasan_cari" class="form-control" placeholder="Cari Nama Lokasi Penugasan" value="{{ Request('nama_lokasi_penugasan') }}">
                     </div>
-                </form>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <input type="number" name="jumlah_jam_kerja" id="jumlah_jam_kerja_cari" class="form-control" placeholder="Cari Jumlah Jam Kerja" value="{{ Request('jumlah_jam_kerja') }}">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <input type="number" name="jumlah_hari_kerja" id="jumlah_hari_kerja_cari" class="form-control" placeholder="Cari Jumlah Hari Kerja" value="{{ Request('jumlah_hari_kerja') }}">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <select name="kode_cabang" id="kode_cabang_cari" class="form-control">
+                            <option value="">Pilih Kantor Cabang</option>
+                            @foreach ($cabang as $item)
+                            <option {{ Request('kode_cabang') == $item->kode_cabang ? 'selected' : '' }} value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="bi bi-search"></i> Cari
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
         <div class="row">
             <div class="col-12">
                 {{-- table --}}
@@ -109,7 +127,7 @@
                                 <td class="text-center" class="text-center">
                                     <div class="btn-group ">
                                         <a href="{{ route('admin.lokasi.penugasan.edit', $item->kode_lokasi_penugasan) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
-                                        <button class="btn btn-danger delete-confirm" data-kode="{{ $item->kode_lokasi_penugasan }}">
+                                        <button class="btn btn-danger delete-confirm" data-kode="{{ $item->kode_lokasi_penugasan }}" data-nama="{{ $item->nama_lokasi_penugasan }}">
                                             <i class="bi bi-trash3"></i> Delete
                                         </button>
                                     </div>
@@ -199,6 +217,43 @@
 
 
 @push('myscript')
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 <script>
     let table = new DataTable('#dataTable');
 
@@ -206,10 +261,11 @@
         $('.delete-confirm').on('click', function(e) {
             e.preventDefault();
             var kode = $(this).data('kode');
+            var nama = $(this).data('nama');
 
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: "Data Lokasi Penugasan akan dihapus permanen!",
+                text: "Data Lokasi Penugasan " + nama + " akan dihapus permanen!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
