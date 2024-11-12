@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 11, 2024 at 04:11 PM
+-- Generation Time: Nov 12, 2024 at 03:57 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -48,9 +48,10 @@ INSERT INTO `cashbon` (`id`, `kode_cashbon`, `nik`, `tanggal_pengajuan`, `jumlah
 (2, 'CB2B3C4D', '123123123', '2024-10-31', 100000.00, 'Test lagi Cashbon', 'pending', '2024-10-24 05:01:03', '2024-11-10 10:40:31'),
 (3, 'CBXWL175', '123123123', '2024-10-25', 10000.00, 'test code cashbon', 'diterima', '2024-10-24 08:39:00', '2024-10-25 10:02:24'),
 (4, 'CBI0E781', '123456789', '2024-10-25', 20000.00, 'naefdoncalksj', 'ditolak', '2024-10-25 06:11:26', '2024-11-10 10:40:58'),
-(5, 'CB2CD594', '123123123', '2024-11-09', 10000.00, 'test limit', 'pending', '2024-10-25 10:01:17', '2024-11-10 10:41:03'),
+(5, 'CB2CD594', '123123123', '2024-11-09', 10000.00, 'test limit', 'diterima', '2024-10-25 10:01:17', '2024-11-12 08:16:42'),
 (6, 'CBJWZ938', '123123123', '2024-10-26', 100000.00, 'test edit cashbon', 'diterima', '2024-10-26 05:37:44', '2024-10-26 05:58:03'),
-(9, 'CBQBL599', '123123123', '2024-10-27', 2000.00, 'test 2000', 'pending', '2024-10-26 07:03:33', '2024-10-26 07:03:33');
+(9, 'CBQBL599', '123123123', '2024-10-27', 2000.00, 'test 2000', 'pending', '2024-10-26 07:03:33', '2024-10-26 07:03:33'),
+(10, 'CBJEH963', '123123123', '2025-11-13', 50000.00, 'test', 'diterima', '2024-11-12 08:20:37', '2024-11-12 08:20:53');
 
 -- --------------------------------------------------------
 
@@ -71,8 +72,8 @@ CREATE TABLE `cashbon_karyawan_limit` (
 --
 
 INSERT INTO `cashbon_karyawan_limit` (`id`, `nik`, `limit`, `created_at`, `updated_at`) VALUES
-(1, '123123123', 1500000.00, '2024-10-25 09:39:06', '2024-10-25 10:24:08'),
-(2, '123456789', 1500000.00, '2024-10-25 09:47:59', '2024-10-25 10:24:08');
+(1, '123123123', 1500000.00, '2024-10-25 09:39:06', '2024-11-12 08:29:44'),
+(2, '123456789', 1500000.00, '2024-10-25 09:47:59', '2024-11-12 08:29:44');
 
 -- --------------------------------------------------------
 
@@ -92,7 +93,7 @@ CREATE TABLE `cashbon_limit` (
 --
 
 INSERT INTO `cashbon_limit` (`id`, `global_limit`, `created_at`, `updated_at`) VALUES
-(1, 1500000.00, '2024-10-25 09:29:38', '2024-10-25 09:29:38');
+(1, 1500000.00, '2024-10-25 09:29:38', '2024-11-12 08:29:44');
 
 -- --------------------------------------------------------
 
@@ -520,10 +521,7 @@ CREATE TABLE `konfigurasi_gaji` (
 INSERT INTO `konfigurasi_gaji` (`kode_jenis_gaji`, `jenis_gaji`, `keterangan`, `is_active`, `created_at`, `updated_at`) VALUES
 ('GT', 'Gaji Tetap', 'Gaji Tetap', 1, '2024-10-16 07:16:12', '2024-10-16 07:16:12'),
 ('L', 'Lembur', 'Lembur', 1, '2024-10-22 06:05:31', '2024-10-22 06:05:31'),
-('MKN', 'Uang Makan', 'Uang Makan', 1, '2024-10-16 07:17:15', '2024-10-16 07:17:15'),
-('TGJ', 'Test gaji asd', 'tesssss asdqw', 0, '2024-10-27 08:17:53', '2024-10-27 08:18:03'),
-('TJ', 'Tunjangan Jabatan', 'Tunjangan Jabatan', 1, '2024-10-16 07:16:27', '2024-10-16 07:16:27'),
-('TR', 'Transportasi', 'Transportasi', 1, '2024-10-16 07:16:52', '2024-10-27 08:17:32');
+('TJ', 'Tunjangan Jabatan', 'Tunjangan Jabatan', 1, '2024-10-16 07:16:27', '2024-10-16 07:16:27');
 
 -- --------------------------------------------------------
 
@@ -1451,7 +1449,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cashbon`
 --
 ALTER TABLE `cashbon`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `cashbon_karyawan_limit`

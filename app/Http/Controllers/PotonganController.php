@@ -12,9 +12,36 @@ use Illuminate\Http\Request;
 
 class PotonganController extends Controller
 {
-    public function PotonganIndex()
+    public function PotonganIndex(Request $request)
     {
-        $potongan = Potongan::with('jabatan', 'jenispotongan')->orderBy('kode_jabatan')->get();
+        // Initialize the query
+        $query = Potongan::with('jabatan', 'jenisPotongan')->orderBy('kode_jabatan');
+
+        // Check for search parameters and apply filters
+        if ($request->has('nama_potongan') && $request->nama_potongan != '') {
+            $query->where('nama_potongan', 'like', '%' . $request->nama_potongan . '%');
+        }
+
+        if ($request->has('kode_jabatan') && $request->kode_jabatan != '') {
+            $query->where('kode_jabatan', $request->kode_jabatan);
+        }
+
+        if ($request->has('kode_jenis_potongan') && $request->kode_jenis_potongan != '') {
+            $query->where('kode_jenis_potongan', $request->kode_jenis_potongan);
+        }
+
+        if ($request->has('kode_cabang') && $request->kode_cabang != '') {
+            $query->whereHas('lokasiPenugasan', function($q) use ($request) {
+                $q->where('kode_cabang', $request->kode_cabang);
+            });
+        }
+
+        if ($request->has('kode_lokasi_penugasan') && $request->kode_lokasi_penugasan != '') {
+            $query->where('kode_lokasi_penugasan', $request->kode_lokasi_penugasan);
+        }
+
+        // Execute the query
+        $potongan = $query->get();
         $jabatan = Jabatan::all();
         $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();
         $cabang = Cabang::with('LokasiPenugasan')->get();

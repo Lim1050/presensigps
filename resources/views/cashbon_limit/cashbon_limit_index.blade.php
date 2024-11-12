@@ -44,7 +44,7 @@
     <div class="col-12">
         <div class="card shadow">
             <div class="card-body">
-                @if (Session::get('success'))
+                {{-- @if (Session::get('success'))
                     <div class="alert alert-success">
                         {{ Session::get('success') }}
                     </div>
@@ -53,7 +53,7 @@
                     <div class="alert alert-danger">
                         {{ Session::get('error') }}
                     </div>
-                @endif
+                @endif --}}
                 <h2>Global Limit</h2>
                 <form action="{{ route('admin.konfigurasi.cashbon.global.limit') }}" method="POST">
                     @csrf
@@ -70,7 +70,63 @@
                     <button type="submit" class="btn btn-danger">Update Global Limit</button>
                 </form>
 
-                <h2 class="mt-3">Limit Karyawan</h2>
+                {{-- form cari data cashbon limit --}}
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <form action="{{ route('admin.konfigurasi.cashbon.limit') }}" method="GET">
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <input type="text" name="nama_karyawan" id="nama_karyawan_cari" class="form-control" placeholder="Cari Nama Karyawan" value="{{ Request('nama_karyawan') }}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <select name="kode_jabatan" id="kode_jabatan_cari" class="form-control">
+                                            <option value="">Pilih Jabatan</option>
+                                            @foreach ($jabatan as $item)
+                                            <option {{ Request('kode_jabatan') == $item->kode_jabatan ? 'selected' : '' }} value="{{ $item->kode_jabatan  }}">{{ $item->nama_jabatan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <select name="kode_cabang" id="kode_cabang_cari" class="form-control">
+                                            <option value="">Pilih Kantor Cabang</option>
+                                            @foreach ($cabang as $item)
+                                            <option {{ Request('kode_cabang') == $item->kode_cabang ? 'selected' : '' }} value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan_cari" class="form-control">
+                                            <option value="">Pilih Lokasi Penugasan</option>
+                                            @foreach ($lokasi_penugasan as $item)
+                                            <option {{ Request('kode_lokasi_penugasan') == $item->kode_lokasi_penugasan ? 'selected' : '' }} value="{{ $item->kode_lokasi_penugasan }}" data-cabang="{{ $item->kode_cabang }}">{{ $item->nama_lokasi_penugasan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-danger w-100">
+                                            <i class="bi bi-search"></i> Cari
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <h2 class="mt-2">Limit Karyawan Bulan {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}</h2>
                 <div class="table-responsive">
                 <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -95,9 +151,9 @@
                             <td class="text-center">{{ $item->lokasiPenugasan->nama_lokasi_penugasan }}</td>
                             <td class="text-center">{{ $item->cabang->nama_cabang }}</td>
                             <td class="text-right">Rp {{ number_format($item->cashbonKaryawanLimit->limit ?? $globalLimit) }}</td>
-                            {{-- {{ $item->cashbonTransactions()->sum('amount') }} --}}
-                            <td class="text-right">Rp {{ number_format($item->cashbon->where('status', 'diterima')->sum('jumlah')) }}</td>
-                            <td class="text-right">Rp {{ $item->getFormattedAvailableCashbonLimit($globalLimit) }}</td>
+                            {{-- Gunakan cashbon_bulan_ini yang sudah difilter --}}
+                            <td class="text-right">Rp {{ number_format($item->cashbon_bulan_ini) }}</td>
+                            <td class="text-right">{{ $item->getFormattedAvailableCashbonLimit($globalLimit) }}</td>
                             <td>
                                 {{-- {{ route('cashbon.setitemLimit', $item) }} --}}
                                 <form action="{{ route('admin.konfigurasi.cashbon.karyawan.limit', $item->nik) }}" method="POST">
@@ -121,6 +177,67 @@
 
 @endsection
 @push('myscript')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cabangSelect = document.getElementById('kode_cabang_cari');
+        const lokasiSelect = document.getElementById('kode_lokasi_penugasan_cari');
+
+        cabangSelect.addEventListener('change', function() {
+            const selectedCabang = this.value;
+
+            // Tampilkan semua lokasi penugasan yang sesuai dengan cabang yang dipilih
+            Array.from(lokasiSelect.options).forEach(option => {
+                if (option.dataset.cabang === selectedCabang || selectedCabang === "") {
+                    option.style.display = 'block'; // Tampilkan option
+                } else {
+                    option.style.display = 'none'; // Sembunyikan option
+                }
+            });
+
+            // Reset pilihan lokasi penugasan jika tidak ada yang sesuai
+            if (!Array.from(lokasiSelect.options).some(option => option.style.display === 'block')) {
+                lokasiSelect.value = ""; // Reset
+            }
+        });
+    });
+</script>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 <script>
     let table = new DataTable('#dataTable');
 </script>

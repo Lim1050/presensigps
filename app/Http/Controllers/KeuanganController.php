@@ -7,6 +7,7 @@ use App\Models\Cashbon;
 use App\Models\CashbonLimit;
 use App\Models\Penggajian;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -104,9 +105,15 @@ class KeuanganController extends Controller
         $karyawan = Auth::guard('karyawan')->user();
         $globalLimit = CashbonLimit::first()->global_limit ?? 0;
 
+        // Ambil bulan saat ini
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
         $personalLimit = $karyawan->cashbonKaryawanLimit->limit ?? $globalLimit;
         $usedCashbon = $karyawan->cashbon()
                                 ->where('status', 'diterima')
+                                ->whereMonth('tanggal_pengajuan', $currentMonth)
+                                ->whereYear('tanggal_pengajuan', $currentYear)
                                 ->sum('jumlah');
         $availableLimit = max(0, $personalLimit - $usedCashbon);
 

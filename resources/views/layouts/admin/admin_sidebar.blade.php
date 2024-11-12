@@ -153,7 +153,7 @@
                 <i class="bi bi-cash fa-fw"></i>
                 <span>Jenis Potongan</span></a>
 
-                <a class="collapse-item {{ request()->is('/admin/konfigurasi/cashbon/limit*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.cashbon.limit') }}">
+                <a class="collapse-item {{ request()->is('admin/konfigurasi/cashbon/limit*') ? 'active' : '' }}" href="{{ route('admin.konfigurasi.cashbon.limit') }}">
                 <i class="bi bi-cash fa-fw"></i>
                 <span>Limit Cashbon</span></a>
 

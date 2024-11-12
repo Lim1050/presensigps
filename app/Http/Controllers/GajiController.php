@@ -16,13 +16,44 @@ class GajiController extends Controller
 {
 
 
-    public function GajiIndex()
+    public function GajiIndex(Request $request)
     {
-        $gaji = Gaji::with('jabatan', 'jenisGaji')->orderBy('kode_jabatan')->get();
+        // Initialize the query
+        $query = Gaji::with('jabatan', 'jenisGaji')->orderBy('kode_jabatan');
+
+        // Check for search parameters and apply filters
+        if ($request->has('nama_gaji') && $request->nama_gaji != '') {
+            $query->where('nama_gaji', 'like', '%' . $request->nama_gaji . '%');
+        }
+
+        if ($request->has('kode_jabatan') && $request->kode_jabatan != '') {
+            $query->where('kode_jabatan', $request->kode_jabatan);
+        }
+
+        if ($request->has('kode_jenis_gaji') && $request->kode_jenis_gaji != '') {
+            $query->where('kode_jenis_gaji', $request->kode_jenis_gaji);
+        }
+
+        if ($request->has('kode_cabang') && $request->kode_cabang != '') {
+            $query->whereHas('lokasiPenugasan', function($q) use ($request) {
+                $q->where('kode_cabang', $request->kode_cabang);
+            });
+        }
+
+        if ($request->has('kode_lokasi_penugasan') && $request->kode_lokasi_penugasan != '') {
+            $query->where('kode_lokasi_penugasan', $request->kode_lokasi_penugasan);
+        }
+
+        // Execute the query
+        $gaji = $query->get();
+
+        // Fetch additional data for the view
         $jabatan = Jabatan::all();
         $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();
-        $cabang = Cabang::with('LokasiPenugasan')->get();
+        $cabang = Cabang::with('lokasiPenugasan')->get();
         $jenis_gaji = KonfigurasiGaji::all();
+
+        // Return the view with the filtered data
         return view('gaji.gaji_index', compact('gaji', 'jabatan', 'jenis_gaji', 'lokasi_penugasan', 'cabang'));
     }
 

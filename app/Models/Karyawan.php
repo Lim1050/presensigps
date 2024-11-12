@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -68,14 +70,20 @@ class Karyawan extends Authenticatable
         return $this->hasOne(CashbonKaryawanLimit::class, 'nik', 'nik');
     }
 
-        public function getAvailableCashbonLimit($globalLimit)
+    public function getAvailableCashbonLimit($globalLimit)
     {
         // Ambil limit personal karyawan, jika tidak ada gunakan global limit
         $personalLimit = $this->cashbonKaryawanLimit->limit ?? $globalLimit;
 
-        // Hitung total cashbon yang sudah diterima
+        // Ambil bulan saat ini
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        // Hitung total cashbon yang sudah diterima pada bulan ini
         $usedCashbon = $this->cashbon()
                             ->where('status', 'diterima')
+                            ->whereMonth('tanggal_pengajuan', $currentMonth) // Tambahkan filter bulan
+                            ->whereYear('tanggal_pengajuan', $currentYear)
                             ->sum('jumlah');
 
         // Hitung sisa limit yang tersedia
