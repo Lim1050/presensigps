@@ -40,7 +40,7 @@
     <div class="card-body">
         <div class="row mb-4">
             <div class="col-12">
-                @if (Session::get('success'))
+                {{-- @if (Session::get('success'))
                     <div class="alert alert-success">
                         {{ Session::get('success') }}
                     </div>
@@ -49,25 +49,55 @@
                     <div class="alert alert-danger">
                         {{ Session::get('error') }}
                     </div>
-                @endif
+                @endif --}}
                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalInputJamKerja"><i class="bi bi-plus-lg"></i> Tambah Data Jam Kerja</a>
             </div>
         </div>
 
         {{-- form cari data jam kerja --}}
-        {{-- <div class="row">
+        <div class="row">
             <div class="col-12">
                 <form action="{{ route('admin.konfigurasi.jam.kerja') }}" method="GET">
                     <div class="row mt-2">
-                        <div class="col-6">
+                        <div class="col-3">
                             <div class="form-group">
-                                <input type="text" name="nama_jam_kerja_cari" id="nama_jam_kerja_cari" class="form-control" placeholder="Cari Nama Jam Kerja" value="{{ Request('nama_jam_kerja') }}">
+                                <input type="text" name="nama_jam_kerja" id="nama_jam_kerja_cari" class="form-control" placeholder="Cari Nama Jam Kerja" value="{{ Request('nama_jam_kerja') }}">
                             </div>
                         </div>
-
-                        <div class="col-2">
+                        <div class="col-3">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-danger">
+                                <select name="kode_cabang" id="kode_cabang_cari" class="form-control">
+                                    <option value="">Pilih Kantor Cabang</option>
+                                    @foreach ($cabang as $item)
+                                    <option {{ Request('kode_cabang') == $item->kode_cabang ? 'selected' : '' }} value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan_cari" class="form-control">
+                                    <option value="">Pilih Lokasi Penugasan</option>
+                                    @foreach ($lokasiPenugasan as $item)
+                                    <option {{ Request('kode_lokasi_penugasan') == $item->kode_lokasi_penugasan ? 'selected' : '' }} value="{{ $item->kode_lokasi_penugasan }}" data-cabang="{{ $item->kode_cabang }}">{{ $item->nama_lokasi_penugasan }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <select name="lintas_hari" id="lintas_hari_cari" class="form-control">
+                                    <option value="">Pilih Lintas Hari</option>
+                                    <option {{ Request('lintas_hari') == '1' ? 'selected' : '' }} value="1">Ya</option>
+                                    <option {{ Request('lintas_hari') == '0' ? 'selected' : '' }} value="0">Tidak</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-danger w-100">
                                     <i class="bi bi-search"></i> Cari
                                 </button>
                             </div>
@@ -75,12 +105,12 @@
                     </div>
                 </form>
             </div>
-        </div> --}}
+        </div>
         <div class="row">
             <div class="col-12">
                 {{-- table --}}
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-hover table-striped" width="100%" cellspacing="0">
                         <thead>
                             <tr class="text-center">
                                 <th class="text-center">No</th>
@@ -97,9 +127,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($jam_kerja as $item)
+                            {{-- @foreach ($jam_kerja as $item) --}}
+                            @foreach ($jam_kerja as $index => $item)
                                 <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    {{-- <td class="text-center">{{ $loop->iteration }}</td> --}}
+                                    <td class="text-center">{{ $jam_kerja->firstItem() + $index }}</td>
                                     <td class="text-center">{{ $item->kode_jam_kerja }}</td>
                                     <td class="text-center">{{ optional($item->lokasiPenugasan)->nama_lokasi_penugasan }}</td>
                                     <td class="text-center">{{ optional($item->cabang)->nama_cabang }}</td>
@@ -129,7 +161,12 @@
                                                 data-lintas_hari="{{ $item->lintas_hari }}">
                                                 <i class="bi bi-pencil-square"></i> Edit
                                             </a>
-                                            <a href="{{ route('admin.konfigurasi.jam.kerja.delete', $item->kode_jam_kerja) }}" class="btn btn-danger delete-confirm">
+                                            <a href="{{ route('admin.konfigurasi.jam.kerja.delete', $item->kode_jam_kerja) }}"
+                                                class="btn btn-danger delete-confirm"
+                                                data-nama="{{ $item->nama_jam_kerja }}"
+                                                data-cabang="{{ $item->cabang->nama_cabang }}"
+                                                data-lokasi_penugasan="{{ $item->lokasiPenugasan->nama_lokasi_penugasan }}"
+                                                >
                                                 <i class="bi bi-trash3"></i> Delete
                                             </a>
                                         </div>
@@ -138,7 +175,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{-- {{ $departemen->links('vendor.pagination.bootstrap-5') }} --}}
+                    {{ $jam_kerja->links('vendor.pagination.bootstrap-5') }}
                 </div>
             </div>
         </div>
@@ -167,21 +204,21 @@
                     </div> --}}
 
                     <div class="form-group">
-                        <label for="kode_lokasi_penugasan">Lokasi Penugasan</label>
-                        <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan" class="form-control" required onchange="updateMinJamKerja()">
-                            <option value="">Pilih Lokasi Penugasan</option>
-                            @foreach($lokasiPenugasan as $lokasi)
-                                <option value="{{ $lokasi->kode_lokasi_penugasan }}" data-jam-kerja="{{ $lokasi->jumlah_jam_kerja }}">{{ $lokasi->nama_lokasi_penugasan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
                         <label for="kode_cabang">Kantor Cabang</label>
                         <select name="kode_cabang" id="kode_cabang" class="form-control" required>
                             <option value="">Pilih Kantor Cabang</option>
                             @foreach($cabang as $cab)
                                 <option value="{{ $cab->kode_cabang }}">{{ $cab->nama_cabang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kode_lokasi_penugasan">Lokasi Penugasan</label>
+                        <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan" class="form-control" required onchange="updateMinJamKerja()">
+                            <option value="">Pilih Lokasi Penugasan</option>
+                            @foreach($lokasiPenugasan as $lokasi)
+                                <option value="{{ $lokasi->kode_lokasi_penugasan }}" data-cabang="{{ $lokasi->kode_cabang }}" data-jam-kerja="{{ $lokasi->jumlah_jam_kerja }}">{{ $lokasi->nama_lokasi_penugasan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -258,21 +295,21 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="kode_lokasi_penugasan">Lokasi Penugasan</label>
-                        <select name="kode_lokasi_penugasan" id="edit_kode_lokasi_penugasan" class="form-control" required onchange="updateMinJamKerja()">
-                            <option value="">Pilih Lokasi Penugasan</option>
-                            @foreach($lokasiPenugasan as $lokasi)
-                                <option value="{{ $lokasi->kode_lokasi_penugasan }}" data-edit-jam-kerja="{{ $lokasi->jumlah_jam_kerja }}">{{ $lokasi->nama_lokasi_penugasan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
                         <label for="kode_cabang">Kantor Cabang</label>
                         <select name="kode_cabang" id="edit_kode_cabang" class="form-control">
                             <option value="">Pilih Kantor Cabang</option>
                             @foreach($cabang as $cab)
                                 <option value="{{ $cab->kode_cabang }}">{{ $cab->nama_cabang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kode_lokasi_penugasan">Lokasi Penugasan</label>
+                        <select name="kode_lokasi_penugasan" id="edit_kode_lokasi_penugasan" class="form-control" required onchange="updateMinJamKerja()">
+                            <option value="">Pilih Lokasi Penugasan</option>
+                            @foreach($lokasiPenugasan as $lokasi)
+                                <option value="{{ $lokasi->kode_lokasi_penugasan }}" data-cabang="{{ $lokasi->kode_cabang }}" data-edit-jam-kerja="{{ $lokasi->jumlah_jam_kerja }}">{{ $lokasi->nama_lokasi_penugasan }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -319,7 +356,90 @@
 </div>
 
 @push('myscript')
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const cabangSelect = document.getElementById('kode_cabang_cari');
+        const lokasiSelect = document.getElementById('kode_lokasi_penugasan_cari');
+
+        cabangSelect.addEventListener('change', function() {
+            const selectedCabang = this.value;
+
+            // Tampilkan semua lokasi penugasan yang sesuai dengan cabang yang dipilih
+            Array.from(lokasiSelect.options).forEach(option => {
+                if (option.dataset.cabang === selectedCabang || selectedCabang === "") {
+                    option.style.display = 'block'; // Tampilkan option
+                } else {
+                    option.style.display = 'none'; // Sembunyikan option
+                }
+            });
+
+            // Reset pilihan lokasi penugasan jika tidak ada yang sesuai
+            if (!Array.from(lokasiSelect.options).some(option => option.style.display === 'block')) {
+                lokasiSelect.value = ""; // Reset
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const cabangSelect = document.getElementById('kode_cabang');
+        const lokasiSelect = document.getElementById('kode_lokasi_penugasan');
+
+        cabangSelect.addEventListener('change', function() {
+            const selectedCabang = this.value;
+
+            // Tampilkan semua lokasi penugasan yang sesuai dengan cabang yang dipilih
+            Array.from(lokasiSelect.options).forEach(option => {
+                if (option.dataset.cabang === selectedCabang || selectedCabang === "") {
+                    option.style.display = 'block'; // Tampilkan option
+                } else {
+                    option.style.display = 'none'; // Sembunyikan option
+                }
+            });
+
+            // Reset pilihan lokasi penugasan jika tidak ada yang sesuai
+            if (!Array.from(lokasiSelect.options).some(option => option.style.display === 'block')) {
+                lokasiSelect.value = ""; // Reset
+            }
+        });
+    });
 
     function updateMinJamKerja() {
         var select = document.getElementById('kode_lokasi_penugasan');
@@ -429,14 +549,17 @@
 </script>
 
 <script>
-    let table = new DataTable('#dataTable');
+    // let table = new DataTable('#dataTable');
 
     $(".delete-confirm").click(function (e){
         e.preventDefault();
         var url = $(this).attr('href');
+        var nama = $(this).data('nama');
+        var cabang = $(this).data('cabang');
+        var lokasi_penugasan = $(this).data('lokasi_penugasan');
         Swal.fire({
         title: "Apakah Anda Yakin?",
-        text: "Data Ini Akan Dihapus!",
+        text: "Data Jam Kerja " + nama + ", lokasi penugasan " + lokasi_penugasan + ", kantor cabang " + cabang + " akan dihapus permanen!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -445,11 +568,6 @@
         }).then((result) => {
         if (result.isConfirmed) {
             window.location.href = url;
-            Swal.fire({
-            title: "Terhapus!",
-            text: "Data Sudah dihapus.",
-            icon: "success"
-            });
         }
         });
     });
@@ -549,6 +667,48 @@
                 return false;
             }
         });
+
+    $(document).ready(function() {
+        // Fungsi untuk memperbarui opsi lokasi penugasan berdasarkan cabang yang dipilih
+        function updateLokasiPenugasan() {
+            var selectedCabang = $('#edit_kode_cabang').val();
+            if(selectedCabang) {
+                $('#edit_kode_lokasi_penugasan option').each(function() {
+                    if($(this).data('cabang') == selectedCabang || $(this).val() == '') {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            } else {
+                $('#edit_kode_lokasi_penugasan option').show();
+            }
+        }
+
+        // Ketika cabang dipilih
+        $('#edit_kode_cabang').change(function() {
+            updateLokasiPenugasan();
+            $('#edit_kode_lokasi_penugasan').val('');
+        });
+
+        // Ketika lokasi penugasan dipilih
+        $('#edit_kode_lokasi_penugasan').change(function() {
+            var selectedCabang = $(this).find(':selected').data('cabang');
+            if(selectedCabang) {
+                $('#edit_kode_cabang').val(selectedCabang);
+            }
+        });
+
+        // Inisialisasi: perbarui lokasi penugasan berdasarkan cabang yang mungkin sudah terpilih
+        updateLokasiPenugasan();
+
+        // Fungsi untuk mengatur nilai awal saat modal edit dibuka
+        window.setEditFormValues = function(kodeCabang, kodeLokasiPenugasan) {
+            $('#edit_kode_cabang').val(kodeCabang);
+            updateLokasiPenugasan();
+            $('#edit_kode_lokasi_penugasan').val(kodeLokasiPenugasan);
+        }
+    });
 
     // Send Data to modal edit jam kerja
     $(document).ready(function() {

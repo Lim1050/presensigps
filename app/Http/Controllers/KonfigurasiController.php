@@ -38,15 +38,46 @@ class KonfigurasiController extends Controller
     //     }
     // }
 
-    public function JamKerja()
+    public function JamKerja(Request $request)
     {
-        // Mengambil semua jam kerja dan mengurutkannya berdasarkan kode_jam_kerja
-        $jam_kerja = JamKerja::orderBy('kode_jam_kerja')->get();
+        // Query dasar
+        $query = JamKerja::query();
+
+        // Filter berdasarkan nama jam kerja
+        if ($request->filled('nama_jam_kerja')) {
+            $query->where('nama_jam_kerja', 'like', '%' . $request->nama_jam_kerja . '%');
+        }
+
+        // Filter berdasarkan kode cabang
+        if ($request->filled('kode_cabang')) {
+            $query->where('kode_cabang', $request->kode_cabang);
+        }
+
+        // Filter berdasarkan kode lokasi penugasan
+        if ($request->filled('kode_lokasi_penugasan')) {
+            $query->where('kode_lokasi_penugasan', $request->kode_lokasi_penugasan);
+        }
+
+        // Filter berdasarkan lintas hari
+        if ($request->filled('lintas_hari')) {
+            $query->where('lintas_hari', $request->lintas_hari);
+        }
+
+        // Ambil data jam kerja dengan filter
+        $jam_kerja = $query->orderBy('kode_jam_kerja')->paginate(10);
+
+        // Ambil data pendukung untuk form
         $lokasiPenugasan = LokasiPenugasan::all();
         $cabang = Cabang::all();
 
-        // Mengembalikan view dengan data jam kerja
-        return view('konfigurasi.jam_kerja', compact('jam_kerja', 'lokasiPenugasan', 'cabang'));
+        // Kembalikan view dengan data
+        return view('konfigurasi.jam_kerja', [
+            'jam_kerja' => $jam_kerja,
+            'lokasiPenugasan' => $lokasiPenugasan,
+            'cabang' => $cabang,
+            // Kembalikan input request untuk mempertahankan filter
+            'request' => $request
+        ]);
     }
 
     public function JamKerjaStore(Request $request)

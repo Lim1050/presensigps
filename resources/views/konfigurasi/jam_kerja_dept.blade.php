@@ -40,7 +40,7 @@
     <div class="card-body">
         <div class="row mb-4">
             <div class="col-12">
-                @if (Session::get('success'))
+                {{-- @if (Session::get('success'))
                     <div class="alert alert-success">
                         {{ Session::get('success') }}
                     </div>
@@ -49,7 +49,7 @@
                     <div class="alert alert-danger">
                         {{ Session::get('error') }}
                     </div>
-                @endif
+                @endif --}}
                 <a href="{{ route('admin.konfigurasi.jam-kerja-dept.create') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Tambah Data Jam Kerja</a>
             </div>
         </div>
@@ -117,6 +117,43 @@
 
 
 @push('myscript')
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 <script>
     let table = new DataTable('#dataTable');
 
