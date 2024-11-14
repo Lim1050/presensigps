@@ -44,7 +44,7 @@
                                         <input type="hidden" name="hari[]" value="{{ $item->hari }}">
                                     </td>
                                     <td>
-                                        {{ $item->nama_jam_kerja }}
+                                        {{ $item->kode_jam_kerja }} - {{ $item->nama_jam_kerja }}
                                     </td>
                                 </tr>
                                 @endforeach
@@ -55,7 +55,7 @@
                 </div>
                 <div class="col-6">
                     <div class="table-responsive">
-                        <table class="table table-hover table-striped text-center" id="dataTable" width="100%" cellspacing="0">
+                        <table class="table table-hover table-striped text-center" id="masterJamKerjaTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th colspan="6">Master Jam Kerja</th>
@@ -69,17 +69,8 @@
                                     <th>Jam Pulang</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach ($jam_kerja as $item)
-                                <tr>
-                                    <td class="text-center">{{ $item->kode_jam_kerja }}</td>
-                                    <td class="text-center">{{ $item->nama_jam_kerja }}</td>
-                                    <td class="text-center">{{ $item->awal_jam_masuk }}</td>
-                                    <td class="text-center">{{ $item->jam_masuk }}</td>
-                                    <td class="text-center">{{ $item->akhir_jam_masuk }}</td>
-                                    <td class="text-center">{{ $item->jam_pulang }}</td>
-                                </tr>
-                                @endforeach
+                            <tbody id="masterJamKerjaBody">
+                            <!-- Isi tabel akan diperbarui secara dinamis -->
                             </tbody>
                         </table>
                     </div>
@@ -89,3 +80,50 @@
 </div>
 
 @endsection
+@push('myscript')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        const kodeCabang = "{{ $jam_kerja_dept->kode_cabang }}";
+        const masterJamKerjaBody = $('#masterJamKerjaBody');
+
+        // Fungsi untuk memperbarui tabel master jam kerja
+        function updateMasterJamKerjaTable() {
+            // Kosongkan tbody sebelum mengisi data baru
+            masterJamKerjaBody.empty();
+
+            // Data jam kerja yang sudah di-filter di controller
+            const jamKerjaData = @json($jam_kerja);
+
+            // Jika tidak ada data
+            if (jamKerjaData.length === 0) {
+                masterJamKerjaBody.html(`
+                    <tr>
+                        <td colspan="6" class="text-center">Tidak Ada Data Jam Kerja untuk Cabang Ini</td>
+                    </tr>
+                `);
+                return;
+            }
+
+            // Isi tabel dengan data yang diterima
+            jamKerjaData.forEach(function(item) {
+                const row = `
+                    <tr>
+                        <td class="text-center">${item.kode_jam_kerja}</td>
+                        <td class="text-center">${item.nama_jam_kerja}</td>
+                        <td class="text-center">${item.awal_jam_masuk}</td>
+                        <td class="text-center">${item.jam_masuk}</td>
+                        <td class="text-center">${item.akhir_jam_masuk}</td>
+                        <td class="text-center">${item.jam_pulang}</td>
+                    </tr>
+                `;
+                masterJamKerjaBody.append(row);
+            });
+        }
+
+        // Panggil fungsi untuk mengisi tabel saat halaman dimuat
+        updateMasterJamKerjaTable();
+    });
+</script>
+@endpush
+

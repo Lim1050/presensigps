@@ -239,27 +239,71 @@ class KonfigurasiController extends Controller
         }
     }
 
-    public function JamKerjaDept()
+    public function JamKerjaDept(Request $request)
     {
-        $jam_kerja_dept = DB::table('jam_kerja_dept')
-                            ->join('kantor_cabang', 'jam_kerja_dept.kode_cabang', '=', 'kantor_cabang.kode_cabang')
-                            ->join('departemen', 'jam_kerja_dept.kode_departemen', '=', 'departemen.kode_departemen')
-                            ->get();
+        // Ambil parameter pencarian dari request
+        $kode_cabang = $request->input('kode_cabang');
+        $kode_departemen = $request->input('kode_departemen');
 
+        // Query untuk mengambil data jam kerja departemen
+        $query = DB::table('jam_kerja_dept')
+                    ->join('kantor_cabang', 'jam_kerja_dept.kode_cabang', '=', 'kantor_cabang.kode_cabang')
+                    ->join('departemen', 'jam_kerja_dept.kode_departemen', '=', 'departemen.kode_departemen');
+
+        // Tambahkan kondisi pencarian jika parameter ada
+        if ($kode_cabang) {
+            $query->where('jam_kerja_dept.kode_cabang', $kode_cabang);
+        }
+
+        if ($kode_departemen) {
+            $query->where('jam_kerja_dept.kode_departemen', $kode_departemen);
+        }
+
+        // Ambil hasil query
+        $jam_kerja_dept = $query->get();
+
+        // Ambil data detail jam kerja departemen
         $jam_kerja_dept_det = DB::table('jam_kerja_dept_detail')->get();
 
-        return view('konfigurasi.jam_kerja_dept', compact('jam_kerja_dept'));
+        // Ambil data cabang dan departemen untuk dropdown
+        $cabang = DB::table('kantor_cabang')->orderBy('nama_cabang')->get();
+        $departemen = DB::table('departemen')->orderBy('nama_departemen')->get();
+
+        // Kembalikan view dengan data yang diperlukan
+        return view('konfigurasi.jam_kerja_dept', compact('jam_kerja_dept', 'cabang', 'departemen'));
     }
     public function JamKerjaDeptCreate()
     {
         $jam_kerja = DB::table('jam_kerja')->orderBy('kode_jam_kerja')->get();
+        // dd($jam_kerja);
         $cabang = DB::table('kantor_cabang')->orderBy('nama_cabang')->get();
         $departemen = DB::table('departemen')->orderBy('nama_departemen')->get();
         return view('konfigurasi.jam_kerja_dept_create', compact('jam_kerja', 'cabang', 'departemen'));
     }
 
+    public function getJamKerjaByCabang($kode_cabang)
+    {
+        $jam_kerja = JamKerja::where('kode_cabang', $kode_cabang)->get();
+        return response()->json($jam_kerja);
+    }
+
     public function JamKerjaDeptStore(Request $request)
     {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'kode_cabang' => 'required|string',
+            'kode_departemen' => 'required|string',
+            'hari' => 'required|array',
+            'kode_jam_kerja' => 'required|array',
+            'kode_jam_kerja.*' => 'string', // Validasi setiap item dalam array
+        ]);
+
+        // if ($validator->fails()) {
+        //     return redirect()->route('admin.konfigurasi.jam-kerja-dept')
+        //         ->withErrors($validator)
+        //         ->withInput();
+        // }
+
         $kode_cabang = $request->kode_cabang;
         $kode_departemen = $request->kode_departemen;
         $hari = $request->hari;
@@ -268,7 +312,7 @@ class KonfigurasiController extends Controller
 
         DB::beginTransaction();
         try {
-            //menyimpan data ke table jam_kerja_dept
+            // Menyimpan data ke table jam_kerja_dept
             DB::table('jam_kerja_dept')->insert([
                 'kode_jk_dept' => $kode_jk_dept,
                 'kode_cabang' => $kode_cabang,
@@ -276,8 +320,9 @@ class KonfigurasiController extends Controller
                 'created_at' => Carbon::now()
             ]);
 
-            //menyimpan data ke table jam_kerja_dept_detail
-            for ($i = 0; $i < count($hari); $i++){
+            // Menyimpan data ke table jam_kerja_dept_detail
+            $data = [];
+            for ($i = 0; $i < count($hari); $i++) {
                 $data[] = [
                     'kode_jk_dept' => $kode_jk_dept,
                     'hari' => $hari[$i],
@@ -290,68 +335,165 @@ class KonfigurasiController extends Controller
             DB::commit();
 
             return redirect()->route('admin.konfigurasi.jam-kerja-dept')->with(['success' => 'Jam Kerja Berhasil Disimpan!']);
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
+            // Log error ke file log
+            // \Log::error('Error saving jam kerja: '.$e->getMessage());
             DB::rollBack();
-            return redirect()->route('admin.konfigurasi.jam-kerja-dept')->with(['warning' => 'Jam Kerja Gagal Disimpan!']);
+            // dd($e);
+            // Tangani error duplicate entry secara spesifik
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                $errorCode = $e->errorInfo[1];
+
+                // Kode error 1062 adalah untuk duplicate entry
+                if ($errorCode == 1062) {
+                    // Ekstrak informasi yang spesifik
+                    preg_match("/Duplicate entry '(.+)' for key/", $e->getMessage(), $matches);
+
+                    $duplicateValue = $matches[1] ?? 'Data';
+
+                    return redirect()->back()
+                        ->with('error', "Jam Kerja dengan kode {$duplicateValue} sudah ada. Silakan gunakan Cabang atau Departemen yang berbeda.")
+                        ->withInput();
+                }
+            }
+            return redirect()->back()->with(key: ['error' => 'Jam Kerja Gagal Disimpan!' .$e->getMessage()]);
         }
     }
 
     public function JamKerjaDeptView($kode_jk_dept)
     {
         $jam_kerja_dept = DB::table('jam_kerja_dept')
-                            ->join('kantor_cabang', 'jam_kerja_dept.kode_cabang', '=', 'kantor_cabang.kode_cabang')
-                            ->join('departemen', 'jam_kerja_dept.kode_departemen', '=', 'departemen.kode_departemen')
-                            ->where('kode_jk_dept', $kode_jk_dept)
-                            ->first();
-        $jam_kerja_dept_detail = DB::table('jam_kerja_dept_detail')
-                                ->join('jam_kerja', 'jam_kerja_dept_detail.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-                                ->where('kode_jk_dept', $kode_jk_dept)
-                                ->get();
+            ->join('kantor_cabang', 'jam_kerja_dept.kode_cabang', '=', 'kantor_cabang.kode_cabang')
+            ->join('departemen', 'jam_kerja_dept.kode_departemen', '=', 'departemen.kode_departemen')
+            ->where('kode_jk_dept', $kode_jk_dept)
+            ->first();
 
-        $jam_kerja = DB::table('jam_kerja')->orderBy('kode_jam_kerja')->get();
+        $jam_kerja_dept_detail = DB::table('jam_kerja_dept_detail')
+            ->join('jam_kerja', 'jam_kerja_dept_detail.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+            ->where('kode_jk_dept', $kode_jk_dept)
+            ->get();
+
+        // Ambil hanya jam kerja yang sesuai dengan kode cabang
+        $jam_kerja = DB::table('jam_kerja')
+            ->where('kode_cabang', $jam_kerja_dept->kode_cabang)
+            ->orderBy('kode_jam_kerja')
+            ->get();
+
         $cabang = DB::table('kantor_cabang')->orderBy('nama_cabang')->get();
         $departemen = DB::table('departemen')->orderBy('nama_departemen')->get();
+
         return view('konfigurasi.jam_kerja_dept_view', compact('jam_kerja', 'cabang', 'departemen', 'jam_kerja_dept', 'jam_kerja_dept_detail'));
     }
     public function JamKerjaDeptEdit($kode_jk_dept)
     {
+        // Ambil data jam kerja departemen
         $jam_kerja_dept = DB::table('jam_kerja_dept')->where('kode_jk_dept', $kode_jk_dept)->first();
-        // dd($jam_kerja_dept);
+
+        // Periksa apakah data jam kerja departemen ditemukan
+        if (!$jam_kerja_dept) {
+            return redirect()->route('admin.konfigurasi.jam-kerja-dept')
+                ->with('error', 'Data Jam Kerja Departemen tidak ditemukan');
+        }
+
+        // Ambil detail jam kerja departemen
         $jam_kerja_dept_detail = DB::table('jam_kerja_dept_detail')->where('kode_jk_dept', $kode_jk_dept)->get();
 
-        $jam_kerja = DB::table('jam_kerja')->orderBy('kode_jam_kerja')->get();
+        // Ambil jam kerja berdasarkan kode cabang dari jam_kerja_dept
+        $jam_kerja = DB::table('jam_kerja')
+            ->where('kode_cabang', $jam_kerja_dept->kode_cabang) // Filter berdasarkan kode cabang
+            ->orderBy('kode_jam_kerja')
+            ->get();
+
+        // Ambil data cabang dan departemen
         $cabang = DB::table('kantor_cabang')->orderBy('nama_cabang')->get();
         $departemen = DB::table('departemen')->orderBy('nama_departemen')->get();
+
+        // Kembalikan view dengan data yang diperlukan
         return view('konfigurasi.jam_kerja_dept_edit', compact('jam_kerja', 'cabang', 'departemen', 'jam_kerja_dept', 'jam_kerja_dept_detail'));
     }
 
-    public function JamKerjaDeptUpdate( $kode_jk_dept ,Request $request)
+    public function JamKerjaDeptUpdate($kode_jk_dept, Request $request)
     {
-        $hari = $request->hari;
-        $kode_jam_kerja = $request->kode_jam_kerja;
+        // Validasi input
+        $request->validate([
+            'hari' => 'required|array',
+            'kode_jam_kerja' => 'required|array',
+            'hari.*' => 'required|string',
+            'kode_jam_kerja.*' => 'required|exists:jam_kerja,kode_jam_kerja'
+        ], [
+            'hari.required' => 'Pilih hari kerja.',
+            'kode_jam_kerja.required' => 'Pilih jam kerja untuk setiap hari.',
+            'kode_jam_kerja.*.exists' => 'Jam kerja yang dipilih tidak valid.'
+        ]);
 
         DB::beginTransaction();
         try {
-            // delete data yg lama
-            DB::table('jam_kerja_dept_detail')->where('kode_jk_dept', $kode_jk_dept)->delete();
+            // Cek apakah data jam kerja departemen ada
+            $jamKerjaDept = DB::table('jam_kerja_dept')->where('kode_jk_dept', $kode_jk_dept)->first();
 
-            //update data ke table jam_kerja_dept_detail
-            for ($i = 0; $i < count($hari); $i++){
+            if (!$jamKerjaDept) {
+                throw new \Exception('Data Jam Kerja Departemen tidak ditemukan.');
+            }
+
+            // Validasi tidak ada duplikat hari
+            $uniqueHari = collect($request->hari)->unique();
+            if (count($uniqueHari) !== count($request->hari)) {
+                throw new \Exception('Terdapat duplikasi hari yang dipilih.');
+            }
+
+            // Ambil data lama untuk dibandingkan
+            $oldData = DB::table('jam_kerja_dept_detail')
+                ->where('kode_jk_dept', $kode_jk_dept)
+                ->get()
+                ->keyBy('hari');
+
+            // Siapkan data baru untuk perbandingan
+            $newData = collect($request->hari)->mapWithKeys(function ($hari, $index) use ($request) {
+                return [$hari => $request->kode_jam_kerja[$index]];
+            });
+
+            // Cek apakah ada perubahan
+            $hasChanges = $newData->diffAssoc($oldData->pluck('kode_jam_kerja', 'hari'))->isNotEmpty();
+
+            if (!$hasChanges) {
+                // Tidak ada perubahan, kembalikan dengan pesan
+                return redirect()->route('admin.konfigurasi.jam-kerja-dept')
+                    ->with('info', 'Tidak ada perubahan data jam kerja.');
+            }
+
+            // Hapus data lama
+            DB::table('jam_kerja_dept_detail')
+                ->where('kode_jk_dept', $kode_jk_dept)
+                ->delete();
+
+            // Siapkan data baru
+            $data = [];
+            foreach ($request->hari as $index => $hari) {
                 $data[] = [
                     'kode_jk_dept' => $kode_jk_dept,
-                    'hari' => $hari[$i],
-                    'kode_jam_kerja' => $kode_jam_kerja[$i],
+                    'hari' => $hari,
+                    'kode_jam_kerja' => $request->kode_jam_kerja[$index],
+                    'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 ];
             }
+
+            // Masukkan data baru
             JamKerjaDeptDetail::insert($data);
 
             DB::commit();
 
-            return redirect()->route('admin.konfigurasi.jam-kerja-dept')->with(['success' => 'Jam Kerja Berhasil Diupdate!']);
-        } catch (\Throwable $e) {
+            return redirect()->route('admin.konfigurasi.jam-kerja-dept')
+                ->with('success', 'Jam Kerja Berhasil Diupdate!');
+        } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('admin.konfigurasi.jam-kerja-dept')->with(['warning' => 'Jam Kerja Gagal Diupdate!']);
+
+            // Log error untuk debugging
+            Log::error('Jam Kerja Update Error: ' . $e->getMessage());
+
+            return redirect()->back()
+                ->with('error', $e->getMessage())
+                ->withInput();
         }
     }
 

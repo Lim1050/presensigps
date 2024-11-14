@@ -39,7 +39,6 @@
             <div class="row">
                 <div class="col-6">
                     <div class="table-responsive">
-                        {{-- <input type="hidden" name="nik" value="{{ $karyawan->nik }}"> --}}
                         <table class="table table-hover table-striped text-center" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
@@ -55,10 +54,10 @@
                                         <input type="hidden" name="hari[]" value="{{ $item->hari }}">
                                     </td>
                                     <td>
-                                        <select name="kode_jam_kerja[]" id="kode_jam_kerja" class="form-control">
+                                        <select name="kode_jam_kerja[]" class="form-control">
                                             <option value="">Pilih Jam Kerja</option>
                                             @foreach ($jam_kerja as $jk)
-                                            <option {{ $item->kode_jam_kerja == $jk->kode_jam_kerja ? 'selected' : ''}} value="{{ $jk->kode_jam_kerja }}">{{ $jk->nama_jam_kerja }}</option>
+                                            <option {{ $item->kode_jam_kerja == $jk->kode_jam_kerja ? 'selected' : ''}} value="{{ $jk->kode_jam_kerja }}">{{ $jk->kode_jam_kerja }} - {{ $jk->nama_jam_kerja }}</option>
                                             @endforeach
                                         </select>
                                     </td>
@@ -106,3 +105,42 @@
 </div>
 
 @endsection
+@push('myscript')
+    @if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+@endpush

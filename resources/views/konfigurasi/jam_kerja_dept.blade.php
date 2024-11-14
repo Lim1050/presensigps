@@ -55,19 +55,35 @@
         </div>
 
         {{-- form cari data jam kerja --}}
-        {{-- <div class="row">
+        <div class="row">
             <div class="col-12">
-                <form action="{{ route('admin.konfigurasi.jam.kerja') }}" method="GET">
+                <form action="{{ route('admin.konfigurasi.jam-kerja-dept') }}" method="GET">
                     <div class="row mt-2">
                         <div class="col-6">
                             <div class="form-group">
-                                <input type="text" name="nama_jam_kerja_cari" id="nama_jam_kerja_cari" class="form-control" placeholder="Cari Nama Jam Kerja" value="{{ Request('nama_jam_kerja') }}">
+                                <select name="kode_cabang" id="kode_cabang" class="form-control">
+                                    <option value="">Pilih Cabang</option>
+                                    @foreach ($cabang as $item)
+                                        <option {{ Request('kode_cabang') == $item->kode_cabang ? 'selected' : '' }} value="{{ $item->kode_cabang }}">{{ strtoupper($item->nama_cabang) }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
-
-                        <div class="col-2">
+                        <div class="col-6">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-danger">
+                                <select name="kode_departemen" id="kode_departemen" class="form-control">
+                                    <option value="">Pilih Departemen</option>
+                                    @foreach ($departemen as $item)
+                                        <option {{ Request('kode_departemen') == $item->kode_departemen ? 'selected' : '' }} value="{{ $item->kode_departemen }}">{{ strtoupper($item->nama_departemen) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-danger w-100">
                                     <i class="bi bi-search"></i> Cari
                                 </button>
                             </div>
@@ -75,7 +91,7 @@
                     </div>
                 </form>
             </div>
-        </div> --}}
+        </div>
         <div class="row">
             <div class="col-12">
                 {{-- table --}}
@@ -101,7 +117,12 @@
                                     <div class="btn-group ">
                                         <a href="{{ route('admin.konfigurasi.jam-kerja-dept.view', $item->kode_jk_dept) }}" class="btn btn-primary"><i class="bi bi-eye"></i> View</a>
                                         <a href="{{ route('admin.konfigurasi.jam-kerja-dept.edit', $item->kode_jk_dept) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
-                                        <a href="{{ route('admin.konfigurasi.jam-kerja-dept.delete', $item->kode_jk_dept) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
+                                        <a href="{{ route('admin.konfigurasi.jam-kerja-dept.delete', $item->kode_jk_dept) }}"
+                                            class="btn btn-danger delete-confirm"
+                                            data-kode="{{ $item->kode_jk_dept }}"
+                                            data-cabang="{{ $item->nama_cabang }}"
+                                            data-departemen="{{ $item->nama_departemen }}"
+                                            ><i class="bi bi-trash3"></i> Delete</a>
                                     </div>
                                 </td>
                             </tr>
@@ -124,6 +145,25 @@
                 title: 'Success!',
                 text: "{{ session('success') }}",
                 icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('info'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Info',
+                text: "{{ session('info') }}",
+                icon: 'info',
                 confirmButtonText: 'OK',
                 customClass: {
                     popup: 'custom-popup', // Kelas kustom untuk popup
@@ -160,9 +200,12 @@
     $(".delete-confirm").click(function (e){
         e.preventDefault();
         var url = $(this).attr('href');
+        var kode = $(this).data('kode');
+        var cabang = $(this).data('cabang');
+        var departemen = $(this).data('departemen');
         Swal.fire({
         title: "Apakah Anda Yakin?",
-        text: "Data Ini Akan Dihapus!",
+        text: "Data Jam Kerja dengan kode " + kode + " Cabang " + cabang + " Departemen " + departemen + " Ini Akan Dihapus!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -171,11 +214,6 @@
         }).then((result) => {
         if (result.isConfirmed) {
             window.location.href = url;
-            Swal.fire({
-            title: "Terhapus!",
-            text: "Data Sudah dihapus.",
-            icon: "success"
-            });
         }
         });
     });

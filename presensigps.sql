@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2024 at 03:57 PM
+-- Generation Time: Nov 14, 2024 at 04:00 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -254,7 +254,7 @@ INSERT INTO `jam_kerja` (`kode_jam_kerja`, `kode_lokasi_penugasan`, `kode_cabang
 --
 
 CREATE TABLE `jam_kerja_dept` (
-  `kode_jk_dept` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_jk_dept` char(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `kode_cabang` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `kode_departemen` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -266,10 +266,13 @@ CREATE TABLE `jam_kerja_dept` (
 --
 
 INSERT INTO `jam_kerja_dept` (`kode_jk_dept`, `kode_cabang`, `kode_departemen`, `created_at`, `updated_at`) VALUES
+('JBKSSEC', 'BKS', 'SEC', '2024-11-14 08:29:03', NULL),
 ('JBKSSM', 'BKS', 'SM', '2024-07-19 07:07:49', NULL),
+('JJKTPSEC', 'JKTP', 'SEC', '2024-11-14 08:00:14', NULL),
 ('JJKTPSKP', 'JKTP', 'SKP', '2024-10-14 15:57:27', NULL),
 ('JJKTPTKM', 'JKTP', 'TKM', '2024-10-14 16:03:29', NULL),
-('JJKTTSM', 'JKTT', 'SM', '2024-07-18 08:29:04', NULL);
+('JJKTTSM', 'JKTT', 'SM', '2024-07-18 08:29:04', NULL),
+('JJKTTTRC', 'JKTT', 'TRC', '2024-11-14 07:57:40', NULL);
 
 -- --------------------------------------------------------
 
@@ -278,9 +281,9 @@ INSERT INTO `jam_kerja_dept` (`kode_jk_dept`, `kode_cabang`, `kode_departemen`, 
 --
 
 CREATE TABLE `jam_kerja_dept_detail` (
-  `kode_jk_dept` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_jk_dept` char(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `hari` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_jam_kerja` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_jam_kerja` char(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -297,27 +300,48 @@ INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `
 ('JJKTTSM', 'Jumat', 'JK03', NULL, '2024-07-18 08:29:34'),
 ('JJKTTSM', 'Sabtu', 'JK02', NULL, '2024-07-18 08:29:34'),
 ('JJKTTSM', 'Minggu', 'JK03', NULL, '2024-07-18 08:29:34'),
-('JBKSSM', 'Senin', 'JK01', '2024-07-19 07:07:49', NULL),
-('JBKSSM', 'Selasa', 'JK02', '2024-07-19 07:07:49', NULL),
-('JBKSSM', 'Rabu', 'JK03', '2024-07-19 07:07:49', NULL),
-('JBKSSM', 'Kamis', 'JK03', '2024-07-19 07:07:49', NULL),
-('JBKSSM', 'Jumat', 'JK01', '2024-07-19 07:07:49', NULL),
-('JBKSSM', 'Sabtu', 'JK02', '2024-07-19 07:07:49', NULL),
-('JBKSSM', 'Minggu', 'JK02', '2024-07-19 07:07:49', NULL),
-('JJKTPSKP', 'Senin', 'JK02', '2024-10-14 15:57:27', NULL),
-('JJKTPSKP', 'Selasa', 'JK02', '2024-10-14 15:57:27', NULL),
-('JJKTPSKP', 'Rabu', 'JK02', '2024-10-14 15:57:27', NULL),
-('JJKTPSKP', 'Kamis', 'JK02', '2024-10-14 15:57:27', NULL),
-('JJKTPSKP', 'Jumat', 'JK02', '2024-10-14 15:57:27', NULL),
-('JJKTPSKP', 'Sabtu', 'JK02', '2024-10-14 15:57:27', NULL),
-('JJKTPSKP', 'Minggu', 'JK02', '2024-10-14 15:57:27', NULL),
-('JJKTPTKM', 'Senin', 'JK03', '2024-10-14 16:03:29', NULL),
-('JJKTPTKM', 'Selasa', 'JK03', '2024-10-14 16:03:29', NULL),
-('JJKTPTKM', 'Rabu', 'JK03', '2024-10-14 16:03:29', NULL),
-('JJKTPTKM', 'Kamis', 'JK03', '2024-10-14 16:03:29', NULL),
-('JJKTPTKM', 'Jumat', 'JK03', '2024-10-14 16:03:29', NULL),
-('JJKTPTKM', 'Sabtu', 'JK03', '2024-10-14 16:03:29', NULL),
-('JJKTPTKM', 'Minggu', 'JK03', '2024-10-14 16:03:29', NULL);
+('JJKTTTRC', 'Senin', 'JK01', '2024-11-14 07:57:40', NULL),
+('JJKTTTRC', 'Selasa', 'JK02', '2024-11-14 07:57:40', NULL),
+('JJKTTTRC', 'Rabu', 'JK03', '2024-11-14 07:57:40', NULL),
+('JJKTTTRC', 'Kamis', 'JK01', '2024-11-14 07:57:40', NULL),
+('JJKTTTRC', 'Jumat', 'JK02', '2024-11-14 07:57:40', NULL),
+('JJKTTTRC', 'Sabtu', 'JK03', '2024-11-14 07:57:40', NULL),
+('JJKTTTRC', 'Minggu', 'JK01', '2024-11-14 07:57:40', NULL),
+('JJKTPSEC', 'Senin', 'JKMNJKTPSM', '2024-11-14 08:00:14', NULL),
+('JJKTPSEC', 'Selasa', 'JKMNJKTPSP', '2024-11-14 08:00:14', NULL),
+('JJKTPSEC', 'Rabu', 'JKMNJKTPSS', '2024-11-14 08:00:14', NULL),
+('JJKTPSEC', 'Kamis', 'JKPIKJKTPSM', '2024-11-14 08:00:14', NULL),
+('JJKTPSEC', 'Jumat', 'JKPIKJKTPSP', '2024-11-14 08:00:14', NULL),
+('JJKTPSEC', 'Sabtu', 'JKPIKJKTPSS', '2024-11-14 08:00:14', NULL),
+('JJKTPSEC', 'Minggu', 'JKMNJKTPSM', '2024-11-14 08:00:14', NULL),
+('JBKSSEC', 'Senin', 'JKHIBKSSS', '2024-11-14 08:46:03', '2024-11-14 08:46:03'),
+('JBKSSEC', 'Selasa', 'JKSMBBKSSM', '2024-11-14 08:46:03', '2024-11-14 08:46:03'),
+('JBKSSEC', 'Rabu', 'JKSMBBKSSP', '2024-11-14 08:46:03', '2024-11-14 08:46:03'),
+('JBKSSEC', 'Kamis', 'JKSMBBKSSS', '2024-11-14 08:46:03', '2024-11-14 08:46:03'),
+('JBKSSEC', 'Jumat', 'JKHIBKSSS', '2024-11-14 08:46:03', '2024-11-14 08:46:03'),
+('JBKSSEC', 'Sabtu', 'JKSMBBKSSM', '2024-11-14 08:46:03', '2024-11-14 08:46:03'),
+('JBKSSEC', 'Minggu', 'JKSMBBKSSP', '2024-11-14 08:46:03', '2024-11-14 08:46:03'),
+('JBKSSM', 'Senin', 'JKHIBKSSS', '2024-11-14 08:50:32', '2024-11-14 08:50:32'),
+('JBKSSM', 'Selasa', 'JKSMBBKSSM', '2024-11-14 08:50:32', '2024-11-14 08:50:32'),
+('JBKSSM', 'Rabu', 'JKSMBBKSSP', '2024-11-14 08:50:32', '2024-11-14 08:50:32'),
+('JBKSSM', 'Kamis', 'JKHIBKSSS', '2024-11-14 08:50:32', '2024-11-14 08:50:32'),
+('JBKSSM', 'Jumat', 'JKSMBBKSSM', '2024-11-14 08:50:32', '2024-11-14 08:50:32'),
+('JBKSSM', 'Sabtu', 'JKSMBBKSSP', '2024-11-14 08:50:32', '2024-11-14 08:50:32'),
+('JBKSSM', 'Minggu', 'JKSMBBKSSS', '2024-11-14 08:50:32', '2024-11-14 08:50:32'),
+('JJKTPSKP', 'Senin', 'JKMNJKTPSM', '2024-11-14 08:51:00', '2024-11-14 08:51:00'),
+('JJKTPSKP', 'Selasa', 'JKMNJKTPSP', '2024-11-14 08:51:00', '2024-11-14 08:51:00'),
+('JJKTPSKP', 'Rabu', 'JKMNJKTPSS', '2024-11-14 08:51:00', '2024-11-14 08:51:00'),
+('JJKTPSKP', 'Kamis', 'JKMNJKTPSM', '2024-11-14 08:51:00', '2024-11-14 08:51:00'),
+('JJKTPSKP', 'Jumat', 'JKMNJKTPSP', '2024-11-14 08:51:00', '2024-11-14 08:51:00'),
+('JJKTPSKP', 'Sabtu', 'JKPIKJKTPSM', '2024-11-14 08:51:00', '2024-11-14 08:51:00'),
+('JJKTPSKP', 'Minggu', 'JKPIKJKTPSS', '2024-11-14 08:51:00', '2024-11-14 08:51:00'),
+('JJKTPTKM', 'Senin', 'JKMNJKTPSM', '2024-11-14 08:51:19', '2024-11-14 08:51:19'),
+('JJKTPTKM', 'Selasa', 'JKPIKJKTPSM', '2024-11-14 08:51:19', '2024-11-14 08:51:19'),
+('JJKTPTKM', 'Rabu', 'JKMNJKTPSM', '2024-11-14 08:51:19', '2024-11-14 08:51:19'),
+('JJKTPTKM', 'Kamis', 'JKMNJKTPSM', '2024-11-14 08:51:19', '2024-11-14 08:51:19'),
+('JJKTPTKM', 'Jumat', 'JKPIKJKTPSM', '2024-11-14 08:51:19', '2024-11-14 08:51:19'),
+('JJKTPTKM', 'Sabtu', 'JKPIKJKTPSM', '2024-11-14 08:51:19', '2024-11-14 08:51:19'),
+('JJKTPTKM', 'Minggu', 'JKMNJKTPSM', '2024-11-14 08:51:19', '2024-11-14 08:51:19');
 
 -- --------------------------------------------------------
 

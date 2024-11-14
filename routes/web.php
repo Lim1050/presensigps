@@ -285,9 +285,10 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/admin/konfigurasi/jam/kerja/delete/{kode_jam_kerja}', [KonfigurasiController::class, 'JamKerjaDelete'])->name('admin.konfigurasi.jam.kerja.delete');
 
     // Konfigurasi Jam Kerja Departement
-    Route::get('/admin/konfigurasi/jam-kerja-dept', [KonfigurasiController::class, 'JamKerjaDept'])->name('admin.konfigurasi.jam-kerja-dept');
+    Route::get('/admin/konfigurasi/jam-kerja-dept', action: [KonfigurasiController::class, 'JamKerjaDept'])->name('admin.konfigurasi.jam-kerja-dept');
     // Konfigurasi Jam Kerja Departement Create
     Route::get('/admin/konfigurasi/jam-kerja-dept/create', [KonfigurasiController::class, 'JamKerjaDeptCreate'])->name('admin.konfigurasi.jam-kerja-dept.create');
+    Route::get('/jam-kerja/{kode_cabang}', action: [KonfigurasiController::class, 'getJamKerjaByCabang']);
     // Konfigurasi Jam Kerja Departement Store
     Route::post('/admin/konfigurasi/jam-kerja-dept/store', [KonfigurasiController::class, 'JamKerjaDeptStore'])->name('admin.konfigurasi.jam-kerja-dept.store');
     // Konfigurasi Jam Kerja Departement view
