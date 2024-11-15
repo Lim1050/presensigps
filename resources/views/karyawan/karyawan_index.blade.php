@@ -155,9 +155,13 @@
                                 <td>
                                     <div class="text-center">
                                         @if (empty($item->foto))
+                                        <a href="#" class="showImageKaryawan" data-image="{{ url($path) }}" data-toggle="modal" data-target="#modalShowImageKaryawan">
                                             <img src="{{ asset('assets/img/sample/avatar/avatar1.jpg') }}" class="img-thumbnail" style="width: 70px; height: 70px;" alt="...">
+                                        </a>
                                         @else
+                                        <a href="#" class="showImageKaryawan" data-image="{{ url($path) }}" data-toggle="modal" data-target="#modalShowImageKaryawan">
                                             <img src="{{ url($path) }}" class="img-thumbnail" style="width: 70px; height: 70px;" alt="...">
+                                        </a>
                                         @endif
                                     </div>
                                 </td>
@@ -198,6 +202,23 @@
                     </table>
                     {{-- {{ $karyawan->links('vendor.pagination.bootstrap-5') }} --}}
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Foto Karyawan -->
+<div class="modal fade" id="modalShowImageKaryawan" tabindex="-1" aria-labelledby="modalShowImageKaryawanLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalShowImageKaryawanLabel">Foto Karyawan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImageKaryawan" src="" class="img-fluid" alt="Foto Presensi" />
             </div>
         </div>
     </div>
@@ -393,6 +414,12 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 <script>
+    $(document).ready(function() {
+        $('.showImageKaryawan').on('click', function() {
+            var imageUrl = $(this).data('image');
+            $('#modalImageKaryawan').attr('src', imageUrl);
+        });
+    });
     document.addEventListener('DOMContentLoaded', function() {
         const cabangSelect = document.getElementById('cari_kode_cabang');
         const lokasiSelect = document.getElementById('cari_kode_lokasi_penugasan');

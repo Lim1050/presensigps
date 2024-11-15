@@ -40,6 +40,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function departemen()
+    {
+        return $this->belongsTo(Departemen::class, 'kode_departemen', 'kode_departemen');
+    }
+
+    public function cabang()
+    {
+        return $this->belongsTo(Cabang::class, 'kode_cabang', 'kode_cabang');
+    }
+
     public static function GetPermissionGroup()
     {
         $permission_groups = DB::table('permissions')->select('group_name')->groupBy('group_name')->get();

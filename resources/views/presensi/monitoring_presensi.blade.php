@@ -103,7 +103,7 @@
         </div>
     </div>
 </div>
-<!-- Modal Foto Masuk -->
+<!-- Modal Foto Keluar -->
 <div class="modal fade" id="modalShowImageKeluar" tabindex="-1" aria-labelledby="modalShowImageKeluarLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

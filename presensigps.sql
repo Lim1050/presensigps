@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 14, 2024 at 04:00 PM
+-- Generation Time: Nov 15, 2024 at 04:33 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -799,7 +799,7 @@ INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 (6, 'App\\Models\\User', 17),
 (12, 'App\\Models\\User', 18),
 (9, 'App\\Models\\User', 19),
-(11, 'App\\Models\\User', 21);
+(6, 'App\\Models\\User', 22);
 
 -- --------------------------------------------------------
 
@@ -1237,7 +1237,7 @@ INSERT INTO `users` (`id`, `username`, `name`, `email`, `email_verified_at`, `pa
 (17, 'admin', 'Admin', 'admin@presensi.com', NULL, '$2y$10$LlpTAdvrMV7/4/WFXGPjp.TrUU5cPfHJgP/DFgwnNxwyZ7cy/qHo2', 'admin_1723709176.jpeg', 'admin', 'SKP', 'JKTT', '08654321987', NULL, '2024-08-15 08:06:16', '2024-08-15 09:03:49'),
 (18, 'admingaji', 'Admin Gaji', 'admin_gaji@presensi.com', NULL, '$2y$10$2is9hbaVsOj.fnuZt/kIJus5TKrlM9iOJpEvW3RrGMq5jXWzYS2AK', 'admingaji_1723710387.jpeg', 'admin-gaji', 'SKP', 'BKS', '0808080808', NULL, '2024-08-15 08:23:26', '2024-08-15 09:03:52'),
 (19, 'adminpresensi', 'Admin Presensi', 'admin_presensi@presensi.com', NULL, '$2y$10$G2YDsXfkbG6Oq6Yvxj54QOrlssaX33Zoupp2eN/eewAGIqhdF8Mmu', 'adminpresensi_1723710353.png', 'admin-presensi', 'SKP', 'JKTT', '090909090909', NULL, '2024-08-15 08:25:53', '2024-08-15 09:03:53'),
-(21, 'testadmin', 'Test Admin', 'test_admin@presensi.com', NULL, '$2y$10$5fy5DRZg8241lEKejcpKnuHfqFCZb6tCp0ebWExA3FXduYd395KQy', 'testadmin_1723711979.webp', 'test-role', 'SKP', 'BKS', '081122334455', NULL, '2024-08-15 08:52:59', '2024-08-15 09:03:56');
+(22, 'admin-cabang', 'Admin Cabang', 'admin_cabang@presensi.com', NULL, '$2y$10$BiyxaXebad/QhbZ2ATDcK.s8.r8pSZ0ahxtdePmTAw1YQfQ5KABti', 'admin-cabang_1731651793.jpg', 'admin', 'SKP', 'BKS', '0123654789', NULL, '2024-11-15 06:23:13', '2024-11-15 06:23:13');
 
 --
 -- Indexes for dumped tables
@@ -1533,13 +1533,13 @@ ALTER TABLE `presensi`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- Constraints for dumped tables

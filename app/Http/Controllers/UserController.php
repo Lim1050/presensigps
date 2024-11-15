@@ -17,27 +17,37 @@ class UserController extends Controller
 {
     public function UserIndex(Request $request)
     {
-        $role = DB::table('roles')->orderBy('name')->get();
-        // $user = DB::table('users')->orderBy('username')->get();
-        // dd($user);
+        // Get roles, departments, and branches
+        $roles = DB::table('roles')->orderBy('name')->get();
         $departemen = DB::table('departemen')->orderBy('nama_departemen')->get();
         $cabang = DB::table('kantor_cabang')->orderBy('nama_cabang')->get();
-        $query = User::query();
 
-        $query->select('users.id', 'users.username', 'users.name', 'users.email', 'users.foto', 'users.no_hp', 'users.role', 'departemen.kode_departemen', 'departemen.nama_departemen', 'kantor_cabang.kode_cabang', 'kantor_cabang.nama_cabang');
-        $query->join('departemen', 'users.kode_departemen', '=', 'departemen.kode_departemen');
-        $query->join('kantor_cabang', 'users.kode_cabang', '=', 'kantor_cabang.kode_cabang');
-        if(!empty($request->cari_nama)){
-            $query->where('users.name', 'like', '%' . $request->cari_nama . '%');
-        }
-        if(!empty($request->cari_role)){
-            $query->where('users.role', 'like', '%' . $request->cari_role . '%');
-        }
+        // Build the query
+        $query = User::with(['departemen', 'cabang']) // Eager load relationships
+            ->select('id', 'username', 'name', 'email', 'foto', 'no_hp', 'role', 'kode_departemen', 'kode_cabang');
+
+        // Apply filters using when
+        $query->when($request->cari_nama, function ($q) use ($request) {
+            return $q->where('name', 'like', '%' . $request->cari_nama . '%');
+        });
+
+        $query->when($request->cari_role, function ($q) use ($request) {
+            return $q->where('role', 'like', '%' . $request->cari_role . '%');
+        });
+
+        $query->when($request->cari_cabang, function ($q) use ($request) {
+            return $q->where('kode_cabang', 'like', '%' . $request->cari_cabang . '%');
+        });
+
+        // Order by username
         $query->orderBy('username');
-        $user = $query->paginate(10);
-        $user->appends(request()->all());
-        // dd($user);
-        return view('user.user_index', compact('user', 'departemen', 'cabang', 'role'));
+
+        // Paginate results
+        $user = $query->get();
+        // $user->appends($request->all()); // Maintain query parameters in pagination links
+
+        // Return view with compacted data
+        return view('user.user_index', compact('user', 'departemen', 'cabang', 'roles'));
     }
 
     public function UserStore(Request $request)
