@@ -1,6 +1,6 @@
 @extends('layouts.admin.admin_master')
-
 @section('content')
+@if (Auth::user()->can('keuangan.cashbon-karyawan'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -291,3 +291,4 @@
     </script>
     @endif
 @endpush
+@endif

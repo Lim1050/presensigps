@@ -1,5 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
+@if (Auth::user()->can('dashboard.persetujuan-sakit-izin'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -294,3 +295,4 @@
     });
 </script>
 @endpush
+@endif

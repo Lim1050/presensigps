@@ -1,5 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
+@if (Auth::user()->can('dashboard.monitoring-presensi'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -166,5 +167,5 @@ $(function () {
 });
 </script>
 @endpush
-
+@endif
 @endsection

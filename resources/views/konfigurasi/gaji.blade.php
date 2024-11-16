@@ -1,6 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
-
+@if (Auth::user()->can('konfigurasi.jenis-gaji'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -342,5 +342,5 @@
 
 @endpush
 
-
+@endif
 @endsection

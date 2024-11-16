@@ -180,7 +180,25 @@
 
 {{-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+<script>
+    $(".logout-confirm").click(function (e){
+        e.preventDefault();
+        var url = $(this).attr('href');
+        Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Anda akan keluar",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, keluar!"
+        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+        });
+    });
+</script>
 @stack('myscript')
 </body>
 

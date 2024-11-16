@@ -1,6 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
-
+@if (Auth::user()->can('konfigurasi.jam-kerja-departemen'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -32,7 +32,7 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Konfigurasi Jam Kerja Departement</h1>
+    <h1 class="h3 mb-0 text-gray-800">Konfigurasi Jam Kerja Departemen</h1>
 </div>
 
 <!-- DataTales Example -->
@@ -223,5 +223,5 @@
 
 @endpush
 
-
+@endif
 @endsection

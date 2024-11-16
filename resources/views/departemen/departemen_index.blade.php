@@ -1,5 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
+@if (Auth::user()->can('master.departemen'))
 
 <style>
     .icon-placeholder {
@@ -246,5 +247,5 @@
 
 @endpush
 
-
+@endif
 @endsection

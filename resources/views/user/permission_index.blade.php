@@ -1,5 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
+@if (Auth::user()->can('konfigurasi.permission'))
 
 <style>
     .icon-placeholder {
@@ -40,7 +41,7 @@
     <div class="card-body">
         <div class="row mb-4">
             <div class="col-12">
-                @if (Session::get('success'))
+                {{-- @if (Session::get('success'))
                     <div class="alert alert-success">
                         {{ Session::get('success') }}
                     </div>
@@ -49,7 +50,7 @@
                     <div class="alert alert-danger">
                         {{ Session::get('error') }}
                     </div>
-                @endif
+                @endif --}}
                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalInputPermission"><i class="bi bi-plus-lg"></i> Tambah Data Permission</a>
                 <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#modalImportPermission"><i class="bi bi-arrow-bar-up"></i></i> Import Permission</a>
                 <a href="{{ route('admin.konfigurasi.permission.export') }}" class="btn btn-success">Export Permission <i class="bi bi-arrow-bar-right"></i> </a>
@@ -105,7 +106,11 @@
                                             data-group_name="{{ $item->group_name }}"
                                             ><i class="bi bi-pencil-square"></i> Edit</a>
                                             {{-- {{ route('admin.konfigurasi.permission.delete', $item->id) }} --}}
-                                        <a href="{{ route('admin.konfigurasi.permission.delete', $item->id) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
+                                        <a href="{{ route('admin.konfigurasi.permission.delete', $item->id) }}"
+                                            class="btn btn-danger delete-confirm"
+                                            data-nama="{{ $item->name }}"
+                                            data-group="{{ $item->group_name }}"
+                                            ><i class="bi bi-trash3"></i> Delete</a>
                                     </div>
                                 </td>
                             </tr>
@@ -144,6 +149,7 @@
                             <option value="">Pilih Group Permission</option>
                             <option value="Dashboard">Dashboard</option>
                             <option value="Laporan">Laporan</option>
+                            <option value="Keuangan">Keuangan</option>
                             <option value="Master">Master</option>
                             <option value="Konfigurasi">Konfigurasi</option>
                         </select>
@@ -226,6 +232,7 @@
                             <option value="">Pilih Group Permission</option>
                             <option value="Dashboard" {{ old('group_name', '') == 'Dashboard' ? 'selected' : '' }}>Dashboard</option>
                             <option value="Laporan" {{ old('group_name', '') == 'Laporan' ? 'selected' : '' }}>Laporan</option>
+                            <option value="Keuangan" {{ old('group_name', '') == 'Keuangan' ? 'selected' : '' }}>Keuangan</option>
                             <option value="Master" {{ old('group_name', '') == 'Master' ? 'selected' : '' }}>Master</option>
                             <option value="Konfigurasi" {{ old('group_name', '') == 'Konfigurasi' ? 'selected' : '' }}>Konfigurasi</option>
                         </select>
@@ -242,42 +249,80 @@
 
 @push('myscript')
 <script>
-    let table = new DataTable('#dataTable');
+    $(".delete-confirm").click(function (e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            var nama = $(this).data('nama');
+            var group = $(this).data('group');
 
-    document.getElementById('import_file').addEventListener('change', function(event) {
-        var file = event.target.files[0];
-        if (file && (file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file.type === "application/vnd.ms-excel")) {
-            // Menampilkan nama file di paragraf pratinjau
-            document.getElementById('fileNamePreview').textContent = "File name: " + file.name;
-        } else {
-            document.getElementById('fileNamePreview').textContent = "Please upload a valid Excel file.";
-        }
-    });
-
-    $(".delete-confirm").click(function (e){
-        e.preventDefault();
-        var url = $(this).attr('href');
-        Swal.fire({
-        title: "Apakah Anda Yakin?",
-        text: "Data Ini Akan Dihapus!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Ya, hapus!"
-        }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = url;
             Swal.fire({
-            title: "Terhapus!",
-            text: "Data Sudah dihapus.",
-            icon: "success"
+                title: "Apakah Anda Yakin?",
+                text: "Data permission " + nama + " dengan group " + group + " Ini Akan Dihapus!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, hapus!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
             });
-        }
         });
-    });
+</script>
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 
-    // Validasi form
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+    <script>
+        let table = new DataTable('#dataTable');
+
+        document.getElementById('import_file').addEventListener('change', function(event) {
+            var file = event.target.files[0];
+            if (file && (file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || file.type === "application/vnd.ms-excel")) {
+                // Menampilkan nama file di paragraf pratinjau
+                document.getElementById('fileNamePreview').textContent = "File name: " + file.name;
+            } else {
+                document.getElementById('fileNamePreview').textContent = "Please upload a valid Excel file.";
+            }
+        });
+
+
+
+        // Validasi form
         $("#formPermission").submit(function(){
             var name = $("#name").val();
             var guard_name = $("#guard_name").val();
@@ -305,27 +350,24 @@
             }
         });
 
-    // Send Data to modal edit permission
+        // Send Data to modal edit permission
         $('#modalEditPermission').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Button that triggered the modal
-        var id = button.data('id');
-        var name = button.data('name');
-        var group_name = button.data('group_name');
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var id = button.data('id');
+            var name = button.data('name');
+            var group_name = button.data('group_name');
 
-        var modal = $(this);
-        modal.find('.modal-body #edit_id').val(id);
-        modal.find('.modal-body #edit_name').val(name);
-        modal.find('.modal-body #edit_group_name').val(group_name);
+            var modal = $(this);
+            modal.find('.modal-body #edit_id').val(id);
+            modal.find('.modal-body #edit_name').val(name);
+            modal.find('.modal-body #edit_group_name').val(group_name);
 
-        // Update form action URL with the id
-        var formAction = "{{ route('admin.konfigurasi.permission.update', ['id' => ':id']) }}";
-        formAction = formAction.replace(':id', id);
-        $('#editForm').attr('action', formAction);
-    });
-</script>
-
-
+            // Update form action URL with the id
+            var formAction = "{{ route('admin.konfigurasi.permission.update', ['id' => ':id']) }}";
+            formAction = formAction.replace(':id', id);
+            $('#editForm').attr('action', formAction);
+        });
+    </script>
 @endpush
-
-
+@endif
 @endsection

@@ -1,6 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
-
+@if (Auth::user()->can('master.jabatan'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -310,5 +310,5 @@ $('#modalEditJabatan').on('show.bs.modal', function (event) {
 
 @endpush
 
-
+@endif
 @endsection

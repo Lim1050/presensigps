@@ -1,6 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
-
+@if (Auth::user()->can('master.potongan'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -631,5 +631,5 @@ $(document).ready(function() {
 
 @endpush
 
-
+@endif
 @endsection

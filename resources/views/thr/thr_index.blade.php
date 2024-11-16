@@ -1,6 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
-
+@if (Auth::user()->can('keuangan.thr-karyawan'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -379,5 +379,5 @@
 
 @endpush
 
-
+@endif
 @endsection

@@ -17,7 +17,7 @@ class RoleController extends Controller
 {
     public function Permissionindex()
     {
-        $permissions = Permission::all();
+        $permissions = Permission::orderBy('name')->get();
 
         return view('user.permission_index', compact('permissions'));
     }

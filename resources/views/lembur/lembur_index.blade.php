@@ -1,5 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
+@if (Auth::user()->can('dashboard.lembur-karyawan'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -240,5 +241,5 @@
     });
 </script>
 @endpush
-
+@endif
 @endsection

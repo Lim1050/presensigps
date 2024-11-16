@@ -1,5 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
+@if (Auth::user()->can('konfigurasi.role'))
 
 <style>
     .icon-placeholder {
@@ -350,5 +351,5 @@
 
 @endpush
 
-
+@endif
 @endsection

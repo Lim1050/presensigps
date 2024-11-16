@@ -1,5 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
+@if (Auth::user()->can('laporan.laporan-presensi'))
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Laporan Presensi</h1>
@@ -147,3 +148,4 @@
         });
     </script>
 @endpush
+@endif

@@ -1,6 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
-
+@if (Auth::user()->can('konfigurasi.user'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -640,5 +640,5 @@ $('#edit_foto').change(function(){
 
 @endpush
 
-
+@endif
 @endsection

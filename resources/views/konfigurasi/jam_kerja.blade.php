@@ -1,5 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
+@if (Auth::user()->can('konfigurasi.jam-kerja'))
 
 <style>
     .icon-placeholder {
@@ -804,5 +805,5 @@
 
 @endpush
 
-
+@endif
 @endsection

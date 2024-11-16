@@ -1,5 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
+@if (Auth::user()->can('konfigurasi.limit-cashbon'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -154,13 +155,13 @@
                             {{-- Gunakan cashbon_bulan_ini yang sudah difilter --}}
                             <td class="text-right">Rp {{ number_format($item->cashbon_bulan_ini) }}</td>
                             <td class="text-right">{{ $item->getFormattedAvailableCashbonLimit($globalLimit) }}</td>
-                            <td>
+                            <td class="text-right">
                                 {{-- {{ route('cashbon.setitemLimit', $item) }} --}}
                                 <form action="{{ route('admin.konfigurasi.cashbon.karyawan.limit', $item->nik) }}" method="POST">
                                     @csrf
                                     {{-- {{ $item->cashbonLimit->limit ?? '' }} --}}
                                     <input type="number" name="limit" value="{{ $item->cashbonKaryawanLimit->limit ?? $globalLimit }}">
-                                    <button type="submit" class="btn btn-danger">Update Limit</button>
+                                    <button type="submit" class="btn btn-danger my-2">Update</button>
                                 </form>
                             </td>
                         </tr>
@@ -174,7 +175,7 @@
 </div>
 
 
-
+@endif
 @endsection
 @push('myscript')
 <script>

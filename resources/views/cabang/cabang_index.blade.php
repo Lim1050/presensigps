@@ -1,5 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
+@if (Auth::user()->can('master.kantor-cabang'))
 
 <style>
     .icon-placeholder {
@@ -287,5 +288,5 @@
 
 @endpush
 
-
+@endif
 @endsection

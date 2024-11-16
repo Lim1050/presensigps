@@ -1,6 +1,6 @@
 @extends('layouts.admin.admin_master')
 @section('content')
-
+@if (Auth::user()->can('konfigurasi.role-in-permission'))
 <style>
     .icon-placeholder {
         position: relative;
@@ -40,7 +40,7 @@
     <div class="card-body">
         <div class="row mb-4">
             <div class="col-12">
-                @if (Session::get('success'))
+                {{-- @if (Session::get('success'))
                     <div class="alert alert-success">
                         {{ Session::get('success') }}
                     </div>
@@ -49,7 +49,7 @@
                     <div class="alert alert-danger">
                         {{ Session::get('error') }}
                     </div>
-                @endif
+                @endif --}}
                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalInputRole"><i class="bi bi-plus-lg"></i> Tambah Role in Permission</a>
             </div>
         </div>
@@ -86,7 +86,10 @@
                                                 ><i class="bi bi-pencil-square"></i> Edit</a> --}}
                                                 {{-- {{ route('admin.konfigurasi.role.delete', $item->id) }} --}}
                                             <a href="{{ route('admin.konfigurasi.add-role-in-permission-edit', $item->id) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
-                                            <a href="{{ route('admin.konfigurasi.add-role-in-permission-delete', $item->id) }}" class="btn btn-danger delete-confirm"><i class="bi bi-trash3"></i> Delete</a>
+                                            <a href="{{ route('admin.konfigurasi.add-role-in-permission-delete', $item->id) }}"
+                                                class="btn btn-danger delete-confirm"
+                                                data-name="{{ $item->name }}"
+                                                ><i class="bi bi-trash3"></i> Delete</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -164,6 +167,43 @@
 </div>
 
 @push('myscript')
+@if(session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    popup: 'custom-popup', // Kelas kustom untuk popup
+                    title: 'custom-title', // Kelas kustom untuk judul
+                    content: 'custom-content', // Kelas kustom untuk konten
+                    confirmButton: 'custom-confirm-button' // Kelas kustom untuk tombol konfirmasi
+                }
+            });
+        });
+    </script>
+@endif
 <script>
     let table = new DataTable('#dataTable');
 
@@ -176,26 +216,23 @@
         }
     });
 
-    $(".delete-confirm").click(function (e){
+    $(".delete-confirm").click(function (e) {
         e.preventDefault();
         var url = $(this).attr('href');
+        var name = $(this).data('name');
+
         Swal.fire({
-        title: "Apakah Anda Yakin?",
-        text: "Data Ini Akan Dihapus!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Ya, hapus!"
+            title: "Apakah Anda Yakin?",
+            text: "Data role in permission " + name + " ini akan dihapus!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, hapus!"
         }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = url;
-            Swal.fire({
-            title: "Terhapus!",
-            text: "Data Sudah dihapus.",
-            icon: "success"
-            });
-        }
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
         });
     });
 </script>
@@ -203,5 +240,5 @@
 
 @endpush
 
-
+@endif
 @endsection
