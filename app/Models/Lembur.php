@@ -19,7 +19,7 @@ class Lembur extends Model
 
     public function presensi()
     {
-        return $this->belongsTo(Presensi::class, 'nik', 'nik')
+        return $this->belongsTo(presensi::class, 'nik', 'nik')
             ->where('tanggal_presensi', $this->tanggal_presensi);
     }
 }

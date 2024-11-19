@@ -64,14 +64,39 @@
                 <div class="table-responsive">
                     <table class="table table-borderless">
                         <tr>
-                            <td width="200">Jumlah Hari Masuk</td>
+                            <td width="200">Jumlah Hadir</td>
                             <td width="10">:</td>
-                            <td>{{ $penggajian->jumlah_hari_masuk }} hari</td> <!-- Pastikan $totalKehadiran didefinisikan di controller -->
+                            <td>{{ $penggajian->kehadiran_murni }} hari</td>
                         </tr>
                         <tr>
-                            <td>Jumlah Ketidakhadiran</td>
+                            <td>Jumlah Sakit</td>
                             <td>:</td>
-                            <td>{{ $penggajian->jumlah_hari_tidak_masuk }} hari</td> <!-- Pastikan $totalKetidakhadiran didefinisikan di controller -->
+                            <td>{{ $penggajian->jumlah_sakit }} hari</td>
+                        </tr>
+                        <tr>
+                            <td>Jumlah Izin</td>
+                            <td>:</td>
+                            <td>{{ $penggajian->jumlah_izin }} hari</td>
+                        </tr>
+                        <tr>
+                            <td>Jumlah Cuti</td>
+                            <td>:</td>
+                            <td>{{ $penggajian->jumlah_cuti }} hari</td>
+                        </tr>
+                        <tr>
+                            <td>Total Kehadiran</td>
+                            <td>:</td>
+                            <td>{{ $penggajian->jumlah_hari_masuk }} hari</td>
+                        </tr>
+                        <tr>
+                            <td>Jumlah Tidak Hadir Dengan Keterangan</td>
+                            <td>:</td>
+                            <td>{{ $penggajian->jumlah_isc }} hari</td>
+                        </tr>
+                        <tr>
+                            <td>Jumlah Tidak Hadir Tanpa Keterangan</td>
+                            <td>:</td>
+                            <td>{{ $penggajian->jumlah_hari_tidak_masuk }} hari</td>
                         </tr>
                         <tr>
                             <td>Total Jam Lembur</td>

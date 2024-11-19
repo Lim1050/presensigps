@@ -167,6 +167,50 @@ class PenggajianController extends Controller
                 })
                 ->toArray();
 
+            // Hitung Cuti Izin Sakit
+            $cuti_izin_sakit = PengajuanIzin::where('nik', $karyawan->nik)
+                ->where('status_approved', 1)
+                ->where(function($query) use ($tahun, $bulan) {
+                    $query->whereYear('tanggal_izin_dari', $tahun)
+                        ->whereMonth('tanggal_izin_dari', $bulan)
+                        ->orWhere(function($subQuery) use ($tahun, $bulan) {
+                            $subQuery->whereYear('tanggal_izin_sampai', $tahun)
+                                    ->whereMonth('tanggal_izin_sampai', $bulan);
+                        });
+                })
+                ->get();
+
+            // Hitung total jumlah hari
+            $total_jumlah_hari_isc = $cuti_izin_sakit->sum('jumlah_hari');
+
+            // Hitung jumlah hari berdasarkan status
+            $jumlah_hari_by_status = $cuti_izin_sakit->groupBy('status')
+                ->map(function ($group) {
+                    return $group->sum('jumlah_hari');
+                });
+
+            // Contoh cara mengakses
+            $jumlah_hari_cuti = $jumlah_hari_by_status['cuti'] ?? 0;
+            $jumlah_hari_izin = $jumlah_hari_by_status['izin'] ?? 0;
+            $jumlah_hari_sakit = $jumlah_hari_by_status['sakit'] ?? 0;
+
+            // Debugging
+            // dd([
+            //     'total_jumlah_hari' => $total_jumlah_hari_isc,
+            //     $jumlah_hari_cuti,
+            //     $jumlah_hari_izin,
+            //     $jumlah_hari_sakit,
+            //     'jumlah_hari_by_status' => $jumlah_hari_by_status,
+            //     'cuti_izin_sakit' => $cuti_izin_sakit
+            // ]);
+
+            // Hitung kehadiran
+            $kehadiran_murni = Presensi::where('nik', $karyawan->nik)
+                ->where('status', 'hadir')
+                ->whereYear('tanggal_presensi', $tahun)
+                ->whereMonth('tanggal_presensi', $bulan)
+                ->count();
+
             // Hitung kehadiran
             $presensi = Presensi::where('nik', $karyawan->nik)
                 ->whereYear('tanggal_presensi', $tahun)
@@ -246,7 +290,12 @@ class PenggajianController extends Controller
                 'totalKehadiran',
                 'totalKetidakhadiran',
                 'lembur',
-                'hariKerjaLokasi'
+                'hariKerjaLokasi',
+                'total_jumlah_hari_isc',
+                'jumlah_hari_cuti',
+                'jumlah_hari_sakit',
+                'jumlah_hari_izin',
+                'kehadiran_murni'
             ))->render();
 
         } catch (\Exception $e) {
@@ -274,6 +323,8 @@ class PenggajianController extends Controller
 
             $tanggalGaji = Carbon::parse($request->tanggal_gaji);
             $bulan = $tanggalGaji->format('Y-m');
+            $month = $tanggalGaji->month;
+            $year = $tanggalGaji->year;
 
             // Cek apakah sudah ada penggajian untuk karyawan di bulan yang sama
             $existingPenggajian = Penggajian::where('nik', $request->nik)
@@ -330,6 +381,52 @@ class PenggajianController extends Controller
                     ];
                 })
                 ->toArray();
+
+            // Hitung Cuti Izin Sakit
+            $cuti_izin_sakit = PengajuanIzin::where('nik', $karyawan->nik)
+                ->where('status_approved', 1)
+                ->where(function($query) use ($year, $month): void {
+                    $query->whereYear('tanggal_izin_dari', $year)
+                        ->whereMonth('tanggal_izin_dari', $month)
+                        ->orWhere(function($subQuery) use ($year, $month) {
+                            $subQuery->whereYear('tanggal_izin_sampai', $year)
+                                    ->whereMonth('tanggal_izin_sampai', $month);
+                        });
+                })
+                ->get();
+
+            // Hitung total jumlah hari
+            $total_jumlah_hari_isc = $cuti_izin_sakit->sum('jumlah_hari');
+
+            // Hitung jumlah hari berdasarkan status
+            $jumlah_hari_by_status = $cuti_izin_sakit->groupBy('status')
+                ->map(function ($group) {
+                    return $group->sum('jumlah_hari');
+                });
+
+            // Contoh cara mengakses
+            $jumlah_hari_cuti = $jumlah_hari_by_status['cuti'] ?? 0;
+            $jumlah_hari_izin = $jumlah_hari_by_status['izin'] ?? 0;
+            $jumlah_hari_sakit = $jumlah_hari_by_status['sakit'] ?? 0;
+
+            // Debugging
+            // dd([
+            //     'total_jumlah_hari' => $total_jumlah_hari_isc,
+            //     $jumlah_hari_cuti,
+            //     $jumlah_hari_izin,
+            //     $jumlah_hari_sakit,
+            //     'jumlah_hari_by_status' => $jumlah_hari_by_status,
+            //     'cuti_izin_sakit' => $cuti_izin_sakit
+            // ]);
+
+            // Hitung kehadiran
+            $kehadiran_murni = Presensi::where('nik', $karyawan->nik)
+                ->where('status', 'hadir')
+                ->whereYear('tanggal_presensi', operator: $tanggalGaji->year)
+                ->whereMonth('tanggal_presensi', $tanggalGaji->month)
+                ->count();
+
+            // dd(vars: $kehadiran_murni);
 
             // Hitung kehadiran
             $presensi = Presensi::where('nik', $karyawan->nik)
@@ -415,6 +512,11 @@ class PenggajianController extends Controller
             $penggajian->bulan = $bulan;
             $penggajian->jumlah_hari_kerja = $hariKerjaLokasi;
             $penggajian->jumlah_hari_masuk = $totalKehadiran;
+            $penggajian->kehadiran_murni = $kehadiran_murni;
+            $penggajian->jumlah_isc = $total_jumlah_hari_isc;
+            $penggajian->jumlah_izin = $jumlah_hari_izin;
+            $penggajian->jumlah_sakit = $jumlah_hari_sakit;
+            $penggajian->jumlah_cuti = $jumlah_hari_cuti;
             $penggajian->jumlah_hari_tidak_masuk = $totalKetidakhadiran;
             $penggajian->total_jam_lembur = $jamLembur;
             $penggajian->komponen_gaji_kotor = json_encode($komponenGajiAsli);

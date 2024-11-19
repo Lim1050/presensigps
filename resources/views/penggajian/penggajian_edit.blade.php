@@ -58,14 +58,50 @@
                     <h4>Data Kehadiran</h4>
                     <table class="table table-borderless">
                         <tr>
-                            <td width="200">Jumlah Hari Masuk</td>
+                            <td width="200">Jumlah Hadir</td>
                             <td width="10">:</td>
                             <td>
-                                <input type="number" id="jumlah_hari_masuk" name="jumlah_hari_masuk" value="{{ $penggajian->jumlah_hari_masuk }}" class="form-control" max="{{ $penggajian->jumlah_hari_kerja }}" required>
+                                <input type="number" id="kehadiran_murni" name="kehadiran_murni" value="{{ $penggajian->kehadiran_murni }}" class="form-control" min="0" max="{{ $penggajian->jumlah_hari_kerja }}" required>
                             </td>
                         </tr>
                         <tr>
-                            <td>Jumlah Ketidakhadiran</td>
+                            <td width="200">Jumlah Izin</td>
+                            <td width="10">:</td>
+                            <td>
+                                <input type="number" id="jumlah_izin" name="jumlah_izin" value="{{ $penggajian->jumlah_izin }}" class="form-control" min="0" max="{{ $penggajian->jumlah_hari_kerja }}" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="200">Jumlah Sakit</td>
+                            <td width="10">:</td>
+                            <td>
+                                <input type="number" id="jumlah_sakit" name="jumlah_sakit" value="{{ $penggajian->jumlah_sakit }}" class="form-control" min="0" max="{{ $penggajian->jumlah_hari_kerja }}" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="200">Jumlah Cuti</td>
+                            <td width="10">:</td>
+                            <td>
+                                <input type="number" id="jumlah_cuti" name="jumlah_cuti" value="{{ $penggajian->jumlah_cuti }}" class="form-control" min="0" max="{{ $penggajian->jumlah_hari_kerja }}" required>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Jumlah Kehadiran</td>
+                            <td>:</td>
+                            <td>
+                                <input type="number" id="jumlah_hari_masuk" name="jumlah_hari_masuk" value="{{ $penggajian->jumlah_hari_masuk }}" class="form-control" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jumlah Tidak Hadir Dengan Keterangan (ISC)</td>
+                            <td>:</td>
+                            <td>
+                                <input type="number" id="jumlah_isc" name="jumlah_isc" value="{{ $penggajian->jumlah_isc }}" class="form-control" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jumlah Tidak Hadir Tanpa Keterangan</td>
                             <td>:</td>
                             <td>
                                 <input type="number" id="jumlah_hari_tidak_masuk" name="jumlah_hari_tidak_masuk" value="{{ $penggajian->jumlah_hari_tidak_masuk }}" class="form-control" readonly>
@@ -175,28 +211,153 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const jumlahHariKerja = {{ $penggajian->jumlah_hari_kerja }};
+        const kehadiranMurniInput = document.getElementById('kehadiran_murni');
+        const jumlahIzinInput = document.getElementById('jumlah_izin');
+        const jumlahSakitInput = document.getElementById('jumlah_sakit');
+        const jumlahCutiInput = document.getElementById('jumlah_cuti');
         const jumlahHariMasukInput = document.getElementById('jumlah_hari_masuk');
+        const jumlahIscInput = document.getElementById('jumlah_isc');
         const jumlahHariTidakMasukInput = document.getElementById('jumlah_hari_tidak_masuk');
 
-        function updateJumlahHariTidakMasuk() {
-            const jumlahHariMasuk = parseInt(jumlahHariMasukInput.value) || 0;
-            jumlahHariTidakMasukInput.value = Math.max(0, jumlahHariKerja - jumlahHariMasuk);
+        function showValidationError(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Kesalahan Input',
+                text: message,
+                confirmButtonText: 'OK'
+            });
         }
 
-        jumlahHariMasukInput.addEventListener('input', function() {
-            if (parseInt(jumlahHariMasukInput.value) > jumlahHariKerja) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan!',
-                    text: `Jumlah hari masuk tidak boleh lebih dari ${jumlahHariKerja} hari.`,
-                    confirmButtonText: 'OK'
-                });
-                jumlahHariMasukInput.value = jumlahHariKerja;
+        function validateAndAdjustInputs() {
+            // Ambil nilai input
+            const kehadiranMurni = parseInt(kehadiranMurniInput.value) || 0;
+            const jumlahIzin = parseInt(jumlahIzinInput.value) || 0;
+            const jumlahSakit = parseInt(jumlahSakitInput.value) || 0;
+            const jumlahCuti = parseInt(jumlahCutiInput.value) || 0;
+
+            // Validasi input negatif
+            const inputs = [
+                { input: kehadiranMurniInput, name: 'Kehadiran Murni' },
+                { input: jumlahIzinInput, name: 'Jumlah Izin' },
+                { input: jumlahSakitInput, name: 'Jumlah Sakit' },
+                { input: jumlahCutiInput, name: 'Jumlah Cuti' }
+            ];
+
+            // Cek input negatif
+            for (let { input, name } of inputs) {
+                const value = parseInt(input.value) || 0;
+                if (value < 0) {
+                    showValidationError(`${name} tidak boleh kurang dari 0`);
+                    input.value = 0;
+                    return false;
+                }
             }
-            updateJumlahHariTidakMasuk();
+
+            // Jika kehadiran murni penuh
+            if (kehadiranMurni === jumlahHariKerja) {
+                if (jumlahIzin > 0 || jumlahSakit > 0 || jumlahCuti > 0) {
+                    showValidationError('Jika kehadiran murni penuh, izin/sakit/cuti harus 0');
+                    jumlahIzinInput.value = 0;
+                    jumlahSakitInput.value = 0;
+                    jumlahCutiInput.value = 0;
+                    return false;
+                }
+            }
+
+            // Hitung total hari
+            const totalHari = kehadiranMurni + jumlahIzin + jumlahSakit + jumlahCuti;
+
+            // Validasi total hari
+            if (totalHari > jumlahHariKerja) {
+                showValidationError(`Total hari ${totalHari}, tidak boleh melebihi ${jumlahHariKerja} hari`);
+
+                // Kurangi input tambahan
+                const selisih = totalHari - jumlahHariKerja;
+
+                // Prioritas pengurangan: Cuti -> Sakit -> Izin
+                if (jumlahCuti >= selisih) {
+                    jumlahCutiInput.value = jumlahCuti - selisih;
+                } else if (jumlahCuti > 0) {
+                    const sisaSelisih = selisih - jumlahCuti;
+                    jumlahCutiInput.value = 0;
+
+                    if (jumlahSakit >= sisaSelisih) {
+                        jumlahSakitInput.value = jumlahSakit - sisaSelisih;
+                    } else if (jumlahSakit > 0) {
+                        const sisaSelisihLagi = sisaSelisih - jumlahSakit;
+                        jumlahSakitInput.value = 0;
+
+                        if (jumlahIzin >= sisaSelisihLagi) {
+                            jumlahIzinInput.value = jumlahIzin - sisaSelisihLagi;
+                        } else {
+                            jumlahIzinInput.value = 0;
+                        }
+                    }
+                } else if (jumlahSakit >= selisih) {
+                    jumlahSakitInput.value = jumlahSakit - selisih;
+                } else if (jumlahSakit > 0) {
+                    const sisaSelisih = selisih - jumlahSakit;
+                    jumlahSakitInput.value = 0;
+
+                    if (jumlahIzin >= sisaSelisih) {
+                        jumlahIzinInput.value = jumlahIzin - sisaSelisih;
+                    } else {
+                        jumlahIzinInput.value = 0;
+                    }
+                } else if (jumlahIzin >= selisih) {
+                    jumlahIzinInput.value = jumlahIzin - selisih;
+                } else {
+                    jumlahIzinInput.value = 0;
+                }
+
+                return false;
+            }
+
+            // Jika total hari kurang
+            // if (totalHari < jumlahHariKerja) {
+            //     showValidationError(`Total hari (${totalHari}) kurang dari ${jumlahHariKerja} hari`);
+            //     return false;
+            // }
+
+            return true;
+        }
+
+        function updateCalculations() {
+            // Validasi input terlebih dahulu
+            if (!validateAndAdjustInputs()) {
+                return;
+            }
+
+            // Konversi input ke integer
+            const kehadiranMurni = parseInt(kehadiranMurniInput.value) || 0;
+            const jumlahIzin = parseInt(jumlahIzinInput.value) || 0;
+            const jumlahSakit = parseInt(jumlahSakitInput.value) || 0;
+            const jumlahCuti = parseInt(jumlahCutiInput.value) || 0;
+
+            // Hitung jumlah hari masuk
+            const jumlahHariMasuk = kehadiranMurni + jumlahIzin + jumlahSakit + jumlahCuti;
+            jumlahHariMasukInput.value = jumlahHariMasuk;
+
+            // Hitung jumlah ISC (izin + sakit + cuti)
+            const jumlahIsc = jumlahIzin + jumlahSakit + jumlahCuti;
+            jumlahIscInput.value = jumlahIsc;
+
+            // Hitung jumlah hari tidak masuk
+            const jumlahHariTidakMasuk = jumlahHariKerja - jumlahHariMasuk;
+            jumlahHariTidakMasukInput.value = jumlahHariTidakMasuk;
+        }
+
+        // Event listener untuk setiap input
+        [kehadiranMurniInput, jumlahIzinInput, jumlahSakitInput, jumlahCutiInput].forEach(input => {
+            input.addEventListener('input', updateCalculations);
+
+            input.addEventListener('blur', () => {
+                updateCalculations();
+            });
         });
 
-        updateJumlahHariTidakMasuk();
+        // Inisialisasi perhitungan saat halaman dimuat
+        updateCalculations();
 
         $('#previewEditButton').click(function() {
             const formData = $('#penggajianForm').serialize();
