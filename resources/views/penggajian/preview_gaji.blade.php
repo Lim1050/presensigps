@@ -66,6 +66,11 @@
                     <td>{{ $jumlah_hari_cuti }} hari</td>
                 </tr>
                 <tr>
+                    <td width="200">Total Kehadiran</td>
+                    <td width="10">:</td>
+                    <td>{{ $totalKehadiran }} hari</td>
+                </tr>
+                <tr>
                     <td>Jumlah Tidak Hadir Dengan Keterangan</td>
                     <td>:</td>
                     <td>{{ $total_jumlah_hari_isc }} hari</td>

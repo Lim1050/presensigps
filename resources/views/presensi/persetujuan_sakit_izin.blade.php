@@ -125,9 +125,9 @@
                                         <th>No.</th>
                                         <th>NIK</th>
                                         <th>Nama Karyawan</th>
-                                        <th>Kode Jabatan</th>
-                                        <th>Tanggal Izin Dari</th>
-                                        <th>Tanggal Izin Sampai</th>
+                                        <th>Jabatan</th>
+                                        <th>Cabang</th>
+                                        <th>Tanggal</th>
                                         <th>Status</th>
                                         <th>Keterangan</th>
                                         <th>Status Approval</th>
@@ -141,8 +141,8 @@
                                         <td>{{ $item->nik }}</td>
                                         <td>{{ $item->karyawan->nama_lengkap ?? 'Tidak Ditemukan' }}</td> <!-- Mengambil nama karyawan -->
                                         <td>{{ $item->karyawan->jabatan->nama_jabatan ?? 'Tidak Ditemukan' }}</td> <!-- Mengambil kode jabatan -->
-                                        <td>{{ date('d-m-Y', strtotime($item->tanggal_izin_dari)) }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($item->tanggal_izin_sampai)) }}</td>
+                                        <td>{{ $item->karyawan->Cabang->nama_cabang ?? 'Tidak Ditemukan' }}</td>
+                                        <td>{{ date('d-m-Y', strtotime($item->tanggal_izin_dari)) }} s/d {{ date('d-m-Y', strtotime($item->tanggal_izin_sampai)) }}</td>
                                         <td>
                                             {{ $item->status == "sakit" ? "Sakit" : ($item->status == "izin" ? "Izin" : "Cuti") }}
                                             @if ($item->status == "sakit")

@@ -48,10 +48,35 @@
                 <tr>
                     <td width="200">Jumlah Hari Masuk</td>
                     <td width="10">:</td>
+                    <td>{{ $kehadiran_murni }} hari</td>
+                </tr>
+                <tr>
+                    <td>Jumlah Sakit</td>
+                    <td>:</td>
+                    <td>{{ $jumlah_hari_sakit }} hari</td>
+                </tr>
+                <tr>
+                    <td>Jumlah Izin</td>
+                    <td>:</td>
+                    <td>{{ $jumlah_hari_izin }} hari</td>
+                </tr>
+                <tr>
+                    <td>Jumlah Cuti</td>
+                    <td>:</td>
+                    <td>{{ $jumlah_hari_cuti }} hari</td>
+                </tr>
+                <tr>
+                    <td width="200">Total Kehadiran</td>
+                    <td width="10">:</td>
                     <td>{{ $totalKehadiran }} hari</td>
                 </tr>
                 <tr>
-                    <td>Jumlah Ketidakhadiran</td>
+                    <td>Jumlah Tidak Hadir Dengan Keterangan</td>
+                    <td>:</td>
+                    <td>{{ $total_jumlah_hari_isc }} hari</td>
+                </tr>
+                <tr>
+                    <td>Jumlah Tidak Hadir Tanpa Keterangan</td>
                     <td>:</td>
                     <td>{{ $totalKetidakhadiran }} hari</td>
                 </tr>

@@ -115,6 +115,7 @@
                                         <th class="text-center">NIK</th>
                                         <th class="text-center">Nama Karyawan</th>
                                         <th class="text-center">Jabatan</th>
+                                        <th class="text-center">Cabang</th>
                                         <th class="text-center">Tanggal Cashbon</th>
                                         <th class="text-center">Jumlah Cashbon</th>
                                         <th class="text-center">Keterangan</th>
@@ -130,6 +131,7 @@
                                         <td class="text-center">{{ $item->nik }}</td>
                                         <td class="text-center">{{ $item->karyawan->nama_lengkap }}</td>
                                         <td class="text-center">{{ $item->karyawan->jabatan->nama_jabatan }}</td>
+                                        <td class="text-center">{{ $item->karyawan->Cabang->nama_cabang }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->translatedFormat('d F Y') }}</td>
                                         <td class="text-center">Rp {{ number_format($item->jumlah, 0) }}</td>
                                         <td class="text-center">{{ $item->keterangan }}</td>

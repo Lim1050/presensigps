@@ -138,7 +138,7 @@
                                 <th class="text-center">Jabatan</th>
                                 <th class="text-center">Departemen</th>
                                 <th class="text-center">Lokasi Penugasan</th>
-                                <th class="text-center">Kantor</th>
+                                <th class="text-center">Cabang</th>
                                 <th class="text-center">No HP</th>
                                 <th class="text-center">Aksi</th>
                             </tr>

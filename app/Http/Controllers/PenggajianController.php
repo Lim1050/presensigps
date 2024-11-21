@@ -582,7 +582,12 @@ class PenggajianController extends Controller
 
             // Validasi input
             $request->validate([
+                'kehadiran_murni' => 'required|integer|min:0',
+                'jumlah_izin' => 'required|integer|min:0',
+                'jumlah_sakit' => 'required|integer|min:0',
+                'jumlah_cuti' => 'required|integer|min:0',
                 'jumlah_hari_masuk' => 'required|integer|min:0',
+                'jumlah_isc' => 'required|integer|min:0',
                 'jumlah_hari_tidak_masuk' => 'required|integer|min:0',
                 'total_jam_lembur' => 'required|numeric|min:0',
                 'tanggal_gaji' => 'required|date',
@@ -637,6 +642,26 @@ class PenggajianController extends Controller
                 ->toArray();
 
             // dd($komponenPotongan);
+
+            // Hitung total jumlah hari
+            $total_jumlah_hari_isc = $request->jumlah_isc;
+
+            // Contoh cara mengakses
+            $jumlah_hari_cuti = $request->jumlah_cuti ?? 0;
+            $jumlah_hari_izin = $request->jumlah_izin ?? 0;
+            $jumlah_hari_sakit = $request->jumlah_sakit ?? 0;
+
+            // Hitung kehadiran
+            $kehadiran_murni = $request->kehadiran_murni;
+
+            // Debugging
+            // dd([
+            //     'total_jumlah_isc' => $total_jumlah_hari_isc,
+            //     'total_jumlah_cuti' => $jumlah_hari_cuti,
+            //     'total_jumlah_izin' => $jumlah_hari_izin,
+            //     'total_jumlah_sakit' => $jumlah_hari_sakit,
+            //     'total_jumlah_hadir' => $kehadiran_murni,
+            // ]);
 
             // Total kehadiran diambil dari request
             $totalKehadiran = $request->jumlah_hari_masuk;
@@ -699,7 +724,12 @@ class PenggajianController extends Controller
                 'totalGaji',
                 'totalPotongan',
                 'gajiBersih',
+                'kehadiran_murni',
+                'jumlah_hari_sakit',
+                'jumlah_hari_izin',
+                'jumlah_hari_cuti',
                 'totalKehadiran',
+                'total_jumlah_hari_isc',
                 'totalKetidakhadiran',
                 'jamLembur',
                 'jumlahLembur',
@@ -730,7 +760,12 @@ class PenggajianController extends Controller
 
             // Validasi input
             $request->validate([
+                'kehadiran_murni' => 'required|integer|min:0',
+                'jumlah_izin' => 'required|integer|min:0',
+                'jumlah_sakit' => 'required|integer|min:0',
+                'jumlah_cuti' => 'required|integer|min:0',
                 'jumlah_hari_masuk' => 'required|integer|min:0',
+                'jumlah_isc' => 'required|integer|min:0',
                 'jumlah_hari_tidak_masuk' => 'required|integer|min:0',
                 'total_jam_lembur' => 'required|numeric|min:0',
                 'tanggal_gaji' => 'required|date',
@@ -792,6 +827,26 @@ class PenggajianController extends Controller
                 ->toArray();
 
             // dd($komponenPotongan);
+
+            // Hitung total jumlah hari
+            $total_jumlah_hari_isc = $request->jumlah_isc;
+
+            // Contoh cara mengakses
+            $jumlah_hari_cuti = $request->jumlah_cuti ?? 0;
+            $jumlah_hari_izin = $request->jumlah_izin ?? 0;
+            $jumlah_hari_sakit = $request->jumlah_sakit ?? 0;
+
+            // Hitung kehadiran
+            $kehadiran_murni = $request->kehadiran_murni;
+
+            // Debugging
+            // dd([
+            //     'total_jumlah_isc' => $total_jumlah_hari_isc,
+            //     'total_jumlah_cuti' => $jumlah_hari_cuti,
+            //     'total_jumlah_izin' => $jumlah_hari_izin,
+            //     'total_jumlah_sakit' => $jumlah_hari_sakit,
+            //     'total_jumlah_hadir' => $kehadiran_murni,
+            // ]);
 
             // Total kehadiran diambil dari request
             $totalKehadiran = $request->jumlah_hari_masuk;
@@ -865,7 +920,12 @@ class PenggajianController extends Controller
             $penggajian->tanggal_gaji = $tanggalGaji;
             $penggajian->bulan = $bulan;
             $penggajian->jumlah_hari_kerja = $hariKerjaLokasi;
+            $penggajian->kehadiran_murni = $kehadiran_murni;
+            $penggajian->jumlah_sakit = $jumlah_hari_sakit;
+            $penggajian->jumlah_izin = $jumlah_hari_izin;
+            $penggajian->jumlah_cuti = $jumlah_hari_cuti;
             $penggajian->jumlah_hari_masuk = $totalKehadiran;
+            $penggajian->jumlah_isc = $total_jumlah_hari_isc;
             $penggajian->jumlah_hari_tidak_masuk = $totalKetidakhadiran;
             $penggajian->total_jam_lembur = $jamLembur;
             $penggajian->komponen_gaji_kotor = json_encode($komponenGajiAsli);

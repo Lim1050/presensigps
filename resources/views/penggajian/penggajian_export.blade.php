@@ -382,8 +382,8 @@
                                         <span class="badge badge-success">Dibayar</span>
                                     @endif <br>
                             Tanggal Gaji : {{ \Carbon\Carbon::parse($penggajian->tanggal_gaji)->translatedFormat('d F Y') }} <br>
-                            Catatan: {{ $penggajian->catatan }} <br>
-                            Diproses Oleh: {{ $penggajian->diproses_oleh }}
+                            Diproses Oleh: {{ $penggajian->diproses_oleh }}<br>
+                            Catatan: {{ $penggajian->catatan }}
                         </p>
                     </div>
                 </div>
