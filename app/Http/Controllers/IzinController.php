@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cabang;
 use App\Models\Jabatan;
 use App\Models\PengajuanIzin;
 use App\Models\PersetujuanSakitIzin;
@@ -528,9 +529,17 @@ class IzinController extends Controller
 
     public function PersetujuanSakitIzin(Request $request)
     {
+        $user = auth()->user();
         // Membuat query dasar dengan eager loading
         $query = PengajuanIzin::with('karyawan') // Menggunakan relasi karyawan
             ->orderBy('tanggal_izin_dari', 'desc');
+
+        // Filter untuk admin cabang
+        if ($user->role === 'admin-cabang') {
+            $query->whereHas('karyawan', function($q) use ($user) {
+                $q->where('kode_cabang', $user->kode_cabang);
+            });
+        }
 
         // Menggunakan kondisi where untuk filter
         if (!empty($request->dari) && !empty($request->sampai)) {
@@ -559,7 +568,15 @@ class IzinController extends Controller
         // dd($query->toSql(), $query->getBindings());
         $jabatan = Jabatan::get();
 
-        return view('presensi.persetujuan_sakit_izin', compact('sakit_izin', 'jabatan'));
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            return view('presensi.persetujuan_sakit_izin', compact('sakit_izin', 'jabatan', 'cabang'));
+        } else {
+            $cabang = null;
+            return view('presensi.persetujuan_sakit_izin', compact('sakit_izin', 'jabatan', 'cabang'));
+        }
+
+        // return view('presensi.persetujuan_sakit_izin', compact('sakit_izin', 'jabatan'));
     }
     public function ApprovalSakitIzin(Request $request)
     {

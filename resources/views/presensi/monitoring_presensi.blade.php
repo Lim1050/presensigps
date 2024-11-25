@@ -43,7 +43,11 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    @if (Auth::user()->role == 'admin-cabang')
+    <h1 class="h3 mb-0 text-gray-800">Monitoring Presensi Cabang {{ $cabang->nama_cabang }}</h1>
+    @else
     <h1 class="h3 mb-0 text-gray-800">Monitoring Presensi</h1>
+    @endif
 </div>
 
 <!-- Content Row -->
@@ -65,8 +69,8 @@
                                     <th>No.</th>
                                     <th>NIK</th>
                                     <th>Nama Karyawan</th>
-                                    <th>Kode Jabatan</th>
-                                    <th>Departemen</th>
+                                    <th>Jabatan</th>
+                                    <th>Lokasi Penugasan</th>
                                     <th>Jadwal</th>
                                     <th>Jam Masuk</th>
                                     <th>Foto Masuk</th>

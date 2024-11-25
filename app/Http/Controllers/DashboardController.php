@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cabang;
 use App\Models\Lembur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -126,23 +127,68 @@ class DashboardController extends Controller
         ));
     }
 
+    // public function AdminDashboard()
+    // {
+    //     $hari_ini = date("Y-m-d");
+    //     $bulan_ini = date("m");
+    //     $tahun_ini = date("Y");
+    //     $rekap_presensi = DB::table('presensi')
+    //                         ->selectRaw('
+    //                         SUM(IF(status="hadir",1,0))as jml_hadir,
+    //                         SUM(IF(status="izin",1,0))as jml_izin,
+    //                         SUM(IF(status="sakit",1,0))as jml_sakit,
+    //                         SUM(IF(status="cuti",1,0))as jml_cuti,
+    //                         SUM(IF(presensi.jam_masuk > jam_kerja.jam_masuk,1,0)) as jml_terlambat')
+    //                         ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+    //                         ->where('tanggal_presensi', $hari_ini)
+    //                         ->first();
+    //     $jumlah_karyawan = DB::table('karyawan')->count('nik');
+
+    //     return view('dashboard.admin_dashboard', compact('rekap_presensi', 'jumlah_karyawan'));
+    // }
+
     public function AdminDashboard()
     {
         $hari_ini = date("Y-m-d");
-        $bulan_ini = date("m");
-        $tahun_ini = date("Y");
-        $rekap_presensi = DB::table('presensi')
-                            ->selectRaw('
-                            SUM(IF(status="hadir",1,0))as jml_hadir,
-                            SUM(IF(status="izin",1,0))as jml_izin,
-                            SUM(IF(status="sakit",1,0))as jml_sakit,
-                            SUM(IF(status="cuti",1,0))as jml_cuti,
-                            SUM(IF(presensi.jam_masuk > jam_kerja.jam_masuk,1,0)) as jml_terlambat')
-                            ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-                            ->where('tanggal_presensi', $hari_ini)
-                            ->first();
-        $jumlah_karyawan = DB::table('karyawan')->count('nik');
 
-        return view('dashboard.admin_dashboard', compact('rekap_presensi', 'jumlah_karyawan'));
+        // Mendapatkan user yang sedang login
+        $user = auth()->user();
+
+        // Query dasar untuk rekap presensi dengan join ke tabel karyawan
+        $rekap_presensi_query = DB::table('presensi')
+            ->join('karyawan', 'presensi.nik', '=', 'karyawan.nik')
+            ->selectRaw('
+                SUM(IF(status="hadir", 1, 0)) as jml_hadir,
+                SUM(IF(status="izin", 1, 0)) as jml_izin,
+                SUM(IF(status="sakit", 1, 0)) as jml_sakit,
+                SUM(IF(status="cuti", 1, 0)) as jml_cuti,
+                SUM(IF(presensi.jam_masuk > jam_kerja.jam_masuk, 1, 0)) as jml_terlambat
+            ')
+            ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+            ->where('tanggal_presensi', $hari_ini);
+
+        // Query dasar untuk jumlah karyawan
+        $jumlah_karyawan_query = DB::table('karyawan');
+
+        // Pengecekan berdasarkan peran
+        if ($user->role === 'admin-cabang') {
+            // Admin cabang hanya melihat data cabangnya sendiri
+            $rekap_presensi = $rekap_presensi_query
+                ->where('karyawan.kode_cabang', $user->kode_cabang)
+                ->first();
+
+            $jumlah_karyawan = $jumlah_karyawan_query
+                ->where('kode_cabang', $user->kode_cabang)
+                ->count('nik');
+
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first('nama_cabang');
+            // dd($nama_cabang);
+        } else {
+            // Pengguna selain admin cabang (super admin, dll) melihat semua data
+            $rekap_presensi = $rekap_presensi_query->first();
+            $jumlah_karyawan = $jumlah_karyawan_query->count('nik');
+        }
+
+        return view('dashboard.admin_dashboard', compact('rekap_presensi', 'jumlah_karyawan', 'cabang'));
     }
 }

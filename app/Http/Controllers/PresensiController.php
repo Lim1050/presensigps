@@ -493,17 +493,29 @@ class PresensiController extends Controller
     // Admin Monitoring Presensi
     public function MonitoringPresensi()
     {
-        return view('presensi.monitoring_presensi');
+        $user = auth()->user();
+
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            return view('presensi.monitoring_presensi', compact('cabang'));
+        } else {
+            $cabang = null;
+            return view('presensi.monitoring_presensi', compact('cabang'));
+        }
     }
 
     public function MonitoringGetPresensi(Request $request)
     {
         $tanggal_presensi = $request->tanggal_presensi;
-        $presensi = DB::table('presensi')
+        // Mendapatkan user yang sedang login
+        $user = auth()->user();
+
+        $presensi_query = DB::table('presensi')
             ->select('presensi.*',
                 'karyawan.nama_lengkap',
                 'karyawan.kode_jabatan',
                 'karyawan.kode_lokasi_penugasan',
+                'karyawan.kode_cabang',
                 'jabatan.nama_jabatan',
                 'lokasi_penugasan.nama_lokasi_penugasan',
                 DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_mulai ELSE jam_kerja.jam_masuk END as jam_masuk_kerja'),
@@ -522,8 +534,19 @@ class PresensiController extends Controller
                     ->where('lembur.tanggal_presensi', '=', DB::raw('presensi.tanggal_presensi'))
                     ->where('lembur.status', '=', 'disetujui');
             })
-            ->where('presensi.tanggal_presensi', $tanggal_presensi)
-            ->get();
+            ->where('presensi.tanggal_presensi', $tanggal_presensi);
+
+        // Pengecekan berdasarkan peran
+        if ($user->role === 'admin-cabang') {
+            // Jika admin cabang, filter hanya untuk cabang yang sesuai
+            $presensi = $presensi_query
+                ->where('karyawan.kode_cabang', $user->kode_cabang)
+                ->get();
+
+        } else {
+            // Untuk super admin atau role lainnya, tampilkan semua data
+            $presensi = $presensi_query->get();
+        }
 
         return view('presensi.monitoring_getpresensi', compact('presensi'));
     }
@@ -556,9 +579,22 @@ class PresensiController extends Controller
             'Desember',
         ];
 
-        $karyawan = DB::table('karyawan')->orderBy('nama_lengkap')->get();
-        $cabang = Cabang::get();
-        return view('presensi.laporan_presensi', compact('months', 'karyawan', 'cabang'));
+
+        $user = auth()->user();
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first(); // Ubah ke first()
+            $cabangs = Cabang::where('kode_cabang', $user->kode_cabang)->get(); // Tambahkan untuk list cabang
+            $karyawan = DB::table('karyawan')
+            ->where('kode_cabang', $user->kode_cabang)
+            ->orderBy('nama_lengkap')
+            ->get();
+        } else {
+            $cabang = null;
+            $cabangs = Cabang::all();
+            $karyawan = DB::table('karyawan')->orderBy('nama_lengkap')->get();
+        }
+        // dd($cabang);
+        return view('presensi.laporan_presensi', compact('months', 'karyawan', 'cabang', 'cabangs'));
     }
 
     public function LaporanPrint(Request $request)
@@ -713,10 +749,19 @@ class PresensiController extends Controller
             'Desember',
         ];
 
+        $user = auth()->user();
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first(); // Ubah ke first()
+            $kantor_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->get(); // Tambahkan untuk list cabang
+        } else {
+            $cabang = null;
+            $kantor_cabang = Cabang::all();
+        }
+
         $kantor_cabang = DB::table('kantor_cabang')->get();
         // dd($departemen);
 
-        return view('presensi.rekap_presensi', compact('months', 'kantor_cabang'));
+        return view('presensi.rekap_presensi', compact('months', 'kantor_cabang', 'cabang'));
     }
 
     public function RekapPrint(Request $request)

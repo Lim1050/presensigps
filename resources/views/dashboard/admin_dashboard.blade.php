@@ -9,7 +9,11 @@
 <!-- Content Row -->
 <div class="row mb-4">
     <div class="col mb-2">
-        <h3 class="h4 mb-0 text-gray-800">Rekap Presensi Hari Ini {{ date("d-m-Y") }}</h3>
+        @if (Auth::user()->role == 'admin-cabang')
+            <h3 class="h4 mb-0 text-gray-800">Rekap Presensi Hari Ini {{ date("d-m-Y") }} Cabang {{ $cabang->nama_cabang }}</h3>
+        @else
+            <h3 class="h4 mb-0 text-gray-800">Rekap Presensi Hari Ini {{ date("d-m-Y") }}</h3>
+        @endif
     </div>
 </div>
 <div class="row">

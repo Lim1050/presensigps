@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 21, 2024 at 04:54 PM
+-- Generation Time: Nov 25, 2024 at 04:42 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -146,13 +146,13 @@ CREATE TABLE `failed_jobs` (
 --
 
 CREATE TABLE `gaji` (
-  `kode_gaji` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_jabatan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_lokasi_penugasan` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cabang` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_jenis_gaji` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `jenis_gaji` enum('Gaji tetap','Tunjangan jabatan','Transportasi') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nama_gaji` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_gaji` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_jabatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_lokasi_penugasan` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_cabang` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_jenis_gaji` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jenis_gaji` enum('Gaji tetap','Tunjangan jabatan','Transportasi') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_gaji` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `jumlah_gaji` decimal(12,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -163,23 +163,23 @@ CREATE TABLE `gaji` (
 --
 
 INSERT INTO `gaji` (`kode_gaji`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_cabang`, `kode_jenis_gaji`, `jenis_gaji`, `nama_gaji`, `jumlah_gaji`, `created_at`, `updated_at`) VALUES
-('GTKK', 'KEPKAM', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Kepala Keamanan', 5000000.00, '2024-10-15 05:36:13', '2024-10-22 05:59:20'),
-('GTPC', 'PCCTV', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas CCTV', 4000000.00, '2024-10-15 05:38:02', '2024-10-22 05:56:21'),
-('GTPKG', 'PKG', 'SMB', 'BKS', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas Kontrol Gedung', 4000000.00, '2024-10-15 05:40:30', '2024-10-22 05:52:40'),
-('GTPM', 'PENMAL', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Penjaga Malam', 4000000.00, '2024-10-15 05:39:09', '2024-10-22 05:55:22'),
-('GTPPM', 'PPM', 'SMB', 'BKS', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas Pintu Masuk', 3500000.00, '2024-10-15 05:41:57', '2024-10-22 05:58:18'),
-('GTSK', 'SUPKAM', 'GR', 'JKTT', 'GT', 'Gaji tetap', 'Gaji Tetap Supervisor Keamanan', 5000000.00, '2024-10-15 05:45:15', '2024-10-22 05:57:32'),
-('GTSO', 'SO', 'SMB', 'BKS', 'GT', 'Gaji tetap', 'Gaji Tetap Security Officer', 3750000.00, '2024-10-15 05:43:40', '2024-10-22 05:54:44'),
-('GTWKK', 'WAKAM', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Wakil Kepala Keamanan', 4500000.00, '2024-10-15 05:46:22', '2024-10-22 05:55:49'),
-('LKK', 'KEPKAM', 'MN', 'JKTP', 'L', NULL, 'Lembur Kepala Keamanan (per jam)', 20000.00, '2024-11-05 13:37:28', '2024-11-05 13:37:28'),
-('TJKK', 'KEPKAM', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Kepala Keamanan', 2500000.00, '2024-10-15 05:36:51', '2024-10-22 05:59:26'),
-('TJPC', 'PCCTV', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas CCTV', 2000000.00, '2024-10-15 05:38:38', '2024-10-22 05:57:11'),
-('TJPKG', 'PKG', 'SMB', 'BKS', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Kontrol Gedung', 2000000.00, '2024-10-15 05:41:04', '2024-10-22 05:54:16'),
-('TJPM', 'PENMAL', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Penjaga Malam', 2000000.00, '2024-10-15 05:39:41', '2024-10-22 05:55:28'),
-('TJPPM', 'PPM', 'SMB', 'BKS', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Pintu Masuk', 1750000.00, '2024-10-15 05:42:50', '2024-10-22 05:58:26'),
-('TJSK', 'SUPKAM', 'GR', 'JKTT', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Supervisor Keamanan', 2500000.00, '2024-10-15 05:45:44', '2024-10-22 05:57:47'),
-('TJSO', 'SO', 'SMB', 'BKS', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Security Officer', 1875000.00, '2024-10-15 05:44:22', '2024-10-22 05:54:52'),
-('TJWKK', 'WAKAM', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Wakil Kepala Keamanan', 2250000.00, '2024-10-15 05:47:11', '2024-10-22 05:56:00');
+('GTKK', 'KEPKAM', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Kepala Keamanan', 5000000.00, '2024-10-14 22:36:13', '2024-10-21 22:59:20'),
+('GTPC', 'PCCTV', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas CCTV', 4000000.00, '2024-10-14 22:38:02', '2024-10-21 22:56:21'),
+('GTPKG', 'PKG', 'SMB', 'BKS', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas Kontrol Gedung', 4000000.00, '2024-10-14 22:40:30', '2024-10-21 22:52:40'),
+('GTPM', 'PENMAL', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Penjaga Malam', 4000000.00, '2024-10-14 22:39:09', '2024-10-21 22:55:22'),
+('GTPPM', 'PPM', 'SMB', 'BKS', 'GT', 'Gaji tetap', 'Gaji Tetap Petugas Pintu Masuk', 3500000.00, '2024-10-14 22:41:57', '2024-10-21 22:58:18'),
+('GTSK', 'SUPKAM', 'GR', 'JKTT', 'GT', 'Gaji tetap', 'Gaji Tetap Supervisor Keamanan', 5000000.00, '2024-10-14 22:45:15', '2024-10-21 22:57:32'),
+('GTSO', 'SO', 'SMB', 'BKS', 'GT', 'Gaji tetap', 'Gaji Tetap Security Officer', 3750000.00, '2024-10-14 22:43:40', '2024-10-21 22:54:44'),
+('GTWKK', 'WAKAM', 'MN', 'JKTP', 'GT', 'Gaji tetap', 'Gaji Tetap Wakil Kepala Keamanan', 4500000.00, '2024-10-14 22:46:22', '2024-10-21 22:55:49'),
+('LKK', 'KEPKAM', 'MN', 'JKTP', 'L', NULL, 'Lembur Kepala Keamanan (per jam)', 20000.00, '2024-11-05 06:37:28', '2024-11-05 06:37:28'),
+('TJKK', 'KEPKAM', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Kepala Keamanan', 2500000.00, '2024-10-14 22:36:51', '2024-10-21 22:59:26'),
+('TJPC', 'PCCTV', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas CCTV', 2000000.00, '2024-10-14 22:38:38', '2024-10-21 22:57:11'),
+('TJPKG', 'PKG', 'SMB', 'BKS', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Kontrol Gedung', 2000000.00, '2024-10-14 22:41:04', '2024-10-21 22:54:16'),
+('TJPM', 'PENMAL', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Penjaga Malam', 2000000.00, '2024-10-14 22:39:41', '2024-10-21 22:55:28'),
+('TJPPM', 'PPM', 'SMB', 'BKS', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Petugas Pintu Masuk', 1750000.00, '2024-10-14 22:42:50', '2024-10-21 22:58:26'),
+('TJSK', 'SUPKAM', 'GR', 'JKTT', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Supervisor Keamanan', 2500000.00, '2024-10-14 22:45:44', '2024-10-21 22:57:47'),
+('TJSO', 'SO', 'SMB', 'BKS', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Security Officer', 1875000.00, '2024-10-14 22:44:22', '2024-10-21 22:54:52'),
+('TJWKK', 'WAKAM', 'MN', 'JKTP', 'TJ', 'Tunjangan jabatan', 'Tunjangan Jabatan Wakil Kepala Keamanan', 2250000.00, '2024-10-14 22:47:11', '2024-10-21 22:56:00');
 
 -- --------------------------------------------------------
 
@@ -606,7 +606,8 @@ INSERT INTO `lembur` (`id`, `nik`, `tanggal_presensi`, `waktu_mulai`, `waktu_sel
 (6, '123456789', '2024-11-01', '00:00:00', '14:00:00', 840, 0, 1, 'Test Catatan Lembur', 'pending', NULL, '2024-10-31 07:07:24', '2024-10-31 07:07:24'),
 (7, '123123123', '2024-11-02', '16:00:00', '16:30:00', 120, 0, 1, 'asdwqeasff', 'disetujui', NULL, '2024-10-31 09:20:27', '2024-11-02 06:53:02'),
 (8, '123123123', '2024-11-01', '16:10:00', '16:18:00', 60, 0, 1, 'Test Lemburan', 'disetujui', NULL, '2024-11-01 07:47:12', '2024-11-01 08:06:38'),
-(12, '123123123', '2024-11-19', '12:50:00', '13:50:00', 60, 0, 1, 'Catatan Lembur', 'pending', NULL, '2024-11-19 05:50:45', '2024-11-19 05:50:45');
+(12, '123123123', '2024-11-19', '12:50:00', '13:50:00', 60, 0, 1, 'Catatan Lembur', 'pending', NULL, '2024-11-19 05:50:45', '2024-11-19 05:50:45'),
+(13, '222222222', '2024-11-25', '14:13:00', '16:13:00', 120, 0, 1, 'Catatan Lembur', 'pending', NULL, '2024-11-25 07:13:13', '2024-11-25 07:13:13');
 
 -- --------------------------------------------------------
 
@@ -712,7 +713,6 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (16, '2024_06_27_142520_add_kode_departemen_to_karyawan_table', 5),
 (18, '2024_06_27_142747_create_departemen_table', 6),
 (19, '2024_07_04_131023_create_lokasi_kantors_table', 7),
-(20, '2024_07_08_110709_create_gajis_table', 8),
 (21, '2024_07_10_142545_create_kantor_cabang_table', 9),
 (22, '2024_07_10_154246_add_kode_cabang_to_karyawan_table', 10),
 (24, '2024_07_11_121845_create_jam_kerja_table', 11),
@@ -733,25 +733,18 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (46, '2024_08_08_134748_create_permission_tables', 25),
 (47, '2024_08_08_152031_add_kode_departemen_to_users_table', 26),
 (48, '2024_08_08_203420_create_jabatans_table', 27),
-(52, '2024_08_08_203612_create_gajis_table', 28),
 (54, '2024_08_08_204401_update_karyawan_table', 28),
 (55, '2024_08_09_142314_add_username_to_users_table', 28),
 (56, '2024_08_13_131219_add_group_name_to_permissions_table', 29),
-(57, '2024_10_15_131400_add_jenis_gaji_to_gaji_table', 30),
 (60, '2024_10_16_124430_create_konfigurasi_gaji_table', 32),
-(61, '2024_10_16_145441_add_kode_jenis_gaji_to_gaji_table', 33),
 (67, '2024_10_18_124338_add_change_notes_and_changed_by_to_penggajian_table', 35),
 (68, '2024_10_21_134512_create_lokasi_penugasan_table', 36),
 (69, '2024_10_21_150922_update_karyawan_table_remove_jabatan_add_lokasi_penugasan', 37),
-(70, '2024_10_22_121028_add_kode_lokasi_and_cabang_to_gaji_table', 38),
 (71, '2024_10_23_152443_create_cashbon_table', 39),
 (72, '2024_10_23_160445_add_keterangan_to_cashbon_table', 40),
 (74, '2024_10_25_152721_create_cashbon_limit_table', 41),
 (75, '2024_10_25_152826_create_cashbon_karyawan_limit_table', 41),
 (76, '2024_10_27_145336_create_konfigurasi_potongan', 42),
-(77, '2024_10_27_145533_create_potongan', 43),
-(79, '2024_10_28_141613_create_thr_table', 44),
-(80, '2024_10_29_142048_add_catatan_perubahan_dan_diubah_oleh_pada_table_thr', 45),
 (81, '2024_10_30_130909_create_lembur_table', 46),
 (82, '2024_10_30_131532_add_lembur_to_presensi_table', 47),
 (83, '2024_10_30_150231_add_coloumn_durasi_lembur_to_lembur_table', 48),
@@ -765,7 +758,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (91, '2024_11_05_213211_add_jumlah_hari_kerja_to_lokasi_penugasan_table', 56),
 (92, '2024_11_06_152034_create_penggajian_table', 57),
 (93, '2024_11_07_150924_add_komponen_gaji_kotor_to_penggajian_table', 58),
-(94, '2024_11_19_135627_add_kehadiran_to_penggajian_table', 59);
+(94, '2024_11_19_135627_add_kehadiran_to_penggajian_table', 59),
+(95, '2024_11_25_101435_create_gaji_table', 60),
+(96, '2024_11_25_101700_create_potongan_table', 61),
+(97, '2024_11_25_101944_create_thr_table', 62);
 
 -- --------------------------------------------------------
 
@@ -801,7 +797,9 @@ INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 (6, 'App\\Models\\User', 17),
 (12, 'App\\Models\\User', 18),
 (9, 'App\\Models\\User', 19),
-(15, 'App\\Models\\User', 22);
+(15, 'App\\Models\\User', 22),
+(15, 'App\\Models\\User', 25),
+(15, 'App\\Models\\User', 26);
 
 -- --------------------------------------------------------
 
@@ -851,7 +849,6 @@ INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_
 ('IS0624001', '123123123', '2024-06-01', '2024-06-30', '30 Hari', NULL, 'sakit', 1, 'Sakit dikit', 'IS0624001.png', '2024-07-26 08:45:52', NULL),
 ('IS0724005', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'sakit', 2, 'Demam', 'IS0724005.png', '2024-07-24 07:55:10', '2024-07-24 07:57:49'),
 ('IS0724006', '123123123', '2024-07-29', '2024-07-29', '1 Hari', NULL, 'sakit', 1, 'sakit bentar', 'IS0724006.png', '2024-07-28 04:56:18', NULL),
-('IS0724007', '444444444', '2024-07-30', '2024-07-30', '1 Hari', NULL, 'sakit', 2, 'pileg', NULL, '2024-07-30 07:39:16', NULL),
 ('IS1124001', '123123123', '2024-11-10', '2024-11-16', '7 Hari', NULL, 'sakit', 0, 'hahaha', 'IS1124001.png', '2024-11-09 12:02:54', '2024-11-09 13:27:19'),
 ('IS1124002', '123123123', '2024-11-24', '2024-11-30', '7 Hari', NULL, 'sakit', 1, 'sakit bentar', 'IS1124002.png', '2024-11-09 13:11:46', NULL);
 
@@ -901,7 +898,9 @@ INSERT INTO `penggajian` (`kode_penggajian`, `nik`, `kode_cabang`, `kode_lokasi_
 ('PG2024110004', '123123123', 'JKTP', 'MN', '2024-09-30', '2024-09', 26, 24, 15, 9, 5, 3, 1, 2, 5.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 100000}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 4615384.615384615}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\", \"Potongan Ketidakhadiran\": 384615.3846153846}', 1050615.38, 6549384.62, 'dibayar', 'Catatan', 'Super Admin Presensi', 'Catatan Perubahan', 'Super Admin Presensi', '2024-11-21 07:15:52', '2024-11-09 07:36:44', '2024-11-21 07:15:52'),
 ('PG2024110005', '123123123', 'JKTP', 'MN', '2024-10-09', '2024-10', 26, 26, 20, 6, 3, 2, 1, 0, 10.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 200000}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Cashbon\": \"110000.00\", \"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\"}', 776000.00, 6924000.00, 'draft', 'Catatan', 'Super Admin Presensi', 'Catatan Perubahan', 'Super Admin Presensi', '2024-11-21 07:14:10', '2024-11-09 10:50:48', '2024-11-21 07:14:10'),
 ('PG2024110006', '123123123', 'JKTP', 'MN', '2024-11-30', '2024-11', 26, 10, 10, 7, 5, 3, 1, 16, 100.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 2000000}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 1923076.923076923}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Cashbon\": \"10000.00\", \"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\", \"Potongan Ketidakhadiran\": 3076923.076923077}', 3752923.08, 5747076.92, 'draft', 'Catatan', 'Super Admin Presensi', 'test perubahan dengan jumlah sakit izin cuti kehadiran murni Jumlah Tidak Hadir Dengan Keterangan (ISC)', 'Super Admin Presensi', '2024-11-21 07:12:11', '2024-11-19 06:59:04', '2024-11-21 07:12:11'),
-('PG2024110007', '123123123', 'JKTP', 'MN', '2024-08-31', '2024-08', 26, 9, 2, 7, 0, 0, 7, 17, 5.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 100000}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 1730769.2307692303}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\", \"Potongan Ketidakhadiran\": 3269230.7692307695}', 3935230.77, 3664769.23, 'draft', 'Catatan', 'Super Admin Presensi', 'Catatan Perubahan', 'Super Admin Presensi', '2024-11-21 07:17:04', '2024-11-21 07:16:34', '2024-11-21 07:17:04');
+('PG2024110007', '123123123', 'JKTP', 'MN', '2024-08-31', '2024-08', 26, 9, 2, 7, 0, 0, 7, 17, 5.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 100000}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 1730769.2307692303}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\", \"Potongan Ketidakhadiran\": 3269230.7692307695}', 3935230.77, 3664769.23, 'draft', 'Catatan', 'Super Admin Presensi', 'Catatan Perubahan', 'Super Admin Presensi', '2024-11-21 07:17:04', '2024-11-21 07:16:34', '2024-11-21 07:17:04'),
+('PG2024110008', '333333333', 'BKS', 'SMB', '2024-11-30', '2024-11', 26, 0, 0, 0, 0, 0, 0, 26, 0.00, '{\"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"3500000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"1750000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 0}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 0}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"1750000.00\"}}', 5250000.00, '{\"Potongan Ketidakhadiran\": 3500000}', 3500000.00, 1750000.00, 'draft', 'Catatan', 'Super Admin Presensi', NULL, NULL, NULL, '2024-11-25 07:51:46', '2024-11-25 07:51:46'),
+('PG2024110009', '213213213', 'JKTT', 'GR', '2024-11-30', '2024-11', 26, 0, 0, 0, 0, 0, 0, 26, 0.00, '{\"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 0}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 0}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7500000.00, '{\"Potongan Ketidakhadiran\": 5000000}', 5000000.00, 2500000.00, 'draft', 'Catatan', 'Super Admin Presensi', NULL, NULL, NULL, '2024-11-25 07:52:15', '2024-11-25 07:52:15');
 
 -- --------------------------------------------------------
 
@@ -981,12 +980,12 @@ CREATE TABLE `personal_access_tokens` (
 --
 
 CREATE TABLE `potongan` (
-  `kode_potongan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_jabatan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_lokasi_penugasan` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cabang` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_jenis_potongan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nama_potongan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_potongan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_jabatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_lokasi_penugasan` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_cabang` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_jenis_potongan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_potongan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `jumlah_potongan` decimal(10,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -997,12 +996,12 @@ CREATE TABLE `potongan` (
 --
 
 INSERT INTO `potongan` (`kode_potongan`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_cabang`, `kode_jenis_potongan`, `nama_potongan`, `jumlah_potongan`, `created_at`, `updated_at`) VALUES
-('BPJSKKK', 'KEPKAM', 'MN', 'JKTP', 'BPJSK', 'BPJS Kesehatan Kepala Keamanan', 50000.00, '2024-10-30 04:18:46', '2024-10-30 04:18:46'),
-('BPJSTKKK', 'KEPKAM', 'MN', 'JKTP', 'BPJSTK', 'BPJS Tenaga Kerja Kepala Keamanan', 50000.00, '2024-10-30 04:20:18', '2024-10-30 04:20:18'),
-('DDKK', 'KEPKAM', 'MN', 'JKTP', 'DD', 'Dana Darurat Kepala Keamanan', 50000.00, '2024-10-30 04:20:48', '2024-10-30 04:20:48'),
-('JHTKK', 'KEPKAM', 'MN', 'JKTP', 'JHT', 'Jaminan Hari Tua Kepala Keamanan', 50000.00, '2024-10-30 04:18:14', '2024-10-30 04:18:14'),
-('PSKK', 'KEPKAM', 'MN', 'JKTP', 'PS', 'Potongan Seragam Kepala Keamanan', 50000.00, '2024-10-30 04:21:29', '2024-10-30 04:21:29'),
-('THRKK', 'KEPKAM', 'MN', 'JKTP', 'THR', 'Tunjangan Hari Raya Kepala Keamanan', 416000.00, '2024-10-30 04:22:43', '2024-10-30 04:22:43');
+('BPJSKKK', 'KEPKAM', 'MN', 'JKTP', 'BPJSK', 'BPJS Kesehatan Kepala Keamanan', 50000.00, '2024-10-29 21:18:46', '2024-10-29 21:18:46'),
+('BPJSTKKK', 'KEPKAM', 'MN', 'JKTP', 'BPJSTK', 'BPJS Tenaga Kerja Kepala Keamanan', 50000.00, '2024-10-29 21:20:18', '2024-10-29 21:20:18'),
+('DDKK', 'KEPKAM', 'MN', 'JKTP', 'DD', 'Dana Darurat Kepala Keamanan', 50000.00, '2024-10-29 21:20:48', '2024-10-29 21:20:48'),
+('JHTKK', 'KEPKAM', 'MN', 'JKTP', 'JHT', 'Jaminan Hari Tua Kepala Keamanan', 50000.00, '2024-10-29 21:18:14', '2024-10-29 21:18:14'),
+('PSKK', 'KEPKAM', 'MN', 'JKTP', 'PS', 'Potongan Seragam Kepala Keamanan', 50000.00, '2024-10-29 21:21:29', '2024-10-29 21:21:29'),
+('THRKK', 'KEPKAM', 'MN', 'JKTP', 'THR', 'Tunjangan Hari Raya Kepala Keamanan', 416000.00, '2024-10-29 21:22:43', '2024-10-29 21:22:43');
 
 -- --------------------------------------------------------
 
@@ -1230,19 +1229,19 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 --
 
 CREATE TABLE `thr` (
-  `kode_thr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nik` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_jabatan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_lokasi_penugasan` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cabang` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nama_thr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_thr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_jabatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_lokasi_penugasan` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_cabang` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_thr` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tahun` int NOT NULL,
   `jumlah_thr` decimal(65,2) DEFAULT NULL,
   `tanggal_penyerahan` date NOT NULL,
-  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
-  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `catatan_perubahan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `diubah_oleh` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `notes` text COLLATE utf8mb4_unicode_ci,
+  `catatan_perubahan` text COLLATE utf8mb4_unicode_ci,
+  `diubah_oleh` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1252,8 +1251,8 @@ CREATE TABLE `thr` (
 --
 
 INSERT INTO `thr` (`kode_thr`, `nik`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_cabang`, `nama_thr`, `tahun`, `jumlah_thr`, `tanggal_penyerahan`, `status`, `notes`, `catatan_perubahan`, `diubah_oleh`, `created_at`, `updated_at`) VALUES
-('THR4GQ438', '123123123', 'KEPKAM', 'MN', 'JKTP', 'Test Edit THR', 2024, 5000000.00, '2024-10-31', 'Disetujui', 'Test Edit THR', 'Ubah nominal', 'Super Admin Presensi', '2024-10-29 06:41:31', '2024-11-09 11:05:21'),
-('THRBT4832', '123456789', 'WAKAM', 'MN', 'JKTP', 'Nama THR', 2024, 4500000.00, '2024-11-21', 'Pending', 'Catatan', NULL, NULL, '2024-11-10 11:49:38', '2024-11-10 11:49:38');
+('THR4GQ438', '123123123', 'KEPKAM', 'MN', 'JKTP', 'Test Edit THR', 2024, 5000000.00, '2024-10-31', 'Disetujui', 'Test Edit THR', 'Ubah nominal', 'Super Admin Presensi', '2024-10-28 23:41:31', '2024-11-09 04:05:21'),
+('THRBT4832', '123456789', 'WAKAM', 'MN', 'JKTP', 'Nama THR', 2024, 4500000.00, '2024-11-21', 'Pending', 'Catatan', NULL, NULL, '2024-11-10 04:49:38', '2024-11-10 04:49:38');
 
 -- --------------------------------------------------------
 
@@ -1288,7 +1287,9 @@ INSERT INTO `users` (`id`, `username`, `name`, `email`, `email_verified_at`, `pa
 (17, 'admin', 'Admin', 'admin@presensi.com', NULL, '$2y$10$LlpTAdvrMV7/4/WFXGPjp.TrUU5cPfHJgP/DFgwnNxwyZ7cy/qHo2', 'admin_1723709176.jpeg', 'admin', 'SKP', 'JKTT', '08654321987', NULL, '2024-08-15 08:06:16', '2024-08-15 09:03:49'),
 (18, 'admingaji', 'Admin Gaji', 'admin_gaji@presensi.com', NULL, '$2y$10$iwhgU8bRip52mMc29PfDA.rtsXMuPBY0UWD.R2a649IzZeaglrI6u', 'admingaji_1723710387.jpeg', 'admin-gaji', 'SKP', 'BKS', '0808080808', NULL, '2024-08-15 08:23:26', '2024-11-16 06:04:22'),
 (19, 'adminpresensi', 'Admin Presensi', 'admin_presensi@presensi.com', NULL, '$2y$10$G2YDsXfkbG6Oq6Yvxj54QOrlssaX33Zoupp2eN/eewAGIqhdF8Mmu', 'adminpresensi_1723710353.png', 'admin-presensi', 'SKP', 'JKTT', '090909090909', NULL, '2024-08-15 08:25:53', '2024-08-15 09:03:53'),
-(22, 'admin-cabang', 'Admin Cabang', 'admin_cabang@presensi.com', NULL, '$2y$10$BiyxaXebad/QhbZ2ATDcK.s8.r8pSZ0ahxtdePmTAw1YQfQ5KABti', 'admin-cabang_1731651793.jpg', 'admin-cabang', 'SKP', 'BKS', '0123654789', NULL, '2024-11-15 06:23:13', '2024-11-16 07:49:09');
+(22, 'admin-cabang-bekasi', 'Admin Cabang Bekasi', 'admin_cabang_bekasi@presensi.com', NULL, '$2y$10$BiyxaXebad/QhbZ2ATDcK.s8.r8pSZ0ahxtdePmTAw1YQfQ5KABti', 'admin-cabang_1731651793.jpg', 'admin-cabang', 'SKP', 'BKS', '0123654789', NULL, '2024-11-15 06:23:13', '2024-11-25 06:18:02'),
+(25, 'admin-cabang-jakarta-pusat', 'Admin Cabang Jakarta Pusat', 'admin_cabang_jakarta_pusat@presensi.com', NULL, '$2y$10$lmy0GEplkwJ3j6OK5GTp1u3zrjgHbEZ9acQUL/grzvtH1bljmYlba', 'admin-cabang-jakarta-pusat_1732515553.jpg', 'admin-cabang', 'SKP', 'JKTP', '0111222333', NULL, '2024-11-25 06:19:13', '2024-11-25 06:19:13'),
+(26, 'admin-cabang-jakarta-timur', 'Admin Cabang Jakarta Timur', 'admin_cabang_jakarta_timur@presensi.com', NULL, '$2y$10$Q9JX0LXNqC8MR1hl5ECo4eY1Xn/DrRhYBhWhbw8qdlsh8kwhDgp7i', 'admin-cabang-jakarta-timur_1732515608.jpg', 'admin-cabang', 'SKP', 'JKTT', '08133221100', NULL, '2024-11-25 06:20:08', '2024-11-25 06:37:39');
 
 --
 -- Indexes for dumped tables
@@ -1548,7 +1549,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `lembur`
 --
 ALTER TABLE `lembur`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `lokasi_kantor`
@@ -1560,7 +1561,7 @@ ALTER TABLE `lokasi_kantor`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1590,7 +1591,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- Constraints for dumped tables
@@ -1606,9 +1607,9 @@ ALTER TABLE `cashbon_karyawan_limit`
 -- Constraints for table `gaji`
 --
 ALTER TABLE `gaji`
-  ADD CONSTRAINT `gaji_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE SET NULL,
-  ADD CONSTRAINT `gaji_kode_jenis_gaji_foreign` FOREIGN KEY (`kode_jenis_gaji`) REFERENCES `konfigurasi_gaji` (`kode_jenis_gaji`) ON DELETE SET NULL,
-  ADD CONSTRAINT `gaji_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE SET NULL;
+  ADD CONSTRAINT `gaji_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE CASCADE,
+  ADD CONSTRAINT `gaji_kode_jenis_gaji_foreign` FOREIGN KEY (`kode_jenis_gaji`) REFERENCES `konfigurasi_gaji` (`kode_jenis_gaji`) ON DELETE CASCADE,
+  ADD CONSTRAINT `gaji_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `jam_kerja_lokasi_penugasan`
@@ -1646,10 +1647,10 @@ ALTER TABLE `model_has_roles`
 -- Constraints for table `potongan`
 --
 ALTER TABLE `potongan`
-  ADD CONSTRAINT `potongan_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE SET NULL,
-  ADD CONSTRAINT `potongan_kode_jabatan_foreign` FOREIGN KEY (`kode_jabatan`) REFERENCES `jabatan` (`kode_jabatan`) ON DELETE SET NULL,
-  ADD CONSTRAINT `potongan_kode_jenis_potongan_foreign` FOREIGN KEY (`kode_jenis_potongan`) REFERENCES `konfigurasi_potongan` (`kode_jenis_potongan`) ON DELETE SET NULL,
-  ADD CONSTRAINT `potongan_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE SET NULL;
+  ADD CONSTRAINT `potongan_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE CASCADE,
+  ADD CONSTRAINT `potongan_kode_jabatan_foreign` FOREIGN KEY (`kode_jabatan`) REFERENCES `jabatan` (`kode_jabatan`) ON DELETE CASCADE,
+  ADD CONSTRAINT `potongan_kode_jenis_potongan_foreign` FOREIGN KEY (`kode_jenis_potongan`) REFERENCES `konfigurasi_potongan` (`kode_jenis_potongan`) ON DELETE CASCADE,
+  ADD CONSTRAINT `potongan_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `role_has_permissions`
@@ -1662,10 +1663,10 @@ ALTER TABLE `role_has_permissions`
 -- Constraints for table `thr`
 --
 ALTER TABLE `thr`
-  ADD CONSTRAINT `thr_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE SET NULL,
-  ADD CONSTRAINT `thr_kode_jabatan_foreign` FOREIGN KEY (`kode_jabatan`) REFERENCES `jabatan` (`kode_jabatan`) ON DELETE SET NULL,
-  ADD CONSTRAINT `thr_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE SET NULL,
-  ADD CONSTRAINT `thr_nik_foreign` FOREIGN KEY (`nik`) REFERENCES `karyawan` (`nik`) ON DELETE SET NULL;
+  ADD CONSTRAINT `thr_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE CASCADE,
+  ADD CONSTRAINT `thr_kode_jabatan_foreign` FOREIGN KEY (`kode_jabatan`) REFERENCES `jabatan` (`kode_jabatan`) ON DELETE CASCADE,
+  ADD CONSTRAINT `thr_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE CASCADE,
+  ADD CONSTRAINT `thr_nik_foreign` FOREIGN KEY (`nik`) REFERENCES `karyawan` (`nik`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

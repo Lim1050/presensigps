@@ -22,7 +22,16 @@ class LemburController extends Controller
      */
     public function LemburIndex(Request $request)
     {
+        $user = auth()->user();
+
         $query = Lembur::with(['karyawan', 'presensi']);
+
+        // Filter berdasarkan cabang untuk admin cabang
+        if ($user->role === 'admin-cabang') {
+            $query->whereHas('karyawan', function($q) use ($user) {
+                $q->where('kode_cabang', $user->kode_cabang);
+            });
+        }
 
         // Filter berdasarkan tanggal
         if ($request->has('waktu_mulai') && $request->has('waktu_selesai')) {
@@ -37,18 +46,16 @@ class LemburController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Filter berdasarkan departemen jika user adalah kepala departemen
-        // if (Auth::user()->hasRole('kepala_departemen')) {
-        //     $kode_dept = Auth::user()->kode_dept;
-        //     $query->whereHas('karyawan', function($q) use ($kode_dept) {
-        //         $q->where('kode_dept', $kode_dept);
-        //     });
-        // }
-
         $lembur = $query->orderBy('tanggal_presensi', 'desc')
                         ->paginate(10);
 
-        return view('lembur.lembur_index', compact('lembur'));
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            return view('lembur.lembur_index', compact('lembur','cabang'));
+        } else {
+            $cabang = null;
+            return view('lembur.lembur_index', compact('lembur','cabang'));
+        }
     }
 
     /**
@@ -59,7 +66,12 @@ class LemburController extends Controller
         $karyawan = Karyawan::all();
         $jabatan = Jabatan::all();
         $lokasiPenugasan = LokasiPenugasan::all();
-        $cabang = Cabang::all();
+        $user = auth()->user();
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->get();
+        } else {
+             $cabang = Cabang::all();
+        }
         return view('lembur.lembur_create', compact('karyawan', 'jabatan', 'lokasiPenugasan', 'cabang'));
     }
 

@@ -3,7 +3,11 @@
 @if (Auth::user()->can('laporan.rekap-presensi'))
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    @if (Auth::user()->role == 'admin-cabang' && $cabang)
+    <h1 class="h3 mb-0 text-gray-800">Rekap Presensi Cabang {{ $cabang->nama_cabang }}</h1>
+    @else
     <h1 class="h3 mb-0 text-gray-800">Rekap Presensi</h1>
+    @endif
 </div>
 
 <div class="row">
@@ -44,10 +48,14 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <select name="kode_cabang" id="kode_cabang" class="form-control">
-                                    <option value="">Semua Kantor Cabang</option>
-                                    @foreach ($kantor_cabang as $item)
-                                        <option value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
-                                    @endforeach
+                                    @if (Auth::user()->role == 'admin-cabang' && $cabang)
+                                        <option value="{{ $cabang->kode_cabang }}">{{ $cabang->nama_cabang }}</option>
+                                    @else
+                                        <option value="">Semua Kantor Cabang</option>
+                                        @foreach ($kantor_cabang as $item)
+                                            <option value="{{ $item->kode_cabang }}">{{ $item->nama_cabang }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
