@@ -185,6 +185,7 @@ class DashboardController extends Controller
             // dd($nama_cabang);
         } else {
             // Pengguna selain admin cabang (super admin, dll) melihat semua data
+            $cabang = null;
             $rekap_presensi = $rekap_presensi_query->first();
             $jumlah_karyawan = $jumlah_karyawan_query->count('nik');
         }

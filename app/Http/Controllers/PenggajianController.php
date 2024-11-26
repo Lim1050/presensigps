@@ -25,9 +25,15 @@ class PenggajianController extends Controller
     public function PenggajianIndex(Request $request)
     {
         try {
+            $user = auth()->user();
             // Query dasar dengan relasi yang diperlukan
             $query = Penggajian::with(['karyawan', 'cabang', 'lokasiPenugasan'])
                 ->orderBy('created_at', 'desc');
+
+            // Jika user adalah admin-cabang, filter hanya tampilkan data cabang yang sama
+            if ($user->role === 'admin-cabang') {
+                $query->where('kode_cabang', $user->kode_cabang);
+            }
 
             // Filter berdasarkan periode (bulan)
             if ($request->filled('bulan')) {
@@ -62,7 +68,12 @@ class PenggajianController extends Controller
             $penggajian = $query->paginate(10);
 
             // Data untuk dropdown filter
-            $cabangList = Cabang::orderBy('nama_cabang')->pluck('nama_cabang', 'kode_cabang');
+            if ($user->role === 'admin-cabang') {
+                $cabangList = Cabang::where('kode_cabang', $user->kode_cabang)->pluck('nama_cabang', 'kode_cabang');
+            } else {
+                $cabangList = Cabang::orderBy('nama_cabang')->pluck('nama_cabang', 'kode_cabang');
+            }
+            // dd($cabangList);
             $lokasiPenugasanList = LokasiPenugasan::orderBy('nama_lokasi_penugasan')->pluck('nama_lokasi_penugasan', 'kode_lokasi_penugasan');
 
             // Status untuk dropdown
@@ -104,8 +115,13 @@ class PenggajianController extends Controller
 
     public function PenggajianCreate()
     {
+        $user = auth()->user();
         $karyawan = Karyawan::all();
-        $cabang = Cabang::all();
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->get();
+        } else {
+            $cabang = Cabang::all();
+        }
         $lokasi_penugasan = LokasiPenugasan::all();
         return view('penggajian.penggajian_create', compact('karyawan', 'cabang', 'lokasi_penugasan'));
     }
