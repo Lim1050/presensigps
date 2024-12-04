@@ -50,6 +50,7 @@ class ThrController extends Controller
     }
     public function ThrIndex(Request $request)
     {
+        $user = auth()->user();
         // Ambil semua parameter pencarian dari request
         $tanggalDari = $request->input('tanggal_dari');
         $tanggalSampai = $request->input('tanggal_sampai');
@@ -62,6 +63,10 @@ class ThrController extends Controller
 
         // Query untuk mengambil data thr
         $thrQuery = Thr::with(['karyawan', 'jabatan', 'lokasiPenugasan', 'kantorCabang']);
+
+        if ($user->role === 'admin-cabang') {
+                $thrQuery->where('kode_cabang', $user->kode_cabang);
+            }
 
         // Tambahkan kondisi pencarian jika ada
         if ($tanggalDari && $tanggalSampai) {
@@ -96,14 +101,25 @@ class ThrController extends Controller
         $lokasi_penugasan = LokasiPenugasan::all();
         $cabang = Cabang::all();
 
-        return view('thr.thr_index', compact('thr', 'jabatan', 'lokasi_penugasan', 'cabang'));
+        if ($user->role === 'admin-cabang') {
+            $nama_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+        } else {
+            $nama_cabang = null;
+        }
+
+        return view('thr.thr_index', compact('thr', 'jabatan', 'lokasi_penugasan', 'cabang', 'nama_cabang'));
     }
     public function ThrCreate()
     {
+        $user = auth()->user();
         $karyawan = Karyawan::all();
         $jabatan = Jabatan::all();
         $lokasiPenugasan = LokasiPenugasan::all();
-        $cabang = Cabang::all();
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->get();
+        } else {
+            $cabang = Cabang::all();
+        }
 
         return view('thr.thr_create', compact('karyawan', 'jabatan', 'lokasiPenugasan', 'cabang'));
     }

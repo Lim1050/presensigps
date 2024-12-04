@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cabang;
 use App\Models\Cashbon;
 use App\Models\Jabatan;
 use Exception;
@@ -21,8 +22,17 @@ class CashbonController extends Controller
         $kodeJabatan = $request->input('kode_jabatan');
         $status = $request->input('status');
 
+        $user = auth()->user();
+
         // Query untuk mengambil data cashbon
         $cashbonQuery = Cashbon::with('karyawan');
+
+        // Jika user adalah admin-cabang, filter hanya tampilkan data cabang yang sama
+        if ($user->role === 'admin-cabang') {
+            $cashbonQuery->whereHas('karyawan', function($q) use ($user) {
+                $q->where('kode_cabang', $user->kode_cabang);
+            });
+        }
 
         // Tambahkan kondisi pencarian jika ada
         if ($tanggalDari && $tanggalSampai) {
@@ -53,7 +63,13 @@ class CashbonController extends Controller
         // Ambil data jabatan untuk dropdown
         $jabatan = Jabatan::all();
 
-        return view('cashbon.cashbon_index', compact('cashbon', 'jabatan'));
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            return view('cashbon.cashbon_index', compact('cashbon', 'jabatan', 'cabang'));
+        } else {
+            $cabang = null;
+            return view('cashbon.cashbon_index', compact('cashbon', 'jabatan', 'cabang'));
+        }
     }
 
     public function CashbonShow($id)

@@ -32,7 +32,11 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    @if (Auth::user()->role == 'admin-cabang')
+    <h1 class="h3 mb-0 text-gray-800">THR Karyawan Cabang {{ $nama_cabang->nama_cabang }}</h1>
+    @else
     <h1 class="h3 mb-0 text-gray-800">THR Karyawan</h1>
+    @endif
 </div>
 
 <!-- DataTales Example -->
@@ -90,6 +94,7 @@
                                 </select>
                             </div>
                         </div>
+                        @if (Auth::user()->role != 'admin-cabang')
                         <div class="col-4">
                             <div class="form-group">
                                 <select name="kode_cabang" id="kode_cabang" class="form-control">
@@ -100,6 +105,7 @@
                                 </select>
                             </div>
                         </div>
+                        @endif
                         <div class="col-4">
                             <div class="form-group">
                                 <select name="kode_lokasi_penugasan" id="kode_lokasi_penugasan" class="form-control">

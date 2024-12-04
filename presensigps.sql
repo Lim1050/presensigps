@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 26, 2024 at 05:42 PM
+-- Generation Time: Dec 04, 2024 at 03:52 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -1253,7 +1253,11 @@ CREATE TABLE `thr` (
 
 INSERT INTO `thr` (`kode_thr`, `nik`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_cabang`, `nama_thr`, `tahun`, `jumlah_thr`, `tanggal_penyerahan`, `status`, `notes`, `catatan_perubahan`, `diubah_oleh`, `created_at`, `updated_at`) VALUES
 ('THR4GQ438', '123123123', 'KEPKAM', 'MN', 'JKTP', 'Test Edit THR', 2024, 5000000.00, '2024-10-31', 'Disetujui', 'Test Edit THR', 'Ubah nominal', 'Super Admin Presensi', '2024-10-28 23:41:31', '2024-11-09 04:05:21'),
-('THRBT4832', '123456789', 'WAKAM', 'MN', 'JKTP', 'Nama THR', 2024, 4500000.00, '2024-11-21', 'Pending', 'Catatan', NULL, NULL, '2024-11-10 04:49:38', '2024-11-10 04:49:38');
+('THRBT4832', '123456789', 'WAKAM', 'MN', 'JKTP', 'Nama THR', 2024, 4500000.00, '2024-11-21', 'Pending', 'Catatan', NULL, NULL, '2024-11-10 04:49:38', '2024-11-10 04:49:38'),
+('THRHUE777', '444444444', 'PKG', 'SMB', 'BKS', 'Nama THR', 2024, 4000000.00, '2024-12-31', 'Pending', 'Catatan', NULL, NULL, '2024-12-04 08:39:45', '2024-12-04 08:39:45'),
+('THRLFZ129', '213213213', 'SUPKAM', 'GR', 'JKTT', 'test thr', 2024, 5000000.00, '2024-12-31', 'Pending', 'CatatanCatatanCatatan', NULL, NULL, '2024-12-04 08:34:49', '2024-12-04 08:34:49'),
+('THRWJJ802', '213213213', 'SUPKAM', 'GR', 'JKTT', 'Nama THR', 2025, 5000000.00, '2025-12-31', 'Pending', 'Catatan', NULL, NULL, '2024-12-04 08:38:54', '2024-12-04 08:38:54'),
+('THRYZY724', '333333333', 'PPM', 'SMB', 'BKS', 'Nama THR', 2024, 3500000.00, '2024-12-31', 'Pending', 'erhgberag', NULL, NULL, '2024-12-04 08:34:19', '2024-12-04 08:34:19');
 
 -- --------------------------------------------------------
 

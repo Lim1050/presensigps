@@ -101,6 +101,7 @@ class KaryawanController extends Controller
             ->firstOrFail();
 
         return response()->json([
+            'kode_jabatan' => $karyawan->jabatan->kode_jabatan,
             'nama_jabatan' => $karyawan->jabatan->nama_jabatan
         ]);
     }
