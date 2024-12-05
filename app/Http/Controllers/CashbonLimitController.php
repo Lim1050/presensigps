@@ -24,8 +24,14 @@ class CashbonLimitController extends Controller
         $currentMonth = now()->month;
         $currentYear = Carbon::now()->year;
 
+        $user = auth()->user();
+
         // Ambil data karyawan beserta relasi yang diperlukan
         $karyawanQuery = Karyawan::with(['cashbonKaryawanLimit', 'jabatan', 'lokasiPenugasan', 'cabang']);
+
+        if ($user->role === 'admin-cabang') {
+            $karyawanQuery->where('kode_cabang', $user->kode_cabang);
+        }
 
         // Filter berdasarkan nama karyawan jika ada
         if ($request->filled('nama_karyawan')) {
@@ -62,8 +68,19 @@ class CashbonLimitController extends Controller
 
         // Ambil data jabatan, lokasi penugasan, dan cabang
         $jabatan = Jabatan::all();
-        $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();
-        $cabang = Cabang::with('LokasiPenugasan')->get();
+
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::with('lokasiPenugasan')->where('kode_cabang', $user->kode_cabang)->orderBy('kode_cabang')->get();
+            $lokasi_penugasan = LokasiPenugasan::with('cabang')->where('kode_cabang', $user->kode_cabang)->get();
+            $nama_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            // dd($nama_cabang);
+        } else {
+            $cabang = Cabang::with('lokasiPenugasan')->orderBy('kode_cabang')->get();
+            $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();
+            $nama_cabang = null;
+        }
+        // $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();
+        // $cabang = Cabang::with('LokasiPenugasan')->get();
 
         // Kembalikan tampilan dengan data yang diperlukan
         return view('cashbon_limit.cashbon_limit_index', compact(
@@ -73,7 +90,8 @@ class CashbonLimitController extends Controller
             'currentYear',
             'jabatan',
             'lokasi_penugasan',
-            'cabang'
+            'cabang',
+            'nama_cabang'
         ));
     }
 

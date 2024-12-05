@@ -22,9 +22,18 @@ class CabangController extends Controller
 
     public function CabangIndex()
     {
-        $cabang = DB::table('kantor_cabang')
-                    ->orderBy('kode_cabang')
-                    ->get();
+        $user = auth()->user();
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->orderBy('kode_cabang')->get();
+            // $nama_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            // dd($nama_cabang);
+        } else {
+            $cabang = Cabang::orderBy('kode_cabang')->get();
+            // $nama_cabang = null;
+        }
+        // $cabang = DB::table('kantor_cabang')
+        //             ->orderBy('kode_cabang')
+        //             ->get();
         return view('cabang.cabang_index', compact('cabang'));
     }
 

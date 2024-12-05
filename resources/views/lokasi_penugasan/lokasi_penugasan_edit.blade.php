@@ -32,7 +32,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    @if (Auth::user()->role == 'admin-cabang')
+    <h1 class="h3 mb-0 text-gray-800">Edit Data Lokasi Penugasan Cabang {{ $nama_cabang->nama_cabang}}</h1>
+    @else
     <h1 class="h3 mb-0 text-gray-800">Edit Data Lokasi Penugasan</h1>
+    @endif
 </div>
 <form action="{{ route('admin.lokasi.penugasan.update', $lokasi_penugasan->kode_lokasi_penugasan) }}" method="POST" id="formLokasiPenugasan">
     @csrf

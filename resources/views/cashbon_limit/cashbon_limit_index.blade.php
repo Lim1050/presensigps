@@ -37,7 +37,12 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    @if (Auth::user()->role == 'admin-cabang')
+    <h1 class="h3 mb-0 text-gray-800">Konfigurasi Cashbon Limit Cabang {{ $nama_cabang->nama_cabang}}</h1>
+    @else
     <h1 class="h3 mb-0 text-gray-800">Konfigurasi Cashbon Limit</h1>
+    @endif
+    {{-- <h1 class="h3 mb-0 text-gray-800">Konfigurasi Cashbon Limit</h1> --}}
 </div>
 
 <!-- Content Row -->
@@ -55,6 +60,7 @@
                         {{ Session::get('error') }}
                     </div>
                 @endif --}}
+                @if (Auth::user()->role == 'super-admin')
                 <h2>Global Limit</h2>
                 <form action="{{ route('admin.konfigurasi.cashbon.global.limit') }}" method="POST">
                     @csrf
@@ -70,6 +76,7 @@
                     </div>
                     <button type="submit" class="btn btn-danger">Update Global Limit</button>
                 </form>
+                @endif
 
                 {{-- form cari data cashbon limit --}}
                 <div class="row mt-3">

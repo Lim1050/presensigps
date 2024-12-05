@@ -51,7 +51,10 @@
                         {{ Session::get('error') }}
                     </div>
                 @endif --}}
-                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalInputCabang"><i class="bi bi-plus-lg"></i> Tambah Data Kantor Cabang</a>
+                @if (Auth::user()->role == 'super-admin')
+                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalInputCabang"><i class="bi bi-plus-lg"></i> Tambah Data Kantor Cabang</a>
+                @endif
+
             </div>
         </div>
 
@@ -106,7 +109,9 @@
                                 <td class="text-center">
                                     <div class="btn-group ">
                                         <a href="{{ route('admin.cabang.edit', $item->kode_cabang) }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i> Edit</a>
+                                        @if (Auth::user()->role == 'super-admin')
                                         <a href="{{ route('admin.cabang.delete', $item->kode_cabang) }}" class="btn btn-danger delete-confirm" data-nama="{{ $item->nama_cabang }}"><i class="bi bi-trash3"></i> Delete</a>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

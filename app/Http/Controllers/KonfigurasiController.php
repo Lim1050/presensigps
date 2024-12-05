@@ -40,8 +40,12 @@ class KonfigurasiController extends Controller
 
     public function JamKerja(Request $request)
     {
+        $user = auth()->user();
         // Query dasar
         $query = JamKerja::query();
+        if ($user->role === 'admin-cabang') {
+            $query->where('kode_cabang', $user->kode_cabang);
+        }
 
         // Filter berdasarkan nama jam kerja
         if ($request->filled('nama_jam_kerja')) {
@@ -67,14 +71,25 @@ class KonfigurasiController extends Controller
         $jam_kerja = $query->orderBy('kode_jam_kerja')->paginate(10);
 
         // Ambil data pendukung untuk form
-        $lokasiPenugasan = LokasiPenugasan::all();
-        $cabang = Cabang::all();
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::with('lokasiPenugasan')->where('kode_cabang', $user->kode_cabang)->orderBy('kode_cabang')->get();
+            $lokasiPenugasan = LokasiPenugasan::with('cabang')->where('kode_cabang', $user->kode_cabang)->get();
+            $nama_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            // dd($nama_cabang);
+        } else {
+            $cabang = Cabang::with('lokasiPenugasan')->orderBy('kode_cabang')->get();
+            $lokasiPenugasan = LokasiPenugasan::with('cabang')->get();
+            $nama_cabang = null;
+        }
+        // $lokasiPenugasan = LokasiPenugasan::all();
+        // $cabang = Cabang::all();
 
         // Kembalikan view dengan data
         return view('konfigurasi.jam_kerja', [
             'jam_kerja' => $jam_kerja,
             'lokasiPenugasan' => $lokasiPenugasan,
             'cabang' => $cabang,
+            'nama_cabang' => $nama_cabang,
             // Kembalikan input request untuk mempertahankan filter
             'request' => $request
         ]);

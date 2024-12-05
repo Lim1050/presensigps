@@ -40,7 +40,11 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    @if (Auth::user()->role == 'admin-cabang')
+    <h1 class="h3 mb-0 text-gray-800">Data Karyawan Cabang {{ $nama_cabang->nama_cabang}}</h1>
+    @else
     <h1 class="h3 mb-0 text-gray-800">Data Karyawan</h1>
+    @endif
 </div>
 
 <!-- DataTables Example -->
@@ -335,7 +339,7 @@
                     <div class="form-group">
                         <div class="icon-placeholder">
                             <i class="bi bi-upc-scan"></i>
-                            <input type="text" class="form-control" id="edit_nik" name="nik" placeholder=" NIK">
+                            <input type="text" class="form-control" id="edit_nik" name="nik" placeholder=" NIK" readonly>
                         </div>
                     </div>
                     <div class="form-group">

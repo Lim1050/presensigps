@@ -108,6 +108,7 @@ class KaryawanController extends Controller
 
     public function KaryawanIndex(Request $request)
     {
+        $user = auth()->user();
         $query = Karyawan::with(['departemen', 'jabatan', 'Cabang', 'lokasiPenugasan'])
             ->when($request->nama_karyawan, function ($q) use ($request) {
                 return $q->where('nama_lengkap', 'like', '%' . $request->nama_karyawan . '%');
@@ -126,14 +127,26 @@ class KaryawanController extends Controller
             })
             ->orderBy('nama_lengkap');
 
+        if ($user->role === 'admin-cabang') {
+            $query->where('kode_cabang', $user->kode_cabang);
+        }
+
         $karyawan = $query->get();
 
         $jabatan = Jabatan::all();
         $departemen = Departemen::all();
-        $cabang = Cabang::orderBy('kode_cabang')->get();
-        $lokasi_penugasan = LokasiPenugasan::orderBy('kode_lokasi_penugasan')->get();
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->orderBy('kode_cabang')->get();
+            $nama_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            $lokasi_penugasan = LokasiPenugasan::where('kode_cabang', $user->kode_cabang)->orderBy('kode_lokasi_penugasan')->get();
+            // dd($nama_cabang);
+        } else {
+            $cabang = Cabang::orderBy('kode_cabang')->get();
+            $nama_cabang = null;
+            $lokasi_penugasan = LokasiPenugasan::orderBy('kode_lokasi_penugasan')->get();
+        }
 
-        return view('karyawan.karyawan_index', compact('karyawan', 'jabatan', 'departemen', 'cabang', 'lokasi_penugasan'));
+        return view('karyawan.karyawan_index', compact('karyawan', 'jabatan', 'departemen', 'cabang', 'lokasi_penugasan', 'nama_cabang'));
     }
 
     // public function KaryawanStore(Request $request)

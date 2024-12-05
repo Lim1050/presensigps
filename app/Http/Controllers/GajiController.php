@@ -18,8 +18,13 @@ class GajiController extends Controller
 
     public function GajiIndex(Request $request)
     {
+        $user = auth()->user();
         // Initialize the query
         $query = Gaji::with('jabatan', 'jenisGaji')->orderBy('kode_jabatan');
+
+        if ($user->role === 'admin-cabang') {
+            $query->where('kode_cabang', $user->kode_cabang);
+        }
 
         // Check for search parameters and apply filters
         if ($request->has('nama_gaji') && $request->nama_gaji != '') {
@@ -49,12 +54,23 @@ class GajiController extends Controller
 
         // Fetch additional data for the view
         $jabatan = Jabatan::all();
-        $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();
-        $cabang = Cabang::with('lokasiPenugasan')->get();
+
+
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::with('lokasiPenugasan')->where('kode_cabang', $user->kode_cabang)->orderBy('kode_cabang')->get();
+            $lokasi_penugasan = LokasiPenugasan::with('cabang')->where('kode_cabang', $user->kode_cabang)->get();
+            $nama_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            // dd($nama_cabang);
+        } else {
+            $cabang = Cabang::with('lokasiPenugasan')->orderBy('kode_cabang')->get();
+            $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();
+            $nama_cabang = null;
+        }
+        // $cabang = Cabang::with('lokasiPenugasan')->get();
         $jenis_gaji = KonfigurasiGaji::all();
 
         // Return the view with the filtered data
-        return view('gaji.gaji_index', compact('gaji', 'jabatan', 'jenis_gaji', 'lokasi_penugasan', 'cabang'));
+        return view('gaji.gaji_index', compact('gaji', 'jabatan', 'jenis_gaji', 'lokasi_penugasan', 'cabang', 'nama_cabang'));
     }
 
     public function GajiStore(Request $request)

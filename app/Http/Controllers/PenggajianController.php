@@ -119,10 +119,11 @@ class PenggajianController extends Controller
         $karyawan = Karyawan::all();
         if ($user->role === 'admin-cabang') {
             $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->get();
+            $lokasi_penugasan = LokasiPenugasan::where('kode_cabang', $user->kode_cabang)->get();
         } else {
             $cabang = Cabang::all();
+            $lokasi_penugasan = LokasiPenugasan::all();
         }
-        $lokasi_penugasan = LokasiPenugasan::all();
         return view('penggajian.penggajian_create', compact('karyawan', 'cabang', 'lokasi_penugasan'));
     }
 

@@ -33,7 +33,11 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    @if (Auth::user()->role == 'admin-cabang')
+    <h1 class="h3 mb-0 text-gray-800">Data Gaji Cabang {{ $nama_cabang->nama_cabang}}</h1>
+    @else
     <h1 class="h3 mb-0 text-gray-800">Data Gaji</h1>
+    @endif
 </div>
 
 <!-- DataTales Example -->

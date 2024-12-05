@@ -32,7 +32,13 @@ class LokasiPenugasanController extends Controller
 
     public function LokasiPenugasanIndex(Request $request)
     {
+        $user = auth()->user();
+
         $query = LokasiPenugasan::with('cabang');
+
+        if ($user->role === 'admin-cabang') {
+            $query->where('kode_cabang', $user->kode_cabang);
+        }
 
         // Pencarian berdasarkan nama lokasi penugasan
         if ($request->filled('nama_lokasi_penugasan')) {
@@ -58,9 +64,16 @@ class LokasiPenugasanController extends Controller
         $lokasi_penugasan = $query->paginate(10); // Ganti 10 dengan jumlah item per halaman yang diinginkan
 
         // Ambil data cabang untuk dropdown
-        $cabang = Cabang::all();
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->orderBy('kode_cabang')->get();
+            $nama_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            // dd($nama_cabang);
+        } else {
+            $cabang = Cabang::all();
+            $nama_cabang = null;
+        }
 
-        return view('lokasi_penugasan.lokasi_penugasan_index', compact('lokasi_penugasan', 'cabang'));
+        return view('lokasi_penugasan.lokasi_penugasan_index', compact('lokasi_penugasan', 'cabang', 'nama_cabang'));
     }
 
     public function LokasiPenugasanStore(Request $request)
@@ -112,10 +125,20 @@ class LokasiPenugasanController extends Controller
 
     public function LokasiPenugasanEdit($kode_lokasi_penugasan)
     {
+        $user = auth()->user();
         $lokasi_penugasan = LokasiPenugasan::findOrFail($kode_lokasi_penugasan);
-        $cabang = Cabang::all();
 
-        return view('lokasi_penugasan.lokasi_penugasan_edit', compact('lokasi_penugasan', 'cabang'));
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->orderBy('kode_cabang')->get();
+            $nama_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            // dd($nama_cabang);
+        } else {
+            $cabang = Cabang::all();
+            $nama_cabang = null;
+        }
+        // $cabang = Cabang::all();
+
+        return view('lokasi_penugasan.lokasi_penugasan_edit', compact('lokasi_penugasan', 'cabang', 'nama_cabang'));
     }
 
     public function LokasiPenugasanUpdate(Request $request, $kode_lokasi_penugasan)

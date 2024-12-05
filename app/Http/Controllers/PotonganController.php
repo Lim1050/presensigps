@@ -14,8 +14,13 @@ class PotonganController extends Controller
 {
     public function PotonganIndex(Request $request)
     {
+        $user = auth()->user();
         // Initialize the query
         $query = Potongan::with('jabatan', 'jenisPotongan')->orderBy('kode_jabatan');
+
+        if ($user->role === 'admin-cabang') {
+            $query->where('kode_cabang', $user->kode_cabang);
+        }
 
         // Check for search parameters and apply filters
         if ($request->has('nama_potongan') && $request->nama_potongan != '') {
@@ -43,10 +48,21 @@ class PotonganController extends Controller
         // Execute the query
         $potongan = $query->get();
         $jabatan = Jabatan::all();
-        $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();
-        $cabang = Cabang::with('LokasiPenugasan')->get();
+
+
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::with('lokasiPenugasan')->where('kode_cabang', $user->kode_cabang)->orderBy('kode_cabang')->get();
+            $lokasi_penugasan = LokasiPenugasan::with('cabang')->where('kode_cabang', $user->kode_cabang)->get();
+            $nama_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            // dd($nama_cabang);
+        } else {
+            $cabang = Cabang::with('lokasiPenugasan')->orderBy('kode_cabang')->get();
+            $lokasi_penugasan = LokasiPenugasan::with('cabang')->get();
+            $nama_cabang = null;
+        }
+        // $cabang = Cabang::with('LokasiPenugasan')->get();
         $jenis_potongan = KonfigurasiPotongan::all();
-        return view('potongan.potongan_index', compact('potongan', 'jabatan', 'jenis_potongan', 'lokasi_penugasan', 'cabang'));
+        return view('potongan.potongan_index', compact('potongan', 'jabatan', 'jenis_potongan', 'lokasi_penugasan', 'cabang', 'nama_cabang'));
     }
 
     public function PotonganStore(Request $request)
