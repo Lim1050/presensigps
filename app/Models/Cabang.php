@@ -25,8 +25,13 @@ class Cabang extends Model
     }
 
     // Relasi dengan model JamKerja
-        public function jamKerja()
+    public function jamKerja()
     {
         return $this->hasMany(JamKerja::class, 'kode_cabang', 'kode_cabang');
+    }
+
+    public function jamKerjaDept()
+    {
+        return $this->hasMany(JamKerjaDept::class, 'kode_cabang', 'kode_cabang');
     }
 }

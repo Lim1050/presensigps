@@ -71,9 +71,20 @@
                     <div class="form-check mb-1">
                         <input class="form-check-input" type="checkbox" name="update_all" id="update_all" value="1">
                         <label class="form-check-label" for="update_all">
-                            Update all personal limits to match the new global limit
+                            Perbarui semua limit cashbon karyawan agar sesuai dengan limit global yang baru
                         </label>
                     </div>
+                    <button type="submit" class="btn btn-danger">Update Global Limit</button>
+                </form>
+                @elseif (Auth::user()->role == 'admin-cabang')
+                <h2>Global Limit Cabang {{ $nama_cabang->nama_cabang}}</h2>
+                <form action="{{ route('admin.konfigurasi.cashbon.global.limit') }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="global_limit ">Global Limit</label>
+                        <input type="number" class="form-control" id="global_limit" name="global_limit" value="">
+                    </div>
+
                     <button type="submit" class="btn btn-danger">Update Global Limit</button>
                 </form>
                 @endif

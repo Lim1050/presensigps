@@ -13,6 +13,11 @@ class Departemen extends Model
 
     public function karyawan()
     {
-        return $this->hasMany(Karyawan::class, 'kode_departemen', 'kode_departemen');
+        return $this->hasMany(Karyawan::class, 'kode_departemen', localKey: 'kode_departemen');
+    }
+
+    public function jamKerjaDept()
+    {
+        return $this->hasMany(JamKerjaDept::class, 'kode_departemen', localKey: 'kode_departemen');
     }
 }

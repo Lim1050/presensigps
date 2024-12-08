@@ -102,24 +102,53 @@ class CashbonLimitController extends Controller
         'update_all' => 'sometimes|boolean',
         ]);
 
+        $user = auth()->user();
+
         DB::beginTransaction();
 
         try {
-            // Update global limit
-            CashbonLimit::updateOrCreate(
-                ['id' => 1],
-                ['global_limit' => $request->global_limit]
-            );
+            if ($user->role === 'super-admin') {
 
-            // Jika checkbox 'update_all' dicentang
-            if ($request->has('update_all') && $request->update_all) {
-                // Update semua limit personal karyawan
-                CashbonKaryawanLimit::query()->update(['limit' => $request->global_limit]);
+
+                // Jika checkbox 'update_all' dicentang
+                if ($request->has('update_all') && $request->update_all) {
+                    // Update semua limit personal karyawan
+                    CashbonKaryawanLimit::query()->update(['limit' => $request->global_limit]);
+
+                    DB::commit();
+
+                    return redirect()->back()->with('success', 'Global limit berhasil dirubah untuk seluruh karyawan di semua cabang.');
+                } else {
+                    // Update global limit
+                    CashbonLimit::updateOrCreate(
+                        ['id' => 1],
+                        ['global_limit' => $request->global_limit]
+                    );
+
+                    DB::commit();
+
+                    return redirect()->back()->with('success', 'Global limit berhasil dirubah untuk sebagian karyawan di semua cabang yang belum diatur limitnya.');
+                }
+
+            } elseif ($user->role === 'admin-cabang') {
+                // Ambil kode_cabang milik user yang sedang login
+                $kode_cabang_user = $user->kode_cabang;
+                $nama_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+
+                // Cari semua NIK dengan kode_cabang yang sama
+                $nik_list = Karyawan::where('kode_cabang', $kode_cabang_user)->pluck('nik');
+
+                // Update global limit untuk cabang yang dipilih
+                foreach ($nik_list as $nik) {
+                    CashbonKaryawanLimit::updateOrCreate(
+                        ['nik' => $nik],
+                        ['limit' => $request->global_limit]
+                    );
+                }
+                DB::commit();
+
+                return redirect()->back()->with('success', 'Global limit berhasil dirubah untuk cabang ' . $nama_cabang->nama_cabang);
             }
-
-            DB::commit();
-
-            return redirect()->back()->with('success', 'Global limit updated successfully. All personal limits updated if requested.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Failed to update limits: ' . $e->getMessage());
