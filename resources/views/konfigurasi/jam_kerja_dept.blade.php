@@ -32,7 +32,11 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    @if (Auth::user()->role == 'admin-cabang')
+    <h1 class="h3 mb-0 text-gray-800">Konfigurasi Jam Kerja Departemen Cabang {{ $nama_cabang->nama_cabang}}</h1>
+    @else
     <h1 class="h3 mb-0 text-gray-800">Konfigurasi Jam Kerja Departemen</h1>
+    @endif
 </div>
 
 <!-- DataTales Example -->
@@ -111,8 +115,8 @@
                             <tr>
                                 <td class="text-center">{{ $loop->iteration }}</td>
                                 <td class="text-center">{{ $item->kode_jk_dept }}</td>
-                                <td class="text-center">{{ $item->nama_cabang }}</td>
-                                <td class="text-center">{{ $item->nama_departemen }}</td>
+                                <td class="text-center">{{ $item->cabang->nama_cabang }}</td>
+                                <td class="text-center">{{ $item->departemen->nama_departemen }}</td>
                                 <td class="text-center">
                                     <div class="btn-group ">
                                         <a href="{{ route('admin.konfigurasi.jam-kerja-dept.view', $item->kode_jk_dept) }}" class="btn btn-primary"><i class="bi bi-eye"></i> View</a>
@@ -120,8 +124,8 @@
                                         <a href="{{ route('admin.konfigurasi.jam-kerja-dept.delete', $item->kode_jk_dept) }}"
                                             class="btn btn-danger delete-confirm"
                                             data-kode="{{ $item->kode_jk_dept }}"
-                                            data-cabang="{{ $item->nama_cabang }}"
-                                            data-departemen="{{ $item->nama_departemen }}"
+                                            data-cabang="{{ $item->cabang->nama_cabang }}"
+                                            data-departemen="{{ $item->departemen->nama_departemen }}"
                                             ><i class="bi bi-trash3"></i> Delete</a>
                                     </div>
                                 </td>

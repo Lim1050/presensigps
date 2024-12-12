@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cabang;
+use App\Models\Departemen;
 use App\Models\JamKerja;
+use App\Models\JamKerjaDept;
 use App\Models\JamKerjaDeptDetail;
 use App\Models\LokasiPenugasan;
 use Carbon\Carbon;
@@ -256,43 +258,58 @@ class KonfigurasiController extends Controller
 
     public function JamKerjaDept(Request $request)
     {
+        $user = auth()->user();
         // Ambil parameter pencarian dari request
         $kode_cabang = $request->input('kode_cabang');
         $kode_departemen = $request->input('kode_departemen');
 
-        // Query untuk mengambil data jam kerja departemen
-        $query = DB::table('jam_kerja_dept')
-                    ->join('kantor_cabang', 'jam_kerja_dept.kode_cabang', '=', 'kantor_cabang.kode_cabang')
-                    ->join('departemen', 'jam_kerja_dept.kode_departemen', '=', 'departemen.kode_departemen');
+        // Query untuk mengambil data jam kerja departemen menggunakan model
+        $query = JamKerjaDept::with(['cabang', 'departemen']);
+
+        if ($user->role === 'admin-cabang') {
+            $query->where('kode_cabang', $user->kode_cabang);
+        }
 
         // Tambahkan kondisi pencarian jika parameter ada
         if ($kode_cabang) {
-            $query->where('jam_kerja_dept.kode_cabang', $kode_cabang);
+            $query->where('kode_cabang', $kode_cabang);
         }
 
         if ($kode_departemen) {
-            $query->where('jam_kerja_dept.kode_departemen', $kode_departemen);
+            $query->where('kode_departemen', $kode_departemen);
         }
 
         // Ambil hasil query
         $jam_kerja_dept = $query->get();
 
-        // Ambil data detail jam kerja departemen
-        $jam_kerja_dept_det = DB::table('jam_kerja_dept_detail')->get();
+        // Ambil data cabang dan departemen untuk dropdown menggunakan model
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->orderBy('kode_cabang')->get();
+            $nama_cabang = Cabang::where('kode_cabang', $user->kode_cabang)->first();
+            // dd($nama_cabang);
+        } else {
+            $cabang = Cabang::orderBy('nama_cabang')->get();
+            $nama_cabang = null;
+        }
 
-        // Ambil data cabang dan departemen untuk dropdown
-        $cabang = DB::table('kantor_cabang')->orderBy('nama_cabang')->get();
-        $departemen = DB::table('departemen')->orderBy('nama_departemen')->get();
+        $departemen = Departemen::orderBy('nama_departemen')->get();
 
         // Kembalikan view dengan data yang diperlukan
-        return view('konfigurasi.jam_kerja_dept', compact('jam_kerja_dept', 'cabang', 'departemen'));
+        return view('konfigurasi.jam_kerja_dept', compact('jam_kerja_dept', 'cabang', 'departemen', 'nama_cabang'));
     }
     public function JamKerjaDeptCreate()
     {
-        $jam_kerja = DB::table('jam_kerja')->orderBy('kode_jam_kerja')->get();
+        $user = auth()->user();
+
+        if ($user->role === 'admin-cabang') {
+            $cabang = Cabang::where('kode_cabang', $user->kode_cabang)->orderBy('kode_cabang')->get();
+        } else {
+            $cabang = Cabang::orderBy('nama_cabang')->get();
+        }
+
+        $jam_kerja = JamKerja::orderBy('kode_jam_kerja')->get();
         // dd($jam_kerja);
-        $cabang = DB::table('kantor_cabang')->orderBy('nama_cabang')->get();
-        $departemen = DB::table('departemen')->orderBy('nama_departemen')->get();
+        $departemen = Departemen::orderBy('nama_departemen')->get();
         return view('konfigurasi.jam_kerja_dept_create', compact('jam_kerja', 'cabang', 'departemen'));
     }
 
@@ -328,7 +345,7 @@ class KonfigurasiController extends Controller
         DB::beginTransaction();
         try {
             // Menyimpan data ke table jam_kerja_dept
-            DB::table('jam_kerja_dept')->insert([
+            JamKerjaDept::insert([
                 'kode_jk_dept' => $kode_jk_dept,
                 'kode_cabang' => $kode_cabang,
                 'kode_departemen' => $kode_departemen,
@@ -377,32 +394,28 @@ class KonfigurasiController extends Controller
 
     public function JamKerjaDeptView($kode_jk_dept)
     {
-        $jam_kerja_dept = DB::table('jam_kerja_dept')
-            ->join('kantor_cabang', 'jam_kerja_dept.kode_cabang', '=', 'kantor_cabang.kode_cabang')
-            ->join('departemen', 'jam_kerja_dept.kode_departemen', '=', 'departemen.kode_departemen')
-            ->where('kode_jk_dept', $kode_jk_dept)
-            ->first();
+        $jam_kerja_dept = JamKerjaDept::with(['cabang', 'departemen'])
+                                        ->where('kode_jk_dept', $kode_jk_dept)
+                                        ->first();
 
-        $jam_kerja_dept_detail = DB::table('jam_kerja_dept_detail')
-            ->join('jam_kerja', 'jam_kerja_dept_detail.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-            ->where('kode_jk_dept', $kode_jk_dept)
-            ->get();
+        $jam_kerja_dept_detail = JamKerjaDeptDetail::with('jamKerja')
+                                                    ->where('kode_jk_dept', $kode_jk_dept)
+                                                    ->get();
 
         // Ambil hanya jam kerja yang sesuai dengan kode cabang
-        $jam_kerja = DB::table('jam_kerja')
-            ->where('kode_cabang', $jam_kerja_dept->kode_cabang)
-            ->orderBy('kode_jam_kerja')
-            ->get();
+        $jam_kerja = JamKerja::where('kode_cabang', $jam_kerja_dept->kode_cabang)
+                    ->orderBy('kode_jam_kerja')
+                    ->get();
 
-        $cabang = DB::table('kantor_cabang')->orderBy('nama_cabang')->get();
-        $departemen = DB::table('departemen')->orderBy('nama_departemen')->get();
+        $cabang = Cabang::orderBy('nama_cabang')->get();
+        $departemen = Departemen::orderBy('nama_departemen')->get();
 
         return view('konfigurasi.jam_kerja_dept_view', compact('jam_kerja', 'cabang', 'departemen', 'jam_kerja_dept', 'jam_kerja_dept_detail'));
     }
     public function JamKerjaDeptEdit($kode_jk_dept)
     {
         // Ambil data jam kerja departemen
-        $jam_kerja_dept = DB::table('jam_kerja_dept')->where('kode_jk_dept', $kode_jk_dept)->first();
+        $jam_kerja_dept = JamKerjaDept::where('kode_jk_dept', $kode_jk_dept)->first();
 
         // Periksa apakah data jam kerja departemen ditemukan
         if (!$jam_kerja_dept) {
@@ -411,17 +424,16 @@ class KonfigurasiController extends Controller
         }
 
         // Ambil detail jam kerja departemen
-        $jam_kerja_dept_detail = DB::table('jam_kerja_dept_detail')->where('kode_jk_dept', $kode_jk_dept)->get();
+        $jam_kerja_dept_detail = JamKerjaDeptDetail::where('kode_jk_dept', $kode_jk_dept)->get();
 
         // Ambil jam kerja berdasarkan kode cabang dari jam_kerja_dept
-        $jam_kerja = DB::table('jam_kerja')
-            ->where('kode_cabang', $jam_kerja_dept->kode_cabang) // Filter berdasarkan kode cabang
-            ->orderBy('kode_jam_kerja')
-            ->get();
+        $jam_kerja = JamKerja::where('kode_cabang', $jam_kerja_dept->kode_cabang) // Filter berdasarkan kode cabang
+                            ->orderBy('kode_jam_kerja')
+                            ->get();
 
         // Ambil data cabang dan departemen
-        $cabang = DB::table('kantor_cabang')->orderBy('nama_cabang')->get();
-        $departemen = DB::table('departemen')->orderBy('nama_departemen')->get();
+        $cabang = Cabang::orderBy('nama_cabang')->get();
+        $departemen = Departemen::orderBy('nama_departemen')->get();
 
         // Kembalikan view dengan data yang diperlukan
         return view('konfigurasi.jam_kerja_dept_edit', compact('jam_kerja', 'cabang', 'departemen', 'jam_kerja_dept', 'jam_kerja_dept_detail'));
@@ -444,7 +456,7 @@ class KonfigurasiController extends Controller
         DB::beginTransaction();
         try {
             // Cek apakah data jam kerja departemen ada
-            $jamKerjaDept = DB::table('jam_kerja_dept')->where('kode_jk_dept', $kode_jk_dept)->first();
+            $jamKerjaDept = JamKerjaDept::where('kode_jk_dept', $kode_jk_dept)->first();
 
             if (!$jamKerjaDept) {
                 throw new \Exception('Data Jam Kerja Departemen tidak ditemukan.');
@@ -457,10 +469,9 @@ class KonfigurasiController extends Controller
             }
 
             // Ambil data lama untuk dibandingkan
-            $oldData = DB::table('jam_kerja_dept_detail')
-                ->where('kode_jk_dept', $kode_jk_dept)
-                ->get()
-                ->keyBy('hari');
+            $oldData = JamKerjaDeptDetail::where('kode_jk_dept', $kode_jk_dept)
+                                            ->get()
+                                            ->keyBy('hari');
 
             // Siapkan data baru untuk perbandingan
             $newData = collect($request->hari)->mapWithKeys(function ($hari, $index) use ($request) {
@@ -477,9 +488,8 @@ class KonfigurasiController extends Controller
             }
 
             // Hapus data lama
-            DB::table('jam_kerja_dept_detail')
-                ->where('kode_jk_dept', $kode_jk_dept)
-                ->delete();
+            JamKerjaDeptDetail::where('kode_jk_dept', $kode_jk_dept)
+                                ->delete();
 
             // Siapkan data baru
             $data = [];
@@ -516,9 +526,9 @@ class KonfigurasiController extends Controller
     {
         try {
             // Hapus data dari table jam_kerja_dept_detail
-            DB::table('jam_kerja_dept_detail')->where('kode_jk_dept', $kode_jk_dept)->delete();
+            JamKerjaDeptDetail::where('kode_jk_dept', $kode_jk_dept)->delete();
             // Hapus data dari table jam_kerja_dept
-            DB::table('jam_kerja_dept')->where('kode_jk_dept', $kode_jk_dept)->delete();
+            JamKerjaDept::where('kode_jk_dept', $kode_jk_dept)->delete();
             return redirect()->back()->with(['success' => 'Data Berhasil Dihapus!']);
         } catch (\Throwable $th) {
             return redirect()->back()->with(['warning' => 'Data Gagal Dihapus!']);

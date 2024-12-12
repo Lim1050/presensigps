@@ -244,48 +244,62 @@
         <div class="col">
             <h3>Daftar Lembur Bulan {{ $monthName }} {{ $tahun_ini }}</h3>
             <div class="card">
-                {{-- <div class="card-body"> --}}
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Tanggal</th>
-                                <th>Mulai</th>
-                                <th>Selesai</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($daftar_lembur as $lembur)
-                                <tr>
-                                    <td>{{ \Carbon\Carbon::parse($lembur->tanggal_presensi)->translatedFormat('d-m-Y') }}
+                <table class="table" id="lemburTable">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Mulai</th>
+                            <th>Selesai</th>
+                            <th>Status & Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($daftar_lembur as $lembur)
+                            <tr data-id="{{ $lembur->id }}">
+                                <td>
+                                    {{ \Carbon\Carbon::parse($lembur->tanggal_presensi)->translatedFormat('d-m-Y') }}
+                                    @if($lembur->catatan_lembur)
                                         <br>
-                                        <a href="#" class="badge badge-primary keterangan-link" data-id="{{ $lembur->id }}">Keterangan</a>
-                                        <span id="keterangan-{{ $lembur->id }}" style="display: none;">{{ $lembur->catatan_lembur }}</span>
-                                    </td>
-                                    <td>{{ date("H:i",strtotime($lembur->waktu_mulai)) }}</td>
-                                    <td>{{ date("H:i",strtotime($lembur->waktu_selesai)) }}</td>
-                                    <td>
-                                        @if ($lembur->status == 'pending')
-                                            <a href="#" class="badge badge-warning approval-link" data-id="{{ $lembur->id }}">Pending</a>
-                                        @elseif ($lembur->status == 'disetujui')
-                                            <span class="badge badge-success">Disetujui</span>
-                                        @elseif ($lembur->status == 'ditolak')
-                                            <span class="badge badge-danger" data-toggle="tooltip" title="Alasan: {{ $lembur->alasan_penolakan }}">Ditolak</span> <br>
-                                            <a href="#" class="badge badge-danger alasan-penolakan-link" data-id="{{ $lembur->id }}">Alasan</a>
-                                            <span id="alasan-penolakan-{{ $lembur->id }}" style="display: none;">{{ $lembur->alasan_penolakan }}</span>
-                                        @else
-                                            <span class="badge badge-secondary">Tidak Diketahui</span>
+                                        <button class="btn btn-sm btn-secondary mt-1 btn-keterangan" data-keterangan="{{ $lembur->catatan_lembur }}">
+                                            Keterangan
+                                        </button>
+                                    @endif
+                                </td>
+                                <td>{{ date("H:i", strtotime($lembur->waktu_mulai)) }}</td>
+                                <td>{{ date("H:i", strtotime($lembur->waktu_selesai)) }}</td>
+                                <td>
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span class="badge mb-1
+                                            @switch($lembur->status)
+                                                @case('pending') badge-warning @break
+                                                @case('disetujui') badge-success @break
+                                                @case('ditolak') badge-danger @break
+                                                @default badge-secondary
+                                            @endswitch
+                                            status-badge">
+                                            {{ ucfirst($lembur->status) }}
+                                        </span>
+
+                                        @if($lembur->status == 'pending')
+                                            <button class="btn btn-sm btn-primary btn-approval mt-1">
+                                                Tindakan
+                                            </button>
+                                        @elseif($lembur->status == 'ditolak' && $lembur->alasan_penolakan)
+                                            <button class="btn btn-sm btn-danger btn-alasan mt-1"
+                                                data-alasan="{{ $lembur->alasan_penolakan }}">
+                                                Lihat Alasan
+                                            </button>
                                         @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="text-center">Tidak ada data lembur</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center">Tidak ada data lembur</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
                 </table>
-                {{-- </div> --}}
             </div>
         </div>
     </div>
@@ -546,141 +560,124 @@
     });
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.keterangan-link').forEach(function (element) {
-            element.addEventListener('click', function (event) {
-                event.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+    const lemburTable = document.getElementById('lemburTable');
 
-                // Ambil data keterangan dari elemen tersembunyi berdasarkan ID lembur
-                let lemburId = this.getAttribute('data-id');
-                let keterangan = document.querySelector(`#keterangan-${lemburId}`).textContent;
-
-                // Tampilkan SweetAlert dengan keterangan lembur
-                Swal.fire({
-                    title: 'Keterangan Lembur',
-                    text: keterangan,
-                    icon: 'info',
-                    confirmButtonText: 'Tutup'
-                });
+    // Delegasi event untuk tombol keterangan
+    lemburTable.addEventListener('click', function(e) {
+        const btnKeterangan = e.target.closest('.btn-keterangan');
+        if (btnKeterangan) {
+            Swal.fire({
+                title: 'Keterangan Lembur',
+                text: btnKeterangan.dataset.keterangan,
+                icon: 'info',
+                confirmButtonText: 'Tutup'
             });
-        });
-        document.querySelectorAll('.alasan-penolakan-link').forEach(function (element) {
-            element.addEventListener('click', function (event) {
-                event.preventDefault();
-
-                // Ambil data alasan-penolakan dari elemen tersembunyi berdasarkan ID lembur
-                let lemburId = this.getAttribute('data-id');
-                let alasan = document.querySelector(`#alasan-penolakan-${lemburId}`).textContent;
-
-                // Tampilkan SweetAlert dengan alasan-penolakan lembur
-                Swal.fire({
-                    title: 'Alasan Penolakan Lembur',
-                    text: alasan,
-                    icon: 'warning',
-                    confirmButtonText: 'Tutup'
-                });
-            });
-        });
-    });
-</script>
-<script>
-$(document).ready(function() {
-    $('.approval-link').on('click', function(e) {
-        e.preventDefault();
-        const lemburId = $(this).data('id');
-
-        Swal.fire({
-            title: 'Persetujuan Lembur',
-            text: "Pilih tindakan untuk lembur ini",
-            icon: 'question',
-            showCancelButton: true,
-            showDenyButton: true,
-            confirmButtonColor: '#28a745',
-            denyButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Setujui',
-            denyButtonText: 'Tolak',
-            cancelButtonText: 'Tutup'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Jika disetujui
-                updateLemburStatus(lemburId, 'disetujui');
-            } else if (result.isDenied) {
-                // Jika ditolak, tampilkan input alasan
-                Swal.fire({
-                    title: 'Alasan Penolakan',
-                    input: 'textarea',
-                    inputLabel: 'Masukkan alasan penolakan',
-                    inputPlaceholder: 'Ketik alasan penolakan di sini...',
-                    inputAttributes: {
-                        'aria-label': 'Ketik alasan penolakan di sini'
-                    },
-                    showCancelButton: true,
-                    confirmButtonText: 'Konfirmasi Penolakan',
-                    cancelButtonText: 'Batal',
-                    confirmButtonColor: '#dc3545',
-                    cancelButtonColor: '#6c757d',
-                    inputValidator: (value) => {
-                        if (!value) {
-                            return 'Alasan penolakan wajib diisi!'
-                        }
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        updateLemburStatus(lemburId, 'ditolak', result.value);
-                    }
-                });
-            }
-        });
-    });
-
-    function updateLemburStatus(id, status, alasanPenolakan = null) {
-        var data = {
-            _token: '{{ csrf_token() }}',
-            status: status
-        };
-
-        if (alasanPenolakan) {
-            data.alasan_penolakan = alasanPenolakan;
         }
 
-        $.ajax({
-            url: '/lembur/' + id + '/update-status',
-            method: 'POST',
-            data: data,
-            success: function(response) {
-                if (response.success) {
-                    var badgeClass = status === 'disetujui' ? 'badge-success' : 'badge-danger';
-                    var badgeText = status === 'disetujui' ? 'Disetujui' : 'Ditolak';
+        // Delegasi event untuk tombol alasan
+        const btnAlasan = e.target.closest('.btn-alasan');
+        if (btnAlasan) {
+            Swal.fire({
+                title: 'Alasan Penolakan',
+                text: btnAlasan.dataset.alasan,
+                icon: 'warning',
+                confirmButtonText: 'Tutup'
+            });
+        }
 
-                    $('a[data-id="' + id + '"]')
-                        .removeClass('approval-link badge-warning')
-                        .addClass(badgeClass)
-                        .text(badgeText)
-                        .removeAttr('data-toggle data-target');
+        // Delegasi event untuk tombol approval
+        const btnApproval = e.target.closest('.btn-approval');
+        if (btnApproval) {
+            const row = btnApproval.closest('tr');
+            const lemburId = row.dataset.id;
 
+            Swal.fire({
+                title: 'Persetujuan Lembur',
+                text: "Pilih tindakan untuk lembur ini",
+                icon: 'question',
+                showCancelButton: true,
+                showDenyButton: true,
+                confirmButtonText: 'Setujui',
+                denyButtonText: 'Tolak',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    updateLemburStatus(lemburId, 'disetujui', row);
+                } else if (result.isDenied) {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: status === 'disetujui' ?
-                            'Lembur telah disetujui' :
-                            'Lembur telah ditolak'
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Terjadi kesalahan. Silakan coba lagi.'
+                        title: 'Alasan Penolakan',
+                        input: 'textarea',
+                        inputPlaceholder: 'Masukkan alasan penolakan',
+                        showCancelButton: true,
+                        confirmButtonText: 'Tolak',
+                        cancelButtonText: 'Batal',
+                        inputValidator: (value) => {
+                            if (!value) return 'Alasan penolakan wajib diisi!';
+                        }
+                    }).then((alasanResult) => {
+                        if (alasanResult.isConfirmed) {
+                            updateLemburStatus(lemburId, 'ditolak', row, alasanResult.value);
+                        }
                     });
                 }
+            });
+        }
+    });
+
+    function updateLemburStatus(id, status, row, alasanPenolakan = null) {
+        fetch(`/lembur/${id}/update-status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
-            error: function() {
+            body: JSON.stringify({
+                status: status,
+                alasan_penolakan: alasanPenolakan
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const statusCell = row.querySelector('td:last-child');
+                const statusBadge = statusCell.querySelector('.status-badge');
+
+                // Update status badge
+                statusBadge.className = `badge mb-1
+                    ${status === 'disetujui' ? 'badge-success' : 'badge-danger'}
+                    status-badge`;
+                statusBadge.textContent = status === 'disetujui' ? 'Disetujui' : 'Ditolak';
+
+                // Remove action button
+                const actionButtons = statusCell.querySelectorAll('.btn-approval, .btn-alasan');
+                actionButtons.forEach(btn => btn.remove());
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: status === 'disetujui'
+                        ? 'Lembur telah disetujui'
+                        : 'Lembur telah ditolak',
+                    didClose: () => {
+                        // Refresh halaman setelah sweet alert ditutup
+                        window.location.reload();
+                    }
+                });
+            } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Oops...',
-                    text: 'Terjadi kesalahan. Silakan coba lagi.'
+                    title: 'Gagal',
+                    text: data.message || 'Terjadi kesalahan'
                 });
             }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Kesalahan',
+                text: 'Terjadi kesalahan. Silakan coba lagi.'
+            });
         });
     }
 });

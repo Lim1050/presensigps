@@ -54,7 +54,7 @@
                                         <input type="hidden" name="hari[]" value="{{ $hari }}">
                                     </td>
                                     <td>
-                                        <select name="kode_jam_kerja[]" class="form-control jam_kerja_select">
+                                        <select name="kode_jam_kerja[]" class="form-control jam_kerja_select" disabled>
                                             <option value="">Pilih Jam Kerja</option>
                                             @foreach ($jam_kerja as $item)
                                             <option value="{{ $item->kode_jam_kerja }}" data-cabang="{{ $item->kode_cabang }}">{{ $item->kode_jam_kerja }} - {{ $item->nama_jam_kerja }}</option>
@@ -134,6 +134,55 @@
         });
     </script>
 @endif
+
+<script>
+$(document).ready(function() {
+    // Fungsi untuk mengatur status select jam kerja
+    function updateJamKerjaSelect() {
+        var selectedCabang = $('#kode_cabang').val();
+
+        if (selectedCabang) {
+            // Aktifkan select jam kerja
+            $('.jam_kerja_select').prop('disabled', false);
+        } else {
+            // Nonaktifkan select jam kerja
+            $('.jam_kerja_select').prop('disabled', true);
+
+            // Reset pilihan ke opsi default
+            $('.jam_kerja_select').val('');
+        }
+    }
+
+    // Panggil fungsi saat halaman dimuat
+    updateJamKerjaSelect();
+
+    // Panggil fungsi saat cabang berubah
+    $('#kode_cabang').on('change', function() {
+        updateJamKerjaSelect();
+    });
+
+    // Tambahan: Filter opsi jam kerja berdasarkan cabang yang dipilih
+    $('#kode_cabang').on('change', function() {
+        var selectedCabang = $(this).val();
+
+        $('.jam_kerja_select option').each(function() {
+            var optionCabang = $(this).data('cabang');
+
+            if (selectedCabang) {
+                // Sembunyikan opsi yang tidak sesuai cabang
+                if (optionCabang !== selectedCabang && $(this).val() !== '') {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            } else {
+                // Tampilkan semua opsi
+                $(this).show();
+            }
+        });
+    });
+});
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const kodeCabangSelect = document.getElementById('kode_cabang');

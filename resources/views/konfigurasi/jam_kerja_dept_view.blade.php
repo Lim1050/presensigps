@@ -16,11 +16,11 @@
                         <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                             <tr>
                                 <th>Departemen</th>
-                                <td>{{ $jam_kerja_dept->nama_departemen }}</td>
+                                <td>{{ $jam_kerja_dept->departemen->nama_departemen }}</td>
                             </tr>
                             <tr>
                                 <th>Cabang</th>
-                                <td>{{ $jam_kerja_dept->nama_cabang }}</td>
+                                <td>{{ $jam_kerja_dept->cabang->nama_cabang }}</td>
                             </tr>
                         </table>
                     </div>
@@ -44,7 +44,7 @@
                                         <input type="hidden" name="hari[]" value="{{ $item->hari }}">
                                     </td>
                                     <td>
-                                        {{ $item->kode_jam_kerja }} - {{ $item->nama_jam_kerja }}
+                                        {{ $item->kode_jam_kerja }} - {{ $item->jamKerja->nama_jam_kerja }}
                                     </td>
                                 </tr>
                                 @endforeach
