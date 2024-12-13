@@ -53,6 +53,7 @@ return array(
     'App\\Models\\Gaji' => $baseDir . '/app/Models/Gaji.php',
     'App\\Models\\Jabatan' => $baseDir . '/app/Models/Jabatan.php',
     'App\\Models\\JamKerja' => $baseDir . '/app/Models/JamKerja.php',
+    'App\\Models\\JamKerjaDept' => $baseDir . '/app/Models/JamKerjaDept.php',
     'App\\Models\\JamKerjaDeptDetail' => $baseDir . '/app/Models/JamKerjaDeptDetail.php',
     'App\\Models\\JamKerjaKaryawan' => $baseDir . '/app/Models/JamKerjaKaryawan.php',
     'App\\Models\\Karyawan' => $baseDir . '/app/Models/Karyawan.php',
