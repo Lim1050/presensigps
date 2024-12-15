@@ -33,4 +33,16 @@ class JamKerja extends Model
     {
         return $this->belongsTo(Cabang::class, 'kode_cabang', 'kode_cabang');
     }
+
+    // Scope untuk mencari jam kerja berdasarkan kode
+    public function scopeByKode($query, $kode)
+    {
+        return $query->where('kode_jam_kerja', $kode);
+    }
+
+    // Accessor untuk mendapatkan rentang jam kerja
+    public function getRentangJamKerjaAttribute()
+    {
+        return $this->jam_masuk . ' - ' . $this->jam_pulang;
+    }
 }

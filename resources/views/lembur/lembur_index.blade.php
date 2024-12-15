@@ -131,13 +131,13 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="col mb-2">
-                                            <a href="{{ route('admin.lembur.show', $item->id) }}" class="btn-sm btn-info mx-1" title="Lihat"><i class="bi bi-list"></i></a>
+                                            <a href="{{ route('admin.lembur.show', $item->kode_lembur) }}" class="btn-sm btn-info mx-1" title="Lihat"><i class="bi bi-list"></i></a>
                                         </div>
                                         <div class="col mb-2">
-                                        <a href="{{ route('admin.lembur.edit', $item->id) }}" class="btn-sm btn-warning mx-1" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{{ route('admin.lembur.edit', $item->kode_lembur) }}" class="btn-sm btn-warning mx-1" title="Edit"><i class="bi bi-pencil-square"></i></a>
                                         </div>
                                         <div class="col mb-2">
-                                        <form action="{{ route('admin.lembur.delete', $item->id) }}" method="POST" class="d-inline">
+                                        <form action="{{ route('admin.lembur.delete', $item->kode_lembur) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger delete-confirm"

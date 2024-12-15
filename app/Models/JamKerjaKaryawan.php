@@ -20,4 +20,11 @@ class JamKerjaKaryawan extends Model
     {
         return $this->belongsTo(JamKerja::class, 'kode_jam_kerja', 'kode_jam_kerja');
     }
+
+    // Scope untuk pencarian berdasarkan NIK dan hari
+    public function scopeByNikAndDay($query, $nik, $hari)
+    {
+        return $query->where('nik', $nik)
+                     ->where('hari', $hari);
+    }
 }

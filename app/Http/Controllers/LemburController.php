@@ -112,24 +112,32 @@ class LemburController extends Controller
             // Hitung durasi lembur dalam menit
             $durasi_menit = $datetime_mulai->diffInMinutes($datetime_selesai);
 
-            // Default: lembur libur (di luar jam kerja)
-            $lembur_libur = 1;
-
             // Mendapatkan hari dari tanggal presensi
-            $hari = strtolower($tanggal_presensi->format('l'));
+            $hari = strtolower($tanggal_presensi->translatedFormat('l'));
 
-            // Cek jam kerja karyawan
+            // Cek jam kerja karyawan untuk mendapatkan kode jam kerja
             $jamKerjaKaryawan = JamKerjaKaryawan::where('nik', $nik)
                 ->where('hari', $hari)
                 ->first();
 
-            // Jika jam kerja ditemukan, periksa apakah lembur berada dalam jam kerja
+            // Inisialisasi variabel
+            $jam_masuk_asli = null;
+            $jam_pulang_asli = null;
+            $lembur_libur = 1; // Default: lembur libur
+
+            // Jika jam kerja karyawan ditemukan
             if ($jamKerjaKaryawan) {
+                // Ambil detail jam kerja berdasarkan kode jam kerja
                 $jamKerja = JamKerja::where('kode_jam_kerja', $jamKerjaKaryawan->kode_jam_kerja)->first();
 
                 if ($jamKerja) {
-                    $jam_masuk = Carbon::parse($jamKerja->jam_masuk);
-                    $jam_pulang = Carbon::parse($jamKerja->jam_pulang);
+                    // Set jam masuk dan jam pulang asli
+                    $jam_masuk_asli = $jamKerja->jam_masuk;
+                    $jam_pulang_asli = $jamKerja->jam_pulang;
+
+                    // Konversi jam kerja ke Carbon
+                    $jam_masuk = Carbon::parse($jam_masuk_asli);
+                    $jam_pulang = Carbon::parse($jam_pulang_asli);
 
                     // Jika jam kerja lintas hari, sesuaikan jam pulang
                     if ($jamKerja->lintas_hari == '1') {
@@ -140,18 +148,23 @@ class LemburController extends Controller
                     if ($waktu_mulai->between($jam_masuk, $jam_pulang) ||
                         $waktu_selesai->between($jam_masuk, $jam_pulang) ||
                         ($waktu_mulai <= $jam_pulang && $waktu_selesai >= $jam_masuk)) {
-                        $lembur_libur = 0; // Bukan lembur libur karena beririsan dengan jam kerja
+                        $lembur_libur = 0; // Bukan lembur libur
                     }
                 }
             }
-            // Jika jam kerja tidak ditemukan, tetap dianggap sebagai lembur libur (nilai default)
+
+            // Membuat kode lembur secara acak
+            $kode_lembur = $this->generateKodeLembur();
 
             // Membuat instance Lembur baru
             $lembur = new Lembur();
+            $lembur->kode_lembur = $kode_lembur;
             $lembur->nik = $nik;
             $lembur->tanggal_presensi = $tanggal_presensi->toDateString();
             $lembur->waktu_mulai = $waktu_mulai->format('H:i:s');
             $lembur->waktu_selesai = $waktu_selesai->format('H:i:s');
+            $lembur->jam_masuk_asli = $jam_masuk_asli;
+            $lembur->jam_pulang_asli = $jam_pulang_asli;
             $lembur->lembur_libur = $lembur_libur;
             $lembur->lintas_hari = $is_lintas_hari;
             $lembur->durasi_menit = $durasi_menit;
@@ -177,26 +190,33 @@ class LemburController extends Controller
         }
     }
 
+    private function generateKodeLembur()
+    {
+        $randomString = strtoupper(substr(str_shuffle('abcdefghijklmnopqrstuvwxyz'), 0, 3)); // 3 huruf acak
+        $randomNumber = rand(100, 999); // 3 angka acak
+        return 'L' . $randomString . $randomNumber; // Kombinasi L + huruf + angka
+    }
+
     /**
      * Display the specified Lembur record.
      */
-    public function LemburShow($id)
+    public function LemburShow($kode_lembur)
     {
-            $lembur = Lembur::with('karyawan')->findOrFail($id);
+            $lembur = Lembur::with('karyawan')->findOrFail($kode_lembur);
             // dd($lembur);
 
             return view('lembur.lembur_show', compact('lembur'));
     }
 
-    public function LemburEdit($id)
+    public function LemburEdit($kode_lembur)
     {
-            $lembur = Lembur::with('karyawan')->findOrFail($id);
+            $lembur = Lembur::with('karyawan')->findOrFail($kode_lembur);
             // dd($lembur);
 
             return view('lembur.lembur_edit', compact('lembur'));
     }
 
-    public function LemburUpdate(Request $request, $id)
+    public function LemburUpdate(Request $request, $kode_lembur)
     {
         try {
             // Validasi input
@@ -209,7 +229,7 @@ class LemburController extends Controller
 
             DB::beginTransaction();
 
-            $lembur = Lembur::findOrFail($id);
+            $lembur = Lembur::findOrFail($kode_lembur);
 
             // Pastikan status masih 'pending' sebelum mengizinkan update
             if ($lembur->status !== 'pending') {
@@ -296,12 +316,12 @@ class LemburController extends Controller
         }
     }
 
-    public function LemburDelete($id)
+    public function LemburDelete($kode_lembur)
     {
         try {
             DB::beginTransaction();
 
-            $lembur = Lembur::where('id', $id)->firstOrFail();
+            $lembur = Lembur::where('id', $kode_lembur)->firstOrFail();
 
             // Hapus lembur
             $lembur->delete();
@@ -315,14 +335,14 @@ class LemburController extends Controller
         }
     }
 
-    public function LemburUpdateStatus(Request $request, $id)
+    public function LemburUpdateStatus(Request $request, $kode_lembur)
     {
         $request->validate([
             'status' => 'required|in:disetujui,ditolak',
             'alasan_penolakan' => 'required_if:status,ditolak'
         ]);
 
-        $lembur = Lembur::findOrFail($id);
+        $lembur = Lembur::findOrFail($kode_lembur);
         $lembur->status = $request->status;
 
         if ($request->status === 'ditolak') {
