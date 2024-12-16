@@ -203,7 +203,7 @@ class LemburController extends Controller
     public function LemburShow($kode_lembur)
     {
             $lembur = Lembur::with('karyawan')->findOrFail($kode_lembur);
-            // dd($lembur);
+            // dd($lembur->kode_lembur);
 
             return view('lembur.lembur_show', compact('lembur'));
     }
@@ -321,7 +321,7 @@ class LemburController extends Controller
         try {
             DB::beginTransaction();
 
-            $lembur = Lembur::where('id', $kode_lembur)->firstOrFail();
+            $lembur = Lembur::where('kode_lembur', $kode_lembur)->firstOrFail();
 
             // Hapus lembur
             $lembur->delete();

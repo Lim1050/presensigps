@@ -9,7 +9,9 @@ class Lembur extends Model
 {
     use HasFactory;
     protected $table = "lembur";
-    protected $primaryKey = "id";
+    protected $primaryKey = "kode_lembur";
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $guarded = [];
 
     public function karyawan()

@@ -45,6 +45,10 @@
                     <table class="table table-hover table-striped" id="dataTable" width="100%" cellspacing="0">
                         <tbody>
                             <tr>
+                                <th>Kode Lembur</th>
+                                <td>{{ $lembur->kode_lembur }}</td>
+                            </tr>
+                            <tr>
                                 <th>NIK</th>
                                 <td>{{ $lembur->karyawan->nik }}</td>
                             </tr>
@@ -69,6 +73,14 @@
                                 <td>{{$lembur->tanggal_presensi }}</td>
                             </tr>
                             <tr>
+                                <th>Waktu Masuk Asli</th>
+                                <td>{{$lembur->jam_masuk_asli }}</td>
+                            </tr>
+                            <tr>
+                                <th>Waktu Pulang Asli</th>
+                                <td>{{$lembur->jam_pulang_asli }}</td>
+                            </tr>
+                            <tr>
                                 <th>Waktu Mulai</th>
                                 <td>{{$lembur->waktu_mulai }}</td>
                             </tr>
@@ -79,6 +91,10 @@
                             <tr>
                                 <th>Durasi Lembur</th>
                                 <td>{{$lembur->durasi_menit }} menit</td>
+                            </tr>
+                            <tr>
+                                <th>Jenis Lembur</th>
+                                <td>{{$lembur->jenis_lembur }}</td>
                             </tr>
                             <tr>
                                 <th>Lintas Hari</th>
