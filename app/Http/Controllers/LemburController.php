@@ -75,6 +75,40 @@ class LemburController extends Controller
         return view('lembur.lembur_create', compact('karyawan', 'jabatan', 'lokasiPenugasan', 'cabang'));
     }
 
+    public function getJamKerja(Request $request)
+    {
+        $nik = $request->input('nik');
+        $tanggal = $request->input('tanggal');
+
+        // Konversi tanggal ke hari
+        $hari = strtolower(Carbon::parse($tanggal)->translatedFormat('l'));
+
+        // Cari jam kerja karyawan
+        $jamKerjaKaryawan = JamKerjaKaryawan::where('nik', $nik)
+            ->where('hari', $hari)
+            ->first();
+
+        if ($jamKerjaKaryawan) {
+            // Ambil detail jam kerja
+            $jamKerja = JamKerja::where('kode_jam_kerja', $jamKerjaKaryawan->kode_jam_kerja)->first();
+
+            if ($jamKerja) {
+                return response()->json([
+                    'success' => true,
+                    'kode_jam_kerja' => $jamKerja->kode_jam_kerja,
+                    'jam_masuk' => $jamKerja->jam_masuk,
+                    'jam_pulang' => $jamKerja->jam_pulang,
+                    'lintas_hari' => $jamKerja->lintas_hari
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Tidak ditemukan jadwal jam kerja untuk karyawan pada tanggal tersebut.'
+        ]);
+    }
+
     /**
      * Store a newly created Lembur record.
      */
@@ -119,37 +153,26 @@ class LemburController extends Controller
             $jamKerjaKaryawan = JamKerjaKaryawan::where('nik', $nik)
                 ->where('hari', $hari)
                 ->first();
-
+            // dd($jamKerjaKaryawan);
             // Inisialisasi variabel
             $jam_masuk_asli = null;
             $jam_pulang_asli = null;
-            $lembur_libur = 1; // Default: lembur libur
+
+
 
             // Jika jam kerja karyawan ditemukan
             if ($jamKerjaKaryawan) {
                 // Ambil detail jam kerja berdasarkan kode jam kerja
                 $jamKerja = JamKerja::where('kode_jam_kerja', $jamKerjaKaryawan->kode_jam_kerja)->first();
+                // dd($jamKerja);
+
+                // Tentukan lembur libur berdasarkan ada tidaknya jam kerja
+                $lembur_libur = $jamKerja ? 0 : 1;
 
                 if ($jamKerja) {
                     // Set jam masuk dan jam pulang asli
                     $jam_masuk_asli = $jamKerja->jam_masuk;
                     $jam_pulang_asli = $jamKerja->jam_pulang;
-
-                    // Konversi jam kerja ke Carbon
-                    $jam_masuk = Carbon::parse($jam_masuk_asli);
-                    $jam_pulang = Carbon::parse($jam_pulang_asli);
-
-                    // Jika jam kerja lintas hari, sesuaikan jam pulang
-                    if ($jamKerja->lintas_hari == '1') {
-                        $jam_pulang->addDay();
-                    }
-
-                    // Cek apakah lembur beririsan dengan jam kerja
-                    if ($waktu_mulai->between($jam_masuk, $jam_pulang) ||
-                        $waktu_selesai->between($jam_masuk, $jam_pulang) ||
-                        ($waktu_mulai <= $jam_pulang && $waktu_selesai >= $jam_masuk)) {
-                        $lembur_libur = 0; // Bukan lembur libur
-                    }
                 }
             }
 

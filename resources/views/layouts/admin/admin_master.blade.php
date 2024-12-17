@@ -10,6 +10,14 @@
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
+
     <title>Admin Presensi GPS</title>
 
     <link rel="icon" type="image/png" href="{{ asset('assets/img/android-chrome-512x512.png') }}" sizes="32x32" style="color: white">

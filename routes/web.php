@@ -183,6 +183,7 @@ Route::middleware(['auth:user'])->group(function () {
     // lembur route
     Route::get('admin/lembur', [LemburController::class, 'LemburIndex'])->name('admin.lembur');
     Route::get('admin/lembur/create', [LemburController::class, 'LemburCreate'])->name('admin.lembur.create');
+    Route::get('admin/lembur/get-jam-kerja', [LemburController::class, 'getJamKerja'])->name('admin.lembur.get.jam.kerja');
     Route::post('admin/lembur/store', [LemburController::class, 'LemburStore'])->name('admin.lembur.store');
     // Route::put('admin/lembur/{id}/setuju', action: [LemburController::class, 'LemburSetuju'])->name('admin.lembur.setuju');
     // Route::put('admin/lembur/{id}/batal', action: [LemburController::class, 'LemburBatal'])->name('admin.lembur.batal');

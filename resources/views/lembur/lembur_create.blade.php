@@ -266,6 +266,63 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<script>
+$(document).ready(function() {
+    // Tambahkan event listener untuk tanggal dan NIK
+    $('#tanggal_presensi, #nik').on('change', function() {
+        var tanggal = $('#tanggal_presensi').val();
+        var nik = $('#nik').val();
+
+        // Pastikan keduanya terisi
+        if (tanggal && nik) {
+            $.ajax({
+                url: "{{ route('admin.lembur.get.jam.kerja') }}",
+                method: 'GET',
+                data: {
+                    tanggal: tanggal,
+                    nik: nik
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Tampilkan informasi jam kerja
+                        $('#jadwal_jam_kerja').remove(); // Hapus jadwal sebelumnya jika ada
+
+                        var jadwalHtml = `
+                            <div id="jadwal_jam_kerja" class="alert alert-info mt-2">
+                                <strong>Jadwal Jam Kerja:</strong><br>
+                                Kode Jam Kerja: ${response.kode_jam_kerja}<br>
+                                Jam Masuk: ${response.jam_masuk}<br>
+                                Jam Pulang: ${response.jam_pulang}
+                                ${response.lintas_hari == '1' ? ' (Lintas Hari)' : ''}
+                            </div>
+                        `;
+
+                        $('#tanggal_presensi').after(jadwalHtml);
+                    } else {
+                        // Tampilkan pesan jika tidak ditemukan jadwal
+                        $('#jadwal_jam_kerja').remove();
+                        $('#tanggal_presensi').after(`
+                            <div id="jadwal_jam_kerja" class="alert alert-warning mt-2">
+                                ${response.message}
+                            </div>
+                        `);
+                    }
+                },
+                error: function() {
+                    $('#jadwal_jam_kerja').remove();
+                    $('#tanggal_presensi').after(`
+                        <div id="jadwal_jam_kerja" class="alert alert-danger mt-2">
+                            Terjadi kesalahan saat mengambil jadwal jam kerja.
+                        </div>
+                    `);
+                }
+            });
+        }
+    });
+});
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @if(session('success'))
     <script>
