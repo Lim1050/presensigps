@@ -157,7 +157,8 @@ class LemburController extends Controller
             // Inisialisasi variabel
             $jam_masuk_asli = null;
             $jam_pulang_asli = null;
-
+            $lembur_libur = 1; // Default: lembur libur
+            $jenis_lembur = 'reguler'; // Default: lembur reguler
 
 
             // Jika jam kerja karyawan ditemukan
@@ -167,12 +168,33 @@ class LemburController extends Controller
                 // dd($jamKerja);
 
                 // Tentukan lembur libur berdasarkan ada tidaknya jam kerja
-                $lembur_libur = $jamKerja ? 0 : 1;
+                // $lembur_libur = $jamKerja ? 0 : 1;
 
                 if ($jamKerja) {
                     // Set jam masuk dan jam pulang asli
                     $jam_masuk_asli = $jamKerja->jam_masuk;
                     $jam_pulang_asli = $jamKerja->jam_pulang;
+
+                    // Konversi jam kerja ke Carbon
+                    $jam_masuk = $tanggal_presensi->copy()->setTimeFromTimeString($jam_masuk_asli);
+                    $jam_pulang = $tanggal_presensi->copy()->setTimeFromTimeString($jam_pulang_asli);
+
+                    // Jika jam kerja lintas hari, sesuaikan jam pulang
+                    if ($jamKerja->lintas_hari == '1') {
+                        $jam_pulang->addDay();
+                    }
+
+                    // Tentukan lembur libur
+                    $lembur_libur = 0;
+
+                    // Tentukan jenis lembur
+                    if ($datetime_mulai < $jam_masuk) {
+                        // Lembur dimulai sebelum jam masuk (penebalan)
+                        $jenis_lembur = 'penebalan';
+                    } elseif ($datetime_mulai > $jam_pulang) {
+                        // Lembur dimulai setelah jam pulang (reguler)
+                        $jenis_lembur = 'reguler';
+                    }
                 }
             }
 
@@ -188,6 +210,7 @@ class LemburController extends Controller
             $lembur->waktu_selesai = $waktu_selesai->format('H:i:s');
             $lembur->jam_masuk_asli = $jam_masuk_asli;
             $lembur->jam_pulang_asli = $jam_pulang_asli;
+            $lembur->jenis_lembur = $jenis_lembur;
             $lembur->lembur_libur = $lembur_libur;
             $lembur->lintas_hari = $is_lintas_hari;
             $lembur->durasi_menit = $durasi_menit;
@@ -244,6 +267,7 @@ class LemburController extends Controller
         try {
             // Validasi input
             $validatedData = $request->validate([
+                'nik' => 'required',
                 'tanggal_presensi' => 'required|date',
                 'waktu_mulai' => 'required',
                 'waktu_selesai' => 'required',
@@ -259,6 +283,7 @@ class LemburController extends Controller
                 throw new \Exception('Hanya lembur dengan status pending yang dapat diubah.');
             }
 
+            $nik = $validatedData['nik'];
             $tanggal_presensi = Carbon::parse($validatedData['tanggal_presensi']);
             $waktu_mulai = Carbon::parse($validatedData['waktu_mulai']);
             $waktu_selesai = Carbon::parse($validatedData['waktu_selesai']);
@@ -278,49 +303,66 @@ class LemburController extends Controller
             // Hitung durasi lembur dalam menit
             $durasi_menit = $datetime_mulai->diffInMinutes($datetime_selesai);
 
-            // Default: lembur libur (di luar jam kerja)
-            $lembur_libur = 1;
-
             // Mendapatkan hari dari tanggal presensi
-            $hari = strtolower($tanggal_presensi->format('l'));
+            $hari = strtolower($tanggal_presensi->translatedFormat('l'));
 
-            // Cek jam kerja karyawan
-            $jamKerjaKaryawan = JamKerjaKaryawan::where('nik', $lembur->nik)
+            // Cek jam kerja karyawan untuk mendapatkan kode jam kerja
+            $jamKerjaKaryawan = JamKerjaKaryawan::where('nik', $nik)
                 ->where('hari', $hari)
                 ->first();
 
-            // Jika jam kerja ditemukan, periksa apakah lembur berada dalam jam kerja
+            // Inisialisasi variabel
+            $jam_masuk_asli = null;
+            $jam_pulang_asli = null;
+            $lembur_libur = 1; // Default: lembur libur
+            $jenis_lembur = 'reguler'; // Default: lembur reguler
+
+            // Jika jam kerja karyawan ditemukan
             if ($jamKerjaKaryawan) {
+                // Ambil detail jam kerja berdasarkan kode jam kerja
                 $jamKerja = JamKerja::where('kode_jam_kerja', $jamKerjaKaryawan->kode_jam_kerja)->first();
 
                 if ($jamKerja) {
-                    $jam_masuk = Carbon::parse($jamKerja->jam_masuk);
-                    $jam_pulang = Carbon::parse($jamKerja->jam_pulang);
+                    // Set jam masuk dan jam pulang asli
+                    $jam_masuk_asli = $jamKerja->jam_masuk;
+                    $jam_pulang_asli = $jamKerja->jam_pulang;
+
+                    // Konversi jam kerja ke Carbon
+                    $jam_masuk = $tanggal_presensi->copy()->setTimeFromTimeString($jam_masuk_asli);
+                    $jam_pulang = $tanggal_presensi->copy()->setTimeFromTimeString($jam_pulang_asli);
 
                     // Jika jam kerja lintas hari, sesuaikan jam pulang
                     if ($jamKerja->lintas_hari == '1') {
                         $jam_pulang->addDay();
                     }
 
-                    // Cek apakah lembur beririsan dengan jam kerja
-                    if ($waktu_mulai->between($jam_masuk, $jam_pulang) ||
-                        $waktu_selesai->between($jam_masuk, $jam_pulang) ||
-                        ($waktu_mulai <= $jam_pulang && $waktu_selesai >= $jam_masuk)) {
-                        $lembur_libur = 0; // Bukan lembur libur karena beririsan dengan jam kerja
+                    // Tentukan lembur libur
+                    $lembur_libur = 0;
+
+                    // Tentukan jenis lembur
+                    if ($datetime_mulai < $jam_masuk) {
+                        // Lembur dimulai sebelum jam masuk (penebalan)
+                        $jenis_lembur = 'penebalan';
+                    } elseif ($datetime_mulai > $jam_pulang) {
+                        // Lembur dimulai setelah jam pulang (reguler)
+                        $jenis_lembur = 'reguler';
                     }
                 }
             }
-            // Jika jam kerja tidak ditemukan, tetap dianggap sebagai lembur libur (nilai default)
 
             // Update data lembur
             $lembur->tanggal_presensi = $tanggal_presensi->toDateString();
             $lembur->waktu_mulai = $waktu_mulai->format('H:i:s');
             $lembur->waktu_selesai = $waktu_selesai->format('H:i:s');
+            $lembur->jam_masuk_asli = $jam_masuk_asli;
+            $lembur->jam_pulang_asli = $jam_pulang_asli;
+            $lembur->jenis_lembur = $jenis_lembur;
+            $lembur->lembur_libur = $lembur_libur;
             $lembur->lintas_hari = $is_lintas_hari;
             $lembur->durasi_menit = $durasi_menit;
-            $lembur->lembur_libur = $lembur_libur;
             $lembur->catatan_lembur = $catatan_lembur;
 
+            // Menyimpan data lembur
             $lembur->save();
 
             DB::commit();

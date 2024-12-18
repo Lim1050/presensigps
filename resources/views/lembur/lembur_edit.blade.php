@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 </div>
-
+                <input type="hidden" name="nik" id="nik" value="{{ $lembur->nik }}">
                 <div class="row mb-3">
                     <div class="col-md-4 sm-3">
                         <div class="form-group">
@@ -131,20 +131,19 @@
         // Set tanggal dan waktu saat ini
         const now = new Date();
         const today = now.toISOString().split('T')[0];
+        const originalTanggal = "{{ $lembur->tanggal_presensi }}";
+        const originalStatus = "{{ $lembur->status }}";
 
         // Format waktu saat ini untuk input time
         const currentHour = String(now.getHours()).padStart(2, '0');
         const currentMinute = String(now.getMinutes()).padStart(2, '0');
         const currentTime = `${currentHour}:${currentMinute}`;
 
-        // Tanggal lembur yang sedang diedit
-        const lemburDate = "{{ $lembur->tanggal_presensi }}";
-
         function updateMinTime() {
             const selectedDate = tanggalInput.value;
 
-            if (selectedDate === today && lemburDate !== today) {
-                // Jika tanggal yang dipilih adalah hari ini dan bukan tanggal lembur asli
+            // Jika tanggal yang dipilih adalah hari ini
+            if (selectedDate === today) {
                 waktuMulaiInput.setAttribute('min', currentTime);
 
                 // Jika waktu yang dipilih lebih awal dari waktu saat ini, reset input
@@ -152,19 +151,108 @@
                     waktuMulaiInput.value = '';
                 }
             } else {
-                // Jika tanggal yang dipilih adalah hari lain atau tanggal lembur asli
+                // Jika tanggal yang dipilih adalah hari lain
                 waktuMulaiInput.removeAttribute('min');
             }
         }
+
+        // Set minimum date untuk tanggal presensi
+        tanggalInput.setAttribute('min', originalTanggal);
 
         // Event listeners
         tanggalInput.addEventListener('change', updateMinTime);
         waktuMulaiInput.addEventListener('change', updateMinTime);
 
+        // Form submit validation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            // Validasi status lembur
+            if (originalStatus !== 'pending') {
+                event.preventDefault();
+                alert('Hanya lembur dengan status pending yang dapat diubah');
+                return;
+            }
+
+            // Tambahan validasi untuk mencegah perubahan ke tanggal yang sudah lewat
+            const selectedDate = new Date(tanggalInput.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Reset waktu untuk perbandingan tanggal saja
+
+            if (selectedDate < today) {
+                event.preventDefault();
+                alert('Tidak dapat mengubah lembur ke tanggal yang sudah lewat');
+            }
+        });
+
         // Inisialisasi validasi
         updateMinTime();
     });
 </script>
+
+<script>
+$(document).ready(function() {
+    // Fungsi untuk mengambil jadwal jam kerja
+    function fetchJadwalKerja() {
+        var tanggal = $('#tanggal_presensi').val();
+        var nik = $('#nik').val();
+
+        // Pastikan keduanya terisi
+        if (tanggal && nik) {
+            $.ajax({
+                url: "{{ route('admin.lembur.get.jam.kerja') }}",
+                method: 'GET',
+                data: {
+                    tanggal: tanggal,
+                    nik: nik
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Tampilkan informasi jam kerja
+                        $('#jadwal_jam_kerja').remove(); // Hapus jadwal sebelumnya jika ada
+
+                        var jadwalHtml = `
+                            <div id="jadwal_jam_kerja" class="alert alert-info mt-2">
+                                <strong>Jadwal Jam Kerja:</strong><br>
+                                Kode Jam Kerja: ${response.kode_jam_kerja}<br>
+                                Jam Masuk: ${response.jam_masuk}<br>
+                                Jam Pulang: ${response.jam_pulang}
+                                ${response.lintas_hari == '1' ? ' (Lintas Hari)' : ''}
+                            </div>
+                        `;
+
+                        $('#tanggal_presensi').after(jadwalHtml);
+                    } else {
+                        // Tampilkan pesan jika tidak ditemukan jadwal
+                        $('#jadwal_jam_kerja').remove();
+                        $('#tanggal_presensi').after(`
+                            <div id="jadwal_jam_kerja" class="alert alert-warning mt-2">
+                                ${response.message}
+                            </div>
+                        `);
+                    }
+                },
+                error: function() {
+                    $('#jadwal_jam_kerja').remove();
+                    $('#tanggal_presensi').after(`
+                        <div id="jadwal_jam_kerja" class="alert alert-danger mt-2">
+                            Terjadi kesalahan saat mengambil jadwal jam kerja.
+                        </div>
+                    `);
+                }
+            });
+        }
+    }
+
+    // Panggil fungsi saat halaman pertama kali dimuat
+    fetchJadwalKerja();
+
+    // Tambahkan event listener untuk perubahan tanggal
+    $('#tanggal_presensi').on('change', function() {
+        fetchJadwalKerja();
+    });
+});
+</script>
+
 @if(session('success'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {

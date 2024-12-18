@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 17, 2024 at 04:39 PM
+-- Generation Time: Dec 18, 2024 at 04:58 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -606,7 +606,9 @@ CREATE TABLE `lembur` (
 INSERT INTO `lembur` (`kode_lembur`, `nik`, `tanggal_presensi`, `waktu_mulai`, `waktu_selesai`, `durasi_menit`, `lintas_hari`, `lembur_libur`, `catatan_lembur`, `status`, `jenis_lembur`, `jam_masuk_asli`, `jam_pulang_asli`, `total_absen`, `alasan_penolakan`, `created_at`, `updated_at`) VALUES
 ('LAHP234', '123123123', '2024-12-17', '18:00:00', '19:00:00', 60, 0, 0, 'Catatan Lembur', 'pending', 'reguler', '08:30:00', '16:00:00', 1, NULL, '2024-12-17 08:45:20', '2024-12-17 08:45:20'),
 ('LIAT956', '123123123', '2024-12-18', '21:30:00', '03:30:00', 360, 1, 0, 'Catatan Lembur', 'pending', 'reguler', '21:10:00', '21:30:00', 1, NULL, '2024-12-17 08:59:59', '2024-12-17 08:59:59'),
-('LWXI244', '123123123', '2024-12-22', '08:00:00', '12:00:00', 240, 0, 1, 'Catatan Lembur', 'pending', 'reguler', NULL, NULL, 1, NULL, '2024-12-17 08:59:28', '2024-12-17 08:59:28');
+('LSRA311', '123123123', '2024-12-18', '14:13:00', '15:13:00', 60, 0, 0, 'Catatan Lembur', 'pending', 'penebalan', '21:10:00', '21:30:00', 1, NULL, '2024-12-18 07:13:21', '2024-12-18 07:13:21'),
+('LWXI244', '123123123', '2024-12-22', '22:00:00', '02:00:00', 240, 1, 1, 'Catatan Lembur', 'pending', 'reguler', NULL, NULL, 1, NULL, '2024-12-17 08:59:28', '2024-12-18 07:50:58'),
+('LXET653', '123123123', '2024-12-18', '21:30:00', '02:30:00', 300, 1, 0, 'Catatan Lembur', 'pending', 'reguler', '21:10:00', '21:30:00', 1, NULL, '2024-12-18 07:47:57', '2024-12-18 07:47:57');
 
 -- --------------------------------------------------------
 

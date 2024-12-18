@@ -134,7 +134,16 @@
                                             <a href="{{ route('admin.lembur.show', $item->kode_lembur) }}" class="btn-sm btn-info mx-1" title="Lihat"><i class="bi bi-list"></i></a>
                                         </div>
                                         <div class="col mb-2">
-                                        <a href="{{ route('admin.lembur.edit', $item->kode_lembur) }}" class="btn-sm btn-warning mx-1" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                            @php
+                                                $tanggalPresensi = \Carbon\Carbon::parse($item->tanggal_presensi);
+                                                $today = \Carbon\Carbon::today();
+                                            @endphp
+                                            @if ($tanggalPresensi->isFuture() || $tanggalPresensi->isToday())
+                                                <a href="{{ route('admin.lembur.edit', $item->kode_lembur) }}" class="btn-sm btn-warning mx-1" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                            @else
+                                                {{-- <button class="btn-sm btn-secondary mx-1" title="Edit" disabled><i class="bi bi-pencil-square"></i></button> --}}
+                                                <a href="" class="btn-sm btn-warning mx-1" title="Edit" style="pointer-events: none; opacity: 0.5; cursor: not-allowed;"><i class="bi bi-pencil-square"></i></a>
+                                            @endif
                                         </div>
                                         <div class="col mb-2">
                                         <form action="{{ route('admin.lembur.delete', $item->kode_lembur) }}" method="POST" class="d-inline">
