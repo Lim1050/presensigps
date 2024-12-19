@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2024 at 04:58 PM
+-- Generation Time: Dec 19, 2024 at 04:17 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -245,7 +245,7 @@ INSERT INTO `jam_kerja` (`kode_jam_kerja`, `kode_lokasi_penugasan`, `kode_cabang
 ('JK03', 'GR', 'JKTT', 'Shift Malam', '15:40:00', '15:45:00', '15:50:00', '16:00:00', '1', NULL, '2024-11-05 06:22:56'),
 ('JKHIBKSSS', 'HI', 'BKS', 'Shift Siang', '08:00:00', '09:00:00', '10:00:00', '21:00:00', '0', '2024-11-05 14:53:01', '2024-11-05 14:53:01'),
 ('JKMNJKTPSM', 'MN', 'JKTP', 'Shift Malam', '20:50:00', '21:10:00', '21:20:00', '21:30:00', '0', '2024-11-04 08:37:57', '2024-11-05 14:05:39'),
-('JKMNJKTPSP', 'MN', 'JKTP', 'Shift Pagi', '00:00:00', '00:30:00', '01:00:00', '08:00:00', '0', '2024-11-04 08:34:27', '2024-11-04 08:34:27'),
+('JKMNJKTPSP', 'MN', 'JKTP', 'Shift Pagi', '15:00:00', '15:15:00', '15:30:00', '15:45:00', '0', '2024-11-04 08:34:27', '2024-11-04 08:34:27'),
 ('JKMNJKTPSS', 'MN', 'JKTP', 'Shift Siang', '08:00:00', '08:30:00', '09:00:00', '16:00:00', '0', '2024-11-04 08:36:55', '2024-11-04 08:36:55'),
 ('JKPIKJKTPSM', 'PIK', 'JKTP', 'Shift Malam', '18:00:00', '18:30:00', '19:00:00', '02:30:00', '1', '2024-11-05 15:08:47', '2024-11-05 15:08:47'),
 ('JKPIKJKTPSP', 'PIK', 'JKTP', 'Shift Pagi', '00:00:00', '01:00:00', '02:00:00', '09:00:00', '0', '2024-11-05 15:19:28', '2024-11-05 15:37:54'),
@@ -604,11 +604,7 @@ CREATE TABLE `lembur` (
 --
 
 INSERT INTO `lembur` (`kode_lembur`, `nik`, `tanggal_presensi`, `waktu_mulai`, `waktu_selesai`, `durasi_menit`, `lintas_hari`, `lembur_libur`, `catatan_lembur`, `status`, `jenis_lembur`, `jam_masuk_asli`, `jam_pulang_asli`, `total_absen`, `alasan_penolakan`, `created_at`, `updated_at`) VALUES
-('LAHP234', '123123123', '2024-12-17', '18:00:00', '19:00:00', 60, 0, 0, 'Catatan Lembur', 'pending', 'reguler', '08:30:00', '16:00:00', 1, NULL, '2024-12-17 08:45:20', '2024-12-17 08:45:20'),
-('LIAT956', '123123123', '2024-12-18', '21:30:00', '03:30:00', 360, 1, 0, 'Catatan Lembur', 'pending', 'reguler', '21:10:00', '21:30:00', 1, NULL, '2024-12-17 08:59:59', '2024-12-17 08:59:59'),
-('LSRA311', '123123123', '2024-12-18', '14:13:00', '15:13:00', 60, 0, 0, 'Catatan Lembur', 'pending', 'penebalan', '21:10:00', '21:30:00', 1, NULL, '2024-12-18 07:13:21', '2024-12-18 07:13:21'),
-('LWXI244', '123123123', '2024-12-22', '22:00:00', '02:00:00', 240, 1, 1, 'Catatan Lembur', 'pending', 'reguler', NULL, NULL, 1, NULL, '2024-12-17 08:59:28', '2024-12-18 07:50:58'),
-('LXET653', '123123123', '2024-12-18', '21:30:00', '02:30:00', 300, 1, 0, 'Catatan Lembur', 'pending', 'reguler', '21:10:00', '21:30:00', 1, NULL, '2024-12-18 07:47:57', '2024-12-18 07:47:57');
+('LWXI244', '123123123', '2024-12-19', '16:00:00', '16:30:00', 30, 0, 0, 'Catatan Lembur', 'disetujui', 'reguler', '15:15:00', '15:45:00', 1, NULL, '2024-12-17 08:59:28', '2024-12-19 08:17:59');
 
 -- --------------------------------------------------------
 
@@ -1104,7 +1100,8 @@ INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_kelua
 (330, '123123123', '2024-11-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS1124002', NULL, NULL, NULL, NULL, NULL, '2024-11-19 05:51:08', NULL),
 (331, '123123123', '2024-11-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS1124002', NULL, NULL, NULL, NULL, NULL, '2024-11-19 05:51:08', NULL),
 (332, '123123123', '2024-11-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS1124002', NULL, NULL, NULL, NULL, NULL, '2024-11-19 05:51:08', NULL),
-(333, '123123123', '2024-11-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS1124002', NULL, NULL, NULL, NULL, NULL, '2024-11-19 05:51:08', NULL);
+(333, '123123123', '2024-11-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS1124002', NULL, NULL, NULL, NULL, NULL, '2024-11-19 05:51:08', NULL),
+(334, '123123123', '2024-12-19', '15:15:24', '16:00:05', 'public/uploads/absensi/123123123-2024-12-19-151524-masuk.png', 'public/uploads/absensi/123123123-2024-12-19-160005-keluar.png', '-6.2016912,106.8421141', '-6.2016977,106.8421042', 'JKMNJKTPSP', 'hadir', NULL, NULL, NULL, 0, NULL, NULL, '2024-12-19 08:15:24', '2024-12-19 09:00:05');
 
 -- --------------------------------------------------------
 
@@ -1594,7 +1591,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `presensi`
 --
 ALTER TABLE `presensi`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=334;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=335;
 
 --
 -- AUTO_INCREMENT for table `roles`

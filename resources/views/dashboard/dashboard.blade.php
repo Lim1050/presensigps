@@ -255,7 +255,7 @@
                     </thead>
                     <tbody>
                         @forelse($daftar_lembur as $lembur)
-                            <tr data-id="{{ $lembur->id }}">
+                            <tr data-id="{{ $lembur->kode_lembur }}">
                                 <td>
                                     {{ \Carbon\Carbon::parse($lembur->tanggal_presensi)->translatedFormat('d-m-Y') }}
                                     @if($lembur->catatan_lembur)

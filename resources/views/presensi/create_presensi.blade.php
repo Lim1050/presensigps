@@ -185,6 +185,11 @@
     </div>
     <div class="row mt-2">
         <div class="col">
+            <button class="btn btn-secondary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Lembur</button>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col">
             <div id="map"></div>
         </div>
     </div>

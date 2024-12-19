@@ -139,25 +139,25 @@
         const currentMinute = String(now.getMinutes()).padStart(2, '0');
         const currentTime = `${currentHour}:${currentMinute}`;
 
-        function updateMinTime() {
-            const selectedDate = tanggalInput.value;
+        // function updateMinTime() {
+        //     const selectedDate = tanggalInput.value;
 
-            // Jika tanggal yang dipilih adalah hari ini
-            if (selectedDate === today) {
-                waktuMulaiInput.setAttribute('min', currentTime);
+        //     // Jika tanggal yang dipilih adalah hari ini
+        //     if (selectedDate === today) {
+        //         waktuMulaiInput.setAttribute('min', currentTime);
 
-                // Jika waktu yang dipilih lebih awal dari waktu saat ini, reset input
-                if (waktuMulaiInput.value && waktuMulaiInput.value < currentTime) {
-                    waktuMulaiInput.value = '';
-                }
-            } else {
-                // Jika tanggal yang dipilih adalah hari lain
-                waktuMulaiInput.removeAttribute('min');
-            }
-        }
+        //         // Jika waktu yang dipilih lebih awal dari waktu saat ini, reset input
+        //         if (waktuMulaiInput.value && waktuMulaiInput.value < currentTime) {
+        //             waktuMulaiInput.value = '';
+        //         }
+        //     } else {
+        //         // Jika tanggal yang dipilih adalah hari lain
+        //         waktuMulaiInput.removeAttribute('min');
+        //     }
+        // }
 
         // Set minimum date untuk tanggal presensi
-        tanggalInput.setAttribute('min', originalTanggal);
+        tanggalInput.setAttribute('min', today);
 
         // Event listeners
         tanggalInput.addEventListener('change', updateMinTime);
