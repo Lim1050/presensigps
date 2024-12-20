@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cabang;
+use App\Models\LokasiPenugasan;
 use App\Models\PersetujuanSakitIzin;
 use App\Models\presensi;
 use Carbon\Carbon;
@@ -12,7 +13,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\LaporanPresensiExport;
+use App\Models\JamKerjaKaryawan;
 use App\Models\Karyawan;
+use App\Models\Lembur;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PresensiController extends Controller
@@ -68,8 +71,7 @@ class PresensiController extends Controller
 
         // Cek presensi hari sebelumnya untuk lintas hari
         $tgl_sebelumnya = date('Y-m-d', strtotime("-1 days", strtotime($hari_ini)));
-        $presensi_sebelumnya = DB::table('presensi')
-            ->join('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+        $presensi_sebelumnya = Presensi::with('JamKerja')
             ->where('tanggal_presensi', $tgl_sebelumnya)
             ->where('nik', $nik)
             ->first();
@@ -81,18 +83,22 @@ class PresensiController extends Controller
         }
 
         // Get presensi hari ini
-        $presensi_hari_ini = DB::table('presensi')
-            ->select('presensi.*', 'pengajuan_izin.keterangan')
-            ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
-            ->where('presensi.nik', $nik)
+        $presensi_hari_ini = Presensi::query()
+            ->with('PengajuanIzin')
+            ->where('nik', $nik)
             ->where('tanggal_presensi', $hari_ini)
             ->first();
 
         // Cek lembur yang disetujui
-        $lembur_hari_ini = DB::table('lembur')
-            ->where('nik', $nik)
+        $lembur_hari_ini = Lembur::where('nik', $nik)
             ->where('tanggal_presensi', $hari_ini)
             ->where('status', 'disetujui')
+            ->first();
+
+        // Get jam kerja normal
+        $jam_kerja_normal = JamKerjaKaryawan::with('jamKerja')
+            ->where('nik', $nik)
+            ->where('hari', $nama_hari)
             ->first();
 
         // Data yang dibutuhkan view
@@ -101,50 +107,14 @@ class PresensiController extends Controller
             'cek_masuk' => $presensi_hari_ini ? 1 : 0,
             'cek_keluar' => $presensi_hari_ini && $presensi_hari_ini->foto_keluar ? 1 : 0,
             'foto_keluar' => $presensi_hari_ini ? $presensi_hari_ini->foto_keluar : null,
-            'lokasi_penugasan' => DB::table('lokasi_penugasan')->where('kode_lokasi_penugasan', $kode_lokasi_penugasan)->first(),
+            'lokasi_penugasan' => LokasiPenugasan::where('kode_lokasi_penugasan', $kode_lokasi_penugasan)->first(),
             'cek_izin' => $presensi_hari_ini,
             'hari_ini' => $hari_ini,
             'cek_lintas_hari' => $cek_lintas_hari,
             'cek_presensi_sebelumnya' => $presensi_sebelumnya,
-            'lembur_hari_ini' => $lembur_hari_ini
+            'jam_kerja_karyawan' => $jam_kerja_normal, // Jam kerja normal
+            'lembur_hari_ini' => $lembur_hari_ini // Data lembur
         ];
-
-        // Get jam kerja normal
-        $jam_kerja_normal = DB::table('jam_kerja_karyawan')
-            ->join('jam_kerja', 'jam_kerja_karyawan.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-            ->where('nik', $nik)
-            ->where('hari', $nama_hari)
-            ->first();
-
-        // if (!$jam_kerja_normal) {
-        //     $jam_kerja_normal = DB::table('jam_kerja_dept_detail')
-        //         ->join('jam_kerja_dept', 'jam_kerja_dept_detail.kode_jk_dept', '=', 'jam_kerja_dept.kode_jk_dept')
-        //         ->join('jam_kerja', 'jam_kerja_dept_detail.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-        //         ->where('kode_lokasi_penugasan', $kode_lokasi_penugasan)
-        //         ->where('kode_cabang', $kode_cabang)
-        //         ->where('hari', $nama_hari)
-        //         ->first();
-        // }
-
-        // Jika ada lembur, gunakan waktu lembur sebagai jam kerja
-        if ($lembur_hari_ini) {
-            // Kurangi 30 menit untuk awal_jam_masuk
-            $awal_jam_masuk = date('H:i:s', strtotime('-30 minutes', strtotime($lembur_hari_ini->waktu_mulai)));
-
-            // Tambah 30 menit untuk akhir_jam_masuk
-            $akhir_jam_masuk = date('H:i:s', strtotime('+30 minutes', strtotime($lembur_hari_ini->waktu_mulai)));
-            $data['jam_kerja_karyawan'] = (object) [
-                'kode_jam_kerja' => 'LEMBUR',
-                'nama_jam_kerja' => 'Lembur',
-                'awal_jam_masuk' => $awal_jam_masuk,
-                'jam_masuk' => $lembur_hari_ini->waktu_mulai,
-                'akhir_jam_masuk' => $akhir_jam_masuk,
-                'jam_pulang' => $lembur_hari_ini->waktu_selesai,
-                'lembur' => 1
-            ];
-        } else {
-            $data['jam_kerja_karyawan'] = $jam_kerja_normal;
-        }
 
         // Return view yang sesuai
         if ($data['jam_kerja_karyawan'] == null && !$lembur_hari_ini) {
@@ -168,7 +138,6 @@ class PresensiController extends Controller
         // Cek lintas hari
         $tgl_sebelumnya = date('Y-m-d', strtotime("-1 days", strtotime($hari_ini)));
         $cek_presensi_sebelumnya = DB::table('presensi')
-            ->join('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
             ->where('tanggal_presensi', $tgl_sebelumnya)
             ->where('nik', $nik)
             ->first();
@@ -189,17 +158,12 @@ class PresensiController extends Controller
             ->where('status', 'disetujui')
             ->first();
 
-        // Jika tidak ada jam kerja normal tapi ada lembur
-        if (!$jam_kerja_karyawan && $lembur_hari_ini) {
-            $jam_kerja_karyawan = $this->createLemburJamKerja($lembur_hari_ini);
-        }
-
         // Jika tidak ada jam kerja dan tidak ada lembur
         if (!$jam_kerja_karyawan && !$lembur_hari_ini) {
             return "error|Tidak ada jadwal kerja atau lembur untuk hari ini|sch";
         }
 
-        // Validasi lokasi
+        // Validasi lokasi (hanya untuk jam kerja normal)
         $lokasi_penugasan = DB::table('lokasi_penugasan')
             ->where('kode_lokasi_penugasan', Auth::guard('karyawan')->user()->kode_lokasi_penugasan)
             ->first();
@@ -209,22 +173,263 @@ class PresensiController extends Controller
             return "error|Maaf, anda diluar radius, jarak anda " . $radius . " meter dari kantor!|rad";
         }
 
-        // Proses foto
-        $foto = $this->processFoto($request->image, $nik, $tgl_presensi, $jam_save);
-
         // Cek presensi hari ini
-        $cek = DB::table('presensi')
+        $cek_presensi = DB::table('presensi')
             ->where('tanggal_presensi', $tgl_presensi)
             ->where('nik', $nik)
             ->first();
 
-        if ($cek) {
-            // Proses Absen Pulang
-            return $this->prosesAbsenPulang($cek, $jam_sekarang, $foto, $request->lokasi, $jam_kerja_karyawan, $lembur_hari_ini, $request);
-        } else {
-            // Proses Absen Masuk
-            return $this->prosesAbsenMasuk($jam_sekarang, $foto, $request->lokasi, $jam_kerja_karyawan, $lembur_hari_ini, $tgl_presensi, $request);
+        // Tentukan jenis dan kondisi absensi
+        $kondisi_absensi = $this->tentukan_kondisi_absensi(
+            $jam_kerja_karyawan,
+            $lembur_hari_ini,
+            $cek_presensi,
+            $jam_sekarang
+        );
+
+        // Proses absensi sesuai kondisi
+        switch($kondisi_absensi['jenis']) {
+            case 'absen_masuk_normal':
+                return $this->prosesAbsenMasukNormal(
+                    $jam_sekarang,
+                    $request->image,
+                    $request->lokasi,
+                    $jam_kerja_karyawan,
+                    $tgl_presensi,
+                    $cek_presensi
+                );
+
+            case 'absen_pulang_normal':
+                return $this->prosesAbsenPulangNormal(
+                    $cek_presensi,
+                    $jam_sekarang,
+                    $request->image,
+                    $request->lokasi,
+                    $jam_kerja_karyawan
+                );
+
+            case 'absen_selesai_lembur':
+                return $this->prosesAbsenSelesaiLembur(
+                    $cek_presensi,
+                    $jam_sekarang,
+                    $lembur_hari_ini
+                );
+
+            case 'absen_masuk_lembur':
+                return $this->prosesAbsenMasukLembur(
+                    $jam_sekarang,
+                    $lembur_hari_ini,
+                    $cek_presensi,
+                    $tgl_presensi
+                );
+
+            default:
+                return "error|Tidak dapat melakukan absensi saat ini|absen";
         }
+    }
+
+    private function tentukan_kondisi_absensi($jam_kerja, $lembur, $presensi, $jam_sekarang)
+    {
+        // Konversi waktu ke timestamp untuk perbandingan
+        $ts_jam_sekarang = strtotime($jam_sekarang);
+
+        // Jika tidak ada jam kerja dan lembur
+        if (!$jam_kerja && !$lembur) {
+            return ['jenis' => 'error', 'pesan' => 'Tidak ada jadwal'];
+        }
+
+        // Parameter jam kerja
+        $ts_jam_masuk_normal = strtotime($jam_kerja->jam_masuk);
+        $ts_jam_pulang_normal = strtotime($jam_kerja->jam_pulang);
+        $ts_awal_jam_masuk = strtotime($jam_kerja->awal_jam_masuk);
+        $ts_akhir_jam_masuk = strtotime($jam_kerja->akhir_jam_masuk);
+
+        // Parameter lembur
+        $ts_mulai_lembur = $lembur ? strtotime($lembur->waktu_mulai) : null;
+        $ts_selesai_lembur = $lembur ? strtotime($lembur->waktu_selesai) : null;
+
+        // Kondisi 1: Lembur sebelum jam kerja normal
+        if ($lembur && $ts_selesai_lembur <= $ts_jam_masuk_normal) {
+            // Waktu absen selesai lembur
+            $ts_awal_absen_selesai_lembur = strtotime($lembur->waktu_selesai . ' - 30 minutes');
+            $ts_akhir_absen_selesai_lembur = strtotime($lembur->waktu_selesai . ' + 30 minutes');
+
+            if ($ts_jam_sekarang >= $ts_awal_absen_selesai_lembur &&
+                $ts_jam_sekarang <= $ts_akhir_absen_selesai_lembur) {
+                // Pastikan belum ada absen selesai lembur
+                if (!$presensi || !$presensi->selesai_lembur) {
+                    return [
+                        'jenis' => 'absen_selesai_lembur',
+                        'pesan' => 'Absen Selesai Lembur'
+                    ];
+                }
+            }
+
+            // Absen masuk normal setelah selesai lembur
+            if ($presensi && $presensi->selesai_lembur) {
+                if ($ts_jam_sekarang >= $ts_awal_jam_masuk &&
+                    $ts_jam_sekarang <= $ts_akhir_jam_masuk) {
+                    return [
+                        'jenis' => 'absen_masuk_normal',
+                        'pesan' => 'Absen Masuk Normal'
+                    ];
+                }
+            }
+        }
+
+        // Kondisi 2: Lembur setelah jam pulang normal
+        if ($lembur && $ts_mulai_lembur >= $ts_jam_pulang_normal) {
+            // Waktu absen pulang normal
+            $ts_awal_absen_pulang = strtotime($jam_kerja->jam_pulang . ' - 30 minutes');
+            $ts_akhir_absen_pulang = strtotime($jam_kerja->jam_pulang . ' + 30 minutes');
+
+            if ($ts_jam_sekarang >= $ts_awal_absen_pulang &&
+                $ts_jam_sekarang <= $ts_akhir_absen_pulang) {
+                return [
+                    'jenis' => 'absen_pulang_normal',
+                    'pesan' => 'Absen Pulang Normal'
+                ];
+            }
+
+            // Cek absen masuk lembur setelah pulang
+            if ($presensi && $presensi->jam_keluar) {
+                $ts_awal_absen_lembur = strtotime($lembur->waktu_mulai . ' - 30 minutes');
+                $ts_akhir_absen_lembur = strtotime($lembur->waktu_mulai . ' + 30 minutes');
+
+                if ($ts_jam_sekarang >= $ts_awal_absen_lembur &&
+                    $ts_jam_sekarang <= $ts_akhir_absen_lembur) {
+                    return [
+                        'jenis' => 'absen_masuk_lembur',
+                        'pesan' => 'Absen Masuk Lembur'
+                    ];
+                }
+            }
+        }
+
+        // Kondisi 3: Lembur pada jam pulang normal
+        if ($lembur && $ts_mulai_lembur == $ts_jam_pulang_normal) {
+            $ts_awal_absen_pulang = strtotime($jam_kerja->jam_pulang . ' - 30 minutes');
+            $ts_akhir_absen_pulang = strtotime($jam_kerja->jam_pulang . ' + 30 minutes');
+
+            if ($ts_jam_sekarang >= $ts_awal_absen_pulang &&
+                $ts_jam_sekarang <= $ts_akhir_absen_pulang) {
+                return [
+                    'jenis' => 'absen_pulang_normal',
+                    'pesan' => 'Absen Pulang Normal'
+                ];
+            }
+        }
+
+        return ['jenis' => 'error', 'pesan' => 'Tidak dapat melakukan absensi saat ini'];
+    }
+
+    private function prosesAbsenMasukNormal($jam_sekarang, $image, $lokasi, $jam_kerja, $tgl_presensi, $presensi)
+    {
+        // Tentukan jam masuk yang digunakan
+        $jam_masuk_minimal = $jam_kerja->awal_jam_masuk;
+        $jam_masuk_maksimal = $jam_kerja->akhir_jam_masuk;
+
+        if ($jam_sekarang < $jam_masuk_minimal) {
+            return "error|Maaf Belum Waktunya Melakukan Presensi!|in";
+        }
+
+        if ($jam_sekarang > $jam_masuk_maksimal) {
+            return "error|Maaf Sudah Melewati Waktu Melakukan Presensi!|in";
+        }
+
+        // Proses foto
+        $foto = $this->processFoto($image, Auth::guard('karyawan')->user()->nik, $tgl_presensi, str_replace(':', '', $jam_sekarang));
+
+        // Data dasar untuk presensi masuk
+        $data_masuk = [
+            'nik' => Auth::guard('karyawan')->user()->nik,
+            'tanggal_presensi' => $tgl_presensi,
+            'jam_masuk' => $jam_sekarang,
+            'foto_masuk' => $foto,
+            'lokasi_masuk' => $lokasi,
+            'kode_jam_kerja' => $jam_kerja->kode_jam_kerja,
+            'status' => 'hadir',
+            'created_at' => Carbon::now()
+        ];
+
+        if ($presensi) {
+            // Update data presensi jika sudah ada
+            DB::table('presensi')->where('id', $presensi->id)->update($data_masuk);
+        } else {
+            // Insert data baru jika belum ada
+            DB::table('presensi')->insert($data_masuk);
+        }
+
+        return "success|Terima kasih, Selamat bekerja!|in";
+    }
+
+    private function prosesAbsenPulangNormal($presensi, $jam_sekarang, $image, $lokasi, $jam_kerja)
+    {
+        // Tentukan jam pulang yang digunakan
+        $jam_pulang = $jam_kerja->jam_pulang;
+
+        // Toleransi pulang lebih awal (30 menit)
+        $toleransi_pulang =  30;
+        $jam_pulang_minimal = Carbon::parse($jam_pulang)->subMinutes($toleransi_pulang)->format('H:i:s');
+
+        if (Carbon::parse($jam_sekarang)->lt(Carbon::parse($jam_pulang_minimal))) {
+            $sisa_waktu = Carbon::parse($jam_pulang_minimal)->diffInMinutes(Carbon::parse($jam_sekarang));
+            return "error|Maaf Belum Waktunya Pulang! Sisa waktu: {$sisa_waktu} menit|out";
+        }
+
+        $data_pulang = [
+            'jam_keluar' => $jam_sekarang,
+            'foto_keluar' => $this->processFoto($image, Auth::guard('karyawan')->user()->nik, $presensi->tanggal_presensi, str_replace(':', '', $jam_sekarang)),
+            'lokasi_keluar' => $lokasi,
+            'updated_at' => Carbon::now()
+        ];
+
+        if (DB::table('presensi')->where('id', $presensi->id)->update($data_pulang)) {
+            return "success|Terima kasih, Hati-hati di jalan!|out";
+        }
+
+        return "error|Maaf Gagal absen, hubungi Tim IT|out";
+    }
+
+    private function prosesAbsenMasukLembur($jam_sekarang, $lembur, $presensi, $tgl_presensi)
+    {
+        // Data dasar untuk presensi lembur
+        $data_lembur = [
+            'nik' => Auth::guard('karyawan')->user()->nik,
+            'tanggal_presensi' => $tgl_presensi,
+            'jam_masuk' => $jam_sekarang,
+            'kode_jam_kerja' => 'LEMBUR',
+            'status' => 'hadir',
+            'created_at' => Carbon::now(),
+            'lembur' => 1,
+            'mulai_lembur' => $lembur->waktu_mulai,
+            'selesai_lembur' => $lembur->waktu_selesai
+        ];
+
+        if ($presensi) {
+            // Update data lembur jika sudah ada
+            DB::table('presensi')->where('id', $presensi->id)->update($data_lembur);
+        } else {
+            // Insert data baru jika belum ada
+            DB::table('presensi')->insert($data_lembur);
+        }
+
+        return "success|Terima kasih, Selamat bekerja lembur!|in";
+    }
+
+    private function prosesAbsenSelesaiLembur($presensi, $jam_sekarang, $lembur)
+    {
+        // Update data presensi untuk selesai lembur
+        $data_selesai_lembur = [
+            'selesai_lembur' => $jam_sekarang,
+            'updated_at' => Carbon::now()
+        ];
+
+        if (DB::table('presensi')->where('id', $presensi->id)->update($data_selesai_lembur)) {
+            return "success|Terima kasih, Anda telah selesai lembur!|out";
+        }
+
+        return "error|Maaf Gagal menyelesaikan lembur, hubungi Tim IT|out";
     }
 
     private function processFoto($image, $nik, $tgl_presensi, $jam_save)
@@ -249,104 +454,6 @@ class PresensiController extends Controller
         return $file;
     }
 
-    private function createLemburJamKerja($lembur)
-    {
-        return (object) [
-            'kode_jam_kerja' => 'LEMBUR',
-            'nama_jam_kerja' => 'Lembur',
-            'awal_jam_masuk' => date('H:i:s', strtotime('-30 minutes', strtotime($lembur->waktu_mulai))),
-            'jam_masuk' => $lembur->waktu_mulai,
-            'akhir_jam_masuk' => date('H:i:s', strtotime('+30 minutes', strtotime($lembur->waktu_mulai))),
-            'jam_pulang' => $lembur->waktu_selesai,
-            'lembur' => 1
-        ];
-    }
-
-    private function prosesAbsenMasuk($jam_sekarang, $foto, $lokasi, $jam_kerja, $lembur, $tgl_presensi)
-    {
-        // Tentukan jam masuk yang digunakan
-        $jam_masuk_minimal = $jam_kerja->awal_jam_masuk;
-        $jam_masuk_maksimal = $jam_kerja->akhir_jam_masuk;
-
-        if ($jam_sekarang < $jam_masuk_minimal) {
-            return "error|Maaf Belum Waktunya Melakukan Presensi!|in";
-        }
-
-        if ($jam_sekarang > $jam_masuk_maksimal) {
-            return "error|Maaf Sudah Melewati Waktu Melakukan Presensi!|in";
-        }
-
-        // Data dasar untuk presensi masuk
-        $data_masuk = [
-            'nik' => Auth::guard('karyawan')->user()->nik,
-            'tanggal_presensi' => $tgl_presensi,
-            'jam_masuk' => $jam_sekarang,
-            'foto_masuk' => $foto,
-            'lokasi_masuk' => $lokasi,
-            'kode_jam_kerja' => $jam_kerja->kode_jam_kerja,
-            'status' => 'hadir',
-            'created_at' => Carbon::now()
-        ];
-
-        // Tambahkan data lembur jika ada
-        if ($lembur && isset($jam_kerja->lembur) && $jam_kerja->lembur) {
-            $data_masuk['lembur'] = 1;
-            $data_masuk['mulai_lembur'] = $jam_kerja->jam_masuk;
-            $data_masuk['selesai_lembur'] = $jam_kerja->jam_pulang;
-        } else {
-            $data_masuk['lembur'] = 0;
-            $data_masuk['mulai_lembur'] = null;
-            $data_masuk['selesai_lembur'] = null;
-        }
-
-        if (DB::table('presensi')->insert($data_masuk)) {
-            return "success|Terima kasih, Selamat bekerja!|in";
-        }
-
-        return "error|Maaf Gagal absen, hubungi Tim IT|in";
-    }
-
-    private function prosesAbsenPulang($presensi, $jam_sekarang, $foto, $lokasi, $jam_kerja, $lembur)
-    {
-        // Tentukan jam pulang yang digunakan
-        $jam_pulang = $jam_kerja->jam_pulang;
-
-        // Jika ada lembur, sesuaikan jam pulang
-        if ($lembur) {
-            $waktu_mulai_lembur = Carbon::parse($lembur->waktu_mulai);
-            $waktu_selesai_lembur = Carbon::parse($lembur->waktu_selesai);
-            $jam_masuk_normal = Carbon::parse($jam_kerja->jam_masuk);
-            $jam_pulang_normal = Carbon::parse($jam_kerja->jam_pulang);
-
-            // Jika lembur setelah jam pulang normal
-            if ($waktu_mulai_lembur >= $jam_pulang_normal) {
-                $jam_pulang = $lembur->waktu_selesai;
-            }
-        }
-
-        // Toleransi pulang lebih awal (30 menit)
-        $toleransi_pulang = 30;
-        $jam_pulang_minimal = Carbon::parse($jam_pulang)->subMinutes($toleransi_pulang)->format('H:i:s');
-
-        if (Carbon::parse($jam_sekarang)->lt(Carbon::parse($jam_pulang_minimal))) {
-            $sisa_waktu = Carbon::parse($jam_pulang_minimal)->diffInMinutes(Carbon::parse($jam_sekarang));
-            return "error|Maaf Belum Waktunya Pulang! Sisa waktu: {$sisa_waktu} menit|out";
-        }
-
-        $data_pulang = [
-            'jam_keluar' => $jam_sekarang,
-            'foto_keluar' => $foto,
-            'lokasi_keluar' => $lokasi,
-            'updated_at' => Carbon::now()
-        ];
-
-        if (DB::table('presensi')->where('id', $presensi->id)->update($data_pulang)) {
-            return "success|Terima kasih, Hati - hati dijalan!|out";
-        }
-
-        return "error|Maaf Gagal absen, hubungi Tim IT|out";
-    }
-
     private function getJamKerja($nik, $nama_hari)
     {
         $jam_kerja = DB::table('jam_kerja_karyawan')
@@ -368,7 +475,7 @@ class PresensiController extends Controller
         return $jam_kerja;
     }
 
-     //Menghitung Jarak
+    // Menghitung Jarak
     private function validateLocation($lokasi_user, $lokasi_penugasan)
     {
         $lokasi = explode(",", $lokasi_user);

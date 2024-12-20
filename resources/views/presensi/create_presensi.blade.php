@@ -64,32 +64,22 @@
         </div>
     </div>
     <div class="jam-digital-malasngoding">
-        <p>{{ $hari_ini }}</p>
+        <p>{{ \Carbon\Carbon::parse($hari_ini)->format('d-m-Y') }}</p>
         <p id="jam"></p>
-        <p>{{ $jam_kerja_karyawan->nama_jam_kerja }}</p>
+        <p>{{ $jam_kerja_karyawan->jamKerja->nama_jam_kerja }}</p>
+
+        <p>Awal Jam Masuk : {{ date("H:i", strtotime($jam_kerja_karyawan->jamKerja->awal_jam_masuk)) }}</p>
+        <p>Jam Masuk : {{ date("H:i", strtotime($jam_kerja_karyawan->jamKerja->jam_masuk)) }}</p>
+        <p>Akhir Jam Masuk : {{ date("H:i", strtotime($jam_kerja_karyawan->jamKerja->akhir_jam_masuk)) }}</p>
+        <p>Jam Pulang : {{ date("H:i", strtotime($jam_kerja_karyawan->jamKerja->jam_pulang)) }}</p>
 
         @if($lembur_hari_ini)
-            @php
-                $jam_masuk = date("H:i", strtotime($jam_kerja_karyawan->jam_masuk));
-                $jam_pulang = date("H:i", strtotime($jam_kerja_karyawan->jam_pulang));
-                $jam_mulai_lembur = date("H:i", strtotime($lembur_hari_ini->waktu_mulai));
-                $jam_selesai_lembur = date("H:i", strtotime($lembur_hari_ini->waktu_selesai));
-            @endphp
-
-            <p>Awal Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->awal_jam_masuk)) }}</p>
-            <p>Jam Masuk : {{ $jam_masuk }}</p>
-            <p>Akhir Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->akhir_jam_masuk)) }}</p>
-            <p>Jam Pulang : {{ $jam_pulang }}</p>
             <p class="text-success">Lembur Disetujui</p>
-            <p>Jam Mulai Lembur: {{ $jam_mulai_lembur }}</p>
-            <p>Jam Selesai Lembur: {{ $jam_selesai_lembur }}</p>
-        @else
-            <p>Awal Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->awal_jam_masuk)) }}</p>
-            <p>Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_masuk)) }}</p>
-            <p>Akhir Jam Masuk : {{ date("H:i",strtotime($jam_kerja_karyawan->akhir_jam_masuk)) }}</p>
-            <p>Jam Pulang : {{ date("H:i",strtotime($jam_kerja_karyawan->jam_pulang)) }}</p>
+            <p>Jam Mulai Lembur: {{ date("H:i", strtotime($lembur_hari_ini->waktu_mulai)) }}</p>
+            <p>Jam Selesai Lembur: {{ date("H:i", strtotime($lembur_hari_ini->waktu_selesai)) }}</p>
         @endif
     </div>
+
     <div class="row">
         <div class="col">
             @if ($cek_izin && $cek_masuk && !$foto_keluar && in_array($cek_izin->status, ['izin', 'sakit', 'cuti']))
@@ -99,33 +89,18 @@
             @elseif (!$cek_masuk)
                 @php
                     $jam_sekarang = date('H:i:s');
-                    $awal_jam_masuk = $jam_kerja_karyawan->awal_jam_masuk;
-                    $akhir_jam_masuk = $jam_kerja_karyawan->akhir_jam_masuk;
-
-                    // Sesuaikan jam masuk jika ada lembur
-                    if ($lembur_hari_ini) {
-                        $waktu_mulai_lembur = \Carbon\Carbon::parse($lembur_hari_ini->waktu_mulai);
-                        $waktu_selesai_lembur = \Carbon\Carbon::parse($lembur_hari_ini->waktu_selesai);
-                        $jam_masuk_normal = \Carbon\Carbon::parse($jam_kerja_karyawan->jam_masuk);
-
-                        // Jika lembur sebelum jam kerja normal
-                        if ($waktu_selesai_lembur <= $jam_masuk_normal) {
-                            $awal_jam_masuk = $lembur_hari_ini->waktu_mulai;
-                            $akhir_jam_masuk = $lembur_hari_ini->waktu_selesai;
-                        }
-                    }
+                    $awal_jam_masuk = $jam_kerja_karyawan->jamKerja->awal_jam_masuk;
+                    $akhir_jam_masuk = $jam_kerja_karyawan->jamKerja->akhir_jam_masuk;
 
                     $boleh_masuk = strtotime($jam_sekarang) >= strtotime($awal_jam_masuk) &&
                                 strtotime($jam_sekarang) <= strtotime($akhir_jam_masuk);
 
                     // Hitung sisa waktu
                     if (strtotime($jam_sekarang) < strtotime($awal_jam_masuk)) {
-                        // Jika belum waktunya masuk
                         $sisa_waktu = strtotime($awal_jam_masuk) - strtotime($jam_sekarang);
                         $sisa_menit = ceil($sisa_waktu / 60);
                         $pesan = "Belum Waktunya Masuk<br><small>($sisa_menit menit lagi)</small>";
                     } elseif (strtotime($jam_sekarang) > strtotime($akhir_jam_masuk)) {
-                        // Jika sudah lewat waktu masuk
                         $pesan = "Waktu Absen Masuk Telah Berakhir";
                     } else {
                         $pesan = "Absen Masuk";
@@ -138,23 +113,7 @@
             @elseif (($cek_masuk && !$foto_keluar) || ($cek_lintas_hari == 1 && !$cek_presensi_sebelumnya->foto_keluar))
                 @php
                     $jam_sekarang = date('H:i:s');
-                    $jam_pulang = $jam_kerja_karyawan->jam_pulang;
-
-                    if ($lembur_hari_ini) {
-                        $waktu_mulai_lembur = \Carbon\Carbon::parse($lembur_hari_ini->waktu_mulai);
-                        $waktu_selesai_lembur = \Carbon\Carbon::parse($lembur_hari_ini->waktu_selesai);
-                        $jam_masuk_normal = \Carbon\Carbon::parse($jam_kerja_karyawan->jam_masuk);
-                        $jam_pulang_normal = \Carbon\Carbon::parse($jam_kerja_karyawan->jam_pulang);
-
-                        // Jika lembur sebelum jam kerja normal
-                        if ($waktu_selesai_lembur <= $jam_masuk_normal) {
-                            $jam_pulang = $jam_kerja_karyawan->jam_pulang;
-                        }
-                        // Jika lembur setelah jam pulang normal
-                        elseif ($waktu_mulai_lembur >= $jam_pulang_normal) {
-                            $jam_pulang = $lembur_hari_ini->waktu_selesai;
-                        }
-                    }
+                    $jam_pulang = $jam_kerja_karyawan->jamKerja->jam_pulang;
 
                     // Toleransi pulang lebih awal (30 menit)
                     $toleransi_pulang = 30;
@@ -183,11 +142,16 @@
             @endif
         </div>
     </div>
-    <div class="row mt-2">
-        <div class="col">
-            <button class="btn btn-secondary btn-block"><ion-icon name="camera-outline"></ion-icon>Absen Lembur</button>
+
+    @if($lembur_hari_ini)
+        <div class="row mt-2">
+            <div class="col">
+                <button class="btn btn-success btn-block">
+                    <ion-icon name="camera-outline"></ion-icon>Absen Lembur
+                </button>
+            </div>
         </div>
-    </div>
+    @endif
     <div class="row mt-2">
         <div class="col">
             <div id="map"></div>

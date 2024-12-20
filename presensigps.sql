@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 19, 2024 at 04:17 PM
+-- Generation Time: Dec 20, 2024 at 04:13 PM
 -- Server version: 8.0.33
 -- PHP Version: 8.2.4
 
@@ -604,6 +604,7 @@ CREATE TABLE `lembur` (
 --
 
 INSERT INTO `lembur` (`kode_lembur`, `nik`, `tanggal_presensi`, `waktu_mulai`, `waktu_selesai`, `durasi_menit`, `lintas_hari`, `lembur_libur`, `catatan_lembur`, `status`, `jenis_lembur`, `jam_masuk_asli`, `jam_pulang_asli`, `total_absen`, `alasan_penolakan`, `created_at`, `updated_at`) VALUES
+('LTID667', '123123123', '2024-12-20', '16:00:00', '17:00:00', 60, 0, 0, 'Catatan Lembur', 'disetujui', 'reguler', '08:30:00', '16:00:00', 1, NULL, '2024-12-20 08:42:45', '2024-12-20 08:42:53'),
 ('LWXI244', '123123123', '2024-12-19', '16:00:00', '16:30:00', 30, 0, 0, 'Catatan Lembur', 'disetujui', 'reguler', '15:15:00', '15:45:00', 1, NULL, '2024-12-17 08:59:28', '2024-12-19 08:17:59');
 
 -- --------------------------------------------------------

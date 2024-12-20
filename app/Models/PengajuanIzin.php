@@ -31,6 +31,11 @@ class PengajuanIzin extends Model
         return $this->belongsTo(Karyawan::class, 'nik', 'nik');
     }
 
+    public function Presensi()
+    {
+        return $this->hasMany(Presensi::class, 'kode_izin', 'kode_izin');
+    }
+
         public function getJumlahHariAttribute()
     {
         return Carbon::parse($this->tanggal_izin_dari)->diffInDays(Carbon::parse($this->tanggal_izin_sampai)) + 1;
