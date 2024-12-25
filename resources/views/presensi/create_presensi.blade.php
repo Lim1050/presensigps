@@ -146,7 +146,7 @@
     @if($lembur_hari_ini)
         <div class="row mt-2">
             <div class="col">
-                <button class="btn btn-success btn-block">
+                <button id="takeabsenLembur" class="btn btn-success btn-block">
                     <ion-icon name="camera-outline"></ion-icon>Absen Lembur
                 </button>
             </div>
@@ -301,7 +301,66 @@
                 }
             }
         });
+    });
 
+    $("#takeabsenLembur").click(function(e){
+        // Konfirmasi sebelum absen lembur
+        Swal.fire({
+            title: 'Konfirmasi Absen Lembur',
+            text: 'Apakah Anda yakin akan melakukan absen lembur?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Absen Lembur',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Kirim ajax untuk absen lembur
+                $.ajax({
+                    type: 'POST',
+                    url: '/presensi/store',  // Buat route baru khusus lembur
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        // jenis_absen: 'lembur'  // Tambahan parameter untuk identifikasi
+                    },
+                    cache: false,
+                    success: function(respond) {
+                        var status = respond.split("|");
+                        if(status[0] == "success"){
+                            // Mainkan notifikasi
+                            notif_in.play();
+
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: status[1],
+                                icon: 'success',
+                                timer: 3000,
+                                timerProgressBar: true
+                            });
+
+                            // Redirect ke dashboard
+                            setTimeout("location.href='/dashboard'", 3000);
+                        } else {
+                            Swal.fire({
+                                title: 'Gagal!',
+                                text: status[1],
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Terjadi kesalahan saat absen lembur',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
+                    }
+                });
+            }
+        });
     });
 </script>
 @endpush
