@@ -144,15 +144,26 @@
     </div>
 
     @if($lembur_hari_ini)
-        <div class="row mt-2">
+        <div class="row mt-1">
             <div class="col">
-                <button id="takeabsenLembur" class="btn btn-success btn-block">
-                    <ion-icon name="camera-outline"></ion-icon>Absen Lembur
-                </button>
+                @if ($cek_mulai_lembur == 0 && $cek_selesai_lembur == 0)
+                    <button id="takeabsenLembur" class="btn btn-success btn-block">
+                        <ion-icon name="camera-outline"></ion-icon>Absen Mulai Lembur
+                    </button>
+                @elseif ($cek_mulai_lembur == 1 && $cek_selesai_lembur == 0)
+                    <button id="takeabsenLembur" class="btn btn-danger btn-block">
+                        <ion-icon name="camera-outline"></ion-icon>Absen Selesai Lembur
+                    </button>
+                @elseif ($cek_mulai_lembur == 1 && $cek_selesai_lembur == 1)
+                    <button class="btn btn-secondary btn-block" disabled>
+                        <ion-icon name="camera-outline"></ion-icon>Sudah Absen Lembur
+                    </button>
+                @endif
+
             </div>
         </div>
     @endif
-    <div class="row mt-2">
+    <div class="row mt-1">
         <div class="col">
             <div id="map"></div>
         </div>
@@ -304,36 +315,68 @@
     });
 
     $("#takeabsenLembur").click(function(e){
+        // Ambil jenis absen dari atribut data
+        var jenisAbsen = $(this).data('jenis');
+
+        // Tentukan pesan konfirmasi berdasarkan jenis absen
+        var judulkonfirmasi = jenisAbsen === 'mulai'
+            ? 'Konfirmasi Mulai Lembur'
+            : 'Konfirmasi Selesai Lembur';
+
+        var teksKonfirmasi = jenisAbsen === 'mulai'
+            ? 'Apakah Anda yakin akan memulai lembur saat ini?'
+            : 'Apakah Anda yakin akan mengakhiri lembur saat ini?';
+
         // Konfirmasi sebelum absen lembur
         Swal.fire({
-            title: 'Konfirmasi Absen Lembur',
-            text: 'Apakah Anda yakin akan melakukan absen lembur?',
+            title: judulkonfirmasi,
+            text: teksKonfirmasi,
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Absen Lembur',
+            confirmButtonText: jenisAbsen === 'mulai' ? 'Ya, Mulai Lembur' : 'Ya, Selesai Lembur',
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
+                // Ambil foto
+                Webcam.snap(function(uri){
+                    image = uri;
+                });
+
+                // Ambil lokasi
+                var lokasi = $("#lokasi").val();
+
                 // Kirim ajax untuk absen lembur
                 $.ajax({
                     type: 'POST',
-                    url: '/presensi/store',  // Buat route baru khusus lembur
+                    url: '/presensi/store',
                     data: {
                         _token: "{{ csrf_token() }}",
-                        // jenis_absen: 'lembur'  // Tambahan parameter untuk identifikasi
+                        image: image,
+                        lokasi: lokasi,
+                        jenis_absen_lembur: jenisAbsen  // Tambahkan parameter jenis absen
                     },
                     cache: false,
                     success: function(respond) {
                         var status = respond.split("|");
                         if(status[0] == "success"){
                             // Mainkan notifikasi
-                            notif_in.play();
+                            // notif_in.play();
+                            if (status[2] == "in") {
+                                notif_in.play();
+                            } else {
+                                notif_out.play();
+                            }
+
+                            // Tentukan pesan berhasil
+                            var pesanBerhasil = jenisAbsen === 'mulai'
+                                ? 'Berhasil memulai lembur'
+                                : 'Berhasil mengakhiri lembur';
 
                             Swal.fire({
                                 title: 'Berhasil!',
-                                text: status[1],
+                                text: pesanBerhasil,
                                 icon: 'success',
                                 timer: 3000,
                                 timerProgressBar: true
@@ -351,9 +394,14 @@
                         }
                     },
                     error: function(xhr, status, error) {
+                        // Tangani error dengan pesan yang lebih informatif
+                        var pesanError = xhr.responseJSON
+                            ? xhr.responseJSON.message
+                            : 'Terjadi kesalahan saat memproses absen lembur';
+
                         Swal.fire({
                             title: 'Error!',
-                            text: 'Terjadi kesalahan saat absen lembur',
+                            text: pesanError,
                             icon: 'error',
                             confirmButtonText: 'Ok'
                         });

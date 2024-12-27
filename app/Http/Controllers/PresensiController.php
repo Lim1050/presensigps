@@ -90,6 +90,8 @@ class PresensiController extends Controller
             ->where('tanggal_presensi', $hari_ini)
             ->first();
 
+        // dd($presensi_hari_ini->kode_lembur, $presensi_hari_ini->mulai_lembur, $presensi_hari_ini->selesai_lembur);
+
         // Cek lembur yang disetujui
         $lembur_hari_ini = Lembur::where('nik', $nik)
             ->where('tanggal_presensi', $hari_ini)
@@ -107,6 +109,8 @@ class PresensiController extends Controller
             'nama_hari' => $nama_hari,
             'cek_masuk' => $presensi_hari_ini ? 1 : 0,
             'cek_keluar' => $presensi_hari_ini && $presensi_hari_ini->foto_keluar ? 1 : 0,
+            'cek_mulai_lembur' => $presensi_hari_ini->kode_lembur && $presensi_hari_ini->mulai_lembur ? 1 : 0,
+            'cek_selesai_lembur' => $presensi_hari_ini->kode_lembur && $presensi_hari_ini->selesai_lembur ? 1 : 0,
             'foto_keluar' => $presensi_hari_ini ? $presensi_hari_ini->foto_keluar : null,
             'lokasi_penugasan' => LokasiPenugasan::where('kode_lokasi_penugasan', $kode_lokasi_penugasan)->first(),
             'cek_izin' => $presensi_hari_ini,
@@ -116,6 +120,8 @@ class PresensiController extends Controller
             'jam_kerja_karyawan' => $jam_kerja_normal, // Jam kerja normal
             'lembur_hari_ini' => $lembur_hari_ini // Data lembur
         ];
+
+        // dd($data);
 
         // Return view yang sesuai
         if ($data['jam_kerja_karyawan'] == null && !$lembur_hari_ini) {
@@ -200,9 +206,12 @@ class PresensiController extends Controller
                 $jam_sekarang
             );
 
+            // dd(vars: $kondisi_absensi);
+
             // Proses absensi sesuai kondisi
             switch($kondisi_absensi['jenis']) {
-                case 'absen_masuk_normal':
+                // Absen Masuk
+                case 'absen_masuk_normal_tanpa_lembur':
                     return $this->prosesAbsenMasukNormal(
                         $jam_sekarang,
                         $request->image,
@@ -212,7 +221,28 @@ class PresensiController extends Controller
                         $cek_presensi
                     );
 
-                case 'absen_pulang_normal':
+                case 'absen_masuk_normal_lembur_setelah':
+                    return $this->prosesAbsenMasukNormal(
+                        $jam_sekarang,
+                        $request->image,
+                        $request->lokasi,
+                        $jam_kerja_karyawan,
+                        $tgl_presensi,
+                        $cek_presensi
+                    );
+
+                case 'absen_masuk_normal_lembur_sebelum':
+                    return $this->prosesAbsenMasukNormal(
+                        $jam_sekarang,
+                        $request->image,
+                        $request->lokasi,
+                        $jam_kerja_karyawan,
+                        $tgl_presensi,
+                        $cek_presensi
+                    );
+
+                // Absen Pulang
+                case 'absen_pulang_normal_tanpa_lembur':
                     return $this->prosesAbsenPulangNormal(
                         $cek_presensi,
                         $jam_sekarang,
@@ -221,14 +251,26 @@ class PresensiController extends Controller
                         $jam_kerja_karyawan
                     );
 
-                case 'absen_selesai_lembur':
-                    return $this->prosesAbsenSelesaiLembur(
+                case 'absen_pulang_normal_lembur_setelah':
+                    return $this->prosesAbsenPulangNormal(
                         $cek_presensi,
                         $jam_sekarang,
-                        $lembur_hari_ini
+                        $request->image,
+                        $request->lokasi,
+                        $jam_kerja_karyawan
                     );
 
-                case 'absen_masuk_lembur':
+                case 'absen_pulang_normal_lembur_sebelum':
+                    return $this->prosesAbsenPulangNormal(
+                        $cek_presensi,
+                        $jam_sekarang,
+                        $request->image,
+                        $request->lokasi,
+                        $jam_kerja_karyawan
+                    );
+
+                // Absen Lembur
+                case 'absen_mulai_lembur_sebelum':
                     return $this->prosesAbsenMasukLembur(
                         $jam_sekarang,
                         $lembur_hari_ini,
@@ -236,10 +278,33 @@ class PresensiController extends Controller
                         $tgl_presensi
                     );
 
+                case 'absen_selesai_lembur_sebelum':
+                    return $this->prosesAbsenSelesaiLembur(
+                        $cek_presensi,
+                        $jam_sekarang,
+                        $lembur_hari_ini
+                    );
+
+                case 'absen_mulai_lembur_setelah':
+                    return $this->prosesAbsenMasukLembur(
+                        $jam_sekarang,
+                        $lembur_hari_ini,
+                        $cek_presensi,
+                        $tgl_presensi
+                    );
+
+                case 'absen_selesai_lembur_setelah':
+                    return $this->prosesAbsenSelesaiLembur(
+                        $cek_presensi,
+                        $jam_sekarang,
+                        $lembur_hari_ini
+                    );
+
                 default:
                     throw new \Exception("Tidak dapat melakukan absensi saat ini", 422);
             }
         } catch (\Exception $e) {
+            dd($e);
             // Log error
             Log::error('Presensi Store Error: ' . $e->getMessage(), [
                 'nik' => Auth::guard('karyawan')->user()->nik ?? 'Unknown',
@@ -267,7 +332,7 @@ class PresensiController extends Controller
         if (!$jam_kerja && !$lembur) {
             return ['jenis' => 'error', 'pesan' => 'Tidak ada jadwal'];
         }
-
+        // dd($presensi->jam_keluar);
         // Parameter jam kerja
         $ts_jam_masuk_normal = strtotime($jam_kerja->jam_masuk);
         $ts_jam_pulang_normal = strtotime($jam_kerja->jam_pulang);
@@ -278,101 +343,123 @@ class PresensiController extends Controller
         $ts_mulai_lembur = $lembur ? strtotime($lembur->waktu_mulai) : null;
         $ts_selesai_lembur = $lembur ? strtotime($lembur->waktu_selesai) : null;
 
-        // Skenario 1: Absen Masuk Normal
+        // Skenario 1: Absen Masuk Jam Kerja Normal Tanpa Lembur
         if (!$lembur && !$presensi) {
-            // Cek apakah waktu saat ini berada di rentang awal dan akhir jam masuk
-            if ($ts_jam_sekarang >= $ts_awal_jam_masuk &&
-                $ts_jam_sekarang <= $ts_akhir_jam_masuk) {
+            if ($ts_jam_sekarang >= $ts_awal_jam_masuk && $ts_jam_sekarang <= $ts_akhir_jam_masuk) {
                 return [
-                    'jenis' => 'absen_masuk_normal',
-                    'pesan' => 'Absen Masuk Normal'
+                    'jenis' => 'absen_masuk_normal_tanpa_lembur',
+                    'pesan' => 'Absen Masuk Normal Tanpa Lembur'
                 ];
             }
         }
 
-        // Skenario 2: Absen Pulang Normal
+        // Skenario 2: Absen Masuk Jam Kerja Normal Dengan Lembur Setelah Jam Pulang Normal
+        if ($lembur && $ts_mulai_lembur >= $ts_jam_pulang_normal) {
+            if ($ts_jam_sekarang >= $ts_awal_jam_masuk && $ts_jam_sekarang <= $ts_akhir_jam_masuk) {
+                return [
+                    'jenis' => 'absen_masuk_normal_lembur_setelah',
+                    'pesan' => 'Absen Masuk Normal Dengan Lembur Setelah Jam Pulang'
+                ];
+            }
+        }
+
+        // Skenario 3: Absen Masuk Jam Kerja Normal Dengan Lembur Sebelum Jam Masuk Normal
+        if ($lembur && $ts_selesai_lembur <= $ts_jam_masuk_normal && !$presensi->jam_masuk) {
+            if ($ts_jam_sekarang >= $ts_awal_jam_masuk && $ts_jam_sekarang <= $ts_akhir_jam_masuk) {
+                return [
+                    'jenis' => 'absen_masuk_normal_lembur_sebelum',
+                    'pesan' => 'Absen Masuk Normal Dengan Lembur Sebelum Jam Masuk'
+                ];
+            }
+        }
+
+        // Skenario 4: Absen Pulang Jam Kerja Normal Tanpa Lembur
         if (!$lembur && $presensi && $presensi->jam_masuk && !$presensi->jam_keluar) {
-            // Waktu absen pulang normal (dengan toleransi ±30 menit)
             $ts_awal_absen_pulang = strtotime($jam_kerja->jam_pulang . ' - 30 minutes');
             $ts_akhir_absen_pulang = strtotime($jam_kerja->jam_pulang . ' + 30 minutes');
 
-            if ($ts_jam_sekarang >= $ts_awal_absen_pulang &&
-                $ts_jam_sekarang <= $ts_akhir_absen_pulang) {
+            if ($ts_jam_sekarang >= $ts_awal_absen_pulang && $ts_jam_sekarang <= $ts_akhir_absen_pulang) {
                 return [
-                    'jenis' => 'absen_pulang_normal',
-                    'pesan' => 'Absen Pulang Normal'
+                    'jenis' => 'absen_pulang_normal_tanpa_lembur',
+                    'pesan' => 'Absen Pulang Normal Tanpa Lembur'
                 ];
             }
         }
 
-        // Kondisi 1: Lembur sebelum jam kerja normal
+        // Skenario 5: Absen Pulang Jam Kerja Normal Dengan Lembur Setelah Jam Pulang Normal
+        if ($lembur && $ts_mulai_lembur >= $ts_jam_pulang_normal && !$presensi->jam_keluar) {
+            $ts_awal_absen_pulang = strtotime($jam_kerja->jam_pulang . ' - 30 minutes');
+            $ts_akhir_absen_pulang = strtotime($jam_kerja->jam_pulang . ' + 30 minutes');
+
+            if ($ts_jam_sekarang >= $ts_awal_absen_pulang && $ts_jam_sekarang <= $ts_akhir_absen_pulang) {
+                return [
+                    'jenis' => 'absen_pulang_normal_lembur_setelah',
+                    'pesan' => 'Absen Pulang Normal Dengan Lembur Setelah Jam Pulang'
+                ];
+            }
+        }
+
+        // Skenario 6: Absen Pulang Jam Kerja Normal Dengan Lembur Sebelum Jam Masuk Normal
+        if ($lembur && $ts_selesai_lembur <= $ts_jam_masuk_normal && !$presensi->jam_keluar) {
+            $ts_awal_absen_pulang = strtotime($jam_kerja->jam_pulang . ' - 30 minutes');
+            $ts_akhir_absen_pulang = strtotime($jam_kerja->jam_pulang . ' + 30 minutes');
+
+            if ($ts_jam_sekarang >= $ts_awal_absen_pulang && $ts_jam_sekarang <= $ts_akhir_absen_pulang) {
+                return [
+                    'jenis' => 'absen_pulang_normal_lembur_sebelum',
+                    'pesan' => 'Absen Pulang Normal Dengan Lembur Sebelum Jam Masuk'
+                ];
+            }
+        }
+
+        // Skenario 7: Absen Mulai Lembur Sebelum Jam Kerja Normal
+        if ($lembur && $ts_mulai_lembur <= $ts_jam_masuk_normal) {
+            $ts_awal_absen_mulai_lembur = strtotime($lembur->waktu_mulai . ' - 30 minutes');
+            $ts_akhir_absen_mulai_lembur = strtotime($lembur->waktu_mulai . ' + 30 minutes');
+
+            if ($ts_jam_sekarang >= $ts_awal_absen_mulai_lembur && $ts_jam_sekarang <= $ts_akhir_absen_mulai_lembur) {
+                return [
+                    'jenis' => 'absen_mulai_lembur_sebelum',
+                    'pesan' => 'Absen Mulai Lembur Sebelum Jam Kerja Normal'
+                ];
+            }
+        }
+
+        // Skenario 8: Absen Selesai Lembur Sebelum Jam Kerja Normal
         if ($lembur && $ts_selesai_lembur <= $ts_jam_masuk_normal) {
-            // Waktu absen selesai lembur
+            $ts_awal_absen_selesai_lembur = strtotime($lembur->waktu_selesai . ' - 30 minutes');
+            $ts_akhir_absen_selesai_lembur = strtotime($ $lembur->waktu_selesai . ' + 30 minutes');
+
+            if ($ts_jam_sekarang >= $ts_awal_absen_selesai_lembur && $ts_jam_sekarang <= $ts_akhir_absen_selesai_lembur) {
+                return [
+                    'jenis' => 'absen_selesai_lembur_sebelum',
+                    'pesan' => 'Absen Selesai Lembur Sebelum Jam Kerja Normal'
+                ];
+            }
+        }
+
+        // Skenario 9: Absen Mulai Lembur Setelah Jam Kerja Normal
+        if ($lembur && $ts_mulai_lembur >= $ts_jam_pulang_normal && $presensi->jam_keluar != null) {
+            $ts_awal_absen_mulai_lembur = strtotime($lembur->waktu_mulai . ' - 30 minutes');
+            $ts_akhir_absen_mulai_lembur = strtotime($lembur->waktu_mulai . ' + 30 minutes');
+
+            if ($ts_jam_sekarang >= $ts_awal_absen_mulai_lembur && $ts_jam_sekarang <= $ts_akhir_absen_mulai_lembur) {
+                return [
+                    'jenis' => 'absen_mulai_lembur_setelah',
+                    'pesan' => 'Absen Mulai Lembur Setelah Jam Kerja Normal'
+                ];
+            }
+        }
+
+        // Skenario 10: Absen Selesai Lembur Setelah Jam Kerja Normal
+        if ($lembur && $ts_selesai_lembur > $ts_jam_pulang_normal) {
             $ts_awal_absen_selesai_lembur = strtotime($lembur->waktu_selesai . ' - 30 minutes');
             $ts_akhir_absen_selesai_lembur = strtotime($lembur->waktu_selesai . ' + 30 minutes');
 
-            if ($ts_jam_sekarang >= $ts_awal_absen_selesai_lembur &&
-                $ts_jam_sekarang <= $ts_akhir_absen_selesai_lembur) {
-                // Pastikan belum ada absen selesai lembur
-                if (!$presensi || !$presensi->selesai_lembur) {
-                    return [
-                        'jenis' => 'absen_selesai_lembur',
-                        'pesan' => 'Absen Selesai Lembur'
-                    ];
-                }
-            }
-
-            // Absen masuk normal setelah selesai lembur
-            if ($presensi && $presensi->selesai_lembur) {
-                if ($ts_jam_sekarang >= $ts_awal_jam_masuk &&
-                    $ts_jam_sekarang <= $ts_akhir_jam_masuk) {
-                    return [
-                        'jenis' => 'absen_masuk_normal',
-                        'pesan' => 'Absen Masuk Normal'
-                    ];
-                }
-            }
-        }
-
-        // Kondisi 2: Lembur setelah jam pulang normal
-        if ($lembur && $ts_mulai_lembur >= $ts_jam_pulang_normal) {
-            // Waktu absen pulang normal
-            $ts_awal_absen_pulang = strtotime($jam_kerja->jam_pulang . ' - 30 minutes');
-            $ts_akhir_absen_pulang = strtotime($jam_kerja->jam_pulang . ' + 30 minutes');
-
-            if ($ts_jam_sekarang >= $ts_awal_absen_pulang &&
-                $ts_jam_sekarang <= $ts_akhir_absen_pulang) {
+            if ($ts_jam_sekarang >= $ts_awal_absen_selesai_lembur && $ts_jam_sekarang <= $ts_akhir_absen_selesai_lembur) {
                 return [
-                    'jenis' => 'absen_pulang_normal',
-                    'pesan' => 'Absen Pulang Normal'
-                ];
-            }
-
-            // Cek absen masuk lembur setelah pulang
-            if ($presensi && $presensi->jam_keluar) {
-                $ts_awal_absen_lembur = strtotime($lembur->waktu_mulai . ' - 30 minutes');
-                $ts_akhir_absen_lembur = strtotime($lembur->waktu_mulai . ' + 30 minutes');
-
-                if ($ts_jam_sekarang >= $ts_awal_absen_lembur &&
-                    $ts_jam_sekarang <= $ts_akhir_absen_lembur) {
-                    return [
-                        'jenis' => 'absen_masuk_lembur',
-                        'pesan' => 'Absen Masuk Lembur'
-                    ];
-                }
-            }
-        }
-
-        // Kondisi 3: Lembur pada jam pulang normal
-        if ($lembur && $ts_mulai_lembur == $ts_jam_pulang_normal) {
-            $ts_awal_absen_pulang = strtotime($jam_kerja->jam_pulang . ' - 30 minutes');
-            $ts_akhir_absen_pulang = strtotime($jam_kerja->jam_pulang . ' + 30 minutes');
-
-            if ($ts_jam_sekarang >= $ts_awal_absen_pulang &&
-                $ts_jam_sekarang <= $ts_akhir_absen_pulang) {
-                return [
-                    'jenis' => 'absen_pulang_normal',
-                    'pesan' => 'Absen Pulang Normal'
+                    'jenis' => 'absen_selesai_lembur_setelah',
+                    'pesan' => 'Absen Selesai Lembur Setelah Jam Kerja Normal'
                 ];
             }
         }
@@ -451,17 +538,16 @@ class PresensiController extends Controller
     private function prosesAbsenMasukLembur($jam_sekarang, $lembur, $presensi, $tgl_presensi)
     {
         // Data dasar untuk presensi lembur
+        // dd($presensi);
         $data_lembur = [
-            'nik' => Auth::guard('karyawan')->user()->nik,
-            'tanggal_presensi' => $tgl_presensi,
-            'jam_masuk' => $jam_sekarang,
-            'kode_jam_kerja' => 'LEMBUR',
-            'status' => 'hadir',
-            'created_at' => Carbon::now(),
+            'kode_lembur' => $lembur->kode_lembur,
+            'jenis_absen_lembur' => $lembur->jenis_lembur,
+            'updated_at' => Carbon::now(),
             'lembur' => 1,
-            'mulai_lembur' => $lembur->waktu_mulai,
-            'selesai_lembur' => $lembur->waktu_selesai
+            'mulai_lembur' => $jam_sekarang,
         ];
+
+        // dd(vars: $data_lembur);
 
         if ($presensi) {
             // Update data lembur jika sudah ada
