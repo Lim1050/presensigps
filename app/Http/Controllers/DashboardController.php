@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cabang;
 use App\Models\Lembur;
+use App\Models\presensi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -34,25 +35,45 @@ class DashboardController extends Controller
             ->first();
 
         // Modifikasi history_bulan_ini untuk mencakup data lembur
-        $history_bulan_ini = DB::table('presensi')
-            ->select('presensi.*',
-                    DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN "Lembur" ELSE jam_kerja.nama_jam_kerja END as nama_jam_kerja'),
-                    DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_mulai ELSE jam_kerja.jam_masuk END as jam_kerja_masuk'),
-                    DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_selesai ELSE jam_kerja.jam_pulang END as jam_pulang'),
-                    'pengajuan_izin.keterangan',
-                    'lembur.waktu_mulai as mulai_lembur', 'lembur.waktu_selesai as selesai_lembur')
-            ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-            ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
-            ->leftJoin('lembur', function($join) {
-                $join->on('presensi.nik', '=', 'lembur.nik')
-                    ->on('presensi.tanggal_presensi', '=', 'lembur.tanggal_presensi')
-                    ->where('lembur.status', '=', 'disetujui');
-            })
-            ->where('presensi.nik', $nik)
-            ->whereRaw('MONTH(presensi.tanggal_presensi) = ?', [$bulan_ini])
-            ->whereRaw('YEAR(presensi.tanggal_presensi) = ?', [$tahun_ini])
-            ->orderBy('presensi.tanggal_presensi', 'desc')
+        // $history_bulan_ini_xx = DB::table('presensi')
+        //     ->select('presensi.*',
+        //             DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN "Lembur" ELSE jam_kerja.nama_jam_kerja END as nama_jam_kerja'),
+        //             DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_mulai ELSE jam_kerja.jam_masuk END as jam_kerja_masuk'),
+        //             DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_selesai ELSE jam_kerja.jam_pulang END as jam_pulang'),
+        //             'pengajuan_izin.keterangan',
+        //             'lembur.waktu_mulai as mulai_lembur', 'lembur.waktu_selesai as selesai_lembur')
+        //     ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+        //     ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
+        //     ->leftJoin('lembur', function($join) {
+        //         $join->on('presensi.nik', '=', 'lembur.nik')
+        //             ->on('presensi.tanggal_presensi', '=', 'lembur.tanggal_presensi')
+        //             ->where('lembur.status', '=', 'disetujui');
+        //     })
+        //     ->where('presensi.nik', $nik)
+        //     ->whereRaw('MONTH(presensi.tanggal_presensi) = ?', [$bulan_ini])
+        //     ->whereRaw('YEAR(presensi.tanggal_presensi) = ?', [$tahun_ini])
+        //     ->orderBy('presensi.tanggal_presensi', 'desc')
+        //     ->get();
+
+        $history_bulan_ini = Presensi::with(['jamKerja', 'pengajuanIzin', 'lembur'])
+            ->where('nik', $nik)
+            ->whereMonth('tanggal_presensi', $bulan_ini)
+            ->whereYear('tanggal_presensi', $tahun_ini)
+            ->orderBy('tanggal_presensi', 'desc')
             ->get();
+        //                                 ->map(function ($presensi) {
+        //                                     return [
+        //                                         ...$presensi->toArray(),
+        //                                         'nama_jam_kerja' => $presensi->nama_jam_kerja,
+        //                                         'jam_kerja_masuk' => $presensi->jam_kerja_masuk,
+        //                                         'jam_pulang' => $presensi->jam_pulang,
+        //                                         'keterangan' => optional($presensi->pengajuanIzin)->keterangan,
+        //                                         'mulai_lembur' => optional($presensi->lembur)->waktu_mulai,
+        //                                         'selesai_lembur' => optional($presensi->lembur)->waktu_selesai,
+        //                                     ];
+        // });
+
+        // dd($history_bulan_ini->lembur->waktu_mulai);
 
         // Modifikasi rekap_presensi untuk menghitung keterlambatan dengan mempertimbangkan lembur
         $rekap_presensi = DB::table('presensi')

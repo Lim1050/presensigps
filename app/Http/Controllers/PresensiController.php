@@ -107,10 +107,10 @@ class PresensiController extends Controller
         // Data yang dibutuhkan view
         $data = [
             'nama_hari' => $nama_hari,
-            'cek_masuk' => $presensi_hari_ini ? 1 : 0,
+            'cek_masuk' => $presensi_hari_ini && $presensi_hari_ini->foto_masuk ? 1 : 0,
             'cek_keluar' => $presensi_hari_ini && $presensi_hari_ini->foto_keluar ? 1 : 0,
-            'cek_mulai_lembur' => $presensi_hari_ini->kode_lembur && $presensi_hari_ini->mulai_lembur ? 1 : 0,
-            'cek_selesai_lembur' => $presensi_hari_ini->kode_lembur && $presensi_hari_ini->selesai_lembur ? 1 : 0,
+            'cek_mulai_lembur' => $presensi_hari_ini && $presensi_hari_ini->kode_lembur && $presensi_hari_ini->mulai_lembur ? 1 : 0,
+            'cek_selesai_lembur' => $presensi_hari_ini && $presensi_hari_ini->kode_lembur && $presensi_hari_ini->selesai_lembur ? 1 : 0,
             'foto_keluar' => $presensi_hari_ini ? $presensi_hari_ini->foto_keluar : null,
             'lokasi_penugasan' => LokasiPenugasan::where('kode_lokasi_penugasan', $kode_lokasi_penugasan)->first(),
             'cek_izin' => $presensi_hari_ini,
@@ -364,7 +364,7 @@ class PresensiController extends Controller
         }
 
         // Skenario 3: Absen Masuk Jam Kerja Normal Dengan Lembur Sebelum Jam Masuk Normal
-        if ($lembur && $ts_selesai_lembur <= $ts_jam_masuk_normal && !$presensi->jam_masuk) {
+        if ($lembur && $ts_selesai_lembur <= $ts_jam_masuk_normal && $presensi && $presensi->selesai_lembur && !$presensi->jam_masuk) {
             if ($ts_jam_sekarang >= $ts_awal_jam_masuk && $ts_jam_sekarang <= $ts_akhir_jam_masuk) {
                 return [
                     'jenis' => 'absen_masuk_normal_lembur_sebelum',
@@ -387,7 +387,7 @@ class PresensiController extends Controller
         }
 
         // Skenario 5: Absen Pulang Jam Kerja Normal Dengan Lembur Setelah Jam Pulang Normal
-        if ($lembur && $ts_mulai_lembur >= $ts_jam_pulang_normal && !$presensi->jam_keluar) {
+        if ($lembur && $ts_mulai_lembur >= $ts_jam_pulang_normal && $presensi && $presensi->jam_masuk && !$presensi->jam_keluar) {
             $ts_awal_absen_pulang = strtotime($jam_kerja->jam_pulang . ' - 30 minutes');
             $ts_akhir_absen_pulang = strtotime($jam_kerja->jam_pulang . ' + 30 minutes');
 
@@ -400,7 +400,7 @@ class PresensiController extends Controller
         }
 
         // Skenario 6: Absen Pulang Jam Kerja Normal Dengan Lembur Sebelum Jam Masuk Normal
-        if ($lembur && $ts_selesai_lembur <= $ts_jam_masuk_normal && !$presensi->jam_keluar) {
+        if ($lembur && $ts_selesai_lembur <= $ts_jam_masuk_normal && $presensi && !$presensi->jam_keluar) {
             $ts_awal_absen_pulang = strtotime($jam_kerja->jam_pulang . ' - 30 minutes');
             $ts_akhir_absen_pulang = strtotime($jam_kerja->jam_pulang . ' + 30 minutes');
 
@@ -411,9 +411,9 @@ class PresensiController extends Controller
                 ];
             }
         }
-
+        // dd($presensi->mulai_lembur);
         // Skenario 7: Absen Mulai Lembur Sebelum Jam Kerja Normal
-        if ($lembur && $ts_mulai_lembur <= $ts_jam_masuk_normal) {
+        if ($lembur && $ts_mulai_lembur <= $ts_jam_masuk_normal && !$presensi) {
             $ts_awal_absen_mulai_lembur = strtotime($lembur->waktu_mulai . ' - 30 minutes');
             $ts_akhir_absen_mulai_lembur = strtotime($lembur->waktu_mulai . ' + 30 minutes');
 
@@ -426,9 +426,9 @@ class PresensiController extends Controller
         }
 
         // Skenario 8: Absen Selesai Lembur Sebelum Jam Kerja Normal
-        if ($lembur && $ts_selesai_lembur <= $ts_jam_masuk_normal) {
+        if ($lembur && $ts_selesai_lembur <= $ts_jam_masuk_normal && $presensi && $presensi->mulai_lembur != null) {
             $ts_awal_absen_selesai_lembur = strtotime($lembur->waktu_selesai . ' - 30 minutes');
-            $ts_akhir_absen_selesai_lembur = strtotime($ $lembur->waktu_selesai . ' + 30 minutes');
+            $ts_akhir_absen_selesai_lembur = strtotime($lembur->waktu_selesai . ' + 30 minutes');
 
             if ($ts_jam_sekarang >= $ts_awal_absen_selesai_lembur && $ts_jam_sekarang <= $ts_akhir_absen_selesai_lembur) {
                 return [
@@ -539,20 +539,31 @@ class PresensiController extends Controller
     {
         // Data dasar untuk presensi lembur
         // dd($presensi);
-        $data_lembur = [
-            'kode_lembur' => $lembur->kode_lembur,
-            'jenis_absen_lembur' => $lembur->jenis_lembur,
-            'updated_at' => Carbon::now(),
-            'lembur' => 1,
-            'mulai_lembur' => $jam_sekarang,
-        ];
+
 
         // dd(vars: $data_lembur);
 
         if ($presensi) {
+            $data_lembur = [
+                'kode_lembur' => $lembur->kode_lembur,
+                'jenis_absen_lembur' => $lembur->jenis_lembur,
+                'updated_at' => Carbon::now(),
+                'lembur' => 1,
+                'mulai_lembur' => $jam_sekarang,
+            ];
             // Update data lembur jika sudah ada
             DB::table('presensi')->where('id', $presensi->id)->update($data_lembur);
         } else {
+            $data_lembur = [
+                'nik' => Auth::guard('karyawan')->user()->nik,
+                'tanggal_presensi' => $tgl_presensi,
+                'status' => 'hadir',
+                'kode_lembur' => $lembur->kode_lembur,
+                'jenis_absen_lembur' => $lembur->jenis_lembur,
+                'created_at' => Carbon::now(),
+                'lembur' => 1,
+                'mulai_lembur' => $jam_sekarang,
+            ];
             // Insert data baru jika belum ada
             DB::table('presensi')->insert($data_lembur);
         }

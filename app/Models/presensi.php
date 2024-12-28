@@ -29,7 +29,36 @@ class presensi extends Model
 
     public function lembur()
     {
-        return $this->hasOne(Lembur::class, 'nik', 'nik')
-            ->where('tanggal_presensi', $this->tanggal_presensi);
+        return $this->belongsTo(Lembur::class, 'kode_lembur', 'kode_lembur');
+    }
+
+    // Accessor untuk nama jam kerja
+    public function getNamaJamKerjaAttribute()
+    {
+        return optional($this->JamKerja)->nama_jam_kerja;
+    }
+
+    // Accessor untuk jam kerja masuk
+    public function getJamKerjaMasukAttribute()
+    {
+        return optional($this->JamKerja)->jam_masuk;
+    }
+
+    // Accessor untuk jam pulang
+    public function getJamPulangAttribute()
+    {
+        return optional($this->JamKerja)->jam_pulang;
+    }
+
+    // Accessor untuk jam mulai lembur
+    public function getJamMulaiLemburAttribute()
+    {
+        return optional($this->Lembur)->waktu_mulai;
+    }
+
+    // Accessor untuk jam selesai lembur
+    public function getJamSelesaiLemburAttribute()
+    {
+        return optional($this->Lembur)->waktu_selesai;
     }
 }

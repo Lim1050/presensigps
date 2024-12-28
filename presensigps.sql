@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 27, 2024 at 04:12 PM
--- Server version: 8.0.33
--- PHP Version: 8.2.4
+-- Waktu pembuatan: 28 Des 2024 pada 12.39
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,23 +24,23 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cashbon`
+-- Struktur dari tabel `cashbon`
 --
 
 CREATE TABLE `cashbon` (
-  `id` bigint UNSIGNED NOT NULL,
-  `kode_cashbon` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `kode_cashbon` varchar(255) NOT NULL,
+  `nik` varchar(255) DEFAULT NULL,
   `tanggal_pengajuan` date NOT NULL,
   `jumlah` decimal(10,2) NOT NULL,
-  `keterangan` text COLLATE utf8mb4_unicode_ci,
-  `status` enum('pending','diterima','ditolak') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `keterangan` text DEFAULT NULL,
+  `status` enum('pending','diterima','ditolak') NOT NULL DEFAULT 'pending',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `cashbon`
+-- Dumping data untuk tabel `cashbon`
 --
 
 INSERT INTO `cashbon` (`id`, `kode_cashbon`, `nik`, `tanggal_pengajuan`, `jumlah`, `keterangan`, `status`, `created_at`, `updated_at`) VALUES
@@ -56,19 +56,19 @@ INSERT INTO `cashbon` (`id`, `kode_cashbon`, `nik`, `tanggal_pengajuan`, `jumlah
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cashbon_karyawan_limit`
+-- Struktur dari tabel `cashbon_karyawan_limit`
 --
 
 CREATE TABLE `cashbon_karyawan_limit` (
-  `id` bigint UNSIGNED NOT NULL,
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `nik` varchar(255) NOT NULL,
   `limit` decimal(10,2) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `cashbon_karyawan_limit`
+-- Dumping data untuk tabel `cashbon_karyawan_limit`
 --
 
 INSERT INTO `cashbon_karyawan_limit` (`id`, `nik`, `limit`, `created_at`, `updated_at`) VALUES
@@ -85,18 +85,18 @@ INSERT INTO `cashbon_karyawan_limit` (`id`, `nik`, `limit`, `created_at`, `updat
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cashbon_limit`
+-- Struktur dari tabel `cashbon_limit`
 --
 
 CREATE TABLE `cashbon_limit` (
-  `id` bigint UNSIGNED NOT NULL,
-  `global_limit` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `global_limit` decimal(10,2) NOT NULL DEFAULT 0.00,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `cashbon_limit`
+-- Dumping data untuk tabel `cashbon_limit`
 --
 
 INSERT INTO `cashbon_limit` (`id`, `global_limit`, `created_at`, `updated_at`) VALUES
@@ -105,18 +105,18 @@ INSERT INTO `cashbon_limit` (`id`, `global_limit`, `created_at`, `updated_at`) V
 -- --------------------------------------------------------
 
 --
--- Table structure for table `departemen`
+-- Struktur dari tabel `departemen`
 --
 
 CREATE TABLE `departemen` (
-  `kode_departemen` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_departemen` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_departemen` varchar(255) NOT NULL,
+  `nama_departemen` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `departemen`
+-- Dumping data untuk tabel `departemen`
 --
 
 INSERT INTO `departemen` (`kode_departemen`, `nama_departemen`, `created_at`, `updated_at`) VALUES
@@ -133,40 +133,40 @@ INSERT INTO `departemen` (`kode_departemen`, `nama_departemen`, `created_at`, `u
 -- --------------------------------------------------------
 
 --
--- Table structure for table `failed_jobs`
+-- Struktur dari tabel `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `connection` text NOT NULL,
+  `queue` text NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `gaji`
+-- Struktur dari tabel `gaji`
 --
 
 CREATE TABLE `gaji` (
-  `kode_gaji` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_jabatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_lokasi_penugasan` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cabang` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_jenis_gaji` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `jenis_gaji` enum('Gaji tetap','Tunjangan jabatan','Transportasi') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nama_gaji` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_gaji` varchar(255) NOT NULL,
+  `kode_jabatan` varchar(255) DEFAULT NULL,
+  `kode_lokasi_penugasan` varchar(10) DEFAULT NULL,
+  `kode_cabang` varchar(10) DEFAULT NULL,
+  `kode_jenis_gaji` varchar(255) DEFAULT NULL,
+  `jenis_gaji` enum('Gaji tetap','Tunjangan jabatan','Transportasi') DEFAULT NULL,
+  `nama_gaji` varchar(255) DEFAULT NULL,
   `jumlah_gaji` decimal(12,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `gaji`
+-- Dumping data untuk tabel `gaji`
 --
 
 INSERT INTO `gaji` (`kode_gaji`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_cabang`, `kode_jenis_gaji`, `jenis_gaji`, `nama_gaji`, `jumlah_gaji`, `created_at`, `updated_at`) VALUES
@@ -191,18 +191,18 @@ INSERT INTO `gaji` (`kode_gaji`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jabatan`
+-- Struktur dari tabel `jabatan`
 --
 
 CREATE TABLE `jabatan` (
-  `kode_jabatan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_jabatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_jabatan` varchar(255) NOT NULL,
+  `nama_jabatan` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jabatan`
+-- Dumping data untuk tabel `jabatan`
 --
 
 INSERT INTO `jabatan` (`kode_jabatan`, `nama_jabatan`, `created_at`, `updated_at`) VALUES
@@ -218,25 +218,25 @@ INSERT INTO `jabatan` (`kode_jabatan`, `nama_jabatan`, `created_at`, `updated_at
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja`
+-- Struktur dari tabel `jam_kerja`
 --
 
 CREATE TABLE `jam_kerja` (
-  `kode_jam_kerja` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_lokasi_penugasan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cabang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nama_jam_kerja` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_jam_kerja` varchar(255) NOT NULL,
+  `kode_lokasi_penugasan` varchar(255) DEFAULT NULL,
+  `kode_cabang` varchar(255) DEFAULT NULL,
+  `nama_jam_kerja` varchar(255) NOT NULL,
   `awal_jam_masuk` time NOT NULL,
   `jam_masuk` time NOT NULL,
   `akhir_jam_masuk` time NOT NULL,
   `jam_pulang` time NOT NULL,
-  `lintas_hari` char(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lintas_hari` char(1) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja`
+-- Dumping data untuk tabel `jam_kerja`
 --
 
 INSERT INTO `jam_kerja` (`kode_jam_kerja`, `kode_lokasi_penugasan`, `kode_cabang`, `nama_jam_kerja`, `awal_jam_masuk`, `jam_masuk`, `akhir_jam_masuk`, `jam_pulang`, `lintas_hari`, `created_at`, `updated_at`) VALUES
@@ -257,19 +257,19 @@ INSERT INTO `jam_kerja` (`kode_jam_kerja`, `kode_lokasi_penugasan`, `kode_cabang
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja_dept`
+-- Struktur dari tabel `jam_kerja_dept`
 --
 
 CREATE TABLE `jam_kerja_dept` (
-  `kode_jk_dept` char(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_cabang` char(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_departemen` char(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_jk_dept` char(20) NOT NULL,
+  `kode_cabang` char(10) NOT NULL,
+  `kode_departemen` char(10) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja_dept`
+-- Dumping data untuk tabel `jam_kerja_dept`
 --
 
 INSERT INTO `jam_kerja_dept` (`kode_jk_dept`, `kode_cabang`, `kode_departemen`, `created_at`, `updated_at`) VALUES
@@ -283,19 +283,19 @@ INSERT INTO `jam_kerja_dept` (`kode_jk_dept`, `kode_cabang`, `kode_departemen`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja_dept_detail`
+-- Struktur dari tabel `jam_kerja_dept_detail`
 --
 
 CREATE TABLE `jam_kerja_dept_detail` (
-  `kode_jk_dept` char(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `hari` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_jam_kerja` char(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_jk_dept` char(20) DEFAULT NULL,
+  `hari` varchar(20) DEFAULT NULL,
+  `kode_jam_kerja` char(20) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja_dept_detail`
+-- Dumping data untuk tabel `jam_kerja_dept_detail`
 --
 
 INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `created_at`, `updated_at`) VALUES
@@ -345,19 +345,19 @@ INSERT INTO `jam_kerja_dept_detail` (`kode_jk_dept`, `hari`, `kode_jam_kerja`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja_karyawan`
+-- Struktur dari tabel `jam_kerja_karyawan`
 --
 
 CREATE TABLE `jam_kerja_karyawan` (
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `hari` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_jam_kerja` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nik` varchar(255) DEFAULT NULL,
+  `hari` varchar(255) DEFAULT NULL,
+  `kode_jam_kerja` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `jam_kerja_karyawan`
+-- Dumping data untuk tabel `jam_kerja_karyawan`
 --
 
 INSERT INTO `jam_kerja_karyawan` (`nik`, `hari`, `kode_jam_kerja`, `created_at`, `updated_at`) VALUES
@@ -449,15 +449,15 @@ INSERT INTO `jam_kerja_karyawan` (`nik`, `hari`, `kode_jam_kerja`, `created_at`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam_kerja_lokasi_penugasan`
+-- Struktur dari tabel `jam_kerja_lokasi_penugasan`
 --
 
 CREATE TABLE `jam_kerja_lokasi_penugasan` (
-  `kode_jk_lp_c` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_lokasi_penugasan` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_cabang` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_jam_kerja` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `hari` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_jk_lp_c` varchar(20) NOT NULL,
+  `kode_lokasi_penugasan` varchar(20) NOT NULL,
+  `kode_cabang` varchar(20) NOT NULL,
+  `kode_jam_kerja` varchar(20) NOT NULL,
+  `hari` varchar(20) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -465,20 +465,20 @@ CREATE TABLE `jam_kerja_lokasi_penugasan` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kantor_cabang`
+-- Struktur dari tabel `kantor_cabang`
 --
 
 CREATE TABLE `kantor_cabang` (
-  `kode_cabang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_cabang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `lokasi_kantor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `radius` int DEFAULT NULL,
+  `kode_cabang` varchar(255) NOT NULL,
+  `nama_cabang` varchar(255) DEFAULT NULL,
+  `lokasi_kantor` varchar(255) DEFAULT NULL,
+  `radius` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `kantor_cabang`
+-- Dumping data untuk tabel `kantor_cabang`
 --
 
 INSERT INTO `kantor_cabang` (`kode_cabang`, `nama_cabang`, `lokasi_kantor`, `radius`, `created_at`, `updated_at`) VALUES
@@ -489,26 +489,26 @@ INSERT INTO `kantor_cabang` (`kode_cabang`, `nama_cabang`, `lokasi_kantor`, `rad
 -- --------------------------------------------------------
 
 --
--- Table structure for table `karyawan`
+-- Struktur dari tabel `karyawan`
 --
 
 CREATE TABLE `karyawan` (
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_lengkap` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_jabatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_departemen` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cabang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_lokasi_penugasan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `no_wa` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nik` varchar(255) NOT NULL,
+  `nama_lengkap` varchar(255) DEFAULT NULL,
+  `foto` varchar(255) DEFAULT NULL,
+  `kode_jabatan` varchar(255) DEFAULT NULL,
+  `kode_departemen` varchar(255) DEFAULT NULL,
+  `kode_cabang` varchar(255) DEFAULT NULL,
+  `kode_lokasi_penugasan` varchar(255) DEFAULT NULL,
+  `no_wa` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `karyawan`
+-- Dumping data untuk tabel `karyawan`
 --
 
 INSERT INTO `karyawan` (`nik`, `nama_lengkap`, `foto`, `kode_jabatan`, `kode_departemen`, `kode_cabang`, `kode_lokasi_penugasan`, `no_wa`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
@@ -525,20 +525,20 @@ INSERT INTO `karyawan` (`nik`, `nama_lengkap`, `foto`, `kode_jabatan`, `kode_dep
 -- --------------------------------------------------------
 
 --
--- Table structure for table `konfigurasi_gaji`
+-- Struktur dari tabel `konfigurasi_gaji`
 --
 
 CREATE TABLE `konfigurasi_gaji` (
-  `kode_jenis_gaji` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `jenis_gaji` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `keterangan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `kode_jenis_gaji` varchar(255) NOT NULL,
+  `jenis_gaji` varchar(255) NOT NULL,
+  `keterangan` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `konfigurasi_gaji`
+-- Dumping data untuk tabel `konfigurasi_gaji`
 --
 
 INSERT INTO `konfigurasi_gaji` (`kode_jenis_gaji`, `jenis_gaji`, `keterangan`, `is_active`, `created_at`, `updated_at`) VALUES
@@ -549,20 +549,20 @@ INSERT INTO `konfigurasi_gaji` (`kode_jenis_gaji`, `jenis_gaji`, `keterangan`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `konfigurasi_potongan`
+-- Struktur dari tabel `konfigurasi_potongan`
 --
 
 CREATE TABLE `konfigurasi_potongan` (
-  `kode_jenis_potongan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `jenis_potongan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `keterangan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `kode_jenis_potongan` varchar(255) NOT NULL,
+  `jenis_potongan` varchar(255) NOT NULL,
+  `keterangan` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `konfigurasi_potongan`
+-- Dumping data untuk tabel `konfigurasi_potongan`
 --
 
 INSERT INTO `konfigurasi_potongan` (`kode_jenis_potongan`, `jenis_potongan`, `keterangan`, `is_active`, `created_at`, `updated_at`) VALUES
@@ -576,35 +576,36 @@ INSERT INTO `konfigurasi_potongan` (`kode_jenis_potongan`, `jenis_potongan`, `ke
 -- --------------------------------------------------------
 
 --
--- Table structure for table `lembur`
+-- Struktur dari tabel `lembur`
 --
 
 CREATE TABLE `lembur` (
-  `kode_lembur` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_lembur` varchar(255) NOT NULL,
+  `nik` varchar(255) DEFAULT NULL,
   `tanggal_presensi` date DEFAULT NULL,
   `waktu_mulai` time DEFAULT NULL,
   `waktu_selesai` time DEFAULT NULL,
-  `durasi_menit` int DEFAULT NULL,
-  `lintas_hari` tinyint(1) DEFAULT '0',
-  `lembur_libur` tinyint(1) DEFAULT '0',
-  `catatan_lembur` text COLLATE utf8mb4_unicode_ci,
-  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `jenis_lembur` enum('penebalan','reguler','khusus') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'reguler',
+  `durasi_menit` int(11) DEFAULT NULL,
+  `lintas_hari` tinyint(1) DEFAULT 0,
+  `lembur_libur` tinyint(1) DEFAULT 0,
+  `catatan_lembur` text DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `jenis_lembur` enum('penebalan','reguler','khusus') NOT NULL DEFAULT 'reguler',
   `jam_masuk_asli` time DEFAULT NULL,
   `jam_pulang_asli` time DEFAULT NULL,
-  `total_absen` int NOT NULL DEFAULT '1',
-  `alasan_penolakan` text COLLATE utf8mb4_unicode_ci,
+  `total_absen` int(11) NOT NULL DEFAULT 1,
+  `alasan_penolakan` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `lembur`
+-- Dumping data untuk tabel `lembur`
 --
 
 INSERT INTO `lembur` (`kode_lembur`, `nik`, `tanggal_presensi`, `waktu_mulai`, `waktu_selesai`, `durasi_menit`, `lintas_hari`, `lembur_libur`, `catatan_lembur`, `status`, `jenis_lembur`, `jam_masuk_asli`, `jam_pulang_asli`, `total_absen`, `alasan_penolakan`, `created_at`, `updated_at`) VALUES
 ('LDVM235', '123123123', '2024-12-27', '14:20:00', '15:50:00', 60, 0, 0, 'Catatan Lembur', 'disetujui', 'reguler', '08:30:00', '16:00:00', 1, NULL, '2024-12-27 06:39:24', '2024-12-27 06:39:35'),
+('LFHQ558', '123123123', '2024-12-28', '16:10:00', '16:20:00', 5, 0, 0, 'Catatan Lembur', 'disetujui', 'penebalan', '19:35:00', '19:45:00', 1, NULL, '2024-12-28 08:01:58', '2024-12-28 08:02:09'),
 ('LIXW796', '123123123', '2024-12-25', '19:45:00', '19:00:00', 1395, 1, 0, 'Catatan Lembur', 'disetujui', 'reguler', '19:35:00', '19:45:00', 1, NULL, '2024-12-25 12:38:57', '2024-12-25 12:39:06'),
 ('LTID667', '123123123', '2024-12-20', '16:00:00', '17:00:00', 60, 0, 0, 'Catatan Lembur', 'disetujui', 'reguler', '08:30:00', '16:00:00', 1, NULL, '2024-12-20 08:42:45', '2024-12-20 08:42:53'),
 ('LWXI244', '123123123', '2024-12-19', '16:00:00', '16:30:00', 30, 0, 0, 'Catatan Lembur', 'disetujui', 'reguler', '15:15:00', '15:45:00', 1, NULL, '2024-12-17 08:59:28', '2024-12-19 08:17:59');
@@ -612,19 +613,19 @@ INSERT INTO `lembur` (`kode_lembur`, `nik`, `tanggal_presensi`, `waktu_mulai`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `lokasi_kantor`
+-- Struktur dari tabel `lokasi_kantor`
 --
 
 CREATE TABLE `lokasi_kantor` (
-  `id` bigint UNSIGNED NOT NULL,
-  `lokasi_kantor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `radius` smallint DEFAULT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `lokasi_kantor` varchar(255) DEFAULT NULL,
+  `radius` smallint(6) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `lokasi_kantor`
+-- Dumping data untuk tabel `lokasi_kantor`
 --
 
 INSERT INTO `lokasi_kantor` (`id`, `lokasi_kantor`, `radius`, `created_at`, `updated_at`) VALUES
@@ -633,23 +634,23 @@ INSERT INTO `lokasi_kantor` (`id`, `lokasi_kantor`, `radius`, `created_at`, `upd
 -- --------------------------------------------------------
 
 --
--- Table structure for table `lokasi_penugasan`
+-- Struktur dari tabel `lokasi_penugasan`
 --
 
 CREATE TABLE `lokasi_penugasan` (
-  `kode_lokasi_penugasan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_lokasi_penugasan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lokasi_penugasan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_lokasi_penugasan` varchar(255) NOT NULL,
+  `nama_lokasi_penugasan` varchar(255) NOT NULL,
+  `lokasi_penugasan` varchar(255) NOT NULL,
   `radius` double(8,2) DEFAULT NULL,
-  `jumlah_jam_kerja` int DEFAULT NULL,
-  `jumlah_hari_kerja` int DEFAULT NULL,
-  `kode_cabang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jumlah_jam_kerja` int(11) DEFAULT NULL,
+  `jumlah_hari_kerja` int(11) DEFAULT NULL,
+  `kode_cabang` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `lokasi_penugasan`
+-- Dumping data untuk tabel `lokasi_penugasan`
 --
 
 INSERT INTO `lokasi_penugasan` (`kode_lokasi_penugasan`, `nama_lokasi_penugasan`, `lokasi_penugasan`, `radius`, `jumlah_jam_kerja`, `jumlah_hari_kerja`, `kode_cabang`, `created_at`, `updated_at`) VALUES
@@ -662,19 +663,19 @@ INSERT INTO `lokasi_penugasan` (`kode_lokasi_penugasan`, `nama_lokasi_penugasan`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `master_cuti`
+-- Struktur dari tabel `master_cuti`
 --
 
 CREATE TABLE `master_cuti` (
-  `kode_cuti` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_cuti` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `jumlah_hari` smallint DEFAULT NULL,
+  `kode_cuti` varchar(255) NOT NULL,
+  `nama_cuti` varchar(255) DEFAULT NULL,
+  `jumlah_hari` smallint(6) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `master_cuti`
+-- Dumping data untuk tabel `master_cuti`
 --
 
 INSERT INTO `master_cuti` (`kode_cuti`, `nama_cuti`, `jumlah_hari`, `created_at`, `updated_at`) VALUES
@@ -687,17 +688,17 @@ INSERT INTO `master_cuti` (`kode_cuti`, `nama_cuti`, `jumlah_hari`, `created_at`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `migrations`
+-- Struktur dari tabel `migrations`
 --
 
 CREATE TABLE `migrations` (
-  `id` int UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `batch` int NOT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(255) NOT NULL,
+  `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `migrations`
+-- Dumping data untuk tabel `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -769,37 +770,37 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `model_has_permissions`
+-- Struktur dari tabel `model_has_permissions`
 --
 
 CREATE TABLE `model_has_permissions` (
-  `permission_id` bigint UNSIGNED NOT NULL,
-  `model_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `model_id` bigint UNSIGNED NOT NULL
+  `permission_id` bigint(20) UNSIGNED NOT NULL,
+  `model_type` varchar(255) NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `model_has_roles`
+-- Struktur dari tabel `model_has_roles`
 --
 
 CREATE TABLE `model_has_roles` (
-  `role_id` bigint UNSIGNED NOT NULL,
-  `model_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `model_id` bigint UNSIGNED NOT NULL
+  `role_id` bigint(20) UNSIGNED NOT NULL,
+  `model_type` varchar(255) NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `model_has_roles`
+-- Dumping data untuk tabel `model_has_roles`
 --
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
+(6, 'App\\Models\\User', 17),
 (7, 'App\\Models\\User', 1),
 (8, 'App\\Models\\User', 2),
-(6, 'App\\Models\\User', 17),
-(12, 'App\\Models\\User', 18),
 (9, 'App\\Models\\User', 19),
+(12, 'App\\Models\\User', 18),
 (15, 'App\\Models\\User', 22),
 (15, 'App\\Models\\User', 25),
 (15, 'App\\Models\\User', 26);
@@ -807,38 +808,38 @@ INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `password_resets`
+-- Struktur dari tabel `password_resets`
 --
 
 CREATE TABLE `password_resets` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pengajuan_izin`
+-- Struktur dari tabel `pengajuan_izin`
 --
 
 CREATE TABLE `pengajuan_izin` (
-  `kode_izin` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_izin` varchar(255) NOT NULL,
+  `nik` varchar(255) DEFAULT NULL,
   `tanggal_izin_dari` date DEFAULT NULL,
   `tanggal_izin_sampai` date DEFAULT NULL,
-  `jumlah_hari` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cuti` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` enum('sakit','izin','cuti') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status_approved` tinyint(1) NOT NULL DEFAULT '0',
-  `keterangan` text COLLATE utf8mb4_unicode_ci,
-  `surat_sakit` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jumlah_hari` varchar(255) DEFAULT NULL,
+  `kode_cuti` varchar(255) DEFAULT NULL,
+  `status` enum('sakit','izin','cuti') DEFAULT NULL,
+  `status_approved` tinyint(1) NOT NULL DEFAULT 0,
+  `keterangan` text DEFAULT NULL,
+  `surat_sakit` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `pengajuan_izin`
+-- Dumping data untuk tabel `pengajuan_izin`
 --
 
 INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_izin_sampai`, `jumlah_hari`, `kode_cuti`, `status`, `status_approved`, `keterangan`, `surat_sakit`, `created_at`, `updated_at`) VALUES
@@ -858,43 +859,43 @@ INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `penggajian`
+-- Struktur dari tabel `penggajian`
 --
 
 CREATE TABLE `penggajian` (
-  `kode_penggajian` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cabang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_lokasi_penugasan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_penggajian` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nik` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_cabang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_lokasi_penugasan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tanggal_gaji` date DEFAULT NULL,
-  `bulan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `jumlah_hari_kerja` int DEFAULT NULL,
-  `jumlah_hari_masuk` int DEFAULT NULL,
-  `kehadiran_murni` int NOT NULL DEFAULT '0',
-  `jumlah_isc` int NOT NULL DEFAULT '0',
-  `jumlah_izin` int NOT NULL DEFAULT '0',
-  `jumlah_sakit` int NOT NULL DEFAULT '0',
-  `jumlah_cuti` int NOT NULL DEFAULT '0',
-  `jumlah_hari_tidak_masuk` int DEFAULT NULL,
-  `total_jam_lembur` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `komponen_gaji_kotor` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-  `komponen_gaji` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-  `total_gaji_kotor` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `komponen_potongan` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-  `total_potongan` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `gaji_bersih` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `status` enum('draft','disetujui','ditolak','dibayar') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
-  `catatan` text COLLATE utf8mb4_unicode_ci,
-  `diproses_oleh` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `alasan_perubahan` text COLLATE utf8mb4_unicode_ci,
-  `diubah_oleh` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bulan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jumlah_hari_kerja` int(11) DEFAULT NULL,
+  `jumlah_hari_masuk` int(11) DEFAULT NULL,
+  `kehadiran_murni` int(11) NOT NULL DEFAULT 0,
+  `jumlah_isc` int(11) NOT NULL DEFAULT 0,
+  `jumlah_izin` int(11) NOT NULL DEFAULT 0,
+  `jumlah_sakit` int(11) NOT NULL DEFAULT 0,
+  `jumlah_cuti` int(11) NOT NULL DEFAULT 0,
+  `jumlah_hari_tidak_masuk` int(11) DEFAULT NULL,
+  `total_jam_lembur` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `komponen_gaji_kotor` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `komponen_gaji` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `total_gaji_kotor` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `komponen_potongan` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `total_potongan` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `gaji_bersih` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `status` enum('draft','disetujui','ditolak','dibayar') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
+  `catatan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `diproses_oleh` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `alasan_perubahan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `diubah_oleh` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `waktu_perubahan` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `penggajian`
+-- Dumping data untuk tabel `penggajian`
 --
 
 INSERT INTO `penggajian` (`kode_penggajian`, `nik`, `kode_cabang`, `kode_lokasi_penugasan`, `tanggal_gaji`, `bulan`, `jumlah_hari_kerja`, `jumlah_hari_masuk`, `kehadiran_murni`, `jumlah_isc`, `jumlah_izin`, `jumlah_sakit`, `jumlah_cuti`, `jumlah_hari_tidak_masuk`, `total_jam_lembur`, `komponen_gaji_kotor`, `komponen_gaji`, `total_gaji_kotor`, `komponen_potongan`, `total_potongan`, `gaji_bersih`, `status`, `catatan`, `diproses_oleh`, `alasan_perubahan`, `diubah_oleh`, `waktu_perubahan`, `created_at`, `updated_at`) VALUES
@@ -909,20 +910,20 @@ INSERT INTO `penggajian` (`kode_penggajian`, `nik`, `kode_cabang`, `kode_lokasi_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permissions`
+-- Struktur dari tabel `permissions`
 --
 
 CREATE TABLE `permissions` (
-  `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `guard_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `group_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `guard_name` varchar(255) NOT NULL,
+  `group_name` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `permissions`
+-- Dumping data untuk tabel `permissions`
 --
 
 INSERT INTO `permissions` (`id`, `name`, `guard_name`, `group_name`, `created_at`, `updated_at`) VALUES
@@ -961,16 +962,16 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `group_name`, `created_at
 -- --------------------------------------------------------
 
 --
--- Table structure for table `personal_access_tokens`
+-- Struktur dari tabel `personal_access_tokens`
 --
 
 CREATE TABLE `personal_access_tokens` (
-  `id` bigint UNSIGNED NOT NULL,
-  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tokenable_id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `tokenable_type` varchar(255) NOT NULL,
+  `tokenable_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `abilities` text DEFAULT NULL,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -980,23 +981,23 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `potongan`
+-- Struktur dari tabel `potongan`
 --
 
 CREATE TABLE `potongan` (
-  `kode_potongan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kode_jabatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_lokasi_penugasan` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cabang` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_jenis_potongan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nama_potongan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_potongan` varchar(255) NOT NULL,
+  `kode_jabatan` varchar(255) DEFAULT NULL,
+  `kode_lokasi_penugasan` varchar(10) DEFAULT NULL,
+  `kode_cabang` varchar(10) DEFAULT NULL,
+  `kode_jenis_potongan` varchar(255) DEFAULT NULL,
+  `nama_potongan` varchar(255) DEFAULT NULL,
   `jumlah_potongan` decimal(10,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `potongan`
+-- Dumping data untuk tabel `potongan`
 --
 
 INSERT INTO `potongan` (`kode_potongan`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_cabang`, `kode_jenis_potongan`, `nama_potongan`, `jumlah_potongan`, `created_at`, `updated_at`) VALUES
@@ -1010,25 +1011,25 @@ INSERT INTO `potongan` (`kode_potongan`, `kode_jabatan`, `kode_lokasi_penugasan`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `presensi`
+-- Struktur dari tabel `presensi`
 --
 
 CREATE TABLE `presensi` (
-  `id` bigint UNSIGNED NOT NULL,
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `nik` varchar(255) DEFAULT NULL,
   `tanggal_presensi` date DEFAULT NULL,
   `jam_masuk` time DEFAULT NULL,
   `jam_keluar` time DEFAULT NULL,
-  `foto_masuk` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `foto_keluar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `lokasi_masuk` text COLLATE utf8mb4_unicode_ci,
-  `lokasi_keluar` text COLLATE utf8mb4_unicode_ci,
-  `kode_jam_kerja` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` char(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_izin` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_lembur` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `jenis_absen_lembur` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `lembur` tinyint(1) DEFAULT '0',
+  `foto_masuk` varchar(255) DEFAULT NULL,
+  `foto_keluar` varchar(255) DEFAULT NULL,
+  `lokasi_masuk` text DEFAULT NULL,
+  `lokasi_keluar` text DEFAULT NULL,
+  `kode_jam_kerja` varchar(255) DEFAULT NULL,
+  `status` char(255) DEFAULT NULL,
+  `kode_izin` varchar(255) DEFAULT NULL,
+  `kode_lembur` varchar(255) DEFAULT NULL,
+  `jenis_absen_lembur` varchar(255) DEFAULT NULL,
+  `lembur` tinyint(1) DEFAULT 0,
   `mulai_lembur` time DEFAULT NULL,
   `selesai_lembur` time DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -1036,7 +1037,7 @@ CREATE TABLE `presensi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `presensi`
+-- Dumping data untuk tabel `presensi`
 --
 
 INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_keluar`, `foto_masuk`, `foto_keluar`, `lokasi_masuk`, `lokasi_keluar`, `kode_jam_kerja`, `status`, `kode_izin`, `kode_lembur`, `jenis_absen_lembur`, `lembur`, `mulai_lembur`, `selesai_lembur`, `created_at`, `updated_at`) VALUES
@@ -1107,24 +1108,25 @@ INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_kelua
 (333, '123123123', '2024-11-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IS1124002', NULL, NULL, NULL, NULL, NULL, '2024-11-19 05:51:08', NULL),
 (334, '123123123', '2024-12-19', '15:15:24', '16:00:05', 'public/uploads/absensi/123123123-2024-12-19-151524-masuk.png', 'public/uploads/absensi/123123123-2024-12-19-160005-keluar.png', '-6.2016912,106.8421141', '-6.2016977,106.8421042', 'JKMNJKTPSP', 'hadir', NULL, NULL, NULL, 0, NULL, NULL, '2024-12-19 08:15:24', '2024-12-19 09:00:05'),
 (335, '123123123', '2024-12-25', '19:37:26', '19:45:01', 'public/uploads/absensi/123123123-2024-12-25-193726-masuk.png', 'public/uploads/absensi/123123123-2024-12-25-194501-keluar.png', '-6.2455808,106.9776896', '-6.2455808,106.9776896', 'JKMNJKTPSM', 'hadir', NULL, NULL, NULL, 0, NULL, NULL, '2024-12-25 12:37:26', '2024-12-25 12:45:01'),
-(336, '123123123', '2024-12-27', '14:03:56', '14:16:53', 'public/uploads/absensi/123123123-2024-12-27-140356-masuk.png', 'public/uploads/absensi/123123123-2024-12-27-141653-keluar.png', '-6.2017017,106.8420968', '-6.2062592,106.856448', 'JKMNJKTPSS', 'hadir', NULL, 'LDVM235', 'reguler', 1, '14:46:57', '15:56:43', '2024-12-27 07:03:56', '2024-12-27 08:56:43');
+(336, '123123123', '2024-12-27', '14:03:56', '14:16:53', 'public/uploads/absensi/123123123-2024-12-27-140356-masuk.png', 'public/uploads/absensi/123123123-2024-12-27-141653-keluar.png', '-6.2017017,106.8420968', '-6.2062592,106.856448', 'JKMNJKTPSS', 'hadir', NULL, 'LDVM235', 'reguler', 1, '14:46:57', '15:56:43', '2024-12-27 07:03:56', '2024-12-27 08:56:43'),
+(343, '123123123', '2024-12-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'hadir', NULL, 'LFHQ558', 'penebalan', 1, '16:16:13', '16:20:03', '2024-12-28 09:16:13', '2024-12-28 09:20:03');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `roles`
+-- Struktur dari tabel `roles`
 --
 
 CREATE TABLE `roles` (
-  `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `guard_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `guard_name` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `roles`
+-- Dumping data untuk tabel `roles`
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
@@ -1138,125 +1140,125 @@ INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VAL
 -- --------------------------------------------------------
 
 --
--- Table structure for table `role_has_permissions`
+-- Struktur dari tabel `role_has_permissions`
 --
 
 CREATE TABLE `role_has_permissions` (
-  `permission_id` bigint UNSIGNED NOT NULL,
-  `role_id` bigint UNSIGNED NOT NULL
+  `permission_id` bigint(20) UNSIGNED NOT NULL,
+  `role_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `role_has_permissions`
+-- Dumping data untuk tabel `role_has_permissions`
 --
 
 INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (42, 7),
+(42, 12),
+(42, 15),
 (43, 7),
+(43, 12),
+(43, 15),
 (44, 7),
+(44, 12),
+(44, 15),
 (45, 7),
+(45, 12),
+(45, 15),
 (46, 7),
+(46, 12),
+(46, 15),
 (47, 7),
+(47, 12),
+(47, 15),
 (48, 7),
+(48, 12),
+(48, 15),
 (49, 7),
+(49, 12),
+(49, 15),
 (50, 7),
+(50, 12),
+(50, 15),
 (51, 7),
+(51, 12),
+(51, 15),
 (52, 7),
+(52, 12),
+(52, 15),
 (53, 7),
+(53, 12),
+(53, 15),
 (54, 7),
+(54, 12),
+(54, 15),
 (55, 7),
+(55, 12),
+(55, 15),
 (56, 7),
+(56, 15),
 (57, 7),
+(57, 15),
 (58, 7),
+(58, 15),
 (59, 7),
+(59, 15),
 (60, 7),
+(60, 12),
+(60, 15),
 (61, 7),
+(61, 12),
+(61, 15),
 (62, 7),
+(62, 12),
+(62, 15),
 (63, 7),
+(63, 12),
+(63, 15),
 (64, 7),
+(64, 12),
+(64, 15),
 (65, 7),
+(65, 12),
+(65, 15),
 (66, 7),
+(66, 15),
 (67, 7),
+(67, 15),
 (68, 7),
 (69, 7),
 (70, 7),
 (71, 7),
 (72, 7),
-(42, 12),
-(43, 12),
-(44, 12),
-(45, 12),
-(46, 12),
-(47, 12),
-(48, 12),
-(49, 12),
-(50, 12),
-(51, 12),
-(52, 12),
-(53, 12),
-(54, 12),
-(55, 12),
-(60, 12),
-(61, 12),
-(62, 12),
-(63, 12),
-(64, 12),
-(65, 12),
 (72, 12),
-(42, 15),
-(43, 15),
-(44, 15),
-(45, 15),
-(46, 15),
-(47, 15),
-(48, 15),
-(49, 15),
-(50, 15),
-(51, 15),
-(52, 15),
-(53, 15),
-(54, 15),
-(55, 15),
-(56, 15),
-(57, 15),
-(58, 15),
-(59, 15),
-(60, 15),
-(61, 15),
-(62, 15),
-(63, 15),
-(64, 15),
-(65, 15),
-(66, 15),
-(67, 15),
 (72, 15);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `thr`
+-- Struktur dari tabel `thr`
 --
 
 CREATE TABLE `thr` (
-  `kode_thr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_jabatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_lokasi_penugasan` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cabang` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nama_thr` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `tahun` int NOT NULL,
+  `kode_thr` varchar(255) NOT NULL,
+  `nik` varchar(255) DEFAULT NULL,
+  `kode_jabatan` varchar(255) DEFAULT NULL,
+  `kode_lokasi_penugasan` varchar(10) DEFAULT NULL,
+  `kode_cabang` varchar(10) DEFAULT NULL,
+  `nama_thr` varchar(255) DEFAULT NULL,
+  `tahun` int(11) NOT NULL,
   `jumlah_thr` decimal(65,2) DEFAULT NULL,
   `tanggal_penyerahan` date NOT NULL,
-  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
-  `notes` text COLLATE utf8mb4_unicode_ci,
-  `catatan_perubahan` text COLLATE utf8mb4_unicode_ci,
-  `diubah_oleh` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'pending',
+  `notes` text DEFAULT NULL,
+  `catatan_perubahan` text DEFAULT NULL,
+  `diubah_oleh` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `thr`
+-- Dumping data untuk tabel `thr`
 --
 
 INSERT INTO `thr` (`kode_thr`, `nik`, `kode_jabatan`, `kode_lokasi_penugasan`, `kode_cabang`, `nama_thr`, `tahun`, `jumlah_thr`, `tanggal_penyerahan`, `status`, `notes`, `catatan_perubahan`, `diubah_oleh`, `created_at`, `updated_at`) VALUES
@@ -1270,28 +1272,28 @@ INSERT INTO `thr` (`kode_thr`, `nik`, `kode_jabatan`, `kode_lokasi_penugasan`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktur dari tabel `users`
 --
 
 CREATE TABLE `users` (
-  `id` bigint UNSIGNED NOT NULL,
-  `username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `role` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_departemen` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_cabang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `no_hp` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `foto` varchar(255) DEFAULT NULL,
+  `role` varchar(255) DEFAULT NULL,
+  `kode_departemen` varchar(255) DEFAULT NULL,
+  `kode_cabang` varchar(255) DEFAULT NULL,
+  `no_hp` varchar(255) DEFAULT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data untuk tabel `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `name`, `email`, `email_verified_at`, `password`, `foto`, `role`, `kode_departemen`, `kode_cabang`, `no_hp`, `remember_token`, `created_at`, `updated_at`) VALUES
@@ -1309,40 +1311,40 @@ INSERT INTO `users` (`id`, `username`, `name`, `email`, `email_verified_at`, `pa
 --
 
 --
--- Indexes for table `cashbon`
+-- Indeks untuk tabel `cashbon`
 --
 ALTER TABLE `cashbon`
   ADD PRIMARY KEY (`id`),
   ADD KEY `cashbon_nik_index` (`nik`);
 
 --
--- Indexes for table `cashbon_karyawan_limit`
+-- Indeks untuk tabel `cashbon_karyawan_limit`
 --
 ALTER TABLE `cashbon_karyawan_limit`
   ADD PRIMARY KEY (`id`),
   ADD KEY `cashbon_karyawan_limit_nik_foreign` (`nik`);
 
 --
--- Indexes for table `cashbon_limit`
+-- Indeks untuk tabel `cashbon_limit`
 --
 ALTER TABLE `cashbon_limit`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `departemen`
+-- Indeks untuk tabel `departemen`
 --
 ALTER TABLE `departemen`
   ADD PRIMARY KEY (`kode_departemen`);
 
 --
--- Indexes for table `failed_jobs`
+-- Indeks untuk tabel `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
--- Indexes for table `gaji`
+-- Indeks untuk tabel `gaji`
 --
 ALTER TABLE `gaji`
   ADD PRIMARY KEY (`kode_gaji`),
@@ -1351,13 +1353,13 @@ ALTER TABLE `gaji`
   ADD KEY `gaji_kode_cabang_foreign` (`kode_cabang`);
 
 --
--- Indexes for table `jabatan`
+-- Indeks untuk tabel `jabatan`
 --
 ALTER TABLE `jabatan`
   ADD PRIMARY KEY (`kode_jabatan`);
 
 --
--- Indexes for table `jam_kerja`
+-- Indeks untuk tabel `jam_kerja`
 --
 ALTER TABLE `jam_kerja`
   ADD PRIMARY KEY (`kode_jam_kerja`),
@@ -1365,13 +1367,13 @@ ALTER TABLE `jam_kerja`
   ADD KEY `kode_cabang` (`kode_cabang`);
 
 --
--- Indexes for table `jam_kerja_dept`
+-- Indeks untuk tabel `jam_kerja_dept`
 --
 ALTER TABLE `jam_kerja_dept`
   ADD PRIMARY KEY (`kode_jk_dept`);
 
 --
--- Indexes for table `jam_kerja_karyawan`
+-- Indeks untuk tabel `jam_kerja_karyawan`
 --
 ALTER TABLE `jam_kerja_karyawan`
   ADD KEY `nik` (`nik`),
@@ -1379,7 +1381,7 @@ ALTER TABLE `jam_kerja_karyawan`
   ADD KEY `kode_jam_kerja` (`kode_jam_kerja`);
 
 --
--- Indexes for table `jam_kerja_lokasi_penugasan`
+-- Indeks untuk tabel `jam_kerja_lokasi_penugasan`
 --
 ALTER TABLE `jam_kerja_lokasi_penugasan`
   ADD PRIMARY KEY (`kode_jk_lp_c`),
@@ -1388,90 +1390,90 @@ ALTER TABLE `jam_kerja_lokasi_penugasan`
   ADD KEY `jam_kerja_lokasi_penugasan_kode_cabang_foreign` (`kode_cabang`);
 
 --
--- Indexes for table `kantor_cabang`
+-- Indeks untuk tabel `kantor_cabang`
 --
 ALTER TABLE `kantor_cabang`
   ADD PRIMARY KEY (`kode_cabang`);
 
 --
--- Indexes for table `karyawan`
+-- Indeks untuk tabel `karyawan`
 --
 ALTER TABLE `karyawan`
   ADD PRIMARY KEY (`nik`),
   ADD KEY `karyawan_kode_lokasi_penugasan_foreign` (`kode_lokasi_penugasan`);
 
 --
--- Indexes for table `konfigurasi_gaji`
+-- Indeks untuk tabel `konfigurasi_gaji`
 --
 ALTER TABLE `konfigurasi_gaji`
   ADD PRIMARY KEY (`kode_jenis_gaji`);
 
 --
--- Indexes for table `konfigurasi_potongan`
+-- Indeks untuk tabel `konfigurasi_potongan`
 --
 ALTER TABLE `konfigurasi_potongan`
   ADD PRIMARY KEY (`kode_jenis_potongan`);
 
 --
--- Indexes for table `lembur`
+-- Indeks untuk tabel `lembur`
 --
 ALTER TABLE `lembur`
   ADD PRIMARY KEY (`kode_lembur`),
   ADD KEY `nik` (`nik`);
 
 --
--- Indexes for table `lokasi_kantor`
+-- Indeks untuk tabel `lokasi_kantor`
 --
 ALTER TABLE `lokasi_kantor`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `lokasi_penugasan`
+-- Indeks untuk tabel `lokasi_penugasan`
 --
 ALTER TABLE `lokasi_penugasan`
   ADD PRIMARY KEY (`kode_lokasi_penugasan`),
   ADD KEY `lokasi_penugasan_kode_cabang_foreign` (`kode_cabang`);
 
 --
--- Indexes for table `master_cuti`
+-- Indeks untuk tabel `master_cuti`
 --
 ALTER TABLE `master_cuti`
   ADD PRIMARY KEY (`kode_cuti`);
 
 --
--- Indexes for table `migrations`
+-- Indeks untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `model_has_permissions`
+-- Indeks untuk tabel `model_has_permissions`
 --
 ALTER TABLE `model_has_permissions`
   ADD PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
   ADD KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`);
 
 --
--- Indexes for table `model_has_roles`
+-- Indeks untuk tabel `model_has_roles`
 --
 ALTER TABLE `model_has_roles`
   ADD PRIMARY KEY (`role_id`,`model_id`,`model_type`),
   ADD KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`);
 
 --
--- Indexes for table `password_resets`
+-- Indeks untuk tabel `password_resets`
 --
 ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Indexes for table `pengajuan_izin`
+-- Indeks untuk tabel `pengajuan_izin`
 --
 ALTER TABLE `pengajuan_izin`
   ADD PRIMARY KEY (`kode_izin`);
 
 --
--- Indexes for table `penggajian`
+-- Indeks untuk tabel `penggajian`
 --
 ALTER TABLE `penggajian`
   ADD PRIMARY KEY (`kode_penggajian`),
@@ -1479,14 +1481,14 @@ ALTER TABLE `penggajian`
   ADD KEY `penggajian_tanggal_gaji_index` (`tanggal_gaji`);
 
 --
--- Indexes for table `permissions`
+-- Indeks untuk tabel `permissions`
 --
 ALTER TABLE `permissions`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`);
 
 --
--- Indexes for table `personal_access_tokens`
+-- Indeks untuk tabel `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`),
@@ -1494,7 +1496,7 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Indexes for table `potongan`
+-- Indeks untuk tabel `potongan`
 --
 ALTER TABLE `potongan`
   ADD PRIMARY KEY (`kode_potongan`),
@@ -1504,7 +1506,7 @@ ALTER TABLE `potongan`
   ADD KEY `potongan_kode_jenis_potongan_foreign` (`kode_jenis_potongan`);
 
 --
--- Indexes for table `presensi`
+-- Indeks untuk tabel `presensi`
 --
 ALTER TABLE `presensi`
   ADD PRIMARY KEY (`id`),
@@ -1515,21 +1517,21 @@ ALTER TABLE `presensi`
   ADD KEY `tanggal_presensi` (`tanggal_presensi`);
 
 --
--- Indexes for table `roles`
+-- Indeks untuk tabel `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`);
 
 --
--- Indexes for table `role_has_permissions`
+-- Indeks untuk tabel `role_has_permissions`
 --
 ALTER TABLE `role_has_permissions`
   ADD PRIMARY KEY (`permission_id`,`role_id`),
   ADD KEY `role_has_permissions_role_id_foreign` (`role_id`);
 
 --
--- Indexes for table `thr`
+-- Indeks untuk tabel `thr`
 --
 ALTER TABLE `thr`
   ADD PRIMARY KEY (`kode_thr`),
@@ -1539,7 +1541,7 @@ ALTER TABLE `thr`
   ADD KEY `thr_kode_cabang_foreign` (`kode_cabang`);
 
 --
--- Indexes for table `users`
+-- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -1547,87 +1549,87 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `users_username_unique` (`username`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `cashbon`
+-- AUTO_INCREMENT untuk tabel `cashbon`
 --
 ALTER TABLE `cashbon`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `cashbon_karyawan_limit`
+-- AUTO_INCREMENT untuk tabel `cashbon_karyawan_limit`
 --
 ALTER TABLE `cashbon_karyawan_limit`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT for table `cashbon_limit`
+-- AUTO_INCREMENT untuk tabel `cashbon_limit`
 --
 ALTER TABLE `cashbon_limit`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `failed_jobs`
+-- AUTO_INCREMENT untuk tabel `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `lokasi_kantor`
+-- AUTO_INCREMENT untuk tabel `lokasi_kantor`
 --
 ALTER TABLE `lokasi_kantor`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `migrations`
+-- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
--- AUTO_INCREMENT for table `permissions`
+-- AUTO_INCREMENT untuk tabel `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
--- AUTO_INCREMENT for table `personal_access_tokens`
+-- AUTO_INCREMENT untuk tabel `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `presensi`
+-- AUTO_INCREMENT untuk tabel `presensi`
 --
 ALTER TABLE `presensi`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=337;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=344;
 
 --
--- AUTO_INCREMENT for table `roles`
+-- AUTO_INCREMENT untuk tabel `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
--- Constraints for dumped tables
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
 
 --
--- Constraints for table `cashbon_karyawan_limit`
+-- Ketidakleluasaan untuk tabel `cashbon_karyawan_limit`
 --
 ALTER TABLE `cashbon_karyawan_limit`
   ADD CONSTRAINT `cashbon_karyawan_limit_nik_foreign` FOREIGN KEY (`nik`) REFERENCES `karyawan` (`nik`) ON DELETE CASCADE;
 
 --
--- Constraints for table `gaji`
+-- Ketidakleluasaan untuk tabel `gaji`
 --
 ALTER TABLE `gaji`
   ADD CONSTRAINT `gaji_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE CASCADE,
@@ -1635,7 +1637,7 @@ ALTER TABLE `gaji`
   ADD CONSTRAINT `gaji_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE CASCADE;
 
 --
--- Constraints for table `jam_kerja_lokasi_penugasan`
+-- Ketidakleluasaan untuk tabel `jam_kerja_lokasi_penugasan`
 --
 ALTER TABLE `jam_kerja_lokasi_penugasan`
   ADD CONSTRAINT `jam_kerja_lokasi_penugasan_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE CASCADE,
@@ -1643,31 +1645,31 @@ ALTER TABLE `jam_kerja_lokasi_penugasan`
   ADD CONSTRAINT `jam_kerja_lokasi_penugasan_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE CASCADE;
 
 --
--- Constraints for table `karyawan`
+-- Ketidakleluasaan untuk tabel `karyawan`
 --
 ALTER TABLE `karyawan`
   ADD CONSTRAINT `karyawan_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE SET NULL;
 
 --
--- Constraints for table `lokasi_penugasan`
+-- Ketidakleluasaan untuk tabel `lokasi_penugasan`
 --
 ALTER TABLE `lokasi_penugasan`
   ADD CONSTRAINT `lokasi_penugasan_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE CASCADE;
 
 --
--- Constraints for table `model_has_permissions`
+-- Ketidakleluasaan untuk tabel `model_has_permissions`
 --
 ALTER TABLE `model_has_permissions`
   ADD CONSTRAINT `model_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `model_has_roles`
+-- Ketidakleluasaan untuk tabel `model_has_roles`
 --
 ALTER TABLE `model_has_roles`
   ADD CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `potongan`
+-- Ketidakleluasaan untuk tabel `potongan`
 --
 ALTER TABLE `potongan`
   ADD CONSTRAINT `potongan_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE CASCADE,
@@ -1676,20 +1678,20 @@ ALTER TABLE `potongan`
   ADD CONSTRAINT `potongan_kode_lokasi_penugasan_foreign` FOREIGN KEY (`kode_lokasi_penugasan`) REFERENCES `lokasi_penugasan` (`kode_lokasi_penugasan`) ON DELETE CASCADE;
 
 --
--- Constraints for table `presensi`
+-- Ketidakleluasaan untuk tabel `presensi`
 --
 ALTER TABLE `presensi`
   ADD CONSTRAINT `presensi_kode_lembur_foreign` FOREIGN KEY (`kode_lembur`) REFERENCES `lembur` (`kode_lembur`);
 
 --
--- Constraints for table `role_has_permissions`
+-- Ketidakleluasaan untuk tabel `role_has_permissions`
 --
 ALTER TABLE `role_has_permissions`
   ADD CONSTRAINT `role_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `role_has_permissions_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `thr`
+-- Ketidakleluasaan untuk tabel `thr`
 --
 ALTER TABLE `thr`
   ADD CONSTRAINT `thr_kode_cabang_foreign` FOREIGN KEY (`kode_cabang`) REFERENCES `kantor_cabang` (`kode_cabang`) ON DELETE CASCADE,

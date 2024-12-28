@@ -147,11 +147,11 @@
         <div class="row mt-1">
             <div class="col">
                 @if ($cek_mulai_lembur == 0 && $cek_selesai_lembur == 0)
-                    <button id="takeabsenLembur" class="btn btn-success btn-block">
+                    <button id="takeabsenLembur" class="btn btn-success btn-block" data-jenis="mulai">
                         <ion-icon name="camera-outline"></ion-icon>Absen Mulai Lembur
                     </button>
                 @elseif ($cek_mulai_lembur == 1 && $cek_selesai_lembur == 0)
-                    <button id="takeabsenLembur" class="btn btn-danger btn-block">
+                    <button id="takeabsenLembur" class="btn btn-danger btn-block" data-jenis="selesai">
                         <ion-icon name="camera-outline"></ion-icon>Absen Selesai Lembur
                     </button>
                 @elseif ($cek_mulai_lembur == 1 && $cek_selesai_lembur == 1)

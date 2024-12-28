@@ -21,7 +21,6 @@ class Lembur extends Model
 
     public function presensi()
     {
-        return $this->belongsTo(presensi::class, 'nik', 'nik')
-            ->where('tanggal_presensi', $this->tanggal_presensi);
+        return $this->hasOne(presensi::class, 'kode_lembur', 'kode_lembur');
     }
 }

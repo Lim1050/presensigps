@@ -166,7 +166,7 @@
                     <div class="card-body">
                         <div class="presencecontent">
                             <div class="iconpresence">
-                                @if ($presensi_hari_ini != null && $presensi_hari_ini->status == 'hadir')
+                                @if ($presensi_hari_ini != null && $presensi_hari_ini->foto_masuk && $presensi_hari_ini->status == 'hadir')
                                     @php
                                         $path = Storage::url($presensi_hari_ini->foto_masuk);
                                     @endphp
@@ -185,7 +185,7 @@
                             @if ($presensi_hari_ini == null || $presensi_hari_ini->status == 'hadir')
                                 <div class="presencedetail">
                                     <h4 class="presencetitle">Masuk</h4>
-                                    <span>{{ $presensi_hari_ini != null ? $presensi_hari_ini->jam_masuk : 'Belum Absen' }}</span>
+                                    <span>{{ $presensi_hari_ini != null && $presensi_hari_ini->jam_masuk ? $presensi_hari_ini->jam_masuk : 'Belum Absen' }}</span>
                                 </div>
                             @else
                                 <div class="presencedetail">
@@ -436,9 +436,61 @@
                     .historycontent{ display: flex; }
                     .datapresensi{ margin-left: 10px; }
                 </style>
-                @foreach ($history_bulan_ini as $bulan_ini)
-                    @if ($bulan_ini->status == "hadir")
+                {{-- @foreach ($history_bulan_ini as $bulan_ini)
+                    @if ($bulan_ini->status == "hadir" && $bulan_ini->kode_jam_kerja != null)
                         <div class="card mb-1">
+                            <div class="card-body">
+                                <div class="historycontent">
+                                    <div class="iconpresensi">
+                                        @php
+                                            $jadwalMasuk = $bulan_ini->jam_kerja_masuk;
+                                            $tepatWaktu = $bulan_ini->jam_masuk <= $jadwalMasuk;
+                                        @endphp
+                                        @if ($tepatWaktu)
+                                            <ion-icon style="font-size: 48px" name="checkmark-circle-outline" role="img" class="md hydrated text-success" aria-label="checkmark"></ion-icon>
+                                        @else
+                                            <ion-icon style="font-size: 48px" name="alert-circle-outline" role="img" class="md hydrated text-warning" aria-label="alert"></ion-icon>
+                                        @endif
+                                    </div>
+                                    <div class="datapresensi">
+                                        <h3 style="line-height: 3px">
+                                            {{ $bulan_ini->nama_jam_kerja }}
+                                            <small>({{ date("H:i",strtotime($bulan_ini->jam_kerja_masuk)) }} - {{ date("H:i",strtotime($bulan_ini->jam_pulang)) }})</small>
+                                        </h3>
+                                        <h4 style="margin: 0px !important;">{{ date("d-m-Y", strtotime($bulan_ini->tanggal_presensi)) }}</h4>
+                                        <span class="{{ $tepatWaktu ? 'text-success' : 'text-warning' }}">
+                                            {{ date("H:i",strtotime($bulan_ini->jam_masuk)) }}
+                                        </span> -
+                                        <span class="text-danger">
+                                            {{ $bulan_ini->jam_keluar ? date("H:i",strtotime($bulan_ini->jam_keluar)) : 'Belum Absen' }}
+                                        </span>
+                                        <div id="keterangan" class="mt-0">
+                                            @php
+                                                $jadwal_jam_masuk = $bulan_ini->tanggal_presensi . " " . $jadwalMasuk;
+                                                $jam_presensi = $bulan_ini->tanggal_presensi . " " . $bulan_ini->jam_masuk;
+                                                $hitungjamterlambat = hitungjamterlambat($jadwal_jam_masuk, $jam_presensi);
+                                                list($hours, $minutes) = explode(':', $hitungjamterlambat);
+                                                $deskripsiTerlambat = '';
+                                                if ($hours > 0) {
+                                                    $deskripsiTerlambat .= (int)$hours . ' jam';
+                                                }
+                                                if ($minutes > 0) {
+                                                    if ($hours > 0) {
+                                                        $deskripsiTerlambat .= ' ';
+                                                    }
+                                                    $deskripsiTerlambat .= (int)$minutes . ' menit';
+                                                }
+                                            @endphp
+                                            <span class="{{ $tepatWaktu ? 'text-success' : 'text-warning' }}">
+                                                {{ $tepatWaktu ? 'Tepat Waktu' : "Terlambat $deskripsiTerlambat" }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif ($bulan_ini->status == "hadir" && $bulan_ini->kode_lembur != null)
+                    <div class="card mb-1">
                             <div class="card-body">
                                 <div class="historycontent">
                                     <div class="iconpresensi">
@@ -491,6 +543,105 @@
                         </div>
                     @elseif ($bulan_ini->status=="izin" || $bulan_ini->status=="sakit" || $bulan_ini->status=="cuti")
                         <!-- Kode untuk status izin, sakit, dan cuti tetap sama -->
+                    @endif
+                @endforeach --}}
+
+                @foreach ($history_bulan_ini as $bulan_ini)
+                    {{-- Card untuk Absen Jam Kerja Normal dan lembur --}}
+                    @if ($bulan_ini->status == "hadir")
+                        <div class="card mb-1">
+                            <div class="card-body">
+                                {{-- jam kerja normal --}}
+                                @if ($bulan_ini->kode_jam_kerja && $bulan_ini->jam_kerja_masuk)
+                                    <div class="historycontent mb-2">
+                                        <div class="iconpresensi">
+                                            @php
+                                                $jadwalMasuk = $bulan_ini->jam_kerja_masuk;
+                                                $tepatWaktu = $bulan_ini->jam_masuk <= $jadwalMasuk;
+                                            @endphp
+                                            @if ($tepatWaktu)
+                                                <ion-icon style="font-size: 48px" name="checkmark-circle-outline" role="img" class="md hydrated text-success" aria-label="checkmark"></ion-icon>
+                                            @else
+                                                <ion-icon style="font-size: 48px" name="alert-circle-outline" role="img" class="md hydrated text-warning" aria-label="alert"></ion-icon>
+                                            @endif
+                                        </div>
+                                        <div class="datapresensi">
+                                            <h3 style="line-height: 3px">
+                                                {{ $bulan_ini->nama_jam_kerja }}
+                                                <small>({{ date("H:i",strtotime($bulan_ini->jam_kerja_masuk)) }} - {{ date("H:i",strtotime($bulan_ini->jam_pulang)) }})</small>
+                                            </h3>
+                                            <h4 style="margin: 0px !important;">{{ date("d-m-Y", strtotime($bulan_ini->tanggal_presensi)) }}</h4>
+                                            <span class="{{ $tepatWaktu ? 'text-success' : 'text-warning' }}">
+                                                {{ $bulan_ini->jam_masuk ? date("H:i",strtotime($bulan_ini->jam_masuk)) : 'Belum Absen' }}
+                                            </span> -
+                                            <span class="text-danger">
+                                                {{ $bulan_ini->jam_keluar ? date("H:i",strtotime($bulan_ini->jam_keluar)) : 'Belum Absen' }}
+                                            </span>
+                                            <div id="keterangan" class="mt-0">
+                                                @php
+                                                    $jadwal_jam_masuk = $bulan_ini->tanggal_presensi . " " . $jadwalMasuk;
+                                                    $jam_presensi = $bulan_ini->tanggal_presensi . " " . ($bulan_ini->jam_masuk ?? $jadwalMasuk);
+                                                    $hitungjamterlambat = hitungjamterlambat($jadwal_jam_masuk, $jam_presensi);
+                                                    list($hours, $minutes) = explode(':', $hitungjamterlambat);
+                                                    $deskripsiTerlambat = '';
+                                                    if ($hours > 0) {
+                                                        $deskripsiTerlambat .= (int)$hours . ' jam';
+                                                    }
+                                                    if ($minutes > 0) {
+                                                        if ($hours > 0) {
+                                                            $deskripsiTerlambat .= ' ';
+                                                        }
+                                                        $deskripsiTerlambat .= (int)$minutes . ' menit';
+                                                    }
+                                                @endphp
+                                                <span class="{{ $tepatWaktu ? 'text-success' : 'text-warning' }}">
+                                                    {{ $bulan_ini->jam_masuk ?
+                                                        ($tepatWaktu ? 'Tepat Waktu' : "Terlambat $deskripsiTerlambat") :
+                                                        'Belum Absen'
+                                                    }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                {{-- lembur --}}
+                                @if ($bulan_ini->kode_lembur && $bulan_ini->mulai_lembur && $bulan_ini->selesai_lembur)
+                                    <div class="historycontent">
+                                        <div class="iconpresensi">
+                                            <ion-icon style="font-size: 48px" name="time-outline" role="img" class="md hydrated text-primary" aria-label="time"></ion-icon>
+                                        </div>
+                                        <div class="datapresensi">
+                                            <h3 style="line-height: 3px">
+                                                Lembur
+                                                <small>{{ $bulan_ini->jenis_absen_lembur ?? 'Reguler' }}</small>
+                                            </h3>
+                                            <h4 style="margin: 0px !important;">{{ date("d-m-Y", strtotime($bulan_ini->tanggal_presensi)) }}</h4>
+                                            <span class="text-primary">
+                                                Mulai: {{ date("H:i", strtotime($bulan_ini->mulai_lembur)) }}
+                                            </span> -
+                                            <span class="text-danger">
+                                                Selesai: {{ date("H:i", strtotime($bulan_ini->selesai_lembur)) }}
+                                            </span>
+                                            <div id="keterangan" class="mt-0">
+                                                <span class="text-primary">
+                                                    Durasi Lembur:
+                                                    @php
+                                                        $mulai = \Carbon\Carbon::parse($bulan_ini->mulai_lembur);
+                                                        $selesai = \Carbon\Carbon::parse($bulan_ini->selesai_lembur);
+                                                        $durasi = $selesai->diff($mulai);
+                                                    @endphp
+                                                    {{ $durasi->format('%h jam %i menit') }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    {{-- Card untuk Izin, Sakit, Cuti --}}
+                    @elseif ($bulan_ini->status=="izin" || $bulan_ini->status=="sakit" || $bulan_ini->status=="cuti")
+                        {{-- Kode untuk status izin, sakit, dan cuti --}}
                     @endif
                 @endforeach
             </div>
