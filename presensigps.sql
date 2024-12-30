@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 28 Des 2024 pada 12.39
+-- Waktu pembuatan: 30 Des 2024 pada 06.50
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -843,7 +843,7 @@ CREATE TABLE `pengajuan_izin` (
 --
 
 INSERT INTO `pengajuan_izin` (`kode_izin`, `nik`, `tanggal_izin_dari`, `tanggal_izin_sampai`, `jumlah_hari`, `kode_cuti`, `status`, `status_approved`, `keterangan`, `surat_sakit`, `created_at`, `updated_at`) VALUES
-('IA0724001', '123123123', '2024-07-25', '2024-07-27', '3 Hari', NULL, 'izin', 2, 'Acara Healing', NULL, '2024-07-23 07:02:40', '2024-07-24 04:59:06'),
+('IA0724001', '123123123', '2024-12-30', '2025-01-01', '3 Hari', NULL, 'izin', 1, 'Acara Healing', NULL, '2024-07-23 07:02:40', '2024-07-24 04:59:06'),
 ('IA0724005', '123123123', '2024-07-27', '2024-07-27', '1 Hari', NULL, 'izin', 1, 'Tugas Luar Kota', NULL, '2024-07-24 07:26:57', '2024-07-30 05:43:43'),
 ('IA0724007', '555555555', '2024-07-30', '2024-07-30', '1 Hari', NULL, 'izin', 1, 'libur bentar', NULL, '2024-07-30 07:38:42', NULL),
 ('IA0824002', '123123123', '2024-08-30', '2024-08-31', '2 Hari', NULL, 'izin', 0, 'Libur Bentar', NULL, '2024-08-02 08:54:43', NULL),
@@ -905,7 +905,8 @@ INSERT INTO `penggajian` (`kode_penggajian`, `nik`, `kode_cabang`, `kode_lokasi_
 ('PG2024110007', '123123123', 'JKTP', 'MN', '2024-08-31', '2024-08', 26, 9, 2, 7, 0, 0, 7, 17, 5.00, '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": \"20000.00\"}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 100000}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 1730769.2307692303}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7520000.00, '{\"Dana Darurat\": \"50000.00\", \"BPJS Kesehatan\": \"50000.00\", \"Jaminan Hari Tua\": \"50000.00\", \"Potongan Seragam\": \"50000.00\", \"BPJS Tenaga Kerja\": \"50000.00\", \"Tunjangan Hari Raya\": \"416000.00\", \"Potongan Ketidakhadiran\": 3269230.7692307695}', 3935230.77, 3664769.23, 'draft', 'Catatan', 'Super Admin Presensi', 'Catatan Perubahan', 'Super Admin Presensi', '2024-11-21 07:17:04', '2024-11-21 07:16:34', '2024-11-21 07:17:04'),
 ('PG2024110008', '333333333', 'BKS', 'SMB', '2024-11-30', '2024-11', 26, 0, 0, 0, 0, 0, 0, 26, 0.00, '{\"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"3500000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"1750000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 0}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 0}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"1750000.00\"}}', 5250000.00, '{\"Potongan Ketidakhadiran\": 3500000}', 3500000.00, 1750000.00, 'draft', 'Catatan', 'Super Admin Presensi', NULL, NULL, NULL, '2024-11-25 07:51:46', '2024-11-25 07:51:46'),
 ('PG2024110009', '213213213', 'JKTT', 'GR', '2024-11-30', '2024-11', 26, 0, 0, 0, 0, 0, 0, 26, 0.00, '{\"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"5000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 0}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 0}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2500000.00\"}}', 7500000.00, '{\"Potongan Ketidakhadiran\": 5000000}', 5000000.00, 2500000.00, 'draft', 'Catatan', 'Super Admin Presensi', NULL, NULL, NULL, '2024-11-25 07:52:15', '2024-11-25 07:52:15'),
-('PG2024110010', '444444444', 'BKS', 'SMB', '2024-11-30', '2024-11', 26, 0, 0, 0, 0, 0, 0, 26, 0.00, '{\"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"4000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2000000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 0}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 0}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2000000.00\"}}', 6000000.00, '{\"Potongan Ketidakhadiran\": 4000000}', 4000000.00, 2000000.00, 'draft', 'Catatan', 'Admin Cabang Bekasi', NULL, NULL, NULL, '2024-11-26 08:15:24', '2024-11-26 08:15:24');
+('PG2024110010', '444444444', 'BKS', 'SMB', '2024-11-30', '2024-11', 26, 0, 0, 0, 0, 0, 0, 26, 0.00, '{\"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": \"4000000.00\"}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2000000.00\"}}', '{\"L\": {\"jenis_gaji\": \"Lembur\", \"jumlah_gaji\": 0}, \"GT\": {\"jenis_gaji\": \"Gaji Tetap\", \"jumlah_gaji\": 0}, \"TJ\": {\"jenis_gaji\": \"Tunjangan Jabatan\", \"jumlah_gaji\": \"2000000.00\"}}', 6000000.00, '{\"Potongan Ketidakhadiran\": 4000000}', 4000000.00, 2000000.00, 'draft', 'Catatan', 'Admin Cabang Bekasi', NULL, NULL, NULL, '2024-11-26 08:15:24', '2024-11-26 08:15:24'),
+('PG2024120011', '123123123', 'JKTP', 'MN', '2024-12-31', '2024-12', 26, 4, 4, 0, 0, 0, 0, 22, 25.83, '{\"GT\":{\"jumlah_gaji\":\"5000000.00\",\"jenis_gaji\":\"Gaji Tetap\"},\"L\":{\"jumlah_gaji\":\"20000.00\",\"jenis_gaji\":\"Lembur\"},\"TJ\":{\"jumlah_gaji\":\"2500000.00\",\"jenis_gaji\":\"Tunjangan Jabatan\"}}', '{\"GT\":{\"jumlah_gaji\":769230.769230769,\"jenis_gaji\":\"Gaji Tetap\"},\"L\":{\"jumlah_gaji\":516666.6666666666,\"jenis_gaji\":\"Lembur\"},\"TJ\":{\"jumlah_gaji\":\"2500000.00\",\"jenis_gaji\":\"Tunjangan Jabatan\"}}', 7520000.00, '{\"BPJS Kesehatan\":\"50000.00\",\"BPJS Tenaga Kerja\":\"50000.00\",\"Dana Darurat\":\"50000.00\",\"Jaminan Hari Tua\":\"50000.00\",\"Potongan Seragam\":\"50000.00\",\"Tunjangan Hari Raya\":\"416000.00\",\"Potongan Ketidakhadiran\":4230769.230769231}', 4896769.23, 3119897.44, 'draft', 'Catatan', 'Super Admin Presensi', NULL, NULL, NULL, '2024-12-29 09:32:52', '2024-12-29 09:32:52');
 
 -- --------------------------------------------------------
 
@@ -1109,7 +1110,10 @@ INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_kelua
 (334, '123123123', '2024-12-19', '15:15:24', '16:00:05', 'public/uploads/absensi/123123123-2024-12-19-151524-masuk.png', 'public/uploads/absensi/123123123-2024-12-19-160005-keluar.png', '-6.2016912,106.8421141', '-6.2016977,106.8421042', 'JKMNJKTPSP', 'hadir', NULL, NULL, NULL, 0, NULL, NULL, '2024-12-19 08:15:24', '2024-12-19 09:00:05'),
 (335, '123123123', '2024-12-25', '19:37:26', '19:45:01', 'public/uploads/absensi/123123123-2024-12-25-193726-masuk.png', 'public/uploads/absensi/123123123-2024-12-25-194501-keluar.png', '-6.2455808,106.9776896', '-6.2455808,106.9776896', 'JKMNJKTPSM', 'hadir', NULL, NULL, NULL, 0, NULL, NULL, '2024-12-25 12:37:26', '2024-12-25 12:45:01'),
 (336, '123123123', '2024-12-27', '14:03:56', '14:16:53', 'public/uploads/absensi/123123123-2024-12-27-140356-masuk.png', 'public/uploads/absensi/123123123-2024-12-27-141653-keluar.png', '-6.2017017,106.8420968', '-6.2062592,106.856448', 'JKMNJKTPSS', 'hadir', NULL, 'LDVM235', 'reguler', 1, '14:46:57', '15:56:43', '2024-12-27 07:03:56', '2024-12-27 08:56:43'),
-(343, '123123123', '2024-12-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'hadir', NULL, 'LFHQ558', 'penebalan', 1, '16:16:13', '16:20:03', '2024-12-28 09:16:13', '2024-12-28 09:20:03');
+(343, '123123123', '2024-12-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'hadir', NULL, 'LFHQ558', 'penebalan', 1, '16:16:13', '16:20:03', '2024-12-28 09:16:13', '2024-12-28 09:20:03'),
+(344, '123123123', '2024-12-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'sakit', 'IA0724001', NULL, NULL, 0, NULL, NULL, '2024-12-30 04:51:50', NULL),
+(345, '123123123', '2024-12-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724001', NULL, NULL, 0, NULL, NULL, '2024-12-30 04:51:50', NULL),
+(346, '123123123', '2025-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'izin', 'IA0724001', NULL, NULL, 0, NULL, NULL, '2024-12-30 04:51:50', NULL);
 
 -- --------------------------------------------------------
 
@@ -1604,7 +1608,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT untuk tabel `presensi`
 --
 ALTER TABLE `presensi`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=344;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=347;
 
 --
 -- AUTO_INCREMENT untuk tabel `roles`

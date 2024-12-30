@@ -60,20 +60,20 @@ class DashboardController extends Controller
             ->whereMonth('tanggal_presensi', $bulan_ini)
             ->whereYear('tanggal_presensi', $tahun_ini)
             ->orderBy('tanggal_presensi', 'desc')
-            ->get();
-        //                                 ->map(function ($presensi) {
-        //                                     return [
-        //                                         ...$presensi->toArray(),
-        //                                         'nama_jam_kerja' => $presensi->nama_jam_kerja,
-        //                                         'jam_kerja_masuk' => $presensi->jam_kerja_masuk,
-        //                                         'jam_pulang' => $presensi->jam_pulang,
-        //                                         'keterangan' => optional($presensi->pengajuanIzin)->keterangan,
-        //                                         'mulai_lembur' => optional($presensi->lembur)->waktu_mulai,
-        //                                         'selesai_lembur' => optional($presensi->lembur)->waktu_selesai,
-        //                                     ];
-        // });
+            ->get()
+            ->map(function ($presensi) {
+                return [
+                    ...$presensi->toArray(),
+                    'nama_jam_kerja' => $presensi->nama_jam_kerja,
+                    'jam_kerja_masuk' => $presensi->jam_kerja_masuk,
+                    'jam_pulang' => $presensi->jam_pulang,
+                    'keterangan' => optional($presensi->pengajuanIzin)->keterangan,
+                    'waktu_mulai' => optional($presensi->lembur)->waktu_mulai,
+                    'waktu_selesai' => optional($presensi->lembur)->waktu_selesai,
+                ];
+        });
 
-        // dd($history_bulan_ini->lembur->waktu_mulai);
+        // dd($history_bulan_ini);
 
         // Modifikasi rekap_presensi untuk menghitung keterlambatan dengan mempertimbangkan lembur
         $rekap_presensi = DB::table('presensi')
