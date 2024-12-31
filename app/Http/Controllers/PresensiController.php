@@ -683,33 +683,60 @@ class PresensiController extends Controller
         return view('presensi.history', compact('months'));
     }
 
+    // public function GetHistory(Request $request)
+    // {
+    //     $bulan = $request->bulan;
+    //     $tahun = $request->tahun;
+    //     $nik = Auth::guard('karyawan')->user()->nik;
+
+    //     // Tampilkan data presensi sesuai bulan dan tahun
+    //     $history = DB::table('presensi')
+    //         ->select('presensi.*',
+    //             DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN "Lembur" ELSE jam_kerja.nama_jam_kerja END as nama_jam_kerja'),
+    //             DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_mulai ELSE jam_kerja.jam_masuk END as jam_kerja_masuk'),
+    //             DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_selesai ELSE jam_kerja.jam_pulang END as jam_pulang'),
+    //             'pengajuan_izin.keterangan',
+    //             'lembur.waktu_mulai as mulai_lembur',
+    //             'lembur.waktu_selesai as selesai_lembur')
+    //         ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
+    //         ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
+    //         ->leftJoin('lembur', function($join) {
+    //             $join->on('presensi.nik', '=', 'lembur.nik')
+    //                 ->on('presensi.tanggal_presensi', '=', 'lembur.tanggal_presensi')
+    //                 ->where('lembur.status', '=', 'disetujui');
+    //         })
+    //         ->where('presensi.nik', $nik)
+    //         ->whereRaw('MONTH(presensi.tanggal_presensi) = ?', [$bulan])
+    //         ->whereRaw('YEAR(presensi.tanggal_presensi) = ?', [$tahun])
+    //         ->orderBy('presensi.tanggal_presensi', 'desc')
+    //         ->get();
+
+    //     return view('presensi.gethistory', compact('history'));
+    // }
+
     public function GetHistory(Request $request)
     {
         $bulan = $request->bulan;
         $tahun = $request->tahun;
         $nik = Auth::guard('karyawan')->user()->nik;
 
-        // Tampilkan data presensi sesuai bulan dan tahun
-        $history = DB::table('presensi')
-            ->select('presensi.*',
-                DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN "Lembur" ELSE jam_kerja.nama_jam_kerja END as nama_jam_kerja'),
-                DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_mulai ELSE jam_kerja.jam_masuk END as jam_kerja_masuk'),
-                DB::raw('CASE WHEN presensi.kode_jam_kerja = "LEMBUR" THEN lembur.waktu_selesai ELSE jam_kerja.jam_pulang END as jam_pulang'),
-                'pengajuan_izin.keterangan',
-                'lembur.waktu_mulai as mulai_lembur',
-                'lembur.waktu_selesai as selesai_lembur')
-            ->leftJoin('jam_kerja', 'presensi.kode_jam_kerja', '=', 'jam_kerja.kode_jam_kerja')
-            ->leftJoin('pengajuan_izin', 'presensi.kode_izin', '=', 'pengajuan_izin.kode_izin')
-            ->leftJoin('lembur', function($join) {
-                $join->on('presensi.nik', '=', 'lembur.nik')
-                    ->on('presensi.tanggal_presensi', '=', 'lembur.tanggal_presensi')
-                    ->where('lembur.status', '=', 'disetujui');
-            })
-            ->where('presensi.nik', $nik)
-            ->whereRaw('MONTH(presensi.tanggal_presensi) = ?', [$bulan])
-            ->whereRaw('YEAR(presensi.tanggal_presensi) = ?', [$tahun])
-            ->orderBy('presensi.tanggal_presensi', 'desc')
-            ->get();
+        $history = Presensi::with(['jamKerja', 'pengajuanIzin', 'lembur'])
+            ->where('nik', $nik)
+            ->whereMonth('tanggal_presensi', operator: $bulan)
+            ->whereYear('tanggal_presensi', operator: $tahun)
+            ->orderBy('tanggal_presensi', 'desc')
+            ->get()
+            ->map(function ($presensi) {
+                return [
+                    ...$presensi->toArray(),
+                    'nama_jam_kerja' => $presensi->nama_jam_kerja,
+                    'jam_kerja_masuk' => $presensi->jam_kerja_masuk,
+                    'jam_pulang' => $presensi->jam_pulang,
+                    'keterangan' => optional($presensi->pengajuanIzin)->keterangan,
+                    'waktu_mulai' => optional($presensi->lembur)->waktu_mulai,
+                    'waktu_selesai' => optional($presensi->lembur)->waktu_selesai,
+                ];
+        });
 
         return view('presensi.gethistory', compact('history'));
     }

@@ -260,7 +260,11 @@
                                     {{ \Carbon\Carbon::parse($lembur->tanggal_presensi)->translatedFormat('d-m-Y') }}
                                     @if($lembur->catatan_lembur)
                                         <br>
-                                        <button class="btn btn-sm btn-secondary mt-1 btn-keterangan" data-keterangan="{{ $lembur->catatan_lembur }}">
+                                        <button class="btn btn-sm btn-secondary mt-1 btn-keterangan"
+                                        data-keterangan="{{ $lembur->catatan_lembur }}"
+                                        data-status="{{ $lembur->status }}"
+                                        data-alasan="{{ $lembur->alasan_penolakan }}""
+                                        >
                                             Keterangan
                                         </button>
                                     @endif
@@ -300,7 +304,19 @@
                         @endforelse
                     </tbody>
                 </table>
+                @if($totalLembur > 5)
+                    <div class="card-footer text-center p-0">
+                        <a href="#"
+                        class="btn btn-block btn-outline-secondary rounded-0 py-2">
+                            Lihat Selengkapnya
+                            <span class="badge badge-secondary ml-2">
+                                {{ $totalLembur - 5 }}
+                            </span>
+                        </a>
+                    </div>
+                @endif
             </div>
+            {{-- Tambahkan button Selengkapnya --}}
         </div>
     </div>
 
@@ -679,6 +695,17 @@
                         </div>
                     @endif
                 @endforeach
+                @if($totalPresensi > 5)
+                    <div class="card text-center p-0">
+                        <a href="{{ route('presensi.history') }}"
+                        class="btn btn-block btn-outline-white rounded-0 py-2">
+                            Lihat Selengkapnya
+                            <span class="badge badge-secondary ml-2">
+                                {{ $totalPresensi - 5 }}
+                            </span>
+                        </a>
+                    </div>
+                @endif
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel">
                 <ul class="listview image-listview">

@@ -60,6 +60,7 @@ class DashboardController extends Controller
             ->whereMonth('tanggal_presensi', $bulan_ini)
             ->whereYear('tanggal_presensi', $tahun_ini)
             ->orderBy('tanggal_presensi', 'desc')
+            ->take(5) // Atau limit(5)
             ->get()
             ->map(function ($presensi) {
                 return [
@@ -133,7 +134,20 @@ class DashboardController extends Controller
             ->whereYear('tanggal_presensi', operator: $tahun_ini)
             ->whereMonth('tanggal_presensi', $bulan_ini)
             ->orderBy('tanggal_presensi', 'desc')
+            ->take(5) // Atau limit(5)
             ->get();
+
+        $totalLembur = Lembur::where('nik', $nik)
+                    ->whereYear('tanggal_presensi', $tahun_ini)
+                    ->whereMonth('tanggal_presensi', $bulan_ini)
+                    ->count();
+        // dd($totalLembur);
+
+        $totalPresensi = Presensi::where('nik', $nik)
+                    ->whereYear('tanggal_presensi', $tahun_ini)
+                    ->whereMonth('tanggal_presensi', $bulan_ini)
+                    ->count();
+        // dd($totalPresensi);
 
         return view('dashboard.dashboard', compact(
             'rekap_presensi',
@@ -144,7 +158,9 @@ class DashboardController extends Controller
             'presensi_hari_ini',
             'history_bulan_ini',
             'leaderboards',
-            'daftar_lembur'
+            'daftar_lembur',
+            'totalLembur',
+            'totalPresensi',
         ));
     }
 

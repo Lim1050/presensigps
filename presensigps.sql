@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 30 Des 2024 pada 06.50
+-- Waktu pembuatan: 31 Des 2024 pada 09.46
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -604,6 +604,7 @@ CREATE TABLE `lembur` (
 --
 
 INSERT INTO `lembur` (`kode_lembur`, `nik`, `tanggal_presensi`, `waktu_mulai`, `waktu_selesai`, `durasi_menit`, `lintas_hari`, `lembur_libur`, `catatan_lembur`, `status`, `jenis_lembur`, `jam_masuk_asli`, `jam_pulang_asli`, `total_absen`, `alasan_penolakan`, `created_at`, `updated_at`) VALUES
+('LBCS976', '123123123', '2024-12-31', '15:10:00', '16:11:00', 61, 0, 0, 'Catatan Lembur', 'ditolak', 'penebalan', '19:35:00', '19:45:00', 1, 'lagi liburan', '2024-12-31 08:11:05', '2024-12-31 08:42:45'),
 ('LDVM235', '123123123', '2024-12-27', '14:20:00', '15:50:00', 60, 0, 0, 'Catatan Lembur', 'disetujui', 'reguler', '08:30:00', '16:00:00', 1, NULL, '2024-12-27 06:39:24', '2024-12-27 06:39:35'),
 ('LFHQ558', '123123123', '2024-12-28', '16:10:00', '16:20:00', 5, 0, 0, 'Catatan Lembur', 'disetujui', 'penebalan', '19:35:00', '19:45:00', 1, NULL, '2024-12-28 08:01:58', '2024-12-28 08:02:09'),
 ('LIXW796', '123123123', '2024-12-25', '19:45:00', '19:00:00', 1395, 1, 0, 'Catatan Lembur', 'disetujui', 'reguler', '19:35:00', '19:45:00', 1, NULL, '2024-12-25 12:38:57', '2024-12-25 12:39:06'),
@@ -1091,7 +1092,6 @@ INSERT INTO `presensi` (`id`, `nik`, `tanggal_presensi`, `jam_masuk`, `jam_kelua
 (295, '333333333', '2024-08-07', '15:05:19', '16:14:05', 'public/uploads/absensi/333333333-2024-08-07-150519-masuk.png', 'public/uploads/absensi/333333333-2024-08-07-161405-keluar.png', '-6.1341696,106.82368', '-6.2016842,106.842187', 'JKT01', 'hadir', NULL, NULL, NULL, NULL, NULL, NULL, '2024-08-07 08:05:19', '2024-08-07 09:14:05'),
 (297, '123123123', '2024-10-18', '13:09:24', '13:54:44', 'public/uploads/absensi/123123123-2024-10-18-130924-masuk.png', 'public/uploads/absensi/123123123-2024-10-18-135444-keluar.png', '-6.2017428,106.8420686', NULL, 'JK02', 'hadir', NULL, NULL, NULL, NULL, NULL, NULL, '2024-10-18 06:09:24', '2024-10-18 06:54:44'),
 (299, '123123123', '2024-11-01', '16:16:31', '16:19:18', 'public/uploads/absensi/123123123-2024-11-01-161631-masuk.png', 'public/uploads/absensi/123123123-2024-11-01-161918-keluar.png', '-6.2017276,106.8420937', '-6.2062592,106.856448', 'JK02', 'hadir', NULL, NULL, NULL, NULL, NULL, NULL, '2024-11-01 09:16:31', '2024-11-01 09:19:18'),
-(304, '123123123', '2024-11-02', '16:07:13', '16:11:37', 'public/uploads/absensi/123123123-2024-11-02-160713-masuk.png', 'public/uploads/absensi/123123123-2024-11-02-161137-keluar.png', '-6.2357504,106.790912', '-6.2291968,106.807296', 'LEMBUR', 'hadir', NULL, NULL, NULL, 1, '16:00:00', '16:30:00', '2024-11-02 09:07:13', '2024-11-02 09:11:37'),
 (305, '123123123', '2024-11-05', '21:11:28', '21:30:09', 'public/uploads/absensi/123123123-2024-11-05-211128-masuk.png', 'public/uploads/absensi/123123123-2024-11-05-213009-keluar.png', '-6.2029824,106.8040192', '-6.2029824,106.8040192', 'JKMNJKTPSM', 'hadir', NULL, NULL, NULL, 0, NULL, NULL, '2024-11-05 14:11:28', '2024-11-05 14:30:09'),
 (306, '123123123', '2024-08-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', NULL, NULL, NULL, NULL, NULL, '2024-11-09 13:37:32', NULL),
 (307, '123123123', '2024-08-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'cuti', 'IC0824001', NULL, NULL, NULL, NULL, NULL, '2024-11-09 13:37:32', NULL),
