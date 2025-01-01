@@ -250,7 +250,7 @@
                             <th>Tanggal</th>
                             <th>Mulai</th>
                             <th>Selesai</th>
-                            <th>Status & Aksi</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -288,11 +288,11 @@
                                             <button class="btn btn-sm btn-primary btn-approval mt-1">
                                                 Tindakan
                                             </button>
-                                        @elseif($lembur->status == 'ditolak' && $lembur->alasan_penolakan)
+                                        {{-- @elseif($lembur->status == 'ditolak' && $lembur->alasan_penolakan)
                                             <button class="btn btn-sm btn-danger btn-alasan mt-1"
                                                 data-alasan="{{ $lembur->alasan_penolakan }}">
                                                 Lihat Alasan
-                                            </button>
+                                            </button> --}}
                                         @endif
                                     </div>
                                 </td>
@@ -780,24 +780,33 @@ document.addEventListener('DOMContentLoaded', function() {
     lemburTable.addEventListener('click', function(e) {
         const btnKeterangan = e.target.closest('.btn-keterangan');
         if (btnKeterangan) {
+            let message = btnKeterangan.dataset.keterangan; // Ambil keterangan lembur
+            const status = btnKeterangan.dataset.status; // Ambil status lembur
+            const alasan = btnKeterangan.dataset.alasan; // Ambil alasan penolakan
+
+            // Jika status adalah 'ditolak', tambahkan alasan ke dalam pesan
+            if (status === 'ditolak' && alasan) {
+                message += `<br><br><strong style="color: red;">Alasan Penolakan:</strong><br><span>${alasan}</span>`;
+            }
+
             Swal.fire({
                 title: 'Keterangan Lembur',
-                text: btnKeterangan.dataset.keterangan,
+                html: message,
                 icon: 'info',
                 confirmButtonText: 'Tutup'
             });
         }
 
         // Delegasi event untuk tombol alasan
-        const btnAlasan = e.target.closest('.btn-alasan');
-        if (btnAlasan) {
-            Swal.fire({
-                title: 'Alasan Penolakan',
-                text: btnAlasan.dataset.alasan,
-                icon: 'warning',
-                confirmButtonText: 'Tutup'
-            });
-        }
+        // const btnAlasan = e.target.closest('.btn-alasan');
+        // if (btnAlasan) {
+        //     Swal.fire({
+        //         title: 'Alasan Penolakan',
+        //         text: btnAlasan.dataset.alasan,
+        //         icon: 'warning',
+        //         confirmButtonText: 'Tutup'
+        //     });
+        // }
 
         // Delegasi event untuk tombol approval
         const btnApproval = e.target.closest('.btn-approval');
